@@ -1,13 +1,6 @@
 name: Windows Defender investigation
 
 on:
-  push:
-    branches: [codex/1376-windows-defender]
-    paths:
-      - .github/workflows/windows-defender-investigation.yml
-      - scripts/investigate-windows-defender.ps1
-      - scripts/prepare-defender-components.py
-      - scripts/repack-defender-candidate.mjs
   workflow_dispatch:
 
 permissions:
