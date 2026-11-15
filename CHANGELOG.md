@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.5.5 ? 2026-11-15
+
+### Fixed
+
+- Align desktop, server, web, contracts, and lockfile versions for exact-source release preflight. The existing v1.5.4 tag retains its original source.
+
 ## 1.5.3 — 2026-11-12
 
 **Clearer settings and chats, more reliable accounts, and less background work.**

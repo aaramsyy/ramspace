@@ -64,7 +64,7 @@
     },
     "apps/desktop": {
       "name": "@ramspace/desktop",
-      "version": "1.5.3",
+      "version": "1.5.5",
       "dependencies": {
         "betterwright": "2.7.3",
         "effect": "catalog:",
@@ -171,7 +171,7 @@
     },
     "apps/server": {
       "name": "@ramspace/cli",
-      "version": "1.5.3",
+      "version": "1.5.5",
       "bin": {
         "ramspace": "dist/index.mjs",
         "ramspace-compact-database": "dist/compactDatabase.mjs",
@@ -220,7 +220,7 @@
     },
     "apps/web": {
       "name": "@ramspace/web",
-      "version": "1.5.3",
+      "version": "1.5.5",
       "dependencies": {
         "@base-ui/react": "^1.5.0",
         "@dnd-kit/core": "^6.3.1",
@@ -298,7 +298,7 @@
     },
     "packages/contracts": {
       "name": "@ramspace/contracts",
-      "version": "1.5.3",
+      "version": "1.5.5",
       "dependencies": {
         "effect": "catalog:",
       },
