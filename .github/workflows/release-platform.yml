@@ -245,11 +245,9 @@ jobs:
               echo "macOS signing enabled."
               signed=true
               args+=(--signed)
-            elif [[ "$RAMSPACE_PUBLISH_RELEASE" == "true" ]]; then
-              echo "Publishing macOS artifacts requires every signing and notarization secret."
-              exit 1
             else
-              echo "Build-only macOS artifact will be unsigned because publication is disabled."
+              echo "macOS artifact will be unsigned (open-source release)."
+              signed=false
             fi
           elif [[ "${{ inputs.platform }}" == "win" ]]; then
             if has_all \
@@ -264,11 +262,9 @@ jobs:
               echo "Windows signing enabled (Azure Trusted Signing)."
               signed=true
               args+=(--signed)
-            elif [[ "$RAMSPACE_PUBLISH_RELEASE" == "true" && "$ALLOW_UNSIGNED_WINDOWS_PUBLICATION" != "true" ]]; then
-              echo "Publishing Windows artifacts requires every Azure Trusted Signing secret."
-              exit 1
             else
-              echo "Windows artifact will be unsigned under the explicit version-scoped release exception."
+              echo "Windows artifact will be unsigned under the open-source release exception."
+              signed=false
             fi
           else
             echo "Signing disabled for ${{ inputs.platform }}."

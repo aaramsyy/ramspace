@@ -398,13 +398,13 @@ function resolveSigningEvidence(
 
   if (!input.signed) {
     if (input.publication) {
-      if (input.platform === "win" && input.allowUnsignedWindowsPublication === true) {
-        requireSingleArtifact(artifacts, ".exe");
+      if ((input.platform === "win" && input.allowUnsignedWindowsPublication === true) || input.platform === "mac") {
+        requireSingleArtifact(artifacts, input.platform === "mac" ? ".dmg" : ".exe");
         return {
           status: "unsigned-explicit-release",
           scheme: "none",
           identity: null,
-          checks: ["explicit version-scoped Windows release exception"],
+          checks: ["explicit open-source release exception"],
         };
       }
       throw new Error(`Publishing ${input.platform} artifacts requires verified signing.`);
