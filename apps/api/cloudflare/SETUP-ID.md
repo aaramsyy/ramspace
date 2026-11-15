@@ -9,12 +9,12 @@ kalau build atau login gagal. Daftar pekerjaan tersisa ada di
 
 ## 1. Siapkan akun dan alat
 
-| Kebutuhan | Untuk apa | Yang perlu kamu ambil |
-| --- | --- | --- |
-| Cloudflare | Menjalankan API sebagai Worker | Akun dan subdomain workers.dev |
-| PostgreSQL hosted | Menyimpan data akun | Connection string dengan TLS |
-| WorkOS AuthKit | Mengirim OTP dan memverifikasi login | API key dan Client ID dari environment yang sama |
-| Node dan Bun | Menjalankan setup di PC | Versi sesuai `.mise.toml` di root repo |
+| Kebutuhan         | Untuk apa                            | Yang perlu kamu ambil                            |
+| ----------------- | ------------------------------------ | ------------------------------------------------ |
+| Cloudflare        | Menjalankan API sebagai Worker       | Akun dan subdomain workers.dev                   |
+| PostgreSQL hosted | Menyimpan data akun                  | Connection string dengan TLS                     |
+| WorkOS AuthKit    | Mengirim OTP dan memverifikasi login | API key dan Client ID dari environment yang sama |
+| Node dan Bun      | Menjalankan setup di PC              | Versi sesuai `.mise.toml` di root repo           |
 
 Database boleh berasal dari layanan dengan paket gratis yang menyediakan
 PostgreSQL. Salin connection string dari dashboard penyedia, termasuk pengaturan
@@ -170,15 +170,15 @@ beban API ini sudah terbukti muat dalam kuota Workers Free.
 
 ## Jika gagal
 
-| Gejala | Yang diperiksa |
-| --- | --- |
-| `wrangler` tidak ditemukan | Install dependency root selesai; jalankan dari `apps/api` |
-| Required secret hilang | Enam nama secret harus tepat; lokal membaca `.env`, deployed membaca secret Cloudflare |
-| HTTP 503 | Periksa log Worker secara privat: konfigurasi, koneksi PostgreSQL/TLS, WorkOS, atau runtime belum kompatibel |
-| OTP tidak masuk | Magic Auth aktif, pengiriman email WorkOS, folder spam, environment API key/Client ID |
-| Login sosial menolak redirect | Callback loopback dan provider sosial di WorkOS |
-| Runtime/CPU limit | Catat error runtime dan penggunaan; jangan menaikkan paket tanpa menilai penyebabnya |
-| APNs/tunnel/billing ditolak | Belum didukung entry point draft ini; jangan aktifkan konfigurasi fitur tersebut |
+| Gejala                        | Yang diperiksa                                                                                               |
+| ----------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| `wrangler` tidak ditemukan    | Install dependency root selesai; jalankan dari `apps/api`                                                    |
+| Required secret hilang        | Enam nama secret harus tepat; lokal membaca `.env`, deployed membaca secret Cloudflare                       |
+| HTTP 503                      | Periksa log Worker secara privat: konfigurasi, koneksi PostgreSQL/TLS, WorkOS, atau runtime belum kompatibel |
+| OTP tidak masuk               | Magic Auth aktif, pengiriman email WorkOS, folder spam, environment API key/Client ID                        |
+| Login sosial menolak redirect | Callback loopback dan provider sosial di WorkOS                                                              |
+| Runtime/CPU limit             | Catat error runtime dan penggunaan; jangan menaikkan paket tanpa menilai penyebabnya                         |
+| APNs/tunnel/billing ditolak   | Belum didukung entry point draft ini; jangan aktifkan konfigurasi fitur tersebut                             |
 
 Untuk membatalkan percobaan, kembalikan `RAMSPACE_ACCOUNT_URL` instance percobaan
 ke nilai sebelumnya. Jangan menghapus database untuk menangani kegagalan login.
