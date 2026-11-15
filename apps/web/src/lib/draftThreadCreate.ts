@@ -13,7 +13,7 @@ import type {
   ProviderStartOptions,
   RuntimeMode,
   ThreadId,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 
 import type { NewChatDefault } from "../appSettings";
 import { composerDraftsMatchForCleanup } from "../composerDraftDomain";

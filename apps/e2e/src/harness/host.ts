@@ -1,4 +1,4 @@
-import { EnvironmentId, type RemotePairingBundle } from "@synara/contracts";
+import { EnvironmentId, type RemotePairingBundle } from "@ramspace/contracts";
 import {
   accountApiIssuer,
   readAccountFile,
@@ -17,7 +17,7 @@ import { BootstrapCredentialServiceLive } from "../../../server/src/auth/Layers/
 import http from "node:http";
 
 import * as NodeServices from "@effect/platform-node/NodeServices";
-import { NonNegativeInt, WS_METHODS, type HostSession } from "@synara/contracts";
+import { NonNegativeInt, WS_METHODS, type HostSession } from "@ramspace/contracts";
 import { Effect, Exit, Layer, Schema, Scope } from "effect";
 import { HttpRouter } from "effect/unstable/http";
 import { Rpc, RpcGroup, RpcSerialization, RpcServer } from "effect/unstable/rpc";

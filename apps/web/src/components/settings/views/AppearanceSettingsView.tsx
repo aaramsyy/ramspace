@@ -3,7 +3,7 @@
 // Layer: Settings view
 // Exports: AppearanceSettingsView
 
-import { type DesktopAudioInputDevice } from "@synara/contracts";
+import { type DesktopAudioInputDevice } from "@ramspace/contracts";
 import { useEffect, useMemo, useState } from "react";
 import {
   type AppSettingsBinding,
@@ -258,7 +258,7 @@ export function AppearanceSettingsView(binding: AppSettingsBinding) {
           <SettingsRow
             id="setting-app-icon"
             title="settings:appIcon"
-            description="settings:chooseTheIconSynaraUsesInTheDockOr"
+            description="settings:chooseTheIconRamspaceUsesInTheDockOr"
             resetAction={
               settings.desktopAppIcon !== defaultDesktopAppIcon ? (
                 <SettingResetButton
@@ -286,8 +286,8 @@ export function AppearanceSettingsView(binding: AppSettingsBinding) {
               title="settings:useCustomTitleBar"
               description={
                 customTitleBar.restartRequired
-                  ? "settings:restartSynaraToApplySomeLinuxWindowManagersWork"
-                  : "settings:replaceTheSystemTitleBarWithSynaraSFrameless"
+                  ? "settings:restartRamspaceToApplySomeLinuxWindowManagersWork"
+                  : "settings:replaceTheSystemTitleBarWithRamspaceSFrameless"
               }
               status={customTitleBar.restartRequired ? t("settings:restartRequired") : undefined}
               resetAction={

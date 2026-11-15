@@ -2,7 +2,7 @@
 // Purpose: Single source of truth for provider usage rows shown in Settings,
 // the chat header usage chip, and compact environment/Local popovers.
 
-import { PROVIDER_DESCRIPTORS } from "@synara/shared/providerMetadata";
+import { PROVIDER_DESCRIPTORS } from "@ramspace/shared/providerMetadata";
 import { t } from "~/i18n";
 import {
   deriveVisibleRateLimitRows,

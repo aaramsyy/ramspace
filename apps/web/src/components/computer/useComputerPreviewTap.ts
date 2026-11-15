@@ -10,7 +10,7 @@ import { readExecutionContext } from "~/lib/hosts/executionContext";
 // channel; the hook stays inert there and the stills stream remains the only
 // source. The caller picks one drawer at a time via `enabled` and `active`.
 
-import type { ThreadId } from "@synara/contracts";
+import type { ThreadId } from "@ramspace/contracts";
 import { useEffect, useRef, useState } from "react";
 
 import { useComputerStateStore } from "../../computerStateStore";

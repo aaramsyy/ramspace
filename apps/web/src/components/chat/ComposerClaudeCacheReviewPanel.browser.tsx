@@ -1,4 +1,4 @@
-import { MessageId, type PendingClaudeCacheReview } from "@synara/contracts";
+import { MessageId, type PendingClaudeCacheReview } from "@ramspace/contracts";
 import { page } from "vitest/browser";
 import { describe, expect, it, vi } from "vitest";
 import { render } from "vitest-browser-react";

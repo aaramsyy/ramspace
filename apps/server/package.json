@@ -1,16 +1,16 @@
 {
-  "name": "@synara/cli",
+  "name": "@ramspace/cli",
   "version": "1.5.3",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Emanuele-web04/Synara.git",
+    "url": "git+https://github.com/aaramsyy/Ramspace.git",
     "directory": "apps/server"
   },
   "bin": {
-    "synara": "dist/index.mjs",
-    "synara-compact-database": "dist/compactDatabase.mjs",
-    "synara-restore-migration-backup": "dist/restoreMigrationBackup.mjs"
+    "ramspace": "dist/index.mjs",
+    "ramspace-compact-database": "dist/compactDatabase.mjs",
+    "ramspace-restore-migration-backup": "dist/restoreMigrationBackup.mjs"
   },
   "files": [
     "dist"
@@ -56,9 +56,9 @@
   "devDependencies": {
     "@effect/language-service": "catalog:",
     "@effect/vitest": "catalog:",
-    "@synara/contracts": "workspace:*",
-    "@synara/shared": "workspace:*",
-    "@synara/web": "workspace:*",
+    "@ramspace/contracts": "workspace:*",
+    "@ramspace/shared": "workspace:*",
+    "@ramspace/web": "workspace:*",
     "@types/bun": "catalog:",
     "@types/node": "catalog:",
     "@types/ws": "^8.5.13",

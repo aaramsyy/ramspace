@@ -1,5 +1,5 @@
 import { readExecutionContext } from "~/lib/hosts/executionContext";
-import { REMOTE_NATIVE_UNAVAILABLE } from "@synara/shared/remoteCapabilities";
+import { REMOTE_NATIVE_UNAVAILABLE } from "@ramspace/shared/remoteCapabilities";
 // FILE: ComputerSettingsPanel.tsx
 // Purpose: Own the Computer use settings panel: one surface for the control toggle,
 //          the honest attention-only status line, cursor colors, and the preview.
@@ -15,12 +15,12 @@ import {
   COMPUTER_RELEASE_HOTKEY_BACKENDS,
   type ComputerCapabilities,
   type ComputerPermission,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import {
   COMPUTER_PERMISSION_KINDS,
   computerPermissionSetupMessage,
   missingComputerAppSnapPermissions,
-} from "@synara/shared/computerGrants";
+} from "@ramspace/shared/computerGrants";
 import {
   computerPermissionSetupSupported,
   readLocalComputerPermissionBridge,
@@ -35,7 +35,7 @@ import {
   type AppSettingsBinding,
   type ComputerPreviewSize,
 } from "~/appSettings";
-import type { DesktopAppSnapSettingsPane, DesktopAppSnapState } from "@synara/contracts";
+import type { DesktopAppSnapSettingsPane, DesktopAppSnapState } from "@ramspace/contracts";
 import {
   computerReconnectsNote,
   computerStatusNeedsSetup,

@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { outboundHttp } from "@synara/shared/outboundHttp";
+import { outboundHttp } from "@ramspace/shared/outboundHttp";
 import { fetchOpenRouterModels } from "./OpenRouterDiscovery.ts";
 
 export const liveOpenRouterModel = {

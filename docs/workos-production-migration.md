@@ -1,6 +1,6 @@
 # WorkOS Production migration
 
-WorkOS environments have separate users, organizations and sessions. Synara stores
+WorkOS environments have separate users, organizations and sessions. Ramspace stores
 user and organization IDs in profiles, hosts, devices, usage and private Inbox
 records. Switching credentials alone gives existing users a different ownership
 identity. Rewriting those IDs can also invalidate encrypted host-secret AAD.
@@ -31,7 +31,7 @@ identity. Rewriting those IDs can also invalidate encrypted host-secret AAD.
    continue using their own provider IDs.
 
 3. The WorkOS adapter translates verified Production identities to the existing
-   Synara IDs and translates upstream user/organization operations back to the
+   Ramspace IDs and translates upstream user/organization operations back to the
    Production IDs. Signature, issuer, expiry and exact client verification remain
    mandatory. Membership and revocation checks still query Production. No
    Supabase ownership rows, API signing keys or encrypted blobs are rewritten.
@@ -48,7 +48,7 @@ identity. Rewriting those IDs can also invalidate encrypted host-secret AAD.
 - Update the three identity secrets together; retain every unrelated Worker secret.
   Roll out the Container so the running API loads the new environment.
 - Existing Staging sessions cannot be refreshed in Production. Sign in again;
-  this changes the authentication session, not the account's Synara ownership.
+  this changes the authentication session, not the account's Ramspace ownership.
 - Check each imported user's `/me`, organizations, profile/handle, hosts/devices,
   usage summary and private Inbox. Verify that a different account cannot read
   another user's private records, then test refresh, revocation and native login.
@@ -80,7 +80,7 @@ remain in protected operator storage and Worker secrets, outside Git and images.
 
 - All imported accounts completed real email-code login and scoped refresh. Their
   profile, cached photo, hosts, devices, usage and private Inbox remained available
-  under their existing Synara IDs. Cross-account recap reads returned 404.
+  under their existing Ramspace IDs. Cross-account recap reads returned 404.
 - Google completed the real browser/loopback PKCE exchange, scoped refresh and
   existing-profile lookup. Test sessions were subsequently revoked; every revoked
   refresh was refused with 401. No existing app session was revoked by this test.

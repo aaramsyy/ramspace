@@ -12,12 +12,12 @@ export default function SiteFooter() {
         <span>
           Made by{" "}
           <a
-            href="https://x.com/emanueledpt"
+            href="https://github.com/aaramsyy"
             target="_blank"
             rel="noopener noreferrer"
             className="text-[var(--accent-link)] transition-colors hover:text-[var(--accent-link-hover)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent-link)]"
           >
-            @emanueledpt
+            @aaramsyy
           </a>
         </span>
         <div className="flex items-center gap-4 sm:gap-6">

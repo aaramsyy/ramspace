@@ -14,7 +14,7 @@
 // guard runs BEFORE the handler effect is built, so a refused session causes
 // no credential-file read or write.
 
-import { WS_METHODS, WsRpcError } from "@synara/contracts";
+import { WS_METHODS, WsRpcError } from "@ramspace/contracts";
 import { Effect } from "effect";
 
 import { toAccountWsRpcError, toSensitiveWsRpcError } from "./accountRpcErrors";

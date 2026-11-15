@@ -6,8 +6,8 @@
 //          these surfaces are mounted. Rendering is left entirely to the call sites.
 // Layer: Chat editor action hook
 
-import type { EditorId, ResolvedKeybindingsConfig } from "@synara/contracts";
-import { REMOTE_NATIVE_UNAVAILABLE } from "@synara/shared/remoteCapabilities";
+import type { EditorId, ResolvedKeybindingsConfig } from "@ramspace/contracts";
+import { REMOTE_NATIVE_UNAVAILABLE } from "@ramspace/shared/remoteCapabilities";
 
 import { toastManager } from "../components/ui/toast";
 import {

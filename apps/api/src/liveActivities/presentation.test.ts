@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { Schema } from "effect";
-import { LiveActivityHostSnapshot } from "@synara/contracts";
+import { LiveActivityHostSnapshot } from "@ramspace/contracts";
 import { liveActivityContent } from "./presentation";
 
 const startedAt = 1_790_000_000;
@@ -18,15 +18,15 @@ describe("ActivityKit recovery wire", () => {
         runningConversations: [
           {
             id: "original-watch",
-            title: "Synara task",
-            detail: "Synara",
+            title: "Ramspace task",
+            detail: "Ramspace",
             state: "Usage limit",
             usageLimitResetAt: 811696400,
           },
           {
             id: "resuming-watch",
-            title: "Synara task",
-            detail: "Synara",
+            title: "Ramspace task",
+            detail: "Ramspace",
             state: "Resuming on computer",
           },
         ],

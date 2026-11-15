@@ -7,7 +7,7 @@ import { executionKey, readExecutionContext } from "./hosts/executionContext";
 
 import { awaitIdbRequest, openIndexedDbDatabase, waitForIdbTransaction } from "./indexedDb";
 
-const DATABASE_NAME = "synara-composer-images";
+const DATABASE_NAME = "ramspace-composer-images";
 const DATABASE_VERSION = 1;
 const IMAGE_STORE_NAME = "images";
 const ORPHANED_BLOB_MIN_AGE_MS = 60 * 60 * 1000;

@@ -4,7 +4,7 @@
 // Exports: useCodeEditorSaveKeyDownHandler
 
 import { useQuery } from "@tanstack/react-query";
-import type { ResolvedKeybindingsConfig } from "@synara/contracts";
+import type { ResolvedKeybindingsConfig } from "@ramspace/contracts";
 import { useCallback, useRef, type KeyboardEvent } from "react";
 
 import { isBrowserSaveChord } from "~/hooks/useWorkspaceFileEditorShortcuts";

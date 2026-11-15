@@ -1,4 +1,4 @@
-import { RemotePairingDevice, RemoteTrustScope } from "@synara/contracts";
+import { RemotePairingDevice, RemoteTrustScope } from "@ramspace/contracts";
 import { Effect, Schema } from "effect";
 import type { SqlClient } from "effect/unstable/sql/SqlClient";
 import { toPersistenceSqlError } from "../Errors";

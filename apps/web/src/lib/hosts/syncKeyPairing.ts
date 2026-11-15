@@ -2,7 +2,7 @@
 // Purpose: Encode the public pairing request for copy/paste and normalize its verification code.
 // Layer: Web remote-access feature logic
 
-import { SyncKeyPairingRequest } from "@synara/contracts";
+import { SyncKeyPairingRequest } from "@ramspace/contracts";
 import { Schema } from "effect";
 
 import { normalizeUnambiguousCode } from "./enrollment";
@@ -70,7 +70,7 @@ export const SYNC_KEY_PAIRING_INITIAL_STATE: Extract<
 export const SYNC_KEY_PAIRING_BURNED_WARNING =
   "Pairing was cancelled. A persistent mismatch can mean the request did not come from the device you expect. Start again on both devices.";
 
-const PAIRING_REQUEST_PREFIX = "synara-sync-v1:";
+const PAIRING_REQUEST_PREFIX = "ramspace-sync-v1:";
 
 export function normalizeSyncKeyPairingCode(raw: string): string {
   return normalizeUnambiguousCode(raw, SYNC_KEY_PAIRING_CODE_LENGTH);

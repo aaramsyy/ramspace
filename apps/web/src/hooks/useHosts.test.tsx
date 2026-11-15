@@ -4,7 +4,7 @@
 //          is account-wide.
 // Layer: Web remote-access feature tests.
 
-import type { AccountDevice, AccountHost, EnvironmentId, NativeApi } from "@synara/contracts";
+import type { AccountDevice, AccountHost, EnvironmentId, NativeApi } from "@ramspace/contracts";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import type { ReactNode } from "react";
 import { renderToStaticMarkup } from "react-dom/server";

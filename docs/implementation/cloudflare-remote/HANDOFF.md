@@ -2,7 +2,7 @@
 
 ## Delivered — Remote .29 and TestFlight 0.1 (153) — 2026-10-23
 
-- Published [Synara Remote 1.0.6-remote.29](https://github.com/Emanuele-web04/synara/releases/tag/v1.0.6-remote.29)
+- Published [Ramspace Remote 1.0.6-remote.29](https://github.com/aaramsyy/ramspace/releases/tag/v1.0.6-remote.29)
   for Mac Apple Silicon, Windows x64 and Linux x64. The immutable release source is
   `b975d335426befde70be2c1c10c0a5df9fadc3e5`. All **11 public assets**, three Remote
   update feeds and platform provenance records were checked against that source,
@@ -18,7 +18,7 @@
   failed outcomes cannot be reopened by ordinary late events.
 - Verification: **66 selected browser integration cases**, **352 native Core tests
   / 38 suites** and **87 wire-contract checks** passed. The
-  [exact-tag release CI](https://github.com/Emanuele-web04/synara/actions/runs/39981445955)
+  [exact-tag release CI](https://github.com/aaramsyy/ramspace/actions/runs/39981445955)
   finished green on attempt 2, including quality, the complete server suite and
   packaged startup on all three desktop platforms. The earlier three local test
   failures were repaired in tests only; both affected files pass **350 tests**,
@@ -132,7 +132,7 @@
 
 ## Remote .14 e stato TestFlight — 16 ottobre 2026
 
-- Pubblicata [Remote 1.0.6-remote.14](https://github.com/Emanuele-web04/synara/releases/tag/v1.0.6-remote.14),
+- Pubblicata [Remote 1.0.6-remote.14](https://github.com/aaramsyy/ramspace/releases/tag/v1.0.6-remote.14),
   commit `55ded6c1543a98679f8ac503c447d19cfb3906e9`: Mac Apple Silicon,
   Windows x64 e Linux x64. CI completa verde, hash/provenienza dei download e
   firma/notarizzazione Mac verificati. Windows usa la policy unsigned della sola
@@ -291,7 +291,7 @@ computer, i frame remoti, il pairing e la lineage delle migrazioni 131–136.
 La patch Effect combina la gestione errori NodeSink di main con il cleanup
 NodeRuntime già presente nel branch; lockfile aggiornato dalla reinstallazione.
 
-- Tema Synara aggiornato con superfici e accenti Light/Dark di main. Il frame
+- Tema Ramspace aggiornato con superfici e accenti Light/Dark di main. Il frame
   remoto continua a usare la presentazione del controller e non mostra onboarding.
 - Create project unisce selezione computer/nome e cartelle aggiuntive di main:
   trasmette `additionalFolders` anche al proprietario remoto, mantiene il campo
@@ -451,21 +451,21 @@ confini dello scope, pending/revoked, disconnect e forget. Suite completa:
 16.252 test passati, 251 saltati, 11/11 task riusciti. Build CLI/web/contratti
 riuscita su entrambi i Mac.
 
-MacBook: patch applicata alla vera Synara (Dev), account e pairing conservati;
+MacBook: patch applicata alla vera Ramspace (Dev), account e pairing conservati;
 RPC espone solo il Mini corrente e la UI mostra una sola riga anche offline.
 Durante l'auto-rebuild del desktop Mini il backend si era fermato e il tunnel
 rispondeva 530. Dopo lo sblocco, l'avviso ha identificato un digest delle
 migrazioni incorporato dal vecchio watcher non allineato al checkout: il
 controllo ha fermato l'avvio **prima di aprire il database**. Arrestato il vecchio
 runner, eseguito `bun run build:desktop` (4/4 task riusciti) e riavviato
-`bun run dev:desktop --home-dir ./.synara/phone-playground`, dopo dry-run e
+`bun run dev:desktop --home-dir ./.ramspace/phone-playground`, dopo dry-run e
 verifica delle porte. Home, account e pairing conservati, nessun bypass o reset.
 
 Verifica conclusa nelle app native: Mini startupReady con proiezioni sane;
 MacBook health remoto 200, un solo Mini connesso via Cloudflare e Open apre
 la chat demo con la risposta storica `MACBOOK TO MINI OK`. Nessun nuovo turno
 provider né login. App lasciate aperte. Screenshot MacBook nella cartella
-`~/.local/share/synara-tests/remote-macbook-mvp-20261007/operator/`:
+`~/.local/share/ramspace-tests/remote-macbook-mvp-20261007/operator/`:
 `paired-hosts-list-offline.jpg` e `paired-hosts-list-connected.jpg`.
 
 ## Account nella rail — 7 ottobre 2026
@@ -480,11 +480,11 @@ tipografia, fmt/lint/typecheck; nessun logout delle sessioni reali per provarlo.
 
 ## App desktop MacBook — 7 ottobre 2026
 
-- Avviata la vera app Electron Synara (Dev) dal checkout isolato MacBook,
+- Avviata la vera app Electron Ramspace (Dev) dal checkout isolato MacBook,
   con asset compilati e backend gestito dal desktop. Home di test conservata
   e copiata in un backup privato prima del passaggio; Stable e Canary intatte.
 - Trovato un difetto non visibile nel test web: la negoziazione del bridge
-  remoto rispondeva 200 senza header CORS, impedendo al renderer `synara://app`
+  remoto rispondeva 200 senza header CORS, impedendo al renderer `ramspace://app`
   di leggerla. La route remota ora riflette soltanto le origin già ammesse
   dalla policy esistente, come la negoziazione locale. Autenticazione e ruolo
   owner restano obbligatori secondo la configurazione; nessuna wildcard.
@@ -498,16 +498,16 @@ tipografia, fmt/lint/typecheck; nessun logout delle sessioni reali per provarlo.
 
 ## Verifica live aggiuntiva — 7 ottobre 2026
 
-- Mini: l'app Dev corrente conserva la home `.synara/phone-playground/dev`;
+- Mini: l'app Dev corrente conserva la home `.ramspace/phone-playground/dev`;
   Connections mostra una sessione iOS attiva via Cloudflare. Non è la vecchia
   istanza temporanea sulla porta 4775.
 - Un nuovo turno reale Codex nella chat demo restituisce `MINI MVP CHECK OK`;
   il simulatore iPhone legge la stessa risposta e aggiorna il recap a 3 prompt.
   Nessun telefono fisico usato. La cartella demo vuota è stata inizializzata come
-  repository Git indipendente: prima i checkpoint risalivano alla repo Synara
-  esterna e fallivano sul percorso ignorato `.synara`. Il nuovo turno non produce
+  repository Git indipendente: prima i checkpoint risalivano alla repo Ramspace
+  esterna e fallivano sul percorso ignorato `.ramspace`. Il nuovo turno non produce
   quell'errore. È una correzione dell'ambiente demo, non del codice distribuito.
-- MacBook: vecchio checkout e home `/private/tmp/synara-remote-macbook-20260929`
+- MacBook: vecchio checkout e home `/private/tmp/ramspace-remote-macbook-20260929`
   assenti; nessun listener su 4776. I vecchi endpoint restituiscono 530 e non
   rappresentano il Mini corrente. Stable e Canary lasciate intatte.
 - Ricreato un checkout isolato sul MacBook al commit `89b261503`, con home
@@ -516,8 +516,8 @@ tipografia, fmt/lint/typecheck; nessun logout delle sessioni reali per provarlo.
   default puntava al vecchio servizio account. Login Google e lettura directory
   riusciti; sessione conservata dopo riavvio del server isolato. Il Mini corrente
   risponde 200 con TLS verificato e DNS normale. Checkout MacBook:
-  `/Users/emanueledipietro/.codex/worktrees/remote-macbook-mvp-20261007/synara`;
-  home `/Users/emanueledipietro/.local/share/synara-tests/remote-macbook-mvp-20261007`.
+  `/Users/aaramsyy/.codex/worktrees/remote-macbook-mvp-20261007/ramspace`;
+  home `/Users/aaramsyy/.local/share/ramspace-tests/remote-macbook-mvp-20261007`.
 - Nuovo pairing MacBook autorizzato e completato con la nuova identità della
   home isolata: il Mini mostra il MacBook fra i dispositivi autorizzati.
   Da Dia sul MacBook il workspace remoto si apre via Cloudflare; un turno reale
@@ -548,7 +548,7 @@ Sostituisce le vecchie note che indicavano Inbox cloud non pubblicata.
   nel journal Drizzle. `inbox_recaps` appartiene al ruolo account dedicato,
   RLS attiva, nessun SELECT per `anon`/`authenticated`; tabelle sponsor intatte.
 - API Cloudflare: Worker `b5c6be3a-1d49-48f6-9fc6-41bb58e38cf7`, immagine
-  `synara-account-api-trial:mvp-20261007`, digest registry
+  `ramspace-account-api-trial:mvp-20261007`, digest registry
   `sha256:2fe75916125ebd4adf20a7ab92c124cff2913865922c053378688a9d245d85f1`.
   Health/instance 200, Inbox senza sessione 401 (prima 404), profilo API/pagina 200.
   Binding e segreti precedenti conservati. Il rollback del container è il digest
@@ -591,11 +591,11 @@ Nessun passaggio a produzione WorkOS, pagamento, merge o TestFlight.
 Dashboard, Worker, D1 migrations, legacy forwarder and tests now live in
 [`apps/analytics`](../../../apps/analytics/README.md) on this branch/PR. The
 separate repository PR #3 is historical; it is no longer a release dependency.
-Source imported from `synara-beta-diagnostics` commit `c2fe29c`, including all
+Source imported from `ramspace-beta-diagnostics` commit `c2fe29c`, including all
 four Product sections. Existing Cloudflare resources and client URLs are retained.
 Use the workspace commands for future builds and deployments.
 
-Deploy dalla repo Synara (`67f9dec`) verificato: versione Worker
+Deploy dalla repo Ramspace (`67f9dec`) verificato: versione Worker
 `29cd18af-d988-4d93-9a71-d31b91d0f0e6`, `/healthz` 200, API senza login 401,
 dashboard autenticata funzionante. PR backend #3 chiusa come sostituita.
 Suite finale a concorrenza 2: **16.102 passati, 251 saltati, 11 package riusciti**;
@@ -644,13 +644,13 @@ sia dalle diagnostiche crash Beta sia dalle statistiche account/Inbox. Dettagli 
 Riutilizzati SettingsRow/SettingsSection/Switch, trasporto esistente e componenti nativi;
 nuovi sender separati perché la diagnostica Beta non può diventare la raccolta Stable.
 
-Backend nella [PR draft #3](https://github.com/Emanuele-web04/synara-beta-diagnostics/pull/3),
+Backend nella [PR draft #3](https://github.com/aaramsyy/ramspace-beta-diagnostics/pull/3),
 commit `fd9b3ce` con correzione di compatibilità `7f14dd0`: endpoint `/v1/product-events`, tabella D1 separata, dashboard Product
 privata, deduplica UUID e cleanup limitato dei dati oltre 30 giorni. Allineati account
 e ID D1 ai binding della versione live `cb10fe76`; conservata la verifica del segreto
 per l'IP inoltrato sulle route diagnostiche legacy. Il confronto remoto conferma che
 era pendente soltanto `0005_product_events.sql`. **Deploy completato con autorizzazione il 5 ottobre 2026**:
-migrazione applicata in Synara Orgs e Worker live alla versione
+migrazione applicata in Ramspace Orgs e Worker live alla versione
 `bd556f7d-088e-4d4c-adbf-b0d02d4ad4e3` (4 ottobre, 23:48 UTC).
 Verificati health 200, dashboard API senza sessione 401, JSON malformato 400,
 content type errato 415; un evento sintetico accettato, retry duplicato accettato zero,
@@ -691,11 +691,11 @@ La base aggiornata comprende contesto diagnostico limitato e campioni memoria, c
 
 Passati `bun run fmt:check`, `bun run lint` (896 warning, zero errori), `bun run typecheck` e 12 test browser su sidebar, overlay e transcript. La suite workspace ha eseguito **16.007 test passati, 251 saltati e 2 falliti**: timeout nella selezione PR di GitManager e mancata icona nella fixture Windows Store. Rieseguiti separatamente i due file, **64 test passati senza modifiche a codice o assertion**. Questo non trasforma la prima esecuzione completa in una run verde; resta una segnalazione di instabilità sotto suite. Il primo tentativo in sandbox era stato bloccato sulle porte locali e non è evidenza di regressione dell'app. Nessun nuovo test live tra Mac, build mobile o deploy in questo passaggio.
 
-Tre subagent GPT-6 Luna High hanno confrontato il progetto upstream, la raccolta Synara e l'integrazione. Il confronto usa un checkout fresco del progetto upstream e del Worker Cloudflare. Risultato e piano implementativo in [PRODUCT-ANALYTICS-AUDIT.md](PRODUCT-ANALYTICS-AUDIT.md): scelta richiesta **Cloudflare, Beta e Stable, controllo nelle impostazioni**. Product analytics, consenso, dashboard dedicata ed eventi nativi **non sono ancora implementati**; nessun servizio PostHog aggiunto. Lo stato dei deploy account/Inbox non cambia.
+Tre subagent GPT-6 Luna High hanno confrontato il progetto upstream, la raccolta Ramspace e l'integrazione. Il confronto usa un checkout fresco del progetto upstream e del Worker Cloudflare. Risultato e piano implementativo in [PRODUCT-ANALYTICS-AUDIT.md](PRODUCT-ANALYTICS-AUDIT.md): scelta richiesta **Cloudflare, Beta e Stable, controllo nelle impostazioni**. Product analytics, consenso, dashboard dedicata ed eventi nativi **non sono ancora implementati**; nessun servizio PostHog aggiunto. Lo stato dei deploy account/Inbox non cambia.
 
 ## Integrazione desktop e mobile — 4 ottobre 2026
 
-Base desktop integrata: `212dd3bc8f0b19ad62033b32f7ed9ae1a1dbf85e`, dopo 271 commit di main dal checkpoint `4f204aef`. È un merge che conserva i commit e le PR condivise, senza riscrivere la cronologia. Backup pre-integrazione: `codex/remote-before-main-20261004` (`b46c3f6`). Continuare sulle PR esistenti: [desktop/API #1412](https://github.com/Emanuele-web04/synara/pull/1412), [iPhone #1](https://github.com/Emanuele-web04/SynaraIOS/pull/1) e [iPad #2](https://github.com/Emanuele-web04/SynaraIOS/pull/2). La PR iPad rimane basata sul branch iPhone. Questo aggiornamento non è un merge delle PR né un rilascio.
+Base desktop integrata: `212dd3bc8f0b19ad62033b32f7ed9ae1a1dbf85e`, dopo 271 commit di main dal checkpoint `4f204aef`. È un merge che conserva i commit e le PR condivise, senza riscrivere la cronologia. Backup pre-integrazione: `codex/remote-before-main-20261004` (`b46c3f6`). Continuare sulle PR esistenti: [desktop/API #1412](https://github.com/aaramsyy/ramspace/pull/1412), [iPhone #1](https://github.com/aaramsyy/RamspaceIOS/pull/1) e [iPad #2](https://github.com/aaramsyy/RamspaceIOS/pull/2). La PR iPad rimane basata sul branch iPhone. Questo aggiornamento non è un merge delle PR né un rilascio.
 
 Il controllo ha coperto il delta di main, i contratti RPC e gli incroci con connessioni/account/Inbox, oltre ai conflitti testuali:
 
@@ -709,19 +709,19 @@ Il controllo ha coperto il delta di main, i contratti RPC e gli incroci con conn
 | Mobile: dati e recovery | Snooze e provenienza delle chat importate, paginazione della cronologia importata, stato del lavoro in background, avanzamento della coda Hub e quote per provider instance. Gli invii con esito incerto verificano la ricevuta originale quando il server negozia la capability, senza duplicare il turno. |
 | Mobile: viste           | Nuove icone desktop tramite il resolver condiviso; Connections conserva il globo Central. Tasks con stati/board adattiva, Send as Goal e Tasks del giorno in Inbox. Controlli ed azioni mantengono il computer proprietario.                                                                                |
 
-Riutilizzati `SynaraIcon`, picker modello/account, trasporto, outbox e viste native esistenti. Le nuove strutture mobili per pagine importate e lifecycle delle attività rappresentano contratti senza un proprietario equivalente nel codice precedente. Nessun framework alternativo di sincronizzazione.
+Riutilizzati `RamspaceIcon`, picker modello/account, trasporto, outbox e viste native esistenti. Le nuove strutture mobili per pagine importate e lifecycle delle attività rappresentano contratti senza un proprietario equivalente nel codice precedente. Nessun framework alternativo di sincronizzazione.
 
 ### Verifiche di questo checkpoint
 
 Formato, lint (warning presenti, zero errori), typecheck, lineage di 91 release e controllo statico Windows passati. Corretto anche il gate CI di branding: record upstream rinominato, formulazioni neutrali e una sola attribuzione esatta consentita nel suo documento; 13 test del guard passati, inclusa la nuova regressione riprodotta prima del fix. Passati 26 test browser su cinque superfici: Activity, creazione progetto, Inbox, storico Inbox e task Inbox. I due nuovi test per importazioni tardive falliscono sul codice precedente e passano dopo il fix; passati 39 test mirati di reporter e policy. Avvio reale su loopback con home temporanea: health, startup, subscription e proiezioni sane; server arrestato e porta liberata. Corretti i due harness browser rimasti obsoleti: il mock SignIn conserva gli export correnti e il test della Space seleziona il campo Name esatto, distinto da Project name. Passati tutti gli 8 scenari browser interessati; nessuna assertion rimossa.
 
-Suite workspace finale: **15,999 test passati, 251 saltati, 10 package riusciti**. I salti comprendono 200 test API PostgreSQL senza database di test configurato. Build Debug complete e avvio riusciti su simulatori iPhone 18 Pro e iPad Pro 11, iOS 27; 197 test SwiftPM e 79 fixture condivise contro il desktop passati. Le verifiche visive usano due computer in cache offline, non un nuovo test live. Per inventario mobile, screenshot e limiti vedere il [recap mobile](https://github.com/Emanuele-web04/SynaraIOS/blob/codex/ios-remote-connections/Docs/REMOTE-CONNECTIONS-HANDOFF.md).
+Suite workspace finale: **15,999 test passati, 251 saltati, 10 package riusciti**. I salti comprendono 200 test API PostgreSQL senza database di test configurato. Build Debug complete e avvio riusciti su simulatori iPhone 18 Pro e iPad Pro 11, iOS 27; 197 test SwiftPM e 79 fixture condivise contro il desktop passati. Le verifiche visive usano due computer in cache offline, non un nuovo test live. Per inventario mobile, screenshot e limiti vedere il [recap mobile](https://github.com/aaramsyy/RamspaceIOS/blob/codex/ios-remote-connections/Docs/REMOTE-CONNECTIONS-HANDOFF.md).
 
 ### Limiti e ripartenza
 
 - Le prove di questo giro non ripetono il pairing live Mac ↔ Mac o iPhone ↔ Mac, né un rilascio firmato Windows/Linux/TestFlight. Il controllo Windows è statico.
 - I test API PostgreSQL sono esclusi dalla suite di questo giro perché non è configurato un database di test isolato. Non utilizzare Supabase di produzione per sostituirlo. Le precedenti prove PostgreSQL sotto sono storiche.
-- **Saved Inbox richiede ancora il deploy autorizzato** delle migrazioni API `0016_private_inbox_recaps.sql` e `0017_inbox_automatic_sync.sql` e dell'API. Nessuna operazione di produzione eseguita qui. Persistenza: Supabase/PostgreSQL attraverso l'API Cloudflare; non Cloudflare Analytics. Il sync dei totali del profilo conserva `SYNARA_ACCOUNT_PROFILE_SYNC=1`.
+- **Saved Inbox richiede ancora il deploy autorizzato** delle migrazioni API `0016_private_inbox_recaps.sql` e `0017_inbox_automatic_sync.sql` e dell'API. Nessuna operazione di produzione eseguita qui. Persistenza: Supabase/PostgreSQL attraverso l'API Cloudflare; non Cloudflare Analytics. Il sync dei totali del profilo conserva `RAMSPACE_ACCOUNT_PROFILE_SYNC=1`.
 - L'allineamento mobile non promette tutte le funzioni desktop: handoff provider nella stessa chat, gestione amministrativa Hub, interazioni avanzate Tasks e PR auto-fix UI restano esplicitamente elencati nel recap mobile. Menu Electron, shortcut e audio/window chrome sono specifici del desktop.
 
 ## Checkpoint storici
@@ -734,7 +734,7 @@ Aggiunto lo storico privato dei recap, distinto dal profilo pubblico. Desktop e 
 
 L’API `/api/v1/inbox/recaps` consente salvataggio idempotente, lettura paginata, dettaglio ed eliminazione. Il proprietario è l’utente nel workspace autenticato; la rimozione del computer non elimina i recap. Membership verificata, risposte private/no-store, payload limitato e RLS senza accesso diretto per `anon`/`authenticated`. Migrazioni PostgreSQL `0016_private_inbox_recaps.sql` e `0017_inbox_automatic_sync.sql`; nessuna modifica ai database di produzione durante lo sviluppo.
 
-Il salvataggio avviene in **Supabase/PostgreSQL**, non in Cloudflare Analytics. Il servizio API gira su Cloudflare. `/api/v1/inbox/recaps/sync` accetta solo il proprietario del computer; il worker verifica anche l’identità dopo il rinnovo della sessione. Nessuna sincronizzazione su Stable o da sessioni disconnesse. Dopo un errore ritenta senza avanzare il cursore. Eliminare un recap cancella payload e nome del computer e conserva soltanto la chiave account/computer/giorno: la sincronizzazione non lo ricrea; un Save esplicito può ripristinarlo. I cambi di account/authority sono verificati prima di usare il token. Il sync dei totali del profilo rimane separato e conserva il gate `SYNARA_ACCOUNT_PROFILE_SYNC=1`.
+Il salvataggio avviene in **Supabase/PostgreSQL**, non in Cloudflare Analytics. Il servizio API gira su Cloudflare. `/api/v1/inbox/recaps/sync` accetta solo il proprietario del computer; il worker verifica anche l’identità dopo il rinnovo della sessione. Nessuna sincronizzazione su Stable o da sessioni disconnesse. Dopo un errore ritenta senza avanzare il cursore. Eliminare un recap cancella payload e nome del computer e conserva soltanto la chiave account/computer/giorno: la sincronizzazione non lo ricrea; un Save esplicito può ripristinarlo. I cambi di account/authority sono verificati prima di usare il token. Il sync dei totali del profilo rimane separato e conserva il gate `RAMSPACE_ACCOUNT_PROFILE_SYNC=1`.
 
 Su iPhone/iPad: Inbox nativa con metriche e fasce orarie, cronologia account leggibile senza computer online, Hubs/Tasks aggiornati mentre visibili e Tasks → Start with Agent tramite il picker modelli esistente. Il primo turno passa dalla coda persistente soltanto dopo il collegamento condizionale della task. Corretto anche un crash mobile di reconnect: le copie in cache mantengono gli ID qualificati per computer quando il cursore viene invalidato.
 
@@ -764,7 +764,7 @@ Per riprendere: usare il branch desktop aggiornato e il recap iOS; non riapplica
 
 ## Aggiornamento account/profile — 30 settembre 2026
 
-Dopo il rename Connections (`fdfde17` desktop, `e9aa0b6` iOS), corretto il fallback dell'identità: finché manca un profilo Synara, la pagina Profile usa nome e foto del login, come il menu account. Un profilo salvato continua ad avere precedenza, anche quando la foto è stata esplicitamente rimossa. Gli edit prima dell'onboarding non vengono più salvati silenziosamente nell'identità locale. Il feature gate esistente rimane invariato.
+Dopo il rename Connections (`fdfde17` desktop, `e9aa0b6` iOS), corretto il fallback dell'identità: finché manca un profilo Ramspace, la pagina Profile usa nome e foto del login, come il menu account. Un profilo salvato continua ad avere precedenza, anche quando la foto è stata esplicitamente rimossa. Gli edit prima dell'onboarding non vengono più salvati silenziosamente nell'identità locale. Il feature gate esistente rimane invariato.
 
 iOS legge `/me` con la sessione autenticata e mostra la stessa precedenza nella sezione Account di Connections; aggiorna all'apertura, al ritorno in foreground e con pull-to-refresh. La presentazione rimane separata dallo stato di autorizzazione. Nessuna modifica ai dati salvati o deploy dell'API; serve una build client aggiornata. Una foto può apparire soltanto se il provider la fornisce o l'utente l'ha caricata.
 
@@ -772,14 +772,14 @@ Verifica desktop: regressione riprodotta prima del fix, poi 26 test pertinenti p
 
 ## Dove si trova il lavoro e cosa è pubblicato
 
-| Superficie               | Repository / branch                                        | Stato verificato prima di questo recap                                                                                                                    |
-| ------------------------ | ---------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Desktop, API e trasporto | `Emanuele-web04/synara`, `codex/cloudflare-remote-mvp`     | HEAD locale e branch remota entrambi a `b5f8837adb3a8c938d3f16e2d4882aa1b8a1c7ce`; nessuna PR trovata per questa head                                     |
-| iPhone                   | `Emanuele-web04/SynaraIOS`, `codex/ios-remote-connections` | [PR #1](https://github.com/Emanuele-web04/SynaraIOS/pull/1), aperta, codice pubblicato fino a `4b855e68faadb99396452899d53af1f9d0ced3b3`; worktree pulita |
+| Superficie               | Repository / branch                                    | Stato verificato prima di questo recap                                                                                                                |
+| ------------------------ | ------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Desktop, API e trasporto | `aaramsyy/ramspace`, `codex/cloudflare-remote-mvp`     | HEAD locale e branch remota entrambi a `b5f8837adb3a8c938d3f16e2d4882aa1b8a1c7ce`; nessuna PR trovata per questa head                                 |
+| iPhone                   | `aaramsyy/RamspaceIOS`, `codex/ios-remote-connections` | [PR #1](https://github.com/aaramsyy/RamspaceIOS/pull/1), aperta, codice pubblicato fino a `4b855e68faadb99396452899d53af1f9d0ced3b3`; worktree pulita |
 
-Questo recap viene pubblicato con un commit di sola documentazione dopo quei checkpoint. La sua pubblicazione **non include né certifica** le modifiche desktop non committate descritte sotto. La branch desktop pubblicata è consultabile [qui](https://github.com/Emanuele-web04/synara/tree/codex/cloudflare-remote-mvp).
+Questo recap viene pubblicato con un commit di sola documentazione dopo quei checkpoint. La sua pubblicazione **non include né certifica** le modifiche desktop non committate descritte sotto. La branch desktop pubblicata è consultabile [qui](https://github.com/aaramsyy/ramspace/tree/codex/cloudflare-remote-mvp).
 
-Il worktree desktop è `.codex/worktrees/a816/synara`; quello iOS è `Developer/SynaraIOS-remote-connections` sul Mac Mini. Il [recap iOS](https://github.com/Emanuele-web04/SynaraIOS/blob/codex/ios-remote-connections/Docs/REMOTE-CONNECTIONS-HANDOFF.md) documenta il lato telefono. Non usare la repo beta-diagnostics per riprendere questa attività.
+Il worktree desktop è `.codex/worktrees/a816/ramspace`; quello iOS è `Developer/RamspaceIOS-remote-connections` sul Mac Mini. Il [recap iOS](https://github.com/aaramsyy/RamspaceIOS/blob/codex/ios-remote-connections/Docs/REMOTE-CONNECTIONS-HANDOFF.md) documenta il lato telefono. Non usare la repo beta-diagnostics per riprendere questa attività.
 
 ## Storico del 30 settembre: lavoro desktop allora locale
 
@@ -805,7 +805,7 @@ Il percorso gestito usa Cloudflare Tunnel per raggiungere il computer, con auten
 
 L'API account gestisce identità/directory/autorizzazione; non esegue i task al posto dei Mac. I provider e i file restano sul computer scelto. La configurazione concordata è API/profili su Cloudflare e PostgreSQL su Supabase. Per questo trial l'infrastruttura è già configurata: non occorre ricrearla per riprendere le prove. Segreti, token e chiavi restano fuori dalla repo.
 
-Gli strumenti interni Synara MCP hanno instradamento remoto tramite un `environmentId` esplicito e la connessione già approvata. Il default locale e i controlli di autorizzazione rimangono distinti dai grant delle integrazioni MCP esterne. Cloudflare e SSH sono percorsi differenti: provare l'uno non certifica l'altro. Le regole server Beta/Stable rimangono autorevoli; non disattivarle per far riuscire un test.
+Gli strumenti interni Ramspace MCP hanno instradamento remoto tramite un `environmentId` esplicito e la connessione già approvata. Il default locale e i controlli di autorizzazione rimangono distinti dai grant delle integrazioni MCP esterne. Cloudflare e SSH sono percorsi differenti: provare l'uno non certifica l'altro. Le regole server Beta/Stable rimangono autorevoli; non disattivarle per far riuscire un test.
 
 ## Cosa è stato effettivamente verificato
 
@@ -839,7 +839,7 @@ Non è stato identificato un blocco fondamentale assente nel percorso normale pa
 2. Verificare eventuali nuovi delta desktop rispetto al commit d’integrazione. UI aggiuntiva in pausa; nessun altro ridisegno richiesto.
 3. Seguire AGENTS: Node/Bun da `.mise.toml`; `bun run fmt:check`, `bun run lint`, `bun run typecheck`, test Vitest pertinenti tramite `bun run test`. Le modifiche attuali attraversano più package/lifecycle: serve anche la suite più ampia. Eseguire `bun run windows-runtime:check` se si toccano confini process/platform e `bun run migrations:check` se si cambiano migrazioni. Non usare database di produzione per i test.
 4. Committare e pushare solo dopo aver registrato risultati e limiti del delta esatto. Al momento del controllo iniziale questa branch non aveva una PR: crearla quando il contenuto da revisionare è pronto, senza confonderla con la PR iOS #1.
-5. Riallineare i due runtime isolati a commit noti, conservando le rispettive home e pairing. Verificare porte IPv4/IPv6 prima di avviarli; dry-run del dev runner prima del launch. Le ultime home di prova erano `/private/tmp/synara-remote-mini` (porta 4775) e `/private/tmp/synara-remote-macbook-20260929` (4776 sul MacBook); sono riferimenti storici, non una garanzia che i processi siano ancora in esecuzione.
+5. Riallineare i due runtime isolati a commit noti, conservando le rispettive home e pairing. Verificare porte IPv4/IPv6 prima di avviarli; dry-run del dev runner prima del launch. Le ultime home di prova erano `/private/tmp/ramspace-remote-mini` (porta 4775) e `/private/tmp/ramspace-remote-macbook-20260929` (4776 sul MacBook); sono riferimenti storici, non una garanzia che i processi siano ancora in esecuzione.
 6. Eseguire i casi 1–3 sopra dal simulatore, poi passare al telefono fisico. Registrare commit di ogni runtime/client, passaggi, esito, artefatti e durata. Nuova identità di dispositivo richiede la sua specifica approvazione; non copiare chiavi tra dispositivi.
 7. Correggere difetti concreti emersi; niente riscritture preventive o nuovi strati di trasporto se non necessari. Aggiornare entrambi i recap dopo ciascuna prova significativa.
 
@@ -861,14 +861,14 @@ La connessione Cloudflare deve funzionare anche su rete cellulare; la stessa LAN
 
 L'iPhone conservava profili legacy LAN/Tailscale, non un abbinamento Cloudflare verificato per l'istanza demo. Le correzioni della UI offline non ripristinano quell'autorizzazione e non costituiscono una prova di accesso remoto.
 
-L'istanza demo è stata riavviata con API account e accesso remoto configurati, conservando la stessa home e una copia SQLite privata precedente al collegamento. Health locale HTTP 200 verificato. Il login Google integrato in Synara ha registrato l'istanza corrente e la creazione del codice di pairing ha inizializzato la sua identità TLS. Cloudflare segnala il nuovo tunnel `healthy`, con quattro connessioni; `/health` pubblico risponde HTTP 200 e `/api/v1/instance` pubblico HTTP 404, senza override DNS. Restano da completare il pairing della specifica chiave dell'iPhone e una lettura reale attraverso il tunnel. Non qualificare la connessione cellulare prima di questa prova e non conservare identità di una demo durevole in una home temporanea.
+L'istanza demo è stata riavviata con API account e accesso remoto configurati, conservando la stessa home e una copia SQLite privata precedente al collegamento. Health locale HTTP 200 verificato. Il login Google integrato in Ramspace ha registrato l'istanza corrente e la creazione del codice di pairing ha inizializzato la sua identità TLS. Cloudflare segnala il nuovo tunnel `healthy`, con quattro connessioni; `/health` pubblico risponde HTTP 200 e `/api/v1/instance` pubblico HTTP 404, senza override DNS. Restano da completare il pairing della specifica chiave dell'iPhone e una lettura reale attraverso il tunnel. Non qualificare la connessione cellulare prima di questa prova e non conservare identità di una demo durevole in una home temporanea.
 
 Il percorso CLI `auth --device-code` restituisce una verification URI `/link`, ma il deployment attuale vi serve soltanto il messaggio generico dell'API, senza form di approvazione. Il codice scaduto non ha collegato alcun host; per questa ripresa è stato usato il login integrato, non una modifica manuale delle credenziali. Il flusso headless browser non è quindi qualificato su questo deployment.
 
 ### October 6 — QR-first mobile pairing
 
-- Connections now renders an offline-generated QR alongside the short manual code. The `synara://connect` fragment contains version 1, the configured HTTPS account origin, invitation code, pinned root fingerprint, and expiry. It contains no account token. Expiry/cancel hides the QR; owner approval remains mandatory.
-- SynaraIOS accepts the remote invitation in its existing scanner, paste entry, and system-camera deep-link route. It retains the invitation through first sign-in, reuses an existing account session for that authority, selects a sole workspace automatically, and checks the returned computer fingerprint against the scanned one.
+- Connections now renders an offline-generated QR alongside the short manual code. The `ramspace://connect` fragment contains version 1, the configured HTTPS account origin, invitation code, pinned root fingerprint, and expiry. It contains no account token. Expiry/cancel hides the QR; owner approval remains mandatory.
+- RamspaceIOS accepts the remote invitation in its existing scanner, paste entry, and system-camera deep-link route. It retains the invitation through first sign-in, reuses an existing account session for that authority, selects a sole workspace automatically, and checks the returned computer fingerprint against the scanned one.
 - The signed-out desktop Connections panel now opens the existing account sign-in dialog. The mobile entry starts with Scan QR Code; manual server/code entry is secondary.
 - Verification: desktop formatting/lint/typecheck, four RemoteControls browser tests, and two UI typography tests pass. A desktop-generated invitation was parsed by the actual Swift parser; expired, duplicate-field, plaintext-authority, embedded-credential, and bad-fingerprint variants were rejected. Signed iPhone and simulator builds succeeded. Simulator deep-link delivery opened the new account screen with the invitation retained. Camera optics, physical-phone login, approval, and remote chat read/write are still unverified for this new flow.
 

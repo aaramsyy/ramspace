@@ -1,9 +1,9 @@
-import type { RemoteResource } from "@synara/contracts";
+import type { RemoteResource } from "@ramspace/contracts";
 import {
   decodeRemoteResourceReference,
   remoteResourceRoute,
   REMOTE_RESOURCE_LOCAL_PREFIX,
-} from "@synara/shared/remoteResources";
+} from "@ramspace/shared/remoteResources";
 import { readExecutionContext, type WindowExecutionContext } from "./hosts/executionContext";
 import { readWorkspaceFrame, type WorkspaceFrameBinding } from "./hosts/workspaceFrame";
 import {

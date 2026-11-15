@@ -1,17 +1,17 @@
 ---
 title: Desktop and updates
-description: Resolve Synara launch, window, architecture, packaged update, and reinstall problems without deleting useful state.
+description: Resolve Ramspace launch, window, architecture, packaged update, and reinstall problems without deleting useful state.
 ---
 
-Treat the desktop application, its local server, and the installed provider runtimes as separate layers. A window problem does not automatically mean your repositories, provider credentials, or Synara workspace data are damaged.
+Treat the desktop application, its local server, and the installed provider runtimes as separate layers. A window problem does not automatically mean your repositories, provider credentials, or Ramspace workspace data are damaged.
 
-## Synara will not launch
+## Ramspace will not launch
 
 Work through these checks in order:
 
 1. Confirm the installer matches your operating system and CPU architecture.
-2. Fully quit any existing Synara process.
-3. Start Synara again from the normal application launcher.
+2. Fully quit any existing Ramspace process.
+3. Start Ramspace again from the normal application launcher.
 4. Restart the operating system if a previous process cannot be terminated cleanly.
 5. Re-download the current installer from the [official download page](/install).
 6. Reinstall over the current application without deleting workspace data.
@@ -21,31 +21,31 @@ AppImage to your CPU (`uname -m`: `x86_64` uses the Intel build, `aarch64` uses 
 executable, and install FUSE 2 if the AppImage cannot mount itself:
 
 ```bash
-chmod +x Synara*.AppImage
+chmod +x Ramspace*.AppImage
 ```
 
 If your distribution has no FUSE 2 package, run the bundle without mounting it:
 
 ```bash
-./Synara*.AppImage --appimage-extract
-./squashfs-root/synara
+./Ramspace*.AppImage --appimage-extract
+./squashfs-root/ramspace
 ```
 
 <Callout type="warn" title="Do not delete data as a first step">
-  Replacing the application bundle and deleting Synara’s local data are different operations. As a
+  Replacing the application bundle and deleting Ramspace’s local data are different operations. As a
   rule, reinstall the application first. Preserve repositories, uncommitted changes, task evidence,
   and any data directory before considering destructive cleanup.
 </Callout>
 
 ## Closing while chats are still running
 
-When a desktop quit would interrupt running or connecting chats, Synara lists those chats before closing.
+When a desktop quit would interrupt running or connecting chats, Ramspace lists those chats before closing.
 
 - Choose **Cancel** to keep the app and current work open.
 - Choose **Quit** to stop the listed work and close.
 - Leave **Resume chats automatically** enabled when eligible chats should receive a continuation turn on the next launch.
 
-Automatic resume is guarded rather than unconditional. Synara skips a remembered chat when it completed, was archived or deleted, already started newer work, or no longer belongs to a live project. If the local server cannot record the resume intent within the bounded quit wait, Synara falls back to interruption and still allows the desktop app to close; do not assume that fallback work will resume automatically.
+Automatic resume is guarded rather than unconditional. Ramspace skips a remembered chat when it completed, was archived or deleted, already started newer work, or no longer belongs to a live project. If the local server cannot record the resume intent within the bounded quit wait, Ramspace falls back to interruption and still allows the desktop app to close; do not assume that fallback work will resume automatically.
 
 The checkbox choice persists for later quits. Review it when a task must not continue without fresh supervision.
 
@@ -54,62 +54,62 @@ The checkbox choice persists for later quits. Review it when a task must not con
 A blank window can come from the renderer, the local server, graphics state, or a process left over from an earlier launch.
 
 1. Wait briefly for initial startup and provider-health probes.
-2. Fully quit Synara rather than only closing the window.
-3. Start it again with no other Synara instance running.
+2. Fully quit Ramspace rather than only closing the window.
+3. Start it again with no other Ramspace instance running.
 4. Disconnect unusual display, proxy, or security software only when you can do so safely and reversibly.
 5. Record whether the window is blank immediately or only after opening a specific project or surface.
-6. Capture the operating system, Synara version, and exact time before restarting again.
+6. Capture the operating system, Ramspace version, and exact time before restarting again.
 
 When only one project or task triggers the problem, report that boundary. It is more useful than “the app is blank.”
 
 ## Windows or Linux title bar looks wrong
 
-Open **Settings → Appearance → Use custom title bar** to switch between Synara’s frameless title bar and the operating system’s title bar. A restart is required because Electron chooses the window frame before the renderer starts; use the offered relaunch action after saving the preference.
+Open **Settings → Appearance → Use custom title bar** to switch between Ramspace’s frameless title bar and the operating system’s title bar. A restart is required because Electron chooses the window frame before the renderer starts; use the offered relaunch action after saving the preference.
 
-The custom title bar is supported only on Windows and Linux. Some Linux window managers integrate better with the system title bar. On Windows, the custom frame keeps Synara’s own minimize, maximize, restore, and close controls.
+The custom title bar is supported only on Windows and Linux. Some Linux window managers integrate better with the system title bar. On Windows, the custom frame keeps Ramspace’s own minimize, maximize, restore, and close controls.
 
 ## The local server does not become ready
 
-Synara’s desktop UI depends on its local application server. Repeated connection or startup errors can result from:
+Ramspace’s desktop UI depends on its local application server. Repeated connection or startup errors can result from:
 
-- Another Synara process using the local runtime state
+- Another Ramspace process using the local runtime state
 - A partially terminated previous launch
 - A blocked local process
 - A damaged or incompatible application installation
 - Security software preventing the packaged server from running
 
-Fully quit every Synara process, then relaunch. Do not expose or forward Synara’s local server ports as a troubleshooting shortcut.
+Fully quit every Ramspace process, then relaunch. Do not expose or forward Ramspace’s local server ports as a troubleshooting shortcut.
 
 ## The packaged update failed
 
 1. Preserve important Git work.
 2. Close active provider turns and terminal processes when practical.
-3. Fully quit Synara.
+3. Fully quit Ramspace.
 4. Start it again and retry the update once.
-5. If the updater still fails, download the newest installer from [trysynara.com/install](/install) or [GitHub Releases](https://github.com/Emanuele-web04/synara/releases).
+5. If the updater still fails, download the newest installer from [tryramspace.com/install](/install) or [GitHub Releases](https://github.com/aaramsyy/ramspace/releases).
 6. Install the new application over the existing application.
-7. Launch Synara and verify the displayed version before resuming important work.
+7. Launch Ramspace and verify the displayed version before resuming important work.
 
 An update failure does not prove that local task data was deleted. Avoid combining an update recovery with manual data-directory cleanup.
 
 ## A downloaded update is waiting
 
-Synara continues checking on its normal four-hour schedule while a downloaded update waits for installation. **Check for Updates** also checks immediately. If a newer compatible release is available, Synara downloads it and replaces the pending version; a failed check keeps the already verified download. Installation waits until checking and downloading finish.
+Ramspace continues checking on its normal four-hour schedule while a downloaded update waits for installation. **Check for Updates** also checks immediately. If a newer compatible release is available, Ramspace downloads it and replaces the pending version; a failed check keeps the already verified download. Installation waits until checking and downloading finish.
 
 ## Update a Mac from an iPhone or iPad
 
-In companion builds that support remote updates, open **Settings → Connections**, select the Mac, then open **Software Update**. You can check, download, and choose **Restart & Install** for the downloaded version. This requires an approved connection to the packaged Synara Remote app on macOS; older desktop builds must first be updated on the Mac.
+In companion builds that support remote updates, open **Settings → Connections**, select the Mac, then open **Software Update**. You can check, download, and choose **Restart & Install** for the downloaded version. This requires an approved connection to the packaged Ramspace Remote app on macOS; older desktop builds must first be updated on the Mac.
 
-Finish running chats, queued tasks, approvals, and development servers before installing. The Mac refuses a remote restart when it detects that work is still active or cannot establish that it is idle. Confirm the displayed version and the temporary connection interruption. The app reconnects after Synara restarts; check **Installed version** to confirm completion. A dropped connection alone does not prove installation succeeded. There is no need to delete local data or pair again for an ordinary update.
+Finish running chats, queued tasks, approvals, and development servers before installing. The Mac refuses a remote restart when it detects that work is still active or cannot establish that it is idle. Confirm the displayed version and the temporary connection interruption. The app reconnects after Ramspace restarts; check **Installed version** to confirm completion. A dropped connection alone does not prove installation succeeded. There is no need to delete local data or pair again for an ordinary update.
 
-## Synara opens but providers changed after an update
+## Ramspace opens but providers changed after an update
 
-The application update and provider CLI updates are independent. After updating Synara:
+The application update and provider CLI updates are independent. After updating Ramspace:
 
 - Restart the app so provider discovery runs against the current environment.
 - Check each enabled provider’s detected executable and authentication state.
 - Remove stale custom binary paths.
-- Update the provider runtime through its own supported method when Synara reports that it is outdated.
+- Update the provider runtime through its own supported method when Ramspace reports that it is outdated.
 - Start a new provider session when protocol or capability negotiation changed.
 
 Continue with [Provider troubleshooting](/docs/troubleshooting/providers).
@@ -131,7 +131,7 @@ Do not use a successful website build as evidence that the packaged desktop runt
 
 - [ ] Important repository changes are committed, stashed, copied, or pushed
 - [ ] The correct installer and architecture were selected
-- [ ] Every Synara process was fully closed
+- [ ] Every Ramspace process was fully closed
 - [ ] The application was replaced before any data was deleted
 - [ ] The version was checked after launch
 - [ ] Provider detection and authentication were rechecked
@@ -147,15 +147,15 @@ The app bundle and updater enforce macOS 13 or later, matching the bundled nativ
 
 ## Offline database compaction in 1.1.0
 
-If normal shutdown maintenance cannot reclaim a large legacy database, close every Synara process and every external SQLite client first. Run the installed CLI command with the database's absolute path:
+If normal shutdown maintenance cannot reclaim a large legacy database, close every Ramspace process and every external SQLite client first. Run the installed CLI command with the database's absolute path:
 
 ```sh
-synara-compact-database "$HOME/.synara/userdata/state.sqlite"
+ramspace-compact-database "$HOME/.ramspace/userdata/state.sqlite"
 ```
 
-For Beta, explicitly select `$HOME/.synara-beta/userdata/state.sqlite`; custom homes require their actual path. The command never discovers another channel's database. On PowerShell, use a quoted path such as `"$env:USERPROFILE\.synara\userdata\state.sqlite"`.
+For Beta, explicitly select `$HOME/.ramspace-beta/userdata/state.sqlite`; custom homes require their actual path. The command never discovers another channel's database. On PowerShell, use a quoted path such as `"$env:USERPROFILE\.ramspace\userdata\state.sqlite"`.
 
-Compaction holds Synara's lifecycle lock, refuses pending migration recovery and verifies a private copy's integrity, row counts and identity before replacement. It preserves retained rows and migration backups. Allow about 125% of live-page space plus 64 MiB on the same volume; insufficient space requires freeing space, not deleting application history to force success.
+Compaction holds Ramspace's lifecycle lock, refuses pending migration recovery and verifies a private copy's integrity, row counts and identity before replacement. It preserves retained rows and migration backups. Allow about 125% of live-page space plus 64 MiB on the same volume; insufficient space requires freeing space, not deleting application history to force success.
 
 Keep all clients closed until completion. Cancellation before replacement preserves logical data, although WAL checkpointing may already have changed physical bytes. A failure after replacement explicitly reports that the compact database was installed; preserve it for inspection. Windows does not promise directory-entry durability across sudden power loss. This is maintenance, not emergency disk-recovery or universal completion-time assurance.
 

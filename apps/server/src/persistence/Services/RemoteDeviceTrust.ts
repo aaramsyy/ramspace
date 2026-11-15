@@ -1,4 +1,4 @@
-import type { RemoteTrustedDevice, RemoteTrustScope } from "@synara/contracts";
+import type { RemoteTrustedDevice, RemoteTrustScope } from "@ramspace/contracts";
 import { ServiceMap, type Effect } from "effect";
 import type { PersistenceSqlError } from "../Errors";
 
@@ -49,4 +49,4 @@ export interface RemoteDeviceTrustRepositoryShape {
 export class RemoteDeviceTrustRepository extends ServiceMap.Service<
   RemoteDeviceTrustRepository,
   RemoteDeviceTrustRepositoryShape
->()("synara/persistence/RemoteDeviceTrust") {}
+>()("ramspace/persistence/RemoteDeviceTrust") {}

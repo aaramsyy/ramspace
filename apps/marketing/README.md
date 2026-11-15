@@ -1,9 +1,9 @@
-# Synara website
+# Ramspace website
 
-The public website for Synara — the free, open-source command center for
+The public website for Ramspace — the free, open-source command center for
 agentic development.
 
-Synara gives Claude Code, Codex, OpenCode, Cursor, Antigravity, Grok, Devin
+Ramspace gives Claude Code, Codex, OpenCode, Cursor, Antigravity, Grok, Devin
 CLI, Pi, and Droid one local-first operating surface for parallel sessions,
 terminals, browser previews, diffs, Git worktrees, handoffs, and pull-request
 flow.
@@ -11,8 +11,8 @@ flow.
 ## Product principles
 
 - **Local-first:** workspace data stays on the user's machine.
-- **Direct-to-provider:** Synara connects to the provider the user chooses
-  instead of proxying normal model traffic through a Synara cloud.
+- **Direct-to-provider:** Ramspace connects to the provider the user chooses
+  instead of proxying normal model traffic through a Ramspace cloud.
 - **No lock-in:** users bring the subscriptions and accounts they already use.
 - **Analytics boundaries:** product analytics use random installation IDs unrelated
   to login or billing and exclude code, prompts and chat history. Stable and Beta
@@ -40,8 +40,8 @@ bun run build:marketing
 The site is a Next.js App Router project. Product copy is shared across the
 homepage, metadata, documentation, FAQ structured data, and AI-readable text
 routes so search and answer engines receive the same confident, verifiable
-description of Synara.
+description of Ramspace.
 
-Learn more at [trysynara.com](https://www.trysynara.com), in the
-[documentation](https://www.trysynara.com/docs), or in the
-[Synara app repository](https://github.com/Emanuele-web04/synara).
+Learn more at [tryramspace.com](https://www.tryramspace.com), in the
+[documentation](https://www.tryramspace.com/docs), or in the
+[Ramspace app repository](https://github.com/aaramsyy/ramspace).

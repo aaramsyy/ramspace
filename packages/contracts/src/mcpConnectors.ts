@@ -3,12 +3,12 @@ import { Schema } from "effect";
 import { IsoDateTime, TrimmedNonEmptyString } from "./baseSchemas";
 
 // Connectors: remote and local MCP servers approved in Settings or chat.
-// Synara owns credentials, process configuration, and provider-session proxies.
+// Ramspace owns credentials, process configuration, and provider-session proxies.
 
 export const McpConnectorId = TrimmedNonEmptyString;
 export type McpConnectorId = typeof McpConnectorId.Type;
 
-/** "oauth" servers carry Synara-held tokens; "none" servers answer anonymously. */
+/** "oauth" servers carry Ramspace-held tokens; "none" servers answer anonymously. */
 export const McpConnectorAuthKind = Schema.Literals(["oauth", "none"]);
 export type McpConnectorAuthKind = typeof McpConnectorAuthKind.Type;
 

@@ -4,12 +4,12 @@ import { ServerEnvironment } from "../../environment/Services/ServerEnvironment"
 import { HostConnectionRegistryService } from "../../hostConnections/registry";
 import { ProjectionThreadMessageRepository } from "../../persistence/Services/ProjectionThreadMessages.ts";
 /**
- * AgentGatewayLive - Synara app-control MCP tool surface.
+ * AgentGatewayLive - Ramspace app-control MCP tool surface.
  *
- * Implements the `synara_*` tools served over `POST /mcp` (streamable HTTP,
+ * Implements the `ramspace_*` tools served over `POST /mcp` (streamable HTTP,
  * stateless JSON responses). Every provider session gets this endpoint plus a
  * thread-bound bearer token injected at session start, so any agent running in
- * a Synara thread can list/read/create/steer threads and manage heartbeat
+ * a Ramspace thread can list/read/create/steer threads and manage heartbeat
  * automations - the same host-tool pattern the Codex desktop app uses.
  *
  * All tools delegate to existing services (OrchestrationEngine dispatch,
@@ -27,7 +27,7 @@ import {
   CommandId,
   INLINE_VISUAL_ACTIVITY_KIND,
   EventId,
-  SYNARA_GATEWAY_MAX_THREADS_PER_OPERATION,
+  RAMSPACE_GATEWAY_MAX_THREADS_PER_OPERATION,
   MessageId,
   ProjectId,
   THREAD_GOAL_MAX_CHARS,
@@ -43,10 +43,10 @@ import {
   type RuntimeMode,
   type ServerProviderStatus,
   type TurnDispatchMode,
-} from "@synara/contracts";
-import { runtimeModeEscalatesPrivilege } from "@synara/shared/runtimeMode";
-import { INLINE_VISUALS_BETA_FEATURE } from "@synara/shared/betaFeatures";
-import { deriveProviderInstances, isProviderKind } from "@synara/shared/providerInstances";
+} from "@ramspace/contracts";
+import { runtimeModeEscalatesPrivilege } from "@ramspace/shared/runtimeMode";
+import { INLINE_VISUALS_BETA_FEATURE } from "@ramspace/shared/betaFeatures";
+import { deriveProviderInstances, isProviderKind } from "@ramspace/shared/providerInstances";
 import { Effect, Layer, Option } from "effect";
 
 import { GitCore } from "../../git/Services/GitCore.ts";
@@ -120,7 +120,7 @@ import {
   makeAgentGatewayComputerTools,
   type AgentGatewayComputerToolsOptions,
 } from "../computerTools.ts";
-import { isSynaraComputerToolFamilyName } from "../computerToolPermission.ts";
+import { isRamspaceComputerToolFamilyName } from "../computerToolPermission.ts";
 import { ComputerService } from "../../computer/Services/ComputerService.ts";
 import { computerApprovalGate } from "../../computer/ComputerApprovalGate.ts";
 import { makeComputerForegroundConsent } from "../computerForegroundConsent.ts";
@@ -162,7 +162,7 @@ const providerInstanceAvailability = (
 // tool definition, so repeating the full policy here adds tens of thousands of
 // context characters per round without adding authority or safety.
 const AGENT_GATEWAY_INSTRUCTIONS =
-  "Synara tools are thread-scoped. Use browser_* only for Synara's shared in-app browser runtime; follow the provider-delivered <synara_host_context> for full policy.";
+  "Ramspace tools are thread-scoped. Use browser_* only for Ramspace's shared in-app browser runtime; follow the provider-delivered <ramspace_host_context> for full policy.";
 
 function readThreadGoalArg(args: Record<string, unknown>): string {
   if (!("goal" in args)) {
@@ -475,13 +475,13 @@ export const makeAgentGateway = Effect.gen(function* () {
     maxItems: 16,
     items: { type: "string" },
     description:
-      "IDs of original human messages in this coordinator conversation. Omit only when delegating the current human turn. Synara forwards their canonical text and attachments.",
+      "IDs of original human messages in this coordinator conversation. Omit only when delegating the current human turn. Ramspace forwards their canonical text and attachments.",
   };
   const taskKeySchema = {
     type: "string",
     maxLength: 128,
     description:
-      "Stable identity of this task inside the request. In a Hub, pass one short lowercase key per task (letters, digits, '.', '_', ':', '-'). Synara freezes the key at the first decision, so retrying or restarting with the same key reuses the same worker instead of creating a second one, while a new key adds a new task from the same original message. Ignore this outside Hubs.",
+      "Stable identity of this task inside the request. In a Hub, pass one short lowercase key per task (letters, digits, '.', '_', ':', '-'). Ramspace freezes the key at the first decision, so retrying or restarting with the same key reuses the same worker instead of creating a second one, while a new key adds a new task from the same original message. Ignore this outside Hubs.",
   };
   const routingReasonSchema = {
     type: "string",
@@ -494,9 +494,9 @@ export const makeAgentGateway = Effect.gen(function* () {
     requiredCapability: "thread:write",
     requiresActiveTurn: true,
     definition: {
-      name: "synara_create_threads",
+      name: "ramspace_create_threads",
       description:
-        "Create an exact batch of 1–20 standalone Synara threads. Hub coordinators instead submit durable workItems to the Hub queue: accepted does not mean started, and workerThreadId is available after admission. Give each Hub task a stable taskKey: the Hub freezes that key at the first decision, so a retry after a crash or a restart replays the same worker, while a new key from the same original message adds another task. Worktree threads start on a Synara-managed temporary branch pinned at baseRef (or the selected checkout's HEAD) and copy local checkout changes plus .worktreeinclude files when the ref is that checkout's HEAD; on the first turn Synara may rename the branch after the prompt and publish it. Validation/preflight failures create nothing and may be corrected with the same requestId; durable retries replay the exact operation. Each created thread's result includes a ready-to-use link (`thread://<threadId>`); when you mention a thread in a message to the user, write it as a markdown link like [title](thread://<threadId>).",
+        "Create an exact batch of 1–20 standalone Ramspace threads. Hub coordinators instead submit durable workItems to the Hub queue: accepted does not mean started, and workerThreadId is available after admission. Give each Hub task a stable taskKey: the Hub freezes that key at the first decision, so a retry after a crash or a restart replays the same worker, while a new key from the same original message adds another task. Worktree threads start on a Ramspace-managed temporary branch pinned at baseRef (or the selected checkout's HEAD) and copy local checkout changes plus .worktreeinclude files when the ref is that checkout's HEAD; on the first turn Ramspace may rename the branch after the prompt and publish it. Validation/preflight failures create nothing and may be corrected with the same requestId; durable retries replay the exact operation. Each created thread's result includes a ready-to-use link (`thread://<threadId>`); when you mention a thread in a message to the user, write it as a markdown link like [title](thread://<threadId>).",
       inputSchema: {
         type: "object",
         properties: {
@@ -508,7 +508,7 @@ export const makeAgentGateway = Effect.gen(function* () {
           threads: {
             type: "array",
             minItems: 1,
-            maxItems: SYNARA_GATEWAY_MAX_THREADS_PER_OPERATION,
+            maxItems: RAMSPACE_GATEWAY_MAX_THREADS_PER_OPERATION,
             items: {
               type: "object",
               properties: {
@@ -548,7 +548,7 @@ export const makeAgentGateway = Effect.gen(function* () {
         additionalProperties: false,
       },
       annotations: {
-        title: "Create Synara threads",
+        title: "Create Ramspace threads",
         readOnlyHint: false,
         destructiveHint: true,
         idempotentHint: true,
@@ -562,9 +562,9 @@ export const makeAgentGateway = Effect.gen(function* () {
     requiredCapability: "thread:write",
     requiresActiveTurn: true,
     definition: {
-      name: "synara_create_thread",
+      name: "ramspace_create_thread",
       description:
-        "Create exactly one standalone Synara thread. Hub coordinators receive a durable workItems entry that can remain queued until a worker slot is available; pass a stable taskKey so a retry after a crash or restart reuses the same worker. Worktree threads start on a Synara-managed temporary branch pinned at baseRef; on the first turn Synara may rename the branch after the prompt and publish it. For two or more threads use one synara_create_threads call instead. The result includes a ready-to-use link (`thread://<threadId>`); when you mention the thread in a message to the user, write it as a markdown link like [title](thread://<threadId>).",
+        "Create exactly one standalone Ramspace thread. Hub coordinators receive a durable workItems entry that can remain queued until a worker slot is available; pass a stable taskKey so a retry after a crash or restart reuses the same worker. Worktree threads start on a Ramspace-managed temporary branch pinned at baseRef; on the first turn Ramspace may rename the branch after the prompt and publish it. For two or more threads use one ramspace_create_threads call instead. The result includes a ready-to-use link (`thread://<threadId>`); when you mention the thread in a message to the user, write it as a markdown link like [title](thread://<threadId>).",
       inputSchema: {
         type: "object",
         properties: {
@@ -606,7 +606,7 @@ export const makeAgentGateway = Effect.gen(function* () {
         additionalProperties: false,
       },
       annotations: {
-        title: "Create a Synara thread",
+        title: "Create a Ramspace thread",
         readOnlyHint: false,
         destructiveHint: true,
         idempotentHint: true,
@@ -676,7 +676,7 @@ export const makeAgentGateway = Effect.gen(function* () {
     requiredCapability: "thread:write",
     requiresActiveTurn: true,
     definition: {
-      name: "synara_send_message",
+      name: "ramspace_send_message",
       description: FOLLOW_UP_DISPATCH_DESCRIPTION,
       inputSchema: {
         type: "object",
@@ -693,7 +693,7 @@ export const makeAgentGateway = Effect.gen(function* () {
         required: ["threadId", "message"],
         additionalProperties: false,
       },
-      annotations: { title: "Send a Synara message", ...WRITE_TOOL_ANNOTATIONS },
+      annotations: { title: "Send a Ramspace message", ...WRITE_TOOL_ANNOTATIONS },
     },
     handler: (args, context) =>
       Effect.gen(function* () {
@@ -850,8 +850,8 @@ export const makeAgentGateway = Effect.gen(function* () {
     requiredCapability: "thread:write",
     requiresActiveTurn: true,
     definition: {
-      name: "synara_interrupt_thread",
-      description: "Interrupt the running turn of a Synara thread.",
+      name: "ramspace_interrupt_thread",
+      description: "Interrupt the running turn of a Ramspace thread.",
       inputSchema: {
         type: "object",
         properties: {
@@ -860,7 +860,7 @@ export const makeAgentGateway = Effect.gen(function* () {
         required: ["threadId"],
         additionalProperties: false,
       },
-      annotations: { title: "Interrupt a Synara thread", ...WRITE_TOOL_ANNOTATIONS },
+      annotations: { title: "Interrupt a Ramspace thread", ...WRITE_TOOL_ANNOTATIONS },
     },
     handler: (args, context) =>
       Effect.gen(function* () {
@@ -897,8 +897,8 @@ export const makeAgentGateway = Effect.gen(function* () {
     requiredCapability: "thread:write",
     requiresActiveTurn: true,
     definition: {
-      name: "synara_set_thread_title",
-      description: "Rename a Synara thread.",
+      name: "ramspace_set_thread_title",
+      description: "Rename a Ramspace thread.",
       inputSchema: {
         type: "object",
         properties: {
@@ -908,7 +908,7 @@ export const makeAgentGateway = Effect.gen(function* () {
         required: ["threadId", "title"],
         additionalProperties: false,
       },
-      annotations: { title: "Rename a Synara thread", ...WRITE_TOOL_ANNOTATIONS },
+      annotations: { title: "Rename a Ramspace thread", ...WRITE_TOOL_ANNOTATIONS },
     },
     handler: (args, context) =>
       Effect.gen(function* () {
@@ -934,9 +934,9 @@ export const makeAgentGateway = Effect.gen(function* () {
     requiredCapability: "thread:write",
     requiresActiveTurn: true,
     definition: {
-      name: "synara_set_thread_pull_request",
+      name: "ramspace_set_thread_pull_request",
       description:
-        "Associate a pull request with a Synara thread. Use this after successfully creating the pull request that represents that thread's own deliverable. Do not associate pull requests that the thread only reviews, references, or discusses. Defaults to your own thread when threadId is omitted.",
+        "Associate a pull request with a Ramspace thread. Use this after successfully creating the pull request that represents that thread's own deliverable. Do not associate pull requests that the thread only reviews, references, or discusses. Defaults to your own thread when threadId is omitted.",
       inputSchema: {
         type: "object",
         properties: {
@@ -999,9 +999,9 @@ export const makeAgentGateway = Effect.gen(function* () {
     requiredCapability: "thread:write",
     requiresActiveTurn: true,
     definition: {
-      name: "synara_set_thread_archived",
+      name: "ramspace_set_thread_archived",
       description:
-        "Archive or unarchive a Synara thread. Defaults to your own thread when threadId is omitted.",
+        "Archive or unarchive a Ramspace thread. Defaults to your own thread when threadId is omitted.",
       inputSchema: {
         type: "object",
         properties: {
@@ -1011,7 +1011,7 @@ export const makeAgentGateway = Effect.gen(function* () {
         required: ["archived"],
         additionalProperties: false,
       },
-      annotations: { title: "Update a Synara thread", ...WRITE_TOOL_ANNOTATIONS },
+      annotations: { title: "Update a Ramspace thread", ...WRITE_TOOL_ANNOTATIONS },
     },
     handler: (args, context) =>
       Effect.gen(function* () {
@@ -1055,9 +1055,9 @@ export const makeAgentGateway = Effect.gen(function* () {
     requiredCapability: "thread:write",
     requiresActiveTurn: true,
     definition: {
-      name: "synara_set_thread_goal",
+      name: "ramspace_set_thread_goal",
       description:
-        "Set a persistent goal for a thread. Only set a goal when the user has explicitly asked for one (for example, 'keep working until X' or 'the goal of this thread is Y') or when dispatching a thread explicitly created to pursue a stated objective. Do NOT infer or invent goals from ordinary tasks or set one as a side effect of normal work. Clearing requires the same explicit user intent. When the active goal's objective has been accomplished, pass achieved: true instead of clearing: Synara records the achievement (with the time it took) and clears the goal. If the same external blocker prevents meaningful progress for three consecutive goal turns, pass blocked: true to pause the goal. Do not mark a goal blocked merely because the work is difficult, incomplete, or would benefit from clarification.",
+        "Set a persistent goal for a thread. Only set a goal when the user has explicitly asked for one (for example, 'keep working until X' or 'the goal of this thread is Y') or when dispatching a thread explicitly created to pursue a stated objective. Do NOT infer or invent goals from ordinary tasks or set one as a side effect of normal work. Clearing requires the same explicit user intent. When the active goal's objective has been accomplished, pass achieved: true instead of clearing: Ramspace records the achievement (with the time it took) and clears the goal. If the same external blocker prevents meaningful progress for three consecutive goal turns, pass blocked: true to pause the goal. Do not mark a goal blocked merely because the work is difficult, incomplete, or would benefit from clarification.",
       inputSchema: {
         type: "object",
         properties: {
@@ -1085,7 +1085,7 @@ export const makeAgentGateway = Effect.gen(function* () {
         required: [],
         additionalProperties: false,
       },
-      annotations: { title: "Set a Synara thread goal", ...WRITE_TOOL_ANNOTATIONS },
+      annotations: { title: "Set a Ramspace thread goal", ...WRITE_TOOL_ANNOTATIONS },
     },
     handler: (args, context) =>
       Effect.gen(function* () {
@@ -1365,7 +1365,7 @@ export const makeAgentGateway = Effect.gen(function* () {
           kind: COMPUTER_SETUP_REQUIRED_ACTIVITY_KIND,
           summary: "Computer control needs setup",
           // The grant names ride along so the card can say which permission is
-          // missing rather than "a permission Synara needs"; an empty list is a
+          // missing rather than "a permission Ramspace needs"; an empty list is a
           // backend that refused without naming one, and the card falls back.
           // The build signature rides with them because on a locally built copy
           // the switch in System Settings can already be on — its grant pinned
@@ -1611,7 +1611,7 @@ export const makeAgentGateway = Effect.gen(function* () {
             envMode: "local",
             branch: null,
             worktreePath: null,
-            creationSource: "synara_mcp",
+            creationSource: "ramspace_mcp",
             sourceThreadId: ThreadId.makeUnsafe(sourceThreadId),
             ...(sourceTurnId !== null ? { sourceTurnId: TurnId.makeUnsafe(sourceTurnId) } : {}),
             createdAt: isoNow(),
@@ -1778,12 +1778,12 @@ export const makeAgentGateway = Effect.gen(function* () {
           : tools,
       onCapabilityDenied: surfaceCapabilityDenial,
       // Namespace-insensitive: a session that never saw the catalog reaches
-      // for prefixed spellings (synara_computer_click,
-      // mcp__synara__computer_click). Those must deny with the card, never die
+      // for prefixed spellings (ramspace_computer_click,
+      // mcp__ramspace__computer_click). Those must deny with the card, never die
       // as Unknown-tool. The exact set stays as a backstop for any catalog
       // computer name outside the static family list.
       isComputerToolName: (toolName) =>
-        computerToolNames.has(toolName) || isSynaraComputerToolFamilyName(toolName),
+        computerToolNames.has(toolName) || isRamspaceComputerToolFamilyName(toolName),
       computerControlCapability: COMPUTER_CONTROL_CAPABILITY,
       instructions: AGENT_GATEWAY_INSTRUCTIONS,
       requireThreadShell,

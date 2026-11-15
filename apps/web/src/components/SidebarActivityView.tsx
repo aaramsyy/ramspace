@@ -16,8 +16,8 @@ import {
   type Ref,
 } from "react";
 
-import type { OrchestrationThreadPullRequest, ProjectId, ThreadId } from "@synara/contracts";
-import { resolveThreadEnvironmentMode } from "@synara/shared/threadEnvironment";
+import type { OrchestrationThreadPullRequest, ProjectId, ThreadId } from "@ramspace/contracts";
+import { resolveThreadEnvironmentMode } from "@ramspace/shared/threadEnvironment";
 
 import {
   AddPlusIcon,
@@ -652,7 +652,7 @@ function ActivityScopeMenu({
     scopeSelection === null
       ? t("workspace:allActivity")
       : scopeSelection === "chats"
-        ? "Synara"
+        ? "Ramspace"
         : resolveThreadProjectLabel(projectById.get(scopeSelection));
 
   return (
@@ -705,7 +705,7 @@ function ActivityScopeMenu({
                 <span className="min-w-0 flex-1 truncate">
                   {option.kind === "project"
                     ? resolveThreadProjectLabel(projectById.get(option.projectId))
-                    : "Synara"}
+                    : "Ramspace"}
                 </span>
                 <span className="ml-2 shrink-0 tabular-nums text-muted-foreground/60">
                   {option.threadCount}
@@ -1412,7 +1412,7 @@ export function SidebarActivityView({
     activeScope === null
       ? t("workspace:noActivityYet")
       : activeScope === "chats"
-        ? t("workspace:noActivityInSynaraChats")
+        ? t("workspace:noActivityInRamspaceChats")
         : t("workspace:noActivityForThisProject");
 
   return (
@@ -1479,7 +1479,7 @@ export function SidebarActivityView({
             <SidebarSectionLabel
               label={
                 group.kind === "chats"
-                  ? "Synara"
+                  ? "Ramspace"
                   : resolveThreadProjectLabel(projectById.get(group.projectId))
               }
               {...(group.kind === "project" &&

@@ -13,7 +13,7 @@ import type {
   McpConnectorProposal,
   McpConnectorResolveProposalInput,
   McpConnectorResolveProposalResult,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { Data, ServiceMap } from "effect";
 import type { Effect } from "effect";
 
@@ -70,5 +70,5 @@ export interface McpConnectorsShape {
 }
 
 export class McpConnectors extends ServiceMap.Service<McpConnectors, McpConnectorsShape>()(
-  "synara/mcpConnectors/Services/McpConnectors",
+  "ramspace/mcpConnectors/Services/McpConnectors",
 ) {}

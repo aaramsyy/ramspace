@@ -11,7 +11,7 @@ import {
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { SYNARA_PACKAGED_DESKTOP_FLAVORS } from "@synara/shared/desktopIdentity";
+import { RAMSPACE_PACKAGED_DESKTOP_FLAVORS } from "@ramspace/shared/desktopIdentity";
 import { afterEach, describe, expect, it } from "vitest";
 import { parse } from "yaml";
 
@@ -45,13 +45,13 @@ const developerDirs = (steps: Array<{ env?: Record<string, string> }>) =>
 
 // A repository copy holding only the key's inputs.
 function iconRepository() {
-  const root = temporary("synara-icon-key-");
+  const root = temporary("ramspace-icon-key-");
   for (const path of [
     "scripts/lib/mac-icon-catalog.ts",
     "scripts/mac-icon-catalog.ts",
-    "assets/prod/Synara.icon/icon.json",
-    "assets/prod/Synara.icon/Assets/glyph.png",
-    "assets/beta/Synara.icon/icon.json",
+    "assets/prod/Ramspace.icon/icon.json",
+    "assets/prod/Ramspace.icon/Assets/glyph.png",
+    "assets/beta/Ramspace.icon/icon.json",
   ]) {
     mkdirSync(dirname(join(root, path)), { recursive: true });
     copyFileSync(join(repoRoot, path), join(root, path));
@@ -62,9 +62,9 @@ function iconRepository() {
 describe("release macOS icon catalog identity", () => {
   it("accepts every packaged flavor and rejects anything else", () => {
     expect([...MAC_ICON_FLAVORS].toSorted()).toEqual(
-      [...SYNARA_PACKAGED_DESKTOP_FLAVORS].toSorted(),
+      [...RAMSPACE_PACKAGED_DESKTOP_FLAVORS].toSorted(),
     );
-    for (const flavor of SYNARA_PACKAGED_DESKTOP_FLAVORS)
+    for (const flavor of RAMSPACE_PACKAGED_DESKTOP_FLAVORS)
       expect(parseMacIconFlavor(flavor)).toBe(flavor);
     for (const invalid of ["Beta", "prod", "", undefined])
       expect(() => parseMacIconFlavor(invalid)).toThrow("Unknown macOS icon flavor");
@@ -82,11 +82,11 @@ describe("release macOS icon catalog identity", () => {
     const root = iconRepository();
     const key = () => macIconCatalogKey(collectMacIconCatalogInputs(root, "production"));
     const original = key();
-    const glyph = join(root, "assets/prod/Synara.icon/Assets/glyph.png");
+    const glyph = join(root, "assets/prod/Ramspace.icon/Assets/glyph.png");
     writeFileSync(glyph, Buffer.concat([readFileSync(glyph), Buffer.from([0])]));
     const changedBytes = key();
     expect(changedBytes).not.toBe(original);
-    writeFileSync(join(root, "assets/prod/Synara.icon/Assets/extra.png"), "layer");
+    writeFileSync(join(root, "assets/prod/Ramspace.icon/Assets/extra.png"), "layer");
     expect(key()).not.toBe(changedBytes);
     const afterAdd = key();
     writeFileSync(join(root, "scripts/mac-icon-catalog.ts"), "// changed compile\n", {
@@ -97,7 +97,7 @@ describe("release macOS icon catalog identity", () => {
 
   it("refuses links inside the Icon Composer source", () => {
     const root = iconRepository();
-    symlinkSync("/etc/hosts", join(root, "assets/prod/Synara.icon/Assets/linked.png"));
+    symlinkSync("/etc/hosts", join(root, "assets/prod/Ramspace.icon/Assets/linked.png"));
     expect(() => collectMacIconCatalogInputs(root, "production")).toThrow("non-regular file");
   });
 
@@ -122,7 +122,7 @@ describe("release macOS icon catalog identity", () => {
       "--minimum-deployment-target",
       "26.0",
       "--app-icon",
-      "Synara",
+      "Ramspace",
       "--include-all-app-icons",
       "--output-partial-info-plist",
       "partial.plist",
@@ -134,12 +134,12 @@ describe("release macOS icon catalog identity", () => {
 
 describe("cached macOS icon catalog verification", () => {
   const key = `mac-icon-v1-${"a".repeat(64)}`;
-  const source = "assets/prod/Synara.icon";
+  const source = "assets/prod/Ramspace.icon";
   function catalogDirectory(
     overrides: Record<string, unknown> = {},
     catalog = Buffer.from("BOMStore compiled catalog"),
   ) {
-    const directory = temporary("synara-icon-catalog-");
+    const directory = temporary("ramspace-icon-catalog-");
     writeFileSync(join(directory, MAC_ICON_CATALOG_FILE), catalog);
     writeFileSync(
       join(directory, MAC_ICON_PROVENANCE_FILE),
@@ -162,7 +162,7 @@ describe("cached macOS icon catalog verification", () => {
 
   it.each([
     ["another key", { key: `mac-icon-v1-${"b".repeat(64)}` }, "different key"],
-    ["another source", { source: "assets/beta/Synara.icon" }, "different Icon Composer source"],
+    ["another source", { source: "assets/beta/Ramspace.icon" }, "different Icon Composer source"],
     ["another Xcode", { xcode: "Xcode 26.4\nBuild version 17B1" }, "pinned Xcode"],
     ["a similar Xcode", { xcode: "Xcode 26.30\nBuild version 17B1" }, "pinned Xcode"],
     ["changed bytes", { catalogSha256: "0".repeat(64) }, "do not match"],
@@ -177,7 +177,7 @@ describe("cached macOS icon catalog verification", () => {
       verifyMacIconCatalogDirectory(catalogDirectory({}, Buffer.alloc(0)), { key, source }),
     ).toThrow("not a compiled asset catalog");
     const extra = catalogDirectory();
-    writeFileSync(join(extra, "Synara.icns"), "icns");
+    writeFileSync(join(extra, "Ramspace.icns"), "icns");
     expect(() => verifyMacIconCatalogDirectory(extra, { key, source })).toThrow("Unexpected");
     expect(() =>
       verifyMacIconCatalogDirectory(catalogDirectory(), { key: "cua-v1-x", source }),
@@ -204,7 +204,7 @@ describe("macOS icon catalog workflows", () => {
         (flavor) => desktopIconAssetPaths(parseMacIconFlavor(flavor)).macIconComposer,
       ),
     );
-    for (const flavor of SYNARA_PACKAGED_DESKTOP_FLAVORS)
+    for (const flavor of RAMSPACE_PACKAGED_DESKTOP_FLAVORS)
       expect(produced.has(desktopIconAssetPaths(flavor).macIconComposer), flavor).toBe(true);
   });
 

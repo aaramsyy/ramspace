@@ -9,7 +9,7 @@ import {
   type AccountErrorCode,
   type AccountMe,
   type AccountProfile,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { Schema } from "effect";
 
 /** How many digits the WorkOS verification code always has. */
@@ -142,11 +142,11 @@ export function accountFirstName(me: AccountMe): string {
 export function publicProfileUrl(handle: string): string {
   return new URL(
     `/@${encodeURIComponent(handle)}`,
-    import.meta.env.VITE_PROFILES_PUBLIC_ORIGIN || "https://trysynara.com",
+    import.meta.env.VITE_PROFILES_PUBLIC_ORIGIN || "https://tryramspace.com",
   ).href;
 }
 
-/** Schemeless form for inline copy ("trysynara.com/@ada"). */
+/** Schemeless form for inline copy ("tryramspace.com/@ada"). */
 export function publicProfileDisplayUrl(handle: string): string {
   return publicProfileUrl(handle).replace(/^https?:\/\//, "");
 }

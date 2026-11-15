@@ -1,4 +1,4 @@
-import { pluralize as sourcePluralize } from "@synara/shared/text";
+import { pluralize as sourcePluralize } from "@ramspace/shared/text";
 
 import { t } from ".";
 

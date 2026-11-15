@@ -11,17 +11,17 @@ import type {
   ServerListProviderUsageInput,
   ServerListProviderUsageResult,
   ServerProviderUsageSnapshot,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { Effect } from "effect";
 import nodePath from "node:path";
 
-import { resolveExecutable } from "@synara/shared/executable";
-import { PROVIDER_USAGE_PROVIDERS } from "@synara/shared/providerUsage";
+import { resolveExecutable } from "@ramspace/shared/executable";
+import { PROVIDER_USAGE_PROVIDERS } from "@ramspace/shared/providerUsage";
 import {
   deriveProviderInstances,
   providerStartOptionsFromInstance,
   type ResolvedProviderInstance,
-} from "@synara/shared/providerInstances";
+} from "@ramspace/shared/providerInstances";
 
 import { ServerConfig } from "../config";
 import { resolveBaseCodexHomePath } from "../codexHomePaths";
@@ -359,7 +359,7 @@ function instanceUsageContext(
       !instance.isDefault || codex?.accountId || shadowHomePath
         ? nodePath.dirname(
             prepareCodexAuthTracking({
-              env: { ...env, SYNARA_HOME: baseDir },
+              env: { ...env, RAMSPACE_HOME: baseDir },
               ...(homePath ? { homePath } : {}),
               ...(shadowHomePath ? { shadowHomePath } : {}),
               ...(codex?.accountId ? { accountId: codex.accountId } : {}),
@@ -515,7 +515,7 @@ export const consumeCodexResetCreditEffect = Effect.fn(function* (
   return { outcome } as ServerConsumeCodexResetCreditResult;
 });
 
-// Explicit provider routing inputs exclude volatile Synara control-plane credentials.
+// Explicit provider routing inputs exclude volatile Ramspace control-plane credentials.
 const RECOVERY_ENVIRONMENT_KEYS: Readonly<Partial<Record<ProviderKind, readonly string[]>>> = {
   codex: [
     "HOME",

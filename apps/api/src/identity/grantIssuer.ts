@@ -2,8 +2,8 @@ import {
   GRANT_JWT_TYP,
   GRANT_MAX_AGE_SECONDS,
   HOST_CONNECT_SCOPE,
-  SYNARA_RELAY_AUDIENCE,
-} from "@synara/contracts";
+  RAMSPACE_RELAY_AUDIENCE,
+} from "@ramspace/contracts";
 import type { HostGrantIssuer } from "./interfaces";
 import type { ApiSigningService } from "./signing";
 
@@ -12,7 +12,7 @@ export function createHostGrantIssuer(signing: ApiSigningService): HostGrantIssu
     issueGrant({ userId, host, deviceJkt }) {
       return signing.sign({
         typ: GRANT_JWT_TYP,
-        audience: SYNARA_RELAY_AUDIENCE,
+        audience: RAMSPACE_RELAY_AUDIENCE,
         subject: userId,
         expiresInSeconds: GRANT_MAX_AGE_SECONDS,
         claims: {

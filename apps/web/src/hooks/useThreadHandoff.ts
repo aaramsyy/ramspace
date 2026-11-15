@@ -10,7 +10,7 @@ import {
   type ModelSelection,
   type ProviderInstanceId,
   type ProviderKind,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { useComposerDraftStore } from "../composerDraftStore";
 import { useProviderStatusesForLocalConfig } from "./useProviderStatusesForLocalConfig";
 import { useRefreshProviderStatusesNow } from "./useProviderStatusRefresh";

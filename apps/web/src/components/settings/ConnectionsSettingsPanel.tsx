@@ -18,7 +18,7 @@ import { Button } from "../ui/button";
 import { ConnectionsOtherComputers } from "./ConnectionsOtherComputers";
 import { ConnectionsThisComputer } from "./ConnectionsThisComputer";
 import { SettingsListRow, SettingsSection } from "./SettingsPanelPrimitives";
-import { SYNARA_PLAN_SECTION_ID } from "./BillingSettingsPanel";
+import { RAMSPACE_PLAN_SECTION_ID } from "./BillingSettingsPanel";
 
 type ConnectionsTab = "this" | "others" | "ssh";
 
@@ -105,7 +105,7 @@ export function ConnectionsSettingsPanel({
                 ? () =>
                     void navigate({
                       to: "/settings",
-                      search: { section: "usage", target: SYNARA_PLAN_SECTION_ID },
+                      search: { section: "usage", target: RAMSPACE_PLAN_SECTION_ID },
                     })
                 : undefined
             }
@@ -143,9 +143,9 @@ function ConnectionsSsh() {
         title="Port forwarding"
         description={
           <>
-            Start Synara on the remote machine with{" "}
+            Start Ramspace on the remote machine with{" "}
             <code className="font-mono text-ui-sm text-foreground">--ssh-forward-port</code>, then
-            forward that port over SSH. Synara does not set up SSH keys or routes for you.
+            forward that port over SSH. Ramspace does not set up SSH keys or routes for you.
           </>
         }
       />

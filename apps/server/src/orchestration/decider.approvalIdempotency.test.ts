@@ -6,8 +6,8 @@ import {
   EventId,
   ProjectId,
   ThreadId,
-} from "@synara/contracts";
-import type { OrchestrationReadModel } from "@synara/contracts";
+} from "@ramspace/contracts";
+import type { OrchestrationReadModel } from "@ramspace/contracts";
 import { describe, expect, it } from "vitest";
 import { Effect } from "effect";
 

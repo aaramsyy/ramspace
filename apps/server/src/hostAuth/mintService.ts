@@ -8,11 +8,11 @@ import {
   MINT_REQUEST_MAX_AGE_SECONDS,
   SESSION_CREDENTIAL_JWT_TYP,
   SESSION_CREDENTIAL_MAX_AGE_SECONDS,
-  SYNARA_DEVICE_ISSUER,
-  SYNARA_SESSION_AUDIENCE,
+  RAMSPACE_DEVICE_ISSUER,
+  RAMSPACE_SESSION_AUDIENCE,
   type DevicePublicKeyJwk,
   type GrantClaims,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { Schema } from "effect";
 import {
   calculateJwkThumbprint,
@@ -33,7 +33,7 @@ import {
 } from "./grantVerifier";
 
 function hostIssuer(environmentId: string): string {
-  return `synara-host:${environmentId}`;
+  return `ramspace-host:${environmentId}`;
 }
 
 async function deviceVerificationKey(jwk: DevicePublicKeyJwk): Promise<CryptoKey> {
@@ -97,7 +97,7 @@ export class HostMintService {
         {
           algorithms: [publicKeyJwk.kty === "EC" ? "ES256" : "EdDSA"],
           audience: hostIssuer(this.options.environmentId),
-          issuer: SYNARA_DEVICE_ISSUER,
+          issuer: RAMSPACE_DEVICE_ISSUER,
           clockTolerance: JWT_CLOCK_TOLERANCE_SECONDS,
         },
       );
@@ -140,7 +140,7 @@ export class HostMintService {
       .setProtectedHeader({ alg: "EdDSA", typ: SESSION_CREDENTIAL_JWT_TYP })
       .setIssuer(hostIssuer(this.options.environmentId))
       .setSubject(grant.sub)
-      .setAudience(SYNARA_SESSION_AUDIENCE)
+      .setAudience(RAMSPACE_SESSION_AUDIENCE)
       .setIssuedAt(now)
       .setExpirationTime(expiresAtSeconds)
       .setJti(randomUUID())

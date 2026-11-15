@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { ProjectId, ThreadId } from "@synara/contracts";
+import { ProjectId, ThreadId } from "@ramspace/contracts";
 import type { Project } from "../../types";
 import type { WorkspaceSummary } from "./workspaceFrame";
 import type { WorkspaceSession } from "./workspaceSessions";
@@ -14,11 +14,11 @@ import {
 const project = (id = "same-project"): Project => ({
   id: ProjectId.makeUnsafe(id),
   kind: "project",
-  name: "Synara",
-  remoteName: "Synara",
-  folderName: "synara",
+  name: "Ramspace",
+  remoteName: "Ramspace",
+  folderName: "ramspace",
   localName: null,
-  cwd: "/workspace/synara",
+  cwd: "/workspace/ramspace",
   defaultModelSelection: null,
   expanded: true,
   scripts: [],

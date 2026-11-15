@@ -1,6 +1,6 @@
 import "../../index.css";
 
-import { DEFAULT_SERVER_SETTINGS_VIEW } from "@synara/contracts";
+import { DEFAULT_SERVER_SETTINGS_VIEW } from "@ramspace/contracts";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { page } from "vitest/browser";

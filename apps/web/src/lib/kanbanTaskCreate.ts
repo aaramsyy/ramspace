@@ -4,7 +4,7 @@
 // Layer: Web orchestration helper
 // Exports: createKanbanDraftTask, createAndSendKanbanTask, KanbanDraftTaskInput
 
-import type { AssistantDeliveryMode, ProviderStartOptions, ThreadId } from "@synara/contracts";
+import type { AssistantDeliveryMode, ProviderStartOptions, ThreadId } from "@ramspace/contracts";
 
 import type { NewChatDefault, ProviderInstanceOption } from "../appSettings";
 import { createDraftThread, type DraftThreadInput } from "./draftThreadCreate";

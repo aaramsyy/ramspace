@@ -6,8 +6,8 @@
 // Layer: Web UI hook
 // Exports: useScratchComposerDraft, ScratchComposerDraft, ScratchModelDraft
 
-import type { ModelSlug, ProviderInstanceId, ProviderKind, ThreadId } from "@synara/contracts";
-import { getDefaultModel } from "@synara/shared/model";
+import type { ModelSlug, ProviderInstanceId, ProviderKind, ThreadId } from "@ramspace/contracts";
+import { getDefaultModel } from "@ramspace/shared/model";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 import {

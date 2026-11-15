@@ -1,5 +1,5 @@
-import { DEFAULT_SERVER_SETTINGS_VIEW } from "@synara/contracts";
-import { deriveProviderInstances } from "@synara/shared/providerInstances";
+import { DEFAULT_SERVER_SETTINGS_VIEW } from "@ramspace/contracts";
+import { deriveProviderInstances } from "@ramspace/shared/providerInstances";
 import { describe, expect, it } from "vitest";
 import { resolveEnvironmentProviderUsageSummary } from "./chat/environment/EnvironmentUsageSection.logic";
 

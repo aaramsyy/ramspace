@@ -1,4 +1,4 @@
-import type { AccountErrorBody } from "@synara/contracts";
+import type { AccountErrorBody } from "@ramspace/contracts";
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 import * as billingModule from "./billing/service";
 import { randomUUID } from "node:crypto";
@@ -175,7 +175,7 @@ describe.skipIf(!TEST_DATABASE_URL)("createApp", () => {
     expect(res.status).toBe(200);
     expect(res.headers.get("content-type")).toContain("text/plain");
     const body = await res.text();
-    expect(body).toContain("Sign in from the Synara app");
-    expect(body).toContain("https://github.com/Emanuele-web04/synara");
+    expect(body).toContain("Sign in from the Ramspace app");
+    expect(body).toContain("https://github.com/aaramsyy/ramspace");
   });
 });

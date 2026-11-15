@@ -7,14 +7,14 @@ import {
   type ProviderOptionDescriptor,
   type ProviderKind,
   type ProviderModelDescriptor,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import {
   applyClaudePromptEffortPrefix,
   getProviderOptionCurrentValue,
   getProviderOptionDescriptors,
   isClaudeUltrathinkPrompt,
   trimOrNull,
-} from "@synara/shared/model";
+} from "@ramspace/shared/model";
 
 import { buildProviderOptionPatch, type ProviderOptions } from "../../providerModelOptions";
 import { getRuntimeAwareModelCapabilities } from "./runtimeModelCapabilities";
@@ -155,7 +155,7 @@ const SOURCE_TRAIT_LABELS: Readonly<Record<string, string>> = {
   fastMode: "Fast Mode",
 };
 
-// Localize Synara's standard presentation, including canonical labels built by
+// Localize Ramspace's standard presentation, including canonical labels built by
 // its adapters. Explicit labels from other providers and custom overrides stay data.
 function presentTraitDescriptor(
   descriptor: ProviderOptionDescriptor,

@@ -9,7 +9,7 @@ import { useTranslation } from "~/i18n";
 // Layer: Web hook
 // Exports: useHandleNewGroupChat
 
-import type { ProjectId } from "@synara/contracts";
+import type { ProjectId } from "@ramspace/contracts";
 
 import { startContainerChat, type StartContainerChatResult } from "../lib/startContainerChat";
 import { useComposerDraftStore } from "../composerDraftStore";

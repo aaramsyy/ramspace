@@ -172,13 +172,13 @@ export const GENERATED_SETTINGS_SEARCH_ROWS: readonly GeneratedSettingsSearchRow
     target: "setting-app-icon",
     section: "appearance",
     title: "settings:appIcon",
-    description: "settings:chooseTheIconSynaraUsesInTheDockOr",
+    description: "settings:chooseTheIconRamspaceUsesInTheDockOr",
   },
   {
     target: "setting-use-custom-title-bar",
     section: "appearance",
     title: "settings:useCustomTitleBar",
-    description: "settings:replaceTheSystemTitleBarWithSynaraSFrameless",
+    description: "settings:replaceTheSystemTitleBarWithRamspaceSFrameless",
   },
   {
     target: "setting-ascii-background",
@@ -376,7 +376,7 @@ export const GENERATED_SETTINGS_SEARCH_ROWS: readonly GeneratedSettingsSearchRow
     target: "setting-enable-appsnap",
     section: "appsnap",
     title: "settings:enableAppSnap",
-    description: "settings:runTheCaptureListenerInTheBackgroundWhileSynara",
+    description: "settings:runTheCaptureListenerInTheBackgroundWhileRamspace",
   },
   {
     target: "setting-shortcut",
@@ -424,7 +424,7 @@ export const GENERATED_SETTINGS_SEARCH_ROWS: readonly GeneratedSettingsSearchRow
     target: "setting-this-browser",
     section: "advanced",
     title: "settings:thisBrowser",
-    description: "settings:revokeThisBrowserSessionAndCloseEveryLiveSynara",
+    description: "settings:revokeThisBrowserSessionAndCloseEveryLiveRamspace",
   },
   {
     target: "setting-recovery-tools",
@@ -433,9 +433,9 @@ export const GENERATED_SETTINGS_SEARCH_ROWS: readonly GeneratedSettingsSearchRow
     description: "settings:advanced_recoveryToolsDescription",
   },
   {
-    target: "setting-keep-synara-responsive",
+    target: "setting-keep-ramspace-responsive",
     section: "providers",
-    title: "settings:keepSynaraResponsive",
+    title: "settings:keepRamspaceResponsive",
     description: "settings:giveAgentProcessesAndTheirCommandsAModeratelyLower",
   },
   {
@@ -448,7 +448,7 @@ export const GENERATED_SETTINGS_SEARCH_ROWS: readonly GeneratedSettingsSearchRow
     target: "setting-provider-updates",
     section: "providers",
     title: "settings:providerUpdates_providerUpdates",
-    description: "settings:reviewInstalledProviderToolsThatSynaraCanSafelyUpdate",
+    description: "settings:reviewInstalledProviderToolsThatRamspaceCanSafelyUpdate",
   },
   {
     target: "setting-resume-after-usage-limits",
@@ -475,9 +475,9 @@ export const GENERATED_SETTINGS_SEARCH_ROWS: readonly GeneratedSettingsSearchRow
     description: "settings:addCustomModelSlugsForSupportedProviders",
   },
   {
-    target: "setting-synara-skills-folder",
+    target: "setting-ramspace-skills-folder",
     section: "skills",
-    title: "settings:skills_synaraSkillsFolder",
+    title: "settings:skills_ramspaceSkillsFolder",
     description: "settings:skillsPlacedHereAreAvailableOnEveryProviderWhen",
   },
   {
@@ -502,12 +502,12 @@ export const GENERATED_SETTINGS_SEARCH_ROWS: readonly GeneratedSettingsSearchRow
     target: "setting-name",
     section: "integrations",
     title: "common:scripts_name",
-    description: "settings:howThisConnectionAppearsInSynaraWorksWithCodex",
+    description: "settings:howThisConnectionAppearsInRamspaceWorksWithCodex",
   },
   {
-    target: "setting-access-all-of-synara",
+    target: "setting-access-all-of-ramspace",
     section: "integrations",
-    title: "settings:accessAllOfSynara",
+    title: "settings:accessAllOfRamspace",
     description: "settings:theAgentCanDiscoverAndWorkInEveryProject",
   },
   {

@@ -51,7 +51,7 @@ describe("APNs HTTP/2 boundary", () => {
         privateKey: privateKey.export({ type: "pkcs8", format: "pem" }).toString(),
         keyId: "ABCD123456",
         teamId: "TEAM123456",
-        bundleId: "com.example.synara",
+        bundleId: "com.example.ramspace",
         environment: "both",
       });
       expect(
@@ -70,7 +70,7 @@ describe("APNs HTTP/2 boundary", () => {
           ? "https://api.sandbox.push.apple.com"
           : "https://api.push.apple.com",
       );
-      expect(headers["apns-topic"]).toBe("com.example.synara.push-type.liveactivity");
+      expect(headers["apns-topic"]).toBe("com.example.ramspace.push-type.liveactivity");
       expect(headers["apns-push-type"]).toBe("liveactivity");
       const verified = await jwtVerify(
         headers.authorization!.slice(7),
@@ -98,7 +98,7 @@ describe("APNs HTTP/2 boundary", () => {
         privateKey: privateKey.export({ type: "pkcs8", format: "pem" }).toString(),
         keyId: "ABCD123456",
         teamId: "TEAM123456",
-        bundleId: "com.example.synara",
+        bundleId: "com.example.ramspace",
         environment: "both",
       });
       expect(
@@ -113,13 +113,13 @@ describe("APNs HTTP/2 boundary", () => {
       ).toBe("delivered");
       const { headers, payload } = requests[0]!;
       expect(headers).toMatchObject({
-        "apns-topic": "com.example.synara",
+        "apns-topic": "com.example.ramspace",
         "apns-push-type": "alert",
         "apns-priority": "10",
         "apns-collapse-id": "one-exact-turn",
       });
       expect(JSON.parse(payload)).toEqual({
-        aps: { alert: { title: "Synara", body: "Response ready" }, sound: "default" },
+        aps: { alert: { title: "Ramspace", body: "Response ready" }, sound: "default" },
         source: "codex.runCompletion",
         threadId: "phone-namespaced-thread",
         turnId: "raw-turn",
@@ -135,7 +135,7 @@ describe("APNs HTTP/2 boundary", () => {
       privateKey: privateKey.export({ type: "pkcs8", format: "pem" }).toString(),
       keyId: "ABCD123456",
       teamId: "TEAM123456",
-      bundleId: "com.example.synara",
+      bundleId: "com.example.ramspace",
       environment: "both",
     });
     const preview = {
@@ -169,7 +169,7 @@ describe("APNs HTTP/2 boundary", () => {
 
     const [rich, failed, oversized] = requests.map((request) => JSON.parse(request.payload));
     expect(rich).toMatchObject({
-      aps: { alert: { title: "Synara", body: "Response ready" }, "mutable-content": 1 },
+      aps: { alert: { title: "Ramspace", body: "Response ready" }, "mutable-content": 1 },
       threadId: delivery.threadId,
       turnId: delivery.turnId,
       completionPreview: preview,
@@ -193,7 +193,7 @@ describe("APNs HTTP/2 boundary", () => {
         keyId: "PROD123456",
       },
       teamId: "TEAM123456",
-      bundleId: "com.example.synara",
+      bundleId: "com.example.ramspace",
       environment: "both",
     });
     for (const environment of ["sandbox", "production", "sandbox", "production"] as const) {

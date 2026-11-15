@@ -3,7 +3,7 @@ import {
   EnvironmentId,
   type RemotePairingBundle,
   type DevicePublicKeyJwk,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { eq } from "drizzle-orm";
 import { calculateJwkThumbprint, exportJWK, generateKeyPair, SignJWT } from "jose";
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
@@ -62,8 +62,8 @@ describe.skipIf(!process.env.TEST_DATABASE_URL)("pairing rendezvous (PostgreSQL)
     const published = await service.publish(host, bundle);
     const proof = (code = published.code) =>
       new SignJWT({ code })
-        .setProtectedHeader({ alg: "ES256", typ: "synara-pairing-code+jwt" })
-        .setIssuer("synara-device")
+        .setProtectedHeader({ alg: "ES256", typ: "ramspace-pairing-code+jwt" })
+        .setIssuer("ramspace-device")
         .setSubject(id)
         .setAudience(issuer)
         .setIssuedAt()

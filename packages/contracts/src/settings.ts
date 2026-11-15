@@ -65,7 +65,7 @@ export const ClaudeServerProviderSettings = Schema.Struct({
   enableArtifacts: Schema.Boolean.pipe(Schema.withDecodingDefault(() => false)),
   // On by default: resuming a large session after a long pause re-caches the
   // whole history in one request, which can take several percent of a usage
-  // window. Synara asks the way Claude Code's interactive resume prompt does;
+  // window. Ramspace asks the way Claude Code's interactive resume prompt does;
   // embedded (SDK) Claude Code alone never asks.
   confirmColdCacheResume: Schema.Boolean.pipe(Schema.withDecodingDefault(() => true)),
 });

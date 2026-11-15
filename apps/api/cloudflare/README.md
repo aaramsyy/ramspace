@@ -1,8 +1,8 @@
 # Account API on Cloudflare
 
-The trial uses `synara-account-api-trial` in the Synara Orgs account
+The trial uses `ramspace-account-api-trial` in the Ramspace Orgs account
 `56e5b3e566be2fc8ade9b7d0eadf5e35`. Its deployed trial origin is
-`https://synara-account-api-trial.synara-orgs.workers.dev`. Live startup and hosted
+`https://ramspace-account-api-trial.ramspace-orgs.workers.dev`. Live startup and hosted
 profile privacy checks passed on 2026-09-29; real login and private-profile
 creation from the isolated app are also verified.
 See [qualification evidence](../../../docs/implementation/cloudflare-profiles/READINESS.md).
@@ -18,7 +18,7 @@ and concurrent startup migrations. Containers has separate runtime charges.
 
 ## Prepare
 
-1. Use the existing Supabase project `Synara` (`ubdkfrnaqfbdymgipddq`), as
+1. Use the existing Supabase project `Ramspace` (`ubdkfrnaqfbdymgipddq`), as
    selected by the operator. Account migrations 0000–0015 were bootstrapped
    through MCP on 2026-09-28, with the Drizzle journal preserved. The existing
    advertising tables and Data API configuration must remain intact.
@@ -46,7 +46,7 @@ and concurrent startup migrations. Containers has separate runtime charges.
    `API_SIGNING_KEY` as Worker secrets. The signing key must be a stable,
    base64url-encoded 32-byte Ed25519 seed, not a per-deploy value.
 4. Authenticate Wrangler with write access to Workers, Containers/registry and
-   Durable Objects in the Synara Orgs account. MCP authorization is separate from
+   Durable Objects in the Ramspace Orgs account. MCP authorization is separate from
    Wrangler deployment credentials.
 
 From `apps/api`, `bunx wrangler secret put NAME` accepts a secret interactively.
@@ -169,14 +169,14 @@ The workflow leaves existing credentials in place by default. For initial
 provisioning or a planned update to the base credentials, also check
 `bootstrap_secrets` and supply the matching values in the GitHub environment.
 
-| GitHub secret                 | Destination                          |
-| ----------------------------- | ------------------------------------ |
-| `CLOUDFLARE_API_TOKEN`        | Cloudflare deployment authentication |
-| `SYNARA_API_DATABASE_URL`     | Worker `DATABASE_URL`                |
-| `SYNARA_API_WORKOS_API_KEY`   | Worker `WORKOS_API_KEY`              |
-| `SYNARA_API_WORKOS_CLIENT_ID` | Worker `WORKOS_CLIENT_ID`            |
-| `SYNARA_API_SIGNING_KEY`      | Worker `API_SIGNING_KEY`             |
-| `SYNARA_PROFILE_PROXY_SECRET` | Both Workers' `PROFILE_PROXY_SECRET` |
+| GitHub secret                   | Destination                          |
+| ------------------------------- | ------------------------------------ |
+| `CLOUDFLARE_API_TOKEN`          | Cloudflare deployment authentication |
+| `RAMSPACE_API_DATABASE_URL`     | Worker `DATABASE_URL`                |
+| `RAMSPACE_API_WORKOS_API_KEY`   | Worker `WORKOS_API_KEY`              |
+| `RAMSPACE_API_WORKOS_CLIENT_ID` | Worker `WORKOS_CLIENT_ID`            |
+| `RAMSPACE_API_SIGNING_KEY`      | Worker `API_SIGNING_KEY`             |
+| `RAMSPACE_PROFILE_PROXY_SECRET` | Both Workers' `PROFILE_PROXY_SECRET` |
 
 The workflow must pass the container checks before its deployment job starts.
 It never runs on an application release tag. It deploys the same checked-out
@@ -186,7 +186,7 @@ Then run **Deploy Profiles** with the verified API origin above.
 
 During provisioning, install the same `PROFILE_PROXY_SECRET` for both Workers'
 per-visitor public-profile rate limits. The separate **Deploy Profiles** workflow
-reads its own `CLOUDFLARE_API_TOKEN` and `SYNARA_PROFILE_PROXY_SECRET` from
+reads its own `CLOUDFLARE_API_TOKEN` and `RAMSPACE_PROFILE_PROXY_SECRET` from
 repository or organization secrets. Use a deployment token scoped to Profiles
 there and keep the Account API token in `account-api-production`.
 Direct/manual deployments may omit the proxy secret, in which case profile
@@ -218,7 +218,7 @@ The migration retained old API traffic through `wrangler.legacy.jsonc`, which
 streams requests to the new API and preserves client rate limits with a shared
 `MIGRATION_PROXY_SECRET`. Keep that secret installed on both API Workers; it
 is consumed at the ingress and is never forwarded into the Container. Normal
-deployments use `wrangler.jsonc`, targeting Synara Orgs. The legacy config retains
+deployments use `wrangler.jsonc`, targeting Ramspace Orgs. The legacy config retains
 the original Container class/image for recovery but does not route traffic to it.
 Do not restore that API against the old avatar bucket after new writes begin.
 

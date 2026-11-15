@@ -2,19 +2,19 @@ import {
   makeMessageTextChunks,
   encodeMessageTextFallback,
 } from "../../persistence/messageTextChunks.ts";
-import { ApprovalRequestId, CommandId, type OrchestrationEvent } from "@synara/contracts";
-import { resolveHumanMessageAt } from "@synara/shared/threadSummary";
-import { isSidechatThread } from "@synara/shared/sidechatThread";
-import { clearRemovedAsyncUserInputResponses } from "@synara/shared/asyncUserInput";
-import { isGroupContainerKind } from "@synara/shared/projectContainers";
+import { ApprovalRequestId, CommandId, type OrchestrationEvent } from "@ramspace/contracts";
+import { resolveHumanMessageAt } from "@ramspace/shared/threadSummary";
+import { isSidechatThread } from "@ramspace/shared/sidechatThread";
+import { clearRemovedAsyncUserInputResponses } from "@ramspace/shared/asyncUserInput";
+import { isGroupContainerKind } from "@ramspace/shared/projectContainers";
 import {
   addPinnedMessage,
   removePinnedMessage,
   setPinnedMessageDone,
   setPinnedMessageLabel,
-} from "@synara/shared/pinnedMessages";
-import { createStalePendingInteractionMatcher } from "@synara/shared/pendingInteractions";
-import { resolveModelSelectionInstanceId } from "@synara/shared/providerInstances";
+} from "@ramspace/shared/pinnedMessages";
+import { createStalePendingInteractionMatcher } from "@ramspace/shared/pendingInteractions";
+import { resolveModelSelectionInstanceId } from "@ramspace/shared/providerInstances";
 import * as NodeServices from "@effect/platform-node/NodeServices";
 import { Effect, FileSystem, Layer, Option, Path, Stream } from "effect";
 import * as SqlClient from "effect/unstable/sql/SqlClient";
@@ -60,7 +60,7 @@ import { ProjectionTurnRepositoryLive } from "../../persistence/Layers/Projectio
 import { ProjectionThreadRepositoryLive } from "../../persistence/Layers/ProjectionThreads.ts";
 import { ManagedAttachmentRepositoryLive } from "../../persistence/Layers/ManagedAttachments.ts";
 import { ServerConfig } from "../../config.ts";
-import { deriveTurnStopActivity } from "@synara/shared/turnStopActivity";
+import { deriveTurnStopActivity } from "@ramspace/shared/turnStopActivity";
 import {
   OrchestrationProjectionPipeline,
   type OrchestrationProjectionPipelineShape,

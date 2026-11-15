@@ -12,7 +12,7 @@ function TitleBarState() {
 
 it("uses the controller's actual title bar state without a native bridge in the workspace", async () => {
   const frame = Object.assign(document.createElement("iframe"), {
-    synaraWorkspace: {
+    ramspaceWorkspace: {
       controller: {
         presentation: {
           readCustomTitleBarState: async () => ({

@@ -5,7 +5,7 @@
 //          Owns step navigation and the per-run results the final receipt reads.
 // Layer: Web UI overlay (mounted once from the root route)
 
-import type { ProviderKind } from "@synara/contracts";
+import type { ProviderKind } from "@ramspace/contracts";
 import { useCallback, useEffect, useMemo, useRef, useState, type RefObject } from "react";
 
 import { APP_BASE_NAME } from "~/branding";

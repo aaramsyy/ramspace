@@ -1,7 +1,11 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 
-import { decodeBase64Url, encodeBase64Url, type HostSecretEntry } from "@synara/shared/hostSecrets";
+import {
+  decodeBase64Url,
+  encodeBase64Url,
+  type HostSecretEntry,
+} from "@ramspace/shared/hostSecrets";
 import { Effect } from "effect";
 
 import { withCredentialFileLock } from "../accountCredentialLock";

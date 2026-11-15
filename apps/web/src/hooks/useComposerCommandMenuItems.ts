@@ -9,8 +9,8 @@ import type {
   ProviderMentionReference,
   ProviderPluginDescriptor,
   ProviderSkillDescriptor,
-} from "@synara/contracts";
-import { getAgentMentionAutocompleteAliases } from "@synara/contracts";
+} from "@ramspace/contracts";
+import { getAgentMentionAutocompleteAliases } from "@ramspace/contracts";
 import {
   buildCommandSearchFields,
   buildPluginSearchFields,
@@ -31,9 +31,9 @@ import {
   getProviderNativeSlashCommandSearchTerms,
   shouldHideProviderNativeCommandFromComposerMenu,
 } from "../composerSlashCommands";
-import { mcpConnectorMentionPath } from "@synara/shared/mcpConnectors";
-import { threadMentionPathForThreadId } from "@synara/shared/threadMentions";
-import { isGroupContainerKind } from "@synara/shared/projectContainers";
+import { mcpConnectorMentionPath } from "@ramspace/shared/mcpConnectors";
+import { threadMentionPathForThreadId } from "@ramspace/shared/threadMentions";
+import { isGroupContainerKind } from "@ramspace/shared/projectContainers";
 
 import type { ComposerCommandItem } from "../components/chat/ComposerCommandMenu";
 import type { ProviderModelOption } from "../providerModelOptions";

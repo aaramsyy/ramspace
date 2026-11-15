@@ -13,7 +13,7 @@ Existing `FULL` databases keep that policy; ordinary deletes on new databases do
 not pay the relocation cost of `FULL` mode.
 
 Existing `NONE` databases need a one-time SQLite rebuild before incremental
-vacuum can work. After successful startup and clean shutdown, Synara closes its
+vacuum can work. After successful startup and clean shutdown, Ramspace closes its
 live SQL connection and attempts that rebuild in an owned subprocess while
 retaining its database lifecycle lock. It attempts conversion only when at least
 16 MiB and 25% of the database consists of free pages. The filesystem must report
@@ -21,7 +21,7 @@ at least twice the original database size plus 64 MiB available. An unavailable
 space check or insufficient space defers conversion without starting the rebuild.
 
 The subprocess has a 1.5-second deadline followed by the existing process
-termination escalation. Synara waits for child exit before releasing the
+termination escalation. Ramspace waits for child exit before releasing the
 lifecycle lock. An interrupted SQLite transaction remains subject to SQLite's
 normal crash recovery; startup does not replace the database or discard its WAL.
 Failed migrations or newer unsupported schemas do not arm this maintenance.
@@ -38,7 +38,7 @@ and [VACUUM scratch-space requirement](https://www.sqlite.org/lang_vacuum.html).
 
 ## Interrupted upgrades
 
-Synara retries an interrupted migration up to twice using the original backup.
+Ramspace retries an interrupted migration up to twice using the original backup.
 When a newer build resumes it, the recovery marker records the new target before
 replay. If the database still carries a divergent imported history, approval
 must match the new target and the current tracker. The completed record is
@@ -50,7 +50,7 @@ including after the retry budget is spent. Open the same app channel on a build
 that supports the target to continue recovery. That build can resume replay if
 attempts remain. The local server log reports the target and the schema supported
 by the current build. Desktop can stop before starting the server when attempts
-are exhausted. If you choose to restore there, Synara verifies the backup before
+are exhausted. If you choose to restore there, Ramspace verifies the backup before
 replacing the database. A restore selected from completed provenance refuses to
 replace a different pending recovery. If a restore already installed its
 verified snapshot, retry can finish recording it and remove the marker without
@@ -61,19 +61,19 @@ retry resumes the same recorded bundle so its committed writes stay together.
 ## Explicit offline compaction
 
 When shutdown maintenance keeps deferring a large legacy database, close every
-Synara process and every other client of that database. With the CLI distribution
+Ramspace process and every other client of that database. With the CLI distribution
 installed, run its maintenance command with the absolute database path:
 
 ```sh
-synara-compact-database "$HOME/.synara/userdata/state.sqlite"
+ramspace-compact-database "$HOME/.ramspace/userdata/state.sqlite"
 ```
 
-For Beta, explicitly select `$HOME/.synara-beta/userdata/state.sqlite` instead.
-For Synara Remote, explicitly select `$HOME/.synara-remote/userdata/state.sqlite`.
+For Beta, explicitly select `$HOME/.ramspace-beta/userdata/state.sqlite` instead.
+For Ramspace Remote, explicitly select `$HOME/.ramspace-remote/userdata/state.sqlite`.
 Custom homes and development databases require their own actual path. The command
 does not discover homes, open another channel's database, start the server, or
 change retention. On Windows, pass a quoted absolute path, for example
-`synara-compact-database "$env:USERPROFILE\.synara\userdata\state.sqlite"`
+`ramspace-compact-database "$env:USERPROFILE\.ramspace\userdata\state.sqlite"`
 in PowerShell. A source checkout can run the built entry with
 `node apps/server/dist/compactDatabase.mjs <absolute-database-path>` using a Node
 version supported by `apps/server/package.json`. Bun is not supported and is
@@ -82,14 +82,14 @@ refused before the target database is inspected or locked.
 A desktop installer does not add this global CLI command to `PATH`. It includes
 `apps/server/dist/compactDatabase.mjs` inside `resources/app.asar`; use the
 installation's own runtime in Node mode and the explicit database path. For the
-default macOS Synara Remote installation, after quitting the app and all other
+default macOS Ramspace Remote installation, after quitting the app and all other
 clients:
 
 ```sh
 ELECTRON_RUN_AS_NODE=1 \
-  "/Applications/Synara Remote.app/Contents/MacOS/Synara Remote" \
-  "/Applications/Synara Remote.app/Contents/Resources/app.asar/apps/server/dist/compactDatabase.mjs" \
-  "$HOME/.synara-remote/userdata/state.sqlite"
+  "/Applications/Ramspace Remote.app/Contents/MacOS/Ramspace Remote" \
+  "/Applications/Ramspace Remote.app/Contents/Resources/app.asar/apps/server/dist/compactDatabase.mjs" \
+  "$HOME/.ramspace-remote/userdata/state.sqlite"
 ```
 
 Adjust both application paths for a different installation location and select
@@ -117,7 +117,7 @@ it, copy failures, insufficient space, or cancellation preserve the original's
 logical data; WAL recovery/checkpointing may already have changed its physical
 bytes and journal mode. If a final directory flush or lock cleanup fails after
 replacement, the error explicitly says the compact database was installed and
-asks you to keep Synara closed for inspection. Windows does not expose directory
+asks you to keep Ramspace closed for inspection. Windows does not expose directory
 fsync through the shared filesystem helper, so this does not promise directory
 entry durability across sudden power loss on Windows.
 
@@ -128,7 +128,7 @@ only the private candidate owned by that dead lock, and a retry starts again fro
 the database. Cancellation after the rename cannot undo a completed installation.
 
 The offline precondition includes external SQLite tools: the lifecycle lock
-coordinates Synara, and active SQLite transactions are refused, but an unrelated
+coordinates Ramspace, and active SQLite transactions are refused, but an unrelated
 client opening the file between the final checks and rename does not honor that
 lock. Keep all clients stopped until the command finishes. This maintenance path
 is covered with isolated native SQLite fixtures; it does not establish a universal

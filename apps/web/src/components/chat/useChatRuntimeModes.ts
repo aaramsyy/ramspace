@@ -6,7 +6,7 @@ import {
   type ModelSelection,
   type ProviderKind,
   type ServerProviderStatus,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { useCallback, useEffect, useRef } from "react";
 import { newCommandId } from "~/lib/utils";
 import { readNativeApi } from "~/nativeApi";
@@ -86,7 +86,7 @@ export function useChatRuntimeModes({
             toastManager.add({
               type: "error",
               title: "Could not update access mode",
-              description: "Synara is not connected to the server.",
+              description: "Ramspace is not connected to the server.",
             });
             return false;
           }

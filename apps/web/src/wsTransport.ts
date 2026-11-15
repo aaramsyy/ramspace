@@ -1,6 +1,6 @@
 import { readWorkspaceFrame } from "./lib/hosts/workspaceFrame";
 // FILE: wsTransport.ts
-// Purpose: Browser-side Effect RPC transport over the Synara WebSocket endpoint.
+// Purpose: Browser-side Effect RPC transport over the Ramspace WebSocket endpoint.
 // Layer: Web transport
 // Exports: WsTransport plus stream-selection helpers used by tests.
 
@@ -73,7 +73,7 @@ import {
   type WsPushMessage,
   TASKS_UNAVAILABLE_ERROR_CODE,
   ThreadId,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import {
   Cause,
   Data,
@@ -102,7 +102,7 @@ import {
   makeWsRequestCapacityError,
   WS_REQUEST_CLASS_LIMITS,
   type WsRequestClass,
-} from "@synara/shared/wsRequestClass";
+} from "@ramspace/shared/wsRequestClass";
 import {
   classifyRpcTransportFailure,
   describeTransportFailureForDiagnostics,

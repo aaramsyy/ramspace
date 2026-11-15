@@ -1,6 +1,6 @@
-# @synara/api
+# @ramspace/api
 
-The Synara account service: WorkOS AuthKit for identity, plus account/host
+The Ramspace account service: WorkOS AuthKit for identity, plus account/host
 routes under `/api/v1`.
 
 It is a **self-hosting-first, opt-in** component. Local desktop use works without
@@ -16,24 +16,24 @@ account API itself runs only where an operator starts or deploys it.
 - **With `IDENTITY_PROVIDER=workos` (the default), `WORKOS_API_KEY` and
   `WORKOS_CLIENT_ID` are required**; the dev provider needs neither and refuses
   to coexist with a real key.
-- **The CLI is gated on `SYNARA_ACCOUNT_URL`.** `synara auth` (host linking)
-  and `synara status` only talk to an account service when that variable (or
-  `synara auth --account-url`) names one. Unset, `synara status` prints
+- **The CLI is gated on `RAMSPACE_ACCOUNT_URL`.** `ramspace auth` (host linking)
+  and `ramspace status` only talk to an account service when that variable (or
+  `ramspace auth --account-url`) names one. Unset, `ramspace status` prints
   "account features are not configured" and the CLI never opens a socket to
   anything. Sign-in itself is app-only.
 - **Identity login starts when the person chooses to sign in.** The app can
   fall back to the hosted account service in `packages/shared/src/account.ts`;
-  set `SYNARA_ACCOUNT_URL` explicitly for an operator-managed deployment. Public
+  set `RAMSPACE_ACCOUNT_URL` explicitly for an operator-managed deployment. Public
   Remote policy checks can precede login and remain independent of that login.
 - **No credentials are committed.** Every secret is read from the environment at
   boot (see `src/config.ts`). `apps/api/.env` is gitignored; `.env.example`
   carries names and comments only, never values. Host and device tokens live on
-  the operator's machine under `<synara home>/account-credentials.json` at mode
+  the operator's machine under `<ramspace home>/account-credentials.json` at mode
   `0600`, never in the repository.
 
-<a id="polar--synara-pro-remote-subscriptions"></a>
+<a id="polar--ramspace-pro-remote-subscriptions"></a>
 
-## Polar / Synara Alto Remote subscriptions
+## Polar / Ramspace Alto Remote subscriptions
 
 Billing supports isolated sandbox and production environments and is **off by
 default**. Production payments require a separate explicit interlock. This code
@@ -43,18 +43,18 @@ The sandbox campaign configured for qualification is recorded below.
 | Product decision  | Configuration                                                                                                            |
 | ----------------- | ------------------------------------------------------------------------------------------------------------------------ |
 | Local use         | Free; local coding, local chats and local workspace access do not require Alto.                                          |
-| Synara Alto       | All Remote functionality requires Alto. Local desktop use stays free. Remote still checks ownership and device approval. |
+| Ramspace Alto     | All Remote functionality requires Alto. Local desktop use stays free. Remote still checks ownership and device approval. |
 | Monthly           | USD 9.99, recurring monthly (`999` minor units).                                                                         |
 | Annual            | USD 79.99, recurring annually (`7999` minor units).                                                                      |
 | Tax               | Exclusive: applicable tax is added at checkout.                                                                          |
 | Introductory code | 50% off the first monthly payment only; no annual discount or permanent reduced renewal price.                           |
 
-The iPhone/iPad app remains a free companion for an existing Synara account.
+The iPhone/iPad app remains a free companion for an existing Ramspace account.
 On desktop, **Settings → Connections → View Alto plans** opens the existing
 Subscription panel when checkout is available and the account has no paid
 Remote access.
 The same Connections screen has **Connect a device** for pairing once the host
-allows it. Customers can start Polar checkout from desktop or the Synara pricing
+allows it. Customers can start Polar checkout from desktop or the Ramspace pricing
 site. The website verifies the email code before opening a checkout for that
 account. Only the exact checkout success origin can call the web checkout
 routes, and the site receives the Polar redirect without an account token.
@@ -112,13 +112,13 @@ last `200` the running API process returned, without a request to the container.
 It is kept per runtime-configuration fingerprint and dropped whenever the
 container starts, so it is exactly as fresh as the process it describes.
 
-| Setting                                 | Runs on               | Default and rollout use                                                                                                                                                                            |
-| --------------------------------------- | --------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `SYNARA_ACCOUNT_URL`                    | Remote execution host | Set explicitly to the canonical account API origin for the actual Remote deployment. Match the intended account/host authority; do not copy a trial URL or infer it from a generic UI fallback.    |
-| `SYNARA_REMOTE_BILLING_POLICY_REQUIRED` | Remote execution host | `false` during current preparation. Set to `true` only as part of the approved manual paid rollout. It requires fresh policy proof before admitting unverified Remote sessions, even before login. |
-| `POLAR_REMOTE_ACCESS_ENFORCED`          | Account API           | `false` now. The future paid rollout sets it to `true` with configured billing; beta/test enrollment cannot override it.                                                                           |
-| `POLAR_PROFILE_ACCESS_ENFORCED`         | Account API           | `false` by default. `true` (with configured billing) makes public profiles an Alto feature: publishing needs a fresh check and pages of owners without stored access answer 404.                   |
-| `POLAR_PRODUCTION_PAYMENTS_ENABLED`     | Account API           | `false` now. Production billing separately requires explicit `true`, production credentials, expected catalog and approved return origins.                                                         |
+| Setting                                   | Runs on               | Default and rollout use                                                                                                                                                                            |
+| ----------------------------------------- | --------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `RAMSPACE_ACCOUNT_URL`                    | Remote execution host | Set explicitly to the canonical account API origin for the actual Remote deployment. Match the intended account/host authority; do not copy a trial URL or infer it from a generic UI fallback.    |
+| `RAMSPACE_REMOTE_BILLING_POLICY_REQUIRED` | Remote execution host | `false` during current preparation. Set to `true` only as part of the approved manual paid rollout. It requires fresh policy proof before admitting unverified Remote sessions, even before login. |
+| `POLAR_REMOTE_ACCESS_ENFORCED`            | Account API           | `false` now. The future paid rollout sets it to `true` with configured billing; beta/test enrollment cannot override it.                                                                           |
+| `POLAR_PROFILE_ACCESS_ENFORCED`           | Account API           | `false` by default. `true` (with configured billing) makes public profiles an Alto feature: publishing needs a fresh check and pages of owners without stored access answer 404.                   |
+| `POLAR_PRODUCTION_PAYMENTS_ENABLED`       | Account API           | `false` now. Production billing separately requires explicit `true`, production credentials, expected catalog and approved return origins.                                                         |
 
 With strict host policy enabled, an unknown policy or first-read outage holds
 Remote closed while positive local desktop use remains available. A verified
@@ -177,8 +177,8 @@ rollout is deliberately approved. This documentation changes no runtime setting.
    `checkouts:write` and `customer_sessions:write`. Renewal cancellation needs
    subscription write. Campaign administration and refunds stay outside the
    runtime token; do not add discount/refund write scopes to it.
-6. Enable the desktop panel separately with `VITE_SYNARA_BILLING_ENABLED=1`.
-   The legacy `VITE_SYNARA_BILLING_SANDBOX=1` flag is retained as an alias for
+6. Enable the desktop panel separately with `VITE_RAMSPACE_BILLING_ENABLED=1`.
+   The legacy `VITE_RAMSPACE_BILLING_SANDBOX=1` flag is retained as an alias for
    panel visibility only. Neither build flag selects the billing environment
    or enables backend billing. Sign in to the intended account and open
    Settings → Profile → Subscription. Returning from checkout is not proof of
@@ -197,8 +197,8 @@ configuration together, and preserve that pairing across restarts and restores.
 
 ### Monthly introductory campaign
 
-The sandbox campaign `SYNARABETA50QA` was configured and exercised with a new
-sandbox customer: 50%, Once, restricted to `Synara Desktop — Sandbox Monthly`,
+The sandbox campaign `RAMSPACEBETA50QA` was configured and exercised with a new
+sandbox customer: 50%, Once, restricted to `Ramspace Desktop — Sandbox Monthly`,
 with one redemption per customer. The first discounted payment succeeded with
 `399` USD minor units before tax, `88` tax and `487` total (USD 3.99 + 0.88 = 4.87),
 and the shared feature benefit was granted. The annual checkout kept its full
@@ -218,7 +218,7 @@ separately. IDs and redemption history do not transfer between environments.
 | Percentage                       | 50% (`basis_points: 5000`).                                                                           |
 | Duration                         | Once (`once`), not repeating or forever.                                                              |
 | Products                         | Only that environment's monthly product ID; never the annual product or an unrestricted product list. |
-| Code                             | `SYNARABETA50QA` in sandbox only; select a separate production campaign deliberately.                 |
+| Code                             | `RAMSPACEBETA50QA` in sandbox only; select a separate production campaign deliberately.               |
 | Maximum redemptions per customer | `1`.                                                                                                  |
 
 Polar supports one-time recurring discounts and product restrictions; see
@@ -226,7 +226,7 @@ Polar supports one-time recurring discounts and product restrictions; see
 [discount API](https://polar.sh/docs/api-reference/discounts/update). Monthly
 checkout allows the customer to enter a code on Polar's hosted page; annual
 checkout disallows codes. The [checkout API](https://polar.sh/docs/api-reference/checkouts/create-session)
-provides `allow_discount_codes`; Synara does not accept client-selected discount
+provides `allow_discount_codes`; Ramspace does not accept client-selected discount
 IDs or override the amount. No additional promo-code field is needed in Settings.
 
 `once` limits the discount to one invoice. The per-customer redemption limit
@@ -282,7 +282,7 @@ session was created: only that exact attempt is cleared, allowing a corrected
 retry. Network errors, timeouts and 5xx responses never clear an uncertain intent.
 
 For an uncertain attempt that remains unresolved, inspect its matching
-`synara_checkout_attempt_id` metadata and customer/product scope in Polar before
+`ramspace_checkout_attempt_id` metadata and customer/product scope in Polar before
 operator recovery. Do not erase the local fence or force another purchase merely
 because a request timed out. If no conclusive vendor outcome is available, keep
 the attempt blocked rather than risk charging the customer twice. Returning
@@ -300,7 +300,7 @@ empty provider search is insufficient proof that payment cannot still complete.
 ### Receiver, monitoring and restart runbook
 
 - Deploy `POST /api/v1/billing/webhook` on a stable HTTPS receiver under an
-  operator-controlled hostname. No particular Synara domain is required. Register
+  operator-controlled hostname. No particular Ramspace domain is required. Register
   `customer.state_changed` in Polar using the Raw delivery format and the matching
   environment's signing secret. Use the final destination URL without redirects;
   preserve the original request body and signature headers through the proxy.
@@ -392,11 +392,11 @@ rollout.
 ## Identity: WorkOS AuthKit behind an adapter seam
 
 This service does not store users, passwords, or WorkOS sessions. WorkOS owns
-those. Synara does own an Ed25519 API signing key supplied at boot for host
+those. Ramspace does own an Ed25519 API signing key supplied at boot for host
 grants; only its public keys are served from
 `GET /api/v1/keys/jwks`. The database holds the additive host/account registry
 (`hosts`, legacy `host_tokens`, `devices`, link challenges and revocations)
-plus Synara-owned profiles.
+plus Ramspace-owned profiles.
 
 The domain never talks to WorkOS directly: routes depend on the identity and
 registry interfaces in `src/identity/interfaces.ts`. WorkOS implements user
@@ -620,11 +620,11 @@ empty database is fine. To generate new SQL after a schema change, use
 `bun run --cwd apps/api db:generate`; to apply without booting the server, use
 `db:migrate`.
 
-Then sign in from the Synara app (account menu), and from a server checkout:
+Then sign in from the Ramspace app (account menu), and from a server checkout:
 
 ```sh
-SYNARA_ACCOUNT_URL=http://localhost:8788 bun run --cwd apps/server src/index.ts auth    # link this host
-SYNARA_ACCOUNT_URL=http://localhost:8788 bun run --cwd apps/server src/index.ts status
+RAMSPACE_ACCOUNT_URL=http://localhost:8788 bun run --cwd apps/server src/index.ts auth    # link this host
+RAMSPACE_ACCOUNT_URL=http://localhost:8788 bun run --cwd apps/server src/index.ts status
 ```
 
 ## Developing without a WorkOS account
@@ -635,7 +635,7 @@ Set `IDENTITY_PROVIDER=dev` and the service swaps the whole identity seam for
 an offline implementation — no WorkOS tenancy, no network, no extra process:
 
 ```sh
-IDENTITY_PROVIDER=dev DATABASE_URL=postgres://synara:synara@localhost:5432/synara_accounts \
+IDENTITY_PROVIDER=dev DATABASE_URL=postgres://ramspace:ramspace@localhost:5432/ramspace_accounts \
   ACCOUNT_BASE_URL=http://localhost:8788 API_PUBLIC_URL=http://localhost:8788/api/v1 \
   bun run --cwd apps/api dev
 ```
@@ -684,7 +684,7 @@ path is exactly the one production takes, and neither `WORKOS_ISSUER` nor
 
 Start the API with those set, then sign in from the app as usual: SSO lands
 straight back in the app, OTP codes print in the stub's terminal, and you end
-up with a real credentials file (and, after `synara auth`, a registered host).
+up with a real credentials file (and, after `ramspace auth`, a registered host).
 
 | Flag                 | Default         | Purpose                                                                                                     |
 | -------------------- | --------------- | ----------------------------------------------------------------------------------------------------------- |
@@ -714,7 +714,7 @@ trusting an instance against real WorkOS, confirm by hand:
 2. "Continue with Google/Apple/GitHub" opens the provider page in the system
    browser and lands back in the app signed in; the email OTP dialog signs in
    with the code WorkOS mails.
-3. `synara status` resolves your real name and email through `GET /me`.
+3. `ramspace status` resolves your real name and email through `GET /me`.
 4. A command run more than ~5 minutes after signing in still works — that is the
    refresh path, and the credentials file should hold a changed token pair
    afterwards.
@@ -743,7 +743,7 @@ trusting an instance against real WorkOS, confirm by hand:
     one that omits the claim — that check is what stops a token minted for a
     sibling AuthKit application in the same environment from being accepted, as
     one issuer and one JWKS are shared across all of them. Decode a real access
-    token (jwt.io, or `synara status` plus the credentials file) and confirm the
+    token (jwt.io, or `ramspace status` plus the credentials file) and confirm the
     claim is present with the expected value. If a tenancy is configured with
     Resource Indicators the audience may arrive as `aud` instead, in which case
     this check needs widening before that tenancy can sign in at all.
@@ -777,11 +777,11 @@ A missing required variable fails the boot with an explicit
 
 Supabase is the selected PostgreSQL host for the remote MVP. WorkOS remains the
 identity authority: login, organizations, sessions and refresh tokens continue
-through the account API. Supabase only stores Synara's application data through
+through the account API. Supabase only stores Ramspace's application data through
 the existing `pg`/Drizzle connection. No Supabase Auth setup, WorkOS-to-Supabase
 JWT integration, `supabase-js`, publishable key or service-role API key is needed.
 
-1. The current trial uses the existing Synara project
+1. The current trial uses the existing Ramspace project
    (`ubdkfrnaqfbdymgipddq`), alongside its advertising tables. Account migrations
    0000–0015 and their Drizzle journal were applied through MCP on 2026-09-28.
    For another existing project, first check for account-table name collisions
@@ -800,7 +800,7 @@ JWT integration, `supabase-js`, publishable key or service-role API key is neede
    certificate verification to fix a connection error. Do not reset the shared
    database password or change project-wide settings used by the sponsor service.
 4. Keep this shared project's **Data API** enabled for the sponsor service.
-   Account tables are accessed only through Synara's API. Their bootstrap
+   Account tables are accessed only through Ramspace's API. Their bootstrap
    revokes all table grants from `PUBLIC`, `anon`, `authenticated` and
    `service_role`, without changing advertising grants or schema defaults.
    Migration 0015 also enables RLS without client-facing policies. Apply the
@@ -814,7 +814,7 @@ JWT integration, `supabase-js`, publishable key or service-role API key is neede
 6. Configure WorkOS and Cloudflare through the [remote setup guide](../../docs/implementation/cloudflare-remote/READINESS.md).
    After startup, inspect the tables with the Supabase plugin/SQL editor and
    verify login, profile creation, pairing, reconnect and revocation through
-   Synara. Passing local PostgreSQL tests is not live Supabase qualification.
+   Ramspace. Passing local PostgreSQL tests is not live Supabase qualification.
 
 Example URL shapes (replace placeholders with the values from **Connect**):
 
@@ -853,7 +853,7 @@ other routes and the production traffic mix.
 
 ## Deploying to Cloudflare
 
-Synara's selected API host is Cloudflare Containers. The public profiles run in
+Ramspace's selected API host is Cloudflare Containers. The public profiles run in
 a separate Cloudflare Worker; PostgreSQL stays on Supabase and identity stays on
 WorkOS. Railway is not part of this deployment.
 
@@ -915,7 +915,7 @@ connection while a provider answers:
   as a retryable `500`; idle connections are kept 60 seconds with TCP
   keep-alive. No statement timeout is set.
 
-`SYNARA_API_PERF=1` turns on request timing (off by default; on Cloudflare,
+`RAMSPACE_API_PERF=1` turns on request timing (off by default; on Cloudflare,
 set it as a Worker variable, which restarts the container). Each response
 then carries a `Server-Timing` header and the process logs one `[api-perf]`
 JSON line a minute with, per route pattern and status class: count, latency
@@ -940,7 +940,7 @@ both development and production.
 | `dev`   | Same, with `--hot`.                                                |
 
 **For packaging:** ship `src/`, `drizzle/`, and `node_modules`, then run
-`start`. Do not look for a compiled server entrypoint — unlike `@synara/server`,
+`start`. Do not look for a compiled server entrypoint — unlike `@ramspace/server`,
 which builds to `dist/index.mjs`, this app deliberately has none.
 
 ## Tests
@@ -951,11 +951,11 @@ serves a JWKS from a freshly generated key pair, mints access tokens signed by
 it, and answers the OTP, PKCE, and refresh grants, so the auth path is
 exercised end to end with no network. The same module backs the dev stub above.
 
-Create the separate `synara_accounts_test` database before running:
+Create the separate `ramspace_accounts_test` database before running:
 
 ```sh
 docker compose -f docker-compose.yml up -d
-TEST_DATABASE_URL=postgres://synara:synara@localhost:5432/synara_accounts_test bun run test
+TEST_DATABASE_URL=postgres://ramspace:ramspace@localhost:5432/ramspace_accounts_test bun run test
 ```
 
 Use a disposable test database, separate from personal development and production

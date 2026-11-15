@@ -7,15 +7,15 @@ import {
   HOST_USAGE_RECEIPT_DAYS,
   type HostUsageRow,
   type HostUsageSnapshot,
-} from "@synara/contracts/hostUsage";
+} from "@ramspace/contracts/hostUsage";
 import {
   HOST_USAGE_DAY_MS,
   HOST_USAGE_DIRECTORY,
   HOST_USAGE_POLICY_FILE,
   HOST_USAGE_RECEIPTS_FILE,
   HOST_USAGE_SETTLE_MS,
-} from "@synara/shared/hostUsage";
-import { usageTurnCategories } from "@synara/shared/usageAnalytics";
+} from "@ramspace/shared/hostUsage";
+import { usageTurnCategories } from "@ramspace/shared/usageAnalytics";
 import { Effect, FileSystem, Path } from "effect";
 import * as SqlClient from "effect/unstable/sql/SqlClient";
 import { writeFileStringAtomically } from "./atomicWrite";

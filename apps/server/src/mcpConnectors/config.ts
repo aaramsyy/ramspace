@@ -1,6 +1,6 @@
 import { homedir } from "node:os";
 import * as Path from "node:path";
-import { McpConnectorConnectInput } from "@synara/contracts";
+import { McpConnectorConnectInput } from "@ramspace/contracts";
 import { Schema } from "effect";
 
 export function normalizeConnectorInput(raw: unknown, cwd = homedir()): McpConnectorConnectInput {

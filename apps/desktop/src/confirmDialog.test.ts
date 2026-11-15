@@ -73,7 +73,7 @@ describe("guardDesktopWindowClose", () => {
     });
     guardDesktopWindowClose(
       window as unknown as BrowserWindow,
-      "Close the Synara window?",
+      "Close the Ramspace window?",
       shouldConfirm,
     );
     return window;

@@ -1,6 +1,6 @@
 # Supabase database certificate
 
-`supabase-root-2021.crt` is the public root CA linked by the Synara Supabase
+`supabase-root-2021.crt` is the public root CA linked by the Ramspace Supabase
 dashboard under Database → Settings → SSL configuration. It is not a private key.
 
 Source: <https://supabase-downloads.s3-ap-southeast-1.amazonaws.com/prod/ssl/prod-ca-2021.crt>.

@@ -1,6 +1,6 @@
 # Synara native Cua revision
 
-`0001-synara-native.patch` applies to the exact upstream commit in
+`0001-ramspace-native.patch` applies to the exact upstream commit in
 `packages/shared/src/cuaDriverRelease.json`. That manifest pins the patch checksum,
 Rust version and native protocol revision. Preserve the upstream license in
 `docs/computer-use-cua/CUA-LICENSE.txt`; the original Cua implementation and its
@@ -12,7 +12,7 @@ hunks passed the provisioner's `patch --batch --forward -p1` but failed CI's
 `git apply --check`. They were regenerated with context while preserving the
 earlier patch sections verbatim and every resulting source byte. Both applicators
 are verified against pristine upstream, including the subsequent
-`0002-synara-linux-browser.patch`. Repacking changes the patch checksum, so rebuild
+`0002-ramspace-linux-browser.patch`. Repacking changes the patch checksum, so rebuild
 artifacts through the provisioner instead of editing their provenance receipts.
 
 The patch closes native input admission irreversibly for one driver process.
@@ -171,7 +171,7 @@ seconds after spawn. Bump the literal in the same edit that bumps the manifest,
 then confirm the staged binary reports it (`metadata` over a live socket, or
 `strings` on the binary) before packaging.
 
-`0001-synara-native.patch` is self-contained: it carries the `select_text`
+`0001-ramspace-native.patch` is self-contained: it carries the `select_text`
 tool file itself, not just the registry wiring. Earlier revisions kept the
 tool's new-file hunk in a separate `0002-select-text.patch` record, but a
 `git diff` of tracked files cannot capture an untracked source file, so the

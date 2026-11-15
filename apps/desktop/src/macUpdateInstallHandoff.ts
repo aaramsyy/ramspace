@@ -9,7 +9,7 @@ type NativeMacUpdater = {
 };
 
 const RELAUNCH_REQUIRED_MESSAGE =
-  "Restart Synara before trying to install another update. The previous installer handoff did not finish.";
+  "Restart Ramspace before trying to install another update. The previous installer handoff did not finish.";
 
 export class MacUpdateInstallHandoff {
   private phase: "idle" | "preparing" | "prepared" | "installing" | "blocked" = "idle";

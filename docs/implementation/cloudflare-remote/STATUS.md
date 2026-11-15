@@ -24,7 +24,7 @@ keys deduplicate reconnect/re-registration during retention.
   `0023_turn_notifications` is applied; the live 24th Drizzle entry matches source
   SHA-256 `9ef29ef5012769fcc26923031eb6b9710148d0bbf4865ce129de8b5cdde34da1`
   and timestamp `1792277337529`. Existing rows retain `liveactivity`; table owner
-  `synara_account_api`, default-deny RLS and public grants are unchanged.
+  `ramspace_account_api`, default-deny RLS and public grants are unchanged.
 - **Deployment:** Worker `6872693d-8e41-472b-aa6e-eb850387566c`, Container version
   24 and image `sha256:0b78e508208564c849cc82460237833c37317f2b78b7b3a981cdbeb62f21c1ba`
   are live. The rollout completed with one active instance and no rollout errors.
@@ -43,7 +43,7 @@ continues to use the native notification fallback during iOS's transport grace.
 
 ## Remote .20 and companion 141 delivered — 2026-10-17
 
-[Synara Remote 1.0.6-remote.20](https://github.com/Emanuele-web04/synara/releases/tag/v1.0.6-remote.20)
+[Ramspace Remote 1.0.6-remote.20](https://github.com/aaramsyy/ramspace/releases/tag/v1.0.6-remote.20)
 is public for macOS ARM64, Windows x64 and Linux x64. Immutable tag source
 `de050d78ac88fadb13a8963d660c8b14935039ee` includes desktop fix `37542f8`:
 attachment uploads, thread exports and voice accept the colon-separated thread
@@ -53,7 +53,7 @@ body limits and existing authorization remain in place.
 - **Qualification:** pinned Node 24.13.1/Bun 1.4.2 local format, lint, typecheck,
   identity, release smoke, shared resource regressions and authenticated remote
   resource-pool tests pass. The single
-  [exact-tag publication run](https://github.com/Emanuele-web04/synara/actions/runs/39066174138)
+  [exact-tag publication run](https://github.com/aaramsyy/ramspace/actions/runs/39066174138)
   passes all configured quality tests, all three server shards, three-platform
   packaged startup, macOS signing/notarization and Windows Defender. Temporary
   Apple ticket-delivery disconnects recover through the existing bounded retries
@@ -85,7 +85,7 @@ body limits and existing authorization remain in place.
 
 ## Remote .19 and companion 140 delivered — 2026-10-17
 
-[Synara Remote 1.0.6-remote.19](https://github.com/Emanuele-web04/synara/releases/tag/v1.0.6-remote.19)
+[Ramspace Remote 1.0.6-remote.19](https://github.com/aaramsyy/ramspace/releases/tag/v1.0.6-remote.19)
 is public for macOS ARM64, Windows x64 and Linux x64. Immutable tag source
 `7b303029a4c0cf82e1af4d67bff2a3c0811fe45f` includes main through
 `4cd66c35d897a98aa61ffd075607e08a6c46e4cf`: #1962, #1963, #1770, #1797,
@@ -102,7 +102,7 @@ The source branch merge is `2febfa9`; the candidate version stays off main.
 - **Checks:** format, lint, typecheck, identity, release smoke, Windows runtime
   and migration lineage checks pass. Focused suites pass: 1,816 server, 329 web,
   59 desktop, 72 shared and 12 browser tests. The single
-  [exact-tag publication run](https://github.com/Emanuele-web04/synara/actions/runs/39059832632)
+  [exact-tag publication run](https://github.com/aaramsyy/ramspace/actions/runs/39059832632)
   succeeds, including all configured quality/server suites, three-platform
   packaged startup, macOS signing/notarization and Windows Defender.
 - **Public distribution:** all 11 asset hashes, updater sizes/SHA-512 and
@@ -134,13 +134,13 @@ The source branch merge is `2febfa9`; the candidate version stays off main.
   API key, certificate creation/revocation or paid service was used.
 
 Install Remote **.19** and TestFlight **0.1 (140)**. Private proofs are retained in
-`/private/tmp/synara-remote19-checkpoint.json`,
-`/private/tmp/synara-public-1.0.6-remote.19/verified.json` and
-`/private/tmp/synara-ios140-distribution-proof.json`.
+`/private/tmp/ramspace-remote19-checkpoint.json`,
+`/private/tmp/ramspace-public-1.0.6-remote.19/verified.json` and
+`/private/tmp/ramspace-ios140-distribution-proof.json`.
 
 ## Remote .18 and companion 139 delivered — 2026-10-17
 
-[Synara Remote 1.0.6-remote.18](https://github.com/Emanuele-web04/synara/releases/tag/v1.0.6-remote.18)
+[Ramspace Remote 1.0.6-remote.18](https://github.com/aaramsyy/ramspace/releases/tag/v1.0.6-remote.18)
 is public for macOS ARM64, Windows x64 and Linux x64. Immutable tag source
 `d586357deee7209080f012d5849ec8b0b3b4bebc` integrates reviewed analytics source
 `1f81242` and the additional technical-only error sanitizer in `7cc0b2e`.
@@ -159,7 +159,7 @@ Stable/Beta product collection stays opt-in and Stable diagnostics stay disabled
   D1. The unauthenticated dashboard still returns 401. Only the identified
   synthetic fixture rows were removed after verification.
 - **Desktop qualification:** local final checks and the
-  [single exact-source release workflow](https://github.com/Emanuele-web04/synara/actions/runs/39054643680)
+  [single exact-source release workflow](https://github.com/aaramsyy/ramspace/actions/runs/39054643680)
   pass, including all server shards, three packaged-startup checks, macOS
   signing/notarization and Windows Defender. All 11 public assets match their
   digests, provenance and updater checksums. The public Mac ZIP independently
@@ -178,7 +178,7 @@ Stable/Beta product collection stays opt-in and Stable diagnostics stay disabled
   refreshing profiles; no API key or new certificate was required.
 - **Public policy:** website privacy PR #14,
   merge `5441ab0`, is deployed by Vercel and verified at
-  [trysynara.com/privacy](https://www.trysynara.com/privacy). The maintained mirror
+  [tryramspace.com/privacy](https://www.tryramspace.com/privacy). The maintained mirror
   agrees. Contract, sponsorship, lint, types, links and builds pass on the Mini;
   Linux browser functional, accessibility, performance and all 11 visual checks
   pass. Nine stale golden images were identical between unchanged main and the
@@ -194,7 +194,7 @@ and physical-device APNs delivery remain unverified. The phones were not used.
 
 ## Remote .17 and companion 138 delivered — 2026-10-17
 
-[Synara Remote 1.0.6-remote.17](https://github.com/Emanuele-web04/synara/releases/tag/v1.0.6-remote.17)
+[Ramspace Remote 1.0.6-remote.17](https://github.com/aaramsyy/ramspace/releases/tag/v1.0.6-remote.17)
 is public for macOS ARM64, Windows x64 and Linux x64. Tag source
 `56d6b7691fe66f93a1035c8db74ab79ee80dce99` integrates `8502ff8`.
 Claude's discovered effort ladder retains its model default; the composer also
@@ -204,7 +204,7 @@ release-history entry; no unrelated UI changes were made.
 
 Local formatting, lint, typecheck, brand, frozen install and release smoke pass,
 along with 296 affected adapter/composer/release-history tests. The
-[same exact-source workflow](https://github.com/Emanuele-web04/synara/actions/runs/39047673920)
+[same exact-source workflow](https://github.com/aaramsyy/ramspace/actions/runs/39047673920)
 passes all quality/server gates: **18,267 tests passed, 298 skipped**. Native
 packaged startup passes on all three platforms; macOS signing/notarization and
 Windows Defender pass. Attempt 1's Windows Defender service was unavailable
@@ -236,10 +236,10 @@ turns, manual installed upgrades on every OS or physical-device push delivery.
 
 ## Remote .16 published / companion 137 on TestFlight — 2026-10-17
 
-[Synara Remote 1.0.6-remote.16](https://github.com/Emanuele-web04/synara/releases/tag/v1.0.6-remote.16)
+[Ramspace Remote 1.0.6-remote.16](https://github.com/aaramsyy/ramspace/releases/tag/v1.0.6-remote.16)
 is public for macOS ARM64, Windows x64 and Linux x64. Tag source
 `2b7a1d92406de58e7d59c6744f5c5013248e2f52` integrates feature source `f8a058e`.
-The [single exact-tag workflow](https://github.com/Emanuele-web04/synara/actions/runs/39037141011)
+The [single exact-tag workflow](https://github.com/aaramsyy/ramspace/actions/runs/39037141011)
 passed quality, all three server shards, all three packaged startup checks,
 macOS signing/notarization and Windows Defender: **18,264 tests passed, 298 skipped**.
 Local qualification also passed formatting, lint, typecheck, release smoke,
@@ -280,7 +280,7 @@ and build 136 remain available. No public invitation link or API key was created
 physical device used or new live simulator pass claimed for this source.
 
 The Mini's idle system sleep is already disabled (`sleep = 0`), its display timeout
-is ten minutes, and installed Synara Remote holds a keep-awake assertion. These
+is ten minutes, and installed Ramspace Remote holds a keep-awake assertion. These
 settings were inspected, not changed. Screen lock prevents native UI control but
 does not itself put the Mini to sleep; the prior locked transport evidence below
 remains separate from physical-iPhone identity/reconnect qualification.
@@ -289,12 +289,12 @@ is still unverified. No new permissions or paid services were enabled.
 
 ## Remote .15 published — 2026-10-17
 
-[Synara Remote 1.0.6-remote.15](https://github.com/Emanuele-web04/synara/releases/tag/v1.0.6-remote.15)
+[Ramspace Remote 1.0.6-remote.15](https://github.com/aaramsyy/ramspace/releases/tag/v1.0.6-remote.15)
 is public for macOS ARM64, Windows x64 and Linux x64. The tag names exact source
 `113bd45b0d408bae5e600bb3e887bb6cfb3f9efb`, prepared from feature source `31cae11`
 in the separate release worktree. All 11 installers, provenance documents and
 Remote updater manifests are present; Stable/Beta identities remain separate.
-The [exact-tag workflow](https://github.com/Emanuele-web04/synara/actions/runs/38990068434)
+The [exact-tag workflow](https://github.com/aaramsyy/ramspace/actions/runs/38990068434)
 passed quality, all three server shards, all three packaged startup gates,
 macOS signing/notarization and Windows Defender. CI recorded 18,258 passed tests
 and 298 skipped tests. These packaged checks are not manual installed upgrades
@@ -454,11 +454,11 @@ decoder; server-owned turn and activity fixes apply to remote mobile clients.
 
 ## GitHub Production sign-in follow-up — 2026-10-16
 
-GitHub OAuth is enabled and validated in WorkOS Production. The existing Synara
+GitHub OAuth is enabled and validated in WorkOS Production. The existing Ramspace
 GitHub OAuth app now includes the exact WorkOS callback alongside its existing
 Supabase callback; both use exact matching. An additional client secret is stored
 only in WorkOS. The old secret and callback remain intact. The flow requests
-`user:email`, without repository scopes or provider-token return to Synara.
+`user:email`, without repository scopes or provider-token return to Ramspace.
 
 The source restores the existing GitHub button for Remote through the same SSO
 handler as Google and Apple. The common provider/cancellation/recovery browser
@@ -468,7 +468,7 @@ GitHub authorize API respond successfully. The live source app reaches GitHub's
 consent page; final consent and callback verification are still pending. No new
 release or tag has been published.
 
-The live probe uses a disposable Synara home and Electron profile. GitHub's own
+The live probe uses a disposable Ramspace home and Electron profile. GitHub's own
 account email differs from the existing Mac login, so the test must remain a
 separate identity: do not relink or merge the existing Mac account to make it
 pass. No existing account, chat history or cloud identity mapping was modified.
@@ -477,8 +477,8 @@ pass. No existing account, chat history or cloud identity mapping was modified.
 
 Version **1.0.6-remote.14**, source
 `55ded6c1543a98679f8ac503c447d19cfb3906e9`, is
-[public](https://github.com/Emanuele-web04/synara/releases/tag/v1.0.6-remote.14).
-[Exact-tag CI](https://github.com/Emanuele-web04/synara/actions/runs/38939586124)
+[public](https://github.com/aaramsyy/ramspace/releases/tag/v1.0.6-remote.14).
+[Exact-tag CI](https://github.com/aaramsyy/ramspace/actions/runs/38939586124)
 passes every required quality, server shard, Mac ARM64, Windows x64 and Linux x64
 packaging/startup gate, including Windows Defender. The release contains eleven
 assets and three separate Remote updater feeds. Stable Latest remains v1.0.5;
@@ -538,7 +538,7 @@ identity; code qualification remains the exact-tag CI above.
   warnings remain). This fix is not in the installed Remote .2 apps yet.
 - The iPad PR #2 was merged into the existing iOS remote-connections branch,
   without merging that branch into main. iPad sidebar/rotation and two iPhone
-  workspace UI flows pass. Native sign-in consent now displays Synara; the light
+  workspace UI flows pass. Native sign-in consent now displays Ramspace; the light
   icon uses the current vector at the dark icon's scale. No paid WorkOS custom
   domain or service was enabled.
 - Real-account simulator sign-in and fresh-code enrollment to the installed
@@ -551,7 +551,7 @@ identity; code qualification remains the exact-tag CI above.
 
 ## Installed-app qualification follow-up — 2026-10-15
 
-- Synara Remote was installed beside the existing apps on both Macs. Read-only
+- Ramspace Remote was installed beside the existing apps on both Macs. Read-only
   snapshots and message-by-message comparisons verified the imported local
   histories; account credentials and host/device identities were not copied.
   Both apps completed normal same-account Google sign-in and a real Codex reply.
@@ -566,7 +566,7 @@ identity; code qualification remains the exact-tag CI above.
   across repeated reporter starts with the correctly placed checkpoint. New real
   activity then uploaded without another historical backfill. This operator
   repair does not add per-account local conversation ownership; see [account
-  switching semantics](../../../BETA.md#synara-remote-early-access).
+  switching semantics](../../../BETA.md#ramspace-remote-early-access).
 - A controlled backend restart in installed version **1.0.6-remote.1** exposed a
   separate recovery defect: the replacement backend chose a new port while the
   renderer retained its pinned endpoint. The desktop now keeps its reserved port
@@ -576,7 +576,7 @@ identity; code qualification remains the exact-tag CI above.
   the changed endpoint and passed after the repair. No transport unpinning or
   renderer reload was added. The signed, notarized **1.0.6-remote.2** candidate
   (`a556ebf4238206ccf033158056027d86580fe45b`) passed
-  [all build gates](https://github.com/Emanuele-web04/synara/actions/runs/38783573115)
+  [all build gates](https://github.com/aaramsyy/ramspace/actions/runs/38783573115)
   and is installed on both Macs, with the previous app retained for rollback.
   Both installed apps survived a controlled backend restart in the same window:
   replacement PID, unchanged port, preserved unsent draft, automatic reconnect
@@ -590,7 +590,7 @@ identity; code qualification remains the exact-tag CI above.
   eleven test tasks. A first parallel run hit one five-second web test timeout;
   that case passed in isolation and the second full run passed unchanged.
   Formatting, lint, twelve-package typecheck and Windows runtime checks passed.
-- Apple Developer inspection found the Synara APNs key is topic-specific and
+- Apple Developer inspection found the Ramspace APNs key is topic-specific and
   **Sandbox only**. The deployed `both` gateway setting does not expand its
   authorization. The API now accepts an optional, separately validated
   `APNS_PRODUCTION_PRIVATE_KEY` / `APNS_PRODUCTION_KEY_ID` pair, forwards both
@@ -633,7 +633,7 @@ identity; code qualification remains the exact-tag CI above.
   deployment and startup are not delivery proof.
 - Universal iOS/iPadOS version 0.1 (130) was exported with Cloud Managed Apple
   Distribution and uploaded successfully with the ordinary Xcode Apple ID.
-  App Store Connect shows **Ready to Test**. The internal **Synara Early Access**
+  App Store Connect shows **Ready to Test**. The internal **Ramspace Early Access**
   group has manual distribution, version 0.1 (130) attached and one explicitly
   authorized internal tester. App Store Connect confirms that tester is **Invited**.
   No App Store Connect API key was created. External Beta review remains pending.
@@ -641,29 +641,29 @@ identity; code qualification remains the exact-tag CI above.
   desktop source. The final retained native checks passed 116 cases (one skip)
   on each simulator; the iPad docked-sidebar flow passed twice. The broader
   legacy native suite is not green; see the mobile handoff for retained gaps.
-- GitHub Actions for the private SynaraIOS repository refuses hosted jobs before
+- GitHub Actions for the private RamspaceIOS repository refuses hosted jobs before
   execution because of account payment/spending limits; iOS qualification and
   upload ran on the Mini. This does not block the public desktop repository's
   standard runners. The obsolete build-only Beta candidate was cancelled after
-  the user requested a distinct app named **Synara Remote**. Its separate flavor,
+  the user requested a distinct app named **Ramspace Remote**. Its separate flavor,
   data home and updater lane are implemented through the existing signing
   workflow. Remote qualification passed 259 affected tests, twelve-package
   typecheck, lint (zero errors), formatting, Windows boundary and release smoke.
   The exact candidate `fa1c5e6db6904ee3c694fd9a495d4292f1571a8f`, version
-  **1.0.6-remote.1**, passed [all CI gates](https://github.com/Emanuele-web04/synara/actions/runs/38767031101):
+  **1.0.6-remote.1**, passed [all CI gates](https://github.com/aaramsyy/ramspace/actions/runs/38767031101):
   18,168 tests passed and 295 were skipped by their existing CI routing; the
   database-backed API cases passed separately in the 369-test Mini run above.
   Developer ID signing, Apple notarization of the app/DMG, artifact provenance
   and packaged Mac ARM64 startup smoke all passed. The qualified installer and
   updater ZIP were downloaded on the Mini: source/lockfile provenance, all file
   hashes, Remote bundle/display identity, DMG signature, stapled Apple ticket
-  and Gatekeeper acceptance passed locally. They are available in the [30-day workflow artifact](https://github.com/Emanuele-web04/synara/actions/runs/38767031101/artifacts/11990746436).
+  and Gatekeeper acceptance passed locally. They are available in the [30-day workflow artifact](https://github.com/aaramsyy/ramspace/actions/runs/38767031101/artifacts/11990746436).
   This is a build-only candidate: no public release/update feed has been published.
   No new paid plan or spending limit was enabled.
   No desktop tag, main merge, signed Remote publication or external TestFlight
   review is claimed.
 
-Updated 2026-09-29. Original base `42aa8fb4f093f78fe7a1f7be5525f67571086ebf` verified clean; existing isolated worktree `a816/synara`, branch `codex/cloudflare-remote-mvp`. Git emits known AppleDouble index warnings; branch creation succeeded (exit 0) after granting Git metadata access. No pack repair.
+Updated 2026-09-29. Original base `42aa8fb4f093f78fe7a1f7be5525f67571086ebf` verified clean; existing isolated worktree `a816/ramspace`, branch `codex/cloudflare-remote-mvp`. Git emits known AppleDouble index warnings; branch creation succeeded (exit 0) after granting Git metadata access. No pack repair.
 
 ## Completion levels
 
@@ -699,11 +699,11 @@ Keep public Cloudflare TLS separate from host P-256 TLS1.3. Never forward local 
 
 ## Active local services and next action
 
-Disposable PostgreSQL is stopped. It used `/private/tmp/synara-cloudflare-postgres/data`, 127.0.0.1:58433. Personal instance 7265 was preserved. Final E2E process inspection found no fixture connector/server remnants. Git AppleDouble warnings remain unchanged.
+Disposable PostgreSQL is stopped. It used `/private/tmp/ramspace-cloudflare-postgres/data`, 127.0.0.1:58433. Personal instance 7265 was preserved. Final E2E process inspection found no fixture connector/server remnants. Git AppleDouble warnings remain unchanged.
 
 During qualification, the final process audit found connectors surviving a signal-induced Node exit. The existing Effect patch now keeps signal ownership during asynchronous finalization. A subprocess regression and built-workspace PID assertions cover the correction. Older fixture remnants were explicitly terminated. No operator process was targeted.
 
-Logs: `/private/tmp/synara-cloudflare-{tests,api,e2e,all-types,build,format,lint,windows,migrations,electron,shutdown}.log`. Durable screenshots and compact checks: `/Users/emanueledipietro-macmini/.codex/visualizations/2026/09/28/01a0e737-6f66-7340-a97d-eada9d6c3680/cloudflare-remote/`.
+Logs: `/private/tmp/ramspace-cloudflare-{tests,api,e2e,all-types,build,format,lint,windows,migrations,electron,shutdown}.log`. Durable screenshots and compact checks: `/Users/aaramsyy-macmini/.codex/visualizations/2026/09/28/01a0e737-6f66-7340-a97d-eada9d6c3680/cloudflare-remote/`.
 
 Delivery: implementation commit `39784a61da783548060a1ed062b4ed6d9a314e8d` is published on `origin/codex/cloudflare-remote-mvp`. Final format and frozen patch-install verification passed; the installed-runtime regression passed 11/11. Live phase 9 needs secure test-environment setup and access to both Macs; no live success is claimed. No main merge, release, production deployment or commercial rollout.
 
@@ -721,7 +721,7 @@ Four focused regressions cover retries, cancellation/preview capacity, identity/
 
 Checks: focused regressions 4/4; PostgreSQL API 318/318; rebuilt desktop/server 5/5 build tasks; typecheck 13/13; lint 0 errors / 792 existing warnings; format passed. Full Node 24 E2E passed 16/16 in 79.53 seconds. The first E2E attempt ran under the shell's Node 26 and was refused by the intended runtime gate; it was rerun on Node 24.21.0 without weakening that gate. Final full repository suite passed with Node 24 and cache bypass: 11/11 tasks, 13,918 tests passed / 246 skipped, 305.53 seconds. Database/build-dependent skipped cases passed in the separate API/E2E runs above.
 
-The disposable PostgreSQL instance has been stopped again. This review used logs `/private/tmp/synara-remote-review-*` and browser evidence `/private/tmp/synara-remote-review-evidence`. No external credentials were configured, no real tunnel was provisioned and no live/signed/two-Mac qualification is claimed.
+The disposable PostgreSQL instance has been stopped again. This review used logs `/private/tmp/ramspace-remote-review-*` and browser evidence `/private/tmp/ramspace-remote-review-evidence`. No external credentials were configured, no real tunnel was provisioned and no live/signed/two-Mac qualification is claimed.
 
 Follow [Configure the remote MVP](READINESS.md) for the remaining service setup and live test. API hosting is still required alongside WorkOS, PostgreSQL and Cloudflare. Internal test enrollment remains distinct from commercial paid-entitlement enforcement.
 
@@ -734,7 +734,7 @@ flows are unchanged. The API continues using `pg`/Drizzle with a server-only
 
 Migration `0015_account_table_rls` enables default-deny RLS on all 15 account API
 tables. This prevents untrusted database roles with table grants (such as
-Supabase's Data API roles) from reading or changing rows outside Synara's API.
+Supabase's Data API roles) from reading or changing rows outside Ramspace's API.
 The database-owner runtime remains authoritative for WorkOS-scoped checks. The
 new PostgreSQL regression verifies table coverage, denied reads/writes and
 preserved access for a non-superuser table owner. No historical migration was
@@ -760,7 +760,7 @@ TLS/database role and hosted synthetic privacy checks. See
 [profiles qualification](../cloudflare-profiles/READINESS.md) for current service
 state; earlier no-resource statements describe the preceding remote-only work.
 Real WorkOS login and the migrated account session have now been verified on
-`synara-account-api-trial.synara-orgs.workers.dev`. Tunnel provisioning, remote
+`ramspace-account-api-trial.ramspace-orgs.workers.dev`. Tunnel provisioning, remote
 enrollment and two-Mac acceptance remain unverified. This deployment does not
 mark remote access complete.
 
@@ -773,8 +773,8 @@ forwarding list now includes the four `CLOUDFLARE_*` tunnel settings and
 the unconfigured case; unrelated Worker bindings remain excluded. The API's
 existing config tests cover rejection of incomplete tunnel settings.
 
-Live inspection found no zones or tunnels in Synara Orgs and none of those five
-bindings on the API. The operator chose `trysynara.com` and deferred its DNS
+Live inspection found no zones or tunnels in Ramspace Orgs and none of those five
+bindings on the API. The operator chose `tryramspace.com` and deferred its DNS
 move from Vercel. The website can remain hosted on Vercel. The
 [readiness checklist](READINESS.md) records the remaining DNS preparation,
 runtime token/enrollment, Container restart and two-Mac acceptance steps.
@@ -812,9 +812,9 @@ binding change.
 ## Managed DNS activation — 2026-09-29
 
 After the operator approved the exact nameserver change, Namecheap saved
-`cecelia.ns.cloudflare.com` and `eric.ns.cloudflare.com` for `trysynara.com`.
+`cecelia.ns.cloudflare.com` and `eric.ns.cloudflare.com` for `tryramspace.com`.
 The registry confirms the delegation and Cloudflare reports the zone active in
-Synara Orgs. The full ten-record Vercel inventory was copied before switching;
+Ramspace Orgs. The full ten-record Vercel inventory was copied before switching;
 website records remain DNS-only and point to the original Vercel destinations.
 HTTPS checks returned 200 from Vercel and its project Analytics history remained
 present. No DNSSEC DS delegation existed. No interruption was observed in these
@@ -832,9 +832,9 @@ remote bindings, Container restart and real two-Mac acceptance remain pending.
 
 ## Remote service configured — 2026-09-29
 
-The operator explicitly approved creating `synara-remote-tunnels-trial` with
-no expiration, cloudflared connector write in Synara Orgs and DNS write limited
-to `trysynara.com`. The token was stored outside the repository with private
+The operator explicitly approved creating `ramspace-remote-tunnels-trial` with
+no expiration, cloudflared connector write in Ramspace Orgs and DNS write limited
+to `tryramspace.com`. The token was stored outside the repository with private
 filesystem permissions and in the account API's Worker secrets. A single bulk
 secret update installed all four Cloudflare settings plus the one-user trial
 allowlist, preserving unrelated secrets. Runtime-token verification, tunnel
@@ -849,8 +849,8 @@ or a real remote connection.
 The current branch's CLI and web build passed (four build tasks). A separate
 Node 24 test instance runs on loopback port 4775 with its own home, after the
 dev runner dry-run and IPv4/IPv6 listener checks. The older profiles test and
-the regular Synara instance were left running. The new instance uses the
-Synara Orgs API directly. The operator completed a fresh WorkOS login, the
+the regular Ramspace instance were left running. The new instance uses the
+Ramspace Orgs API directly. The operator completed a fresh WorkOS login, the
 machine linked successfully, and Hosts & devices exposes the pairing controls.
 The new login selected a different WorkOS identity than the earlier profiles
 test. After verifying it through `/api/v1/me`, the allowlist was replaced with
@@ -871,7 +871,7 @@ and matched the registered device. The operator explicitly approved pairing
 that exact device with the isolated Mini instance.
 
 Creating a pairing code through the Mini UI initialized its remote identity.
-Synara automatically provisioned one named Cloudflare tunnel and its proxied
+Ramspace automatically provisioned one named Cloudflare tunnel and its proxied
 DNS record; Cloudflare reported healthy with four connector connections. The
 ten existing website/mail records remained present. Cloudflare and Google
 DNS-over-HTTPS resolved the generated hostname to Cloudflare, but the Mini's
@@ -932,7 +932,7 @@ The built-workspace E2E now waits for restored connections before any manual
 action and no longer reloads the page after controller restart; it passes.
 
 A second live interruption forcibly terminated only the isolated Mini's
-cloudflared process at 11:57:58.574 UTC. Synara replaced it automatically.
+cloudflared process at 11:57:58.574 UTC. Ramspace replaced it automatically.
 The MacBook recorded socket closure at 11:58:04.343 and a restored connection
 at 11:58:07.715: approximately 9.1 seconds from termination and 3.4 seconds
 from the observed close. A subsequent authenticated file read matched the
@@ -956,7 +956,7 @@ long unattended qualification also remain incomplete. This is not a signed
 distribution or an unattended reliability result.
 
 The newly installed official `cf` CLI (`1.0.0-beta.5`) is authenticated to
-Synara Orgs with read-only OAuth scopes. A DNS listing through this CLI matched
+Ramspace Orgs with read-only OAuth scopes. A DNS listing through this CLI matched
 all ten baseline records exactly, including DNS-only website CNAMEs. Runtime
 tunnel writes use the separate scoped service token, and deployment operations
 use the existing authorized deployment credentials.
@@ -1073,7 +1073,7 @@ the real sidebar; execution clients and stores remain isolated.
 
 The reference review used the installed Codex bundle's sidebar/device-picker components and
 the recorded upstream main `d2c9281b81`. Both retain host-qualified identities while allowing a combined
-project/task view. No external source code was copied into Synara. Synara retains its own classic
+project/task view. No external source code was copied into Ramspace. Ramspace retains its own classic
 and Activity views. Remote mutation menus and cross-host keyboard cycling remain follow-ups; the
 outer remote rows expose navigation and project chat creation, and never invoke local mutations.
 
@@ -1107,7 +1107,7 @@ for that remaining physical-device check. The installed app and primary checkout
 ### Internal agent MCP routing — 2026-09-29
 
 Implementation `ac27fd7` closes the gap between the combined sidebar and the provider-session
-MCP gateway. `synara_list_connections` discovers the executing server and its paired outgoing
+MCP gateway. `ramspace_list_connections` discovers the executing server and its paired outgoing
 connections. Existing project/thread tools accept an explicit `environmentId`; local remains
 the default. Results and wait/read continuations retain the owning environment. Remote calls
 reuse paired TLS, caller runtime/worktree limits, and durable creation/recovery; no provider
@@ -1184,7 +1184,7 @@ worktrees. No new UI primitives, model changes, key material in Git, physical
 phone use, or destructive database operations.
 
 MacBook configuration handoff reports all five APNs secrets installed on
-`synara-account-api-trial` in Synara Orgs, with all 16 pre-existing secrets
+`ramspace-account-api-trial` in Ramspace Orgs, with all 16 pre-existing secrets
 preserved. Configuration is Sandbox only. The replacement key remains outside
 Git; the unused exposed key was revoked by that chat with specific user consent.
 This ledger deliberately contains no private key/token values.
@@ -1204,8 +1204,8 @@ restored the existing account without a new login. The simulator and current
 Mini Dev use different accounts, so their remote access remains isolated. The optional browser
 mirror download failed TLS certificate validation; no verification was disabled.
 
-With explicit operator approval, migration 0021 was applied to the live Synara
-Supabase project on 2026-10-09. Both tables are owned by `synara_account_api`,
+With explicit operator approval, migration 0021 was applied to the live Ramspace
+Supabase project on 2026-10-09. Both tables are owned by `ramspace_account_api`,
 have RLS enabled and deny public client roles; the original Drizzle hash and
 timestamp were verified. Worker/container deployment completed as version
 `a9611fbf-fa9c-4298-b53d-4bcb7459ae69`, image digest
@@ -1249,7 +1249,7 @@ update token, the live outbox recorded accepted APNs updates, and simulator
 `liveactivitiesd` recorded Apple push reception at 00:19:47, 00:19:56, 00:20:34
 and 00:21:22 CEST. At 00:21:22 ActivityKit processed the remote end event and the
 lock screen visibly changed from approval needed to Ready without reopening
-Synara. The activity disappeared automatically after the configured 60-second
+Ramspace. The activity disappeared automatically after the configured 60-second
 dismissal. No `simctl push`, database state injection, or physical iPhone was used.
 
 This qualifies the single-host Sandbox path, not Production/TestFlight,
@@ -1299,7 +1299,7 @@ owners; it is not represented as fully green. See the mobile handoff.
 Publication boundary: these changes are branch code, not a new cloud deployment
 or distributed app. Migration 0022 is not applied live; Production APNs, Apple
 upstream token revocation, and provider-side personal-organization retention
-remain unqualified. App Store Connect now has the Synara mobile app entry, but
+remain unqualified. App Store Connect now has the Ramspace mobile app entry, but
 the local Release archive is development-signed and App Store export requires
 ordinary Apple-ID distribution signing. No App Store Connect API key was
 created. No main merge, Beta tag, TestFlight upload or physical-phone update
@@ -1316,14 +1316,14 @@ The regression failed before the fix; 110 focused account/auth/device/pairing
 tests, format, lint (zero errors) and twelve-package typecheck pass.
 
 Remote `1.0.6-remote.3`, source `56c90173152bf15fa22a1282f1166d7f4b65054a`,
-passed [the complete release-candidate workflow](https://github.com/Emanuele-web04/synara/actions/runs/38794054496),
+passed [the complete release-candidate workflow](https://github.com/aaramsyy/ramspace/actions/runs/38794054496),
 including signing, notarization and packaged startup. This is a build-only run;
 no public release, tag or update feed was published. Standard public-repository
 runners were used; no billing or spending setting changed.
 
 The iPad branch was merged into the mobile feature branch through mobile PR #2;
 mobile PR #1 remains separate from main. The native authentication consent names
-Synara, and the light icon is rendered from the current vector at the scale of
+Ramspace, and the light icon is rendered from the current vector at the scale of
 the existing dark/custom icons. WorkOS keeps its existing domain and email
 sender; no paid branding service was activated.
 
@@ -1338,7 +1338,7 @@ The original phone screenshot failure was not reproduced with fresh invites;
 a camera QR scan and cellular network were not tested.
 
 Universal TestFlight `0.1 (131)` finished processing and is attached to the
-existing internal Synara Early Access group. App and widget retain their bundle
+existing internal Ramspace Early Access group. App and widget retain their bundle
 IDs, include device families 1 and 2, have valid distribution signatures and
 disable debugging; the app carries production APNs entitlement. Eight QR
 classification tests, two iPhone navigation UI cases and one iPad docked-sidebar
@@ -1370,7 +1370,7 @@ Codex configuration. The existing classifier understood text logs only.
 Classification now shares one pure implementation between server ingestion and
 historical web replay, recognizes both text and complete JSON log envelopes
 (including `fields.error` without `fields.message`), and retains unknown errors,
-Synara-owned connector failures and explicit retry feedback. Ignored external
+Ramspace-owned connector failures and explicit retry feedback. Ignored external
 MCP OAuth failures keep their existing bounded host-log notice. Historical
 records are filtered when rendered, not deleted or rewritten. A remaining real
 runtime notice uses its readable message instead of the generic row title.
@@ -1391,7 +1391,7 @@ The installed Mini app also exposes Copy code and shows Copied code after a
 real click. TestFlight 131 is not replaced by this desktop change.
 
 Remote `1.0.6-remote.4`, source `922f21bdc385b404639b8e0a4e685f5fa9340197`,
-passed [the complete candidate workflow](https://github.com/Emanuele-web04/synara/actions/runs/38800710107)
+passed [the complete candidate workflow](https://github.com/aaramsyy/ramspace/actions/runs/38800710107)
 and is installed and open on both Macs. This remains a build-only artifact:
 no public tag, release or update-feed publication. Local artifact hashes,
 provenance, Developer ID, Gatekeeper and stapled-ticket checks passed before
@@ -1435,7 +1435,7 @@ format, lint (zero errors), twelve-package typecheck and Windows runtime guards.
 The recovery change is not in the installed `.4` package yet.
 
 Remote `.5` (source `27bc3d7431b2b56062c678cac22736b0cb0b2a9a`) subsequently
-passed [the complete signed-candidate workflow](https://github.com/Emanuele-web04/synara/actions/runs/38806243530)
+passed [the complete signed-candidate workflow](https://github.com/aaramsyy/ramspace/actions/runs/38806243530)
 and is installed on both Macs. Mini retains 46 chats and 215 complete messages;
 MacBook retains 103 chats, 1,745 complete messages and 357 turn rows. Account,
 machine identity and device approvals are unchanged. Both simulator connections
@@ -1479,9 +1479,9 @@ setting. The final UI pass passed format, lint, twelve-package typecheck, four
 typography/selector guards and 26 browser cases covering Connections, inline
 visual blocks and the preview toolbar. No test threshold was relaxed.
 
-### Synara Remote .6 qualification
+### Ramspace Remote .6 qualification
 
-Build-only CI [38811340707](https://github.com/Emanuele-web04/synara/actions/runs/38811340707)
+Build-only CI [38811340707](https://github.com/aaramsyy/ramspace/actions/runs/38811340707)
 passed all gates for candidate `11094322e38de4dcef5c4f4997506202821b3125`. Remote
 `1.0.6-remote.6` is installed and open on both Macs, with `.5` retained for
 rollback. The Mini verified the full GitHub artifact digest, provenance and
@@ -1539,7 +1539,7 @@ commands are untouched. Both regressions failed before repair; all 314 Core
 tests and 14 model-selection simulator tests pass. Universal build `0.1 (133)`
 passed archive/export and app/widget signing checks with production APNs
 entitlements. Apple processed the upload and the build is available to the
-existing internal Synara Early Access group, with test notes saved. No physical
+existing internal Ramspace Early Access group, with test notes saved. No physical
 phone was used; production push delivery remains unverified on a real device.
 
 Workflow `38824651629` completed successfully on the exact `.7` candidate.
@@ -1590,7 +1590,7 @@ connections. The MacBook's public tunnel currently returns HTTP 530 / Cloudflare
 iPhone was used. Universal build 134 uploaded but remains unassigned; final
 build 135 includes the extra earlier-install repair and has passed archive,
 export, app/widget signing, device-family and production APNs entitlement checks.
-Apple processed build 135; it is available to the existing internal Synara Early
+Apple processed build 135; it is available to the existing internal Ramspace Early
 Access group (one tester), with test notes saved. Physical-device production push
 delivery remains unverified.
 
@@ -1604,7 +1604,7 @@ older cached Claude catalogs; that regression failed before repair. Local Node
 macOS ARM64 packaging and packaged startup qualification. The public ZIP, DMG and
 Remote feed matched GitHub asset digests, source provenance and the exact lockfile;
 Developer ID, strict signatures, Gatekeeper and app/DMG stapled tickets passed
-local verification. [Remote .8](https://github.com/Emanuele-web04/synara/releases/tag/v1.0.6-remote.8)
+local verification. [Remote .8](https://github.com/aaramsyy/ramspace/releases/tag/v1.0.6-remote.8)
 is a prerelease with curated notes; GitHub Latest remains Stable `v1.0.5`. The
 installed Macs were not replaced during this publication. Remote retains its
 separate identity/data/feed;
@@ -1633,7 +1633,7 @@ gates, signed/notarized macOS ARM64 packaging and packaged startup qualification
 The public ZIP, DMG, provenance and Remote feed match GitHub asset digests, source
 `41bd27e` and its exact lockfile. Strict app/DMG signatures, Developer ID,
 Gatekeeper and both stapled tickets passed independent local verification.
-[Remote .9](https://github.com/Emanuele-web04/synara/releases/tag/v1.0.6-remote.9)
+[Remote .9](https://github.com/aaramsyy/ramspace/releases/tag/v1.0.6-remote.9)
 is public with curated notes and its own updater feed; GitHub Stable Latest stays
 `v1.0.5`. The installed desktop bundles were not replaced. The final MacBook
 tunnel availability probe still failed (HTTP 502, after the earlier Cloudflare
@@ -1675,7 +1675,7 @@ separate desktop package to reach installed apps; `.9` does not contain them.
 
 ### 2026-10-16 — Remote .10 published and installed on both Macs
 
-[Remote .10](https://github.com/Emanuele-web04/synara/releases/tag/v1.0.6-remote.10),
+[Remote .10](https://github.com/aaramsyy/ramspace/releases/tag/v1.0.6-remote.10),
 source `6b47f9a`, includes `8db6bbf` and `95aa0f5`. Exact-source workflow
 `38898538739` passed every quality/server gate, signed/notarized macOS ARM64
 packaging and packaged startup. Independent verification matched all four public
@@ -1693,10 +1693,10 @@ advanced on existing trust rows. The MacBook retains all 107 chats, 1,763 messag
 363 turns and attachment bytes. Its internal runtime-event retention removed one
 older diagnostic event; user history and durable activities remain unchanged.
 
-A real local Mini turn returned `SYNARA_REMOTE10_MINI_OK` in 5.2 seconds and
+A real local Mini turn returned `RAMSPACE_REMOTE10_MINI_OK` in 5.2 seconds and
 survived reload and app restart. MacBook → Mini created chat
 `f9361dba-3cd3-4e5b-8357-dfc320b6e14d`, received
-`SYNARA_REMOTE10_MACBOOK_TO_MINI_OK`, and retained it after reopen and reload.
+`RAMSPACE_REMOTE10_MACBOOK_TO_MINI_OK`, and retained it after reopen and reload.
 The existing MacBook tunnel responds HTTP 200. The build 135 simulator shows one
 Mini and one MacBook, both Connected, and reads this fresh remote reply. Both
 desktop apps remain running; temporary simulator preview and its listener are
@@ -1716,7 +1716,7 @@ not qualification or installation of a package containing `43d11d5`.
 
 ### 2026-10-16 — Remote .11 published and installed on both Macs
 
-[Remote .11](https://github.com/Emanuele-web04/synara/releases/tag/v1.0.6-remote.11),
+[Remote .11](https://github.com/aaramsyy/ramspace/releases/tag/v1.0.6-remote.11),
 source `94d1a95`, now includes `43d11d5`. Quoted/bracketed remote chat identifiers
 are escaped before hover-anchor lookup, and classic Projects, Pinned and Chats
 reuse the existing local/Activity preview. The candidate passes 121 unit/guard
@@ -1732,7 +1732,7 @@ The Mini runs `.11` after a normal shutdown and a fresh `.10` backup, with the
 `.10` bundle retained for rollback. All 53 original chats, 232 messages, 99 turns,
 eight projects, its plan and 14,667 orchestration events remain intact. The local
 smoke adds one chat, two messages and one turn; its exact reply
-`SYNARA_REMOTE11_MINI_OK` completes in 4.4 seconds, survives Reload and is persisted
+`RAMSPACE_REMOTE11_MINI_OK` completes in 4.4 seconds, survives Reload and is persisted
 after normal quit. Identity bytes and trust authorizations are unchanged; only
 an original chat's `updated_at` and a trust connection timestamp advanced.
 
@@ -1746,7 +1746,7 @@ running.
 
 MacBook reconnects to Mini over Cloudflare and creates chat
 `0bad5420-971e-48af-b44f-88cd416c05ff`. Its exact reply
-`SYNARA_REMOTE11_MACBOOK_TO_MINI_OK` survives reopening and is independently read
+`RAMSPACE_REMOTE11_MACBOOK_TO_MINI_OK` survives reopening and is independently read
 from the Mini. The first MacBook Reload encountered a handshake error and
 recovered with the existing Retry action; the second Reload succeeded without
 intervention. The cause of the first failure is not established, so this is not
@@ -1768,7 +1768,7 @@ and the cancellation/reconnect footer repair in `6270958`. Universal version
 `0.1 (136)` passed archive, distribution signing, iPhone/iPad device-family and
 production APNs checks; Xcode uploaded it successfully and Apple's email confirms
 processing completed at 14:57:51 UTC. After the user restored the Apple browser
-login, build 136 was assigned to the existing Synara Early Access internal group
+login, build 136 was assigned to the existing Ramspace Early Access internal group
 (one tester), with test notes saved. App Store Connect confirms the assignment:
 install `0.1 (136)` in TestFlight on iPhone or iPad. No new tester, App Store
 Connect API key, paid service or agreement was added. External Beta Review remains
@@ -1779,7 +1779,7 @@ focused pass has 41 passes and one isolated-fixture skip. The extended iPhone
 pass has 62 passes, one skip and five failing legacy connection cases (six
 assertions), recorded explicitly in the native handoff. The two repaired footer
 regressions pass. A real paired iPhone simulator reconnects to both Macs,
-discovers and selects README from the Mini, and receives `SYNARA136_IPHONE_OK`.
+discovers and selects README from the Mini, and receives `RAMSPACE136_IPHONE_OK`.
 iPad launch/onboarding was checked, but that simulator has no real host paired.
 No physical iPhone or production push-delivery test was performed.
 
@@ -1797,7 +1797,7 @@ identities and attachments: 55 pre-upgrade chats, 238 messages and 102 turns. Th
 MacBook retained 107 chats, 1,763 messages and 363 turns. Backups and .11 rollback
 bundles remain on each machine. MacBook-to-Mini thread
 `dbdedc8a-8f11-43fd-8051-3b46b61d35a0` returned
-`SYNARA_REMOTE12_MACBOOK_TO_MINI_OK`, retained after reopen and Reload without Retry.
+`RAMSPACE_REMOTE12_MACBOOK_TO_MINI_OK`, retained after reopen and Reload without Retry.
 
 Build 136's simulator still omits Vercel because the actual connector is now
 needs-auth on both Macs. The Mini's old grant has only `openid`, no refresh token,
@@ -1824,7 +1824,7 @@ new mobile binary has been built. No paid service, API key or physical iPhone ac
 
 The user authorized publication and installation of `.13` on both Macs. Version
 `1.0.6-remote.13`, source `16c6b1c37e4478e75149f5806309816340536bea`, is
-[public](https://github.com/Emanuele-web04/synara/releases/tag/v1.0.6-remote.13).
+[public](https://github.com/aaramsyy/ramspace/releases/tag/v1.0.6-remote.13).
 Exact-source release CI 38929539712 passes every required quality, server,
 packaging and packaged-startup gate. Public asset hashes, source/tag/lockfile
 provenance, Remote feed, Developer ID signature, Gatekeeper and app/DMG staples
@@ -1839,7 +1839,7 @@ timestamps and trust last-connected timestamps changed. The MacBook retains
 107 chats, 1,763 messages, 363 turns, identities, pairing and attachments. Its
 bounded runtime log rotated three events, recorded separately from retained user
 history. MacBook-to-Mini chat `a758138a-5af4-4591-ad4d-7c4c3e5d614f`
-returns `SYNARA_REMOTE13_MACBOOK_TO_MINI_OK` after reopen and Reload without Retry;
+returns `RAMSPACE_REMOTE13_MACBOOK_TO_MINI_OK` after reopen and Reload without Retry;
 the Mini independently displays that reply. MacBook tunnel health is HTTP 200.
 
 The user completed the Mini's fresh Vercel consent. The saved grant is connected,

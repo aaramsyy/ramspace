@@ -1,5 +1,5 @@
 import { t } from "~/i18n";
-import type { OrchestrationThreadActivity } from "@synara/contracts";
+import type { OrchestrationThreadActivity } from "@ramspace/contracts";
 
 /** Why a requested fast mode is not the speed the thread is getting. */
 export interface FastModeNotice {

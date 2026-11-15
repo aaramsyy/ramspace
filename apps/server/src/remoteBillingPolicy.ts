@@ -3,7 +3,7 @@ import { createHash } from "node:crypto";
 import fs from "node:fs/promises";
 import path from "node:path";
 
-import { createAccountClient } from "@synara/shared/account";
+import { createAccountClient } from "@ramspace/shared/account";
 import { accountFetch } from "./accountHttp";
 import { Effect } from "effect";
 

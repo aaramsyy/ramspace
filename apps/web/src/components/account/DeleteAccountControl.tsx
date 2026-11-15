@@ -16,7 +16,7 @@ import {
   AlertDialogTitle,
 } from "~/components/ui/alert-dialog";
 
-/** The Delete account row of Settings › Profile › Synara account, with its confirmation. */
+/** The Delete account row of Settings › Profile › Ramspace account, with its confirmation. */
 export function DeleteAccountControl() {
   const { t } = useTranslation();
   const account = useAccount();
@@ -64,7 +64,7 @@ export function DeleteAccountControl() {
       >
         <AlertDialogPopup>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete your Synara account?</AlertDialogTitle>
+            <AlertDialogTitle>Delete your Ramspace account?</AlertDialogTitle>
             <AlertDialogDescription>
               This removes your cloud profile, synced usage, saved Inbox and managed connections.
               Chats stored on your computers remain. Access is disabled immediately and cloud

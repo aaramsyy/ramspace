@@ -2,7 +2,7 @@ import {
   classifyCodexStderr,
   CODEX_STDERR_NATIVE_EVENT_TYPE,
   normalizeCodexUserVisibleErrorMessage,
-} from "@synara/shared/codexStderr";
+} from "@ramspace/shared/codexStderr";
 import {
   type ComputerPermission,
   type ComputerBuildSignature,
@@ -19,35 +19,35 @@ import {
   type ToolLifecycleItemType,
   type TurnId,
   type UserInputQuestion,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { Option, Schema } from "effect";
 import {
   decodeSubagentAgentStates,
   extractSubagentIdentityHints,
   decodeSubagentReceiverAgents,
   decodeSubagentReceiverThreadIds,
-} from "@synara/shared/subagents";
+} from "@ramspace/shared/subagents";
 import {
   approvalRequestKindFromRequestType,
   pendingRequestInstanceKey,
   type ApprovalRequestKind,
-} from "@synara/shared/threadSummary";
+} from "@ramspace/shared/threadSummary";
 import {
   stripTrailingToolExitCode,
   summarizeToolRawOutput,
-} from "@synara/shared/toolOutputSummary";
-import { pluralize, stripTerminalControlSequences } from "@synara/shared/text";
+} from "@ramspace/shared/toolOutputSummary";
+import { pluralize, stripTerminalControlSequences } from "@ramspace/shared/text";
 import { i18n, t } from "~/i18n";
-import { suppressCoordinatorCheckinMessages } from "@synara/shared/coordinatorCheckin";
-import { PROVIDER_DESCRIPTORS } from "@synara/shared/providerMetadata";
+import { suppressCoordinatorCheckinMessages } from "@ramspace/shared/coordinatorCheckin";
+import { PROVIDER_DESCRIPTORS } from "@ramspace/shared/providerMetadata";
 import {
   deriveReadableToolTitle,
-  deriveSynaraMcpToolTitle,
+  deriveRamspaceMcpToolTitle,
   extractMcpServerName,
   isGenericToolTitle,
   normalizeCompactToolLabel,
   normalizeToolTextForComparison,
-  type SynaraMcpToolStatus,
+  type RamspaceMcpToolStatus,
 } from "./lib/toolCallLabel";
 import { toolArgumentSummaryToolName } from "./lib/toolArgumentSummary";
 import { computerToolName, describeComputerToolCall } from "./lib/computerToolPresentation";
@@ -133,10 +133,10 @@ export interface WorkLogComputerSetupRequired {
    */
   buildSignature?: ComputerBuildSignature;
   /**
-   * The app macOS files this Synara's grants against, when a desktop shell told
+   * The app macOS files this Ramspace's grants against, when a desktop shell told
    * the server which flavor it is. The card's `tccutil` advice names it, and
    * absent means that advice is withheld rather than guessed — a guessed
-   * identifier resets a different Synara's grants.
+   * identifier resets a different Ramspace's grants.
    */
   bundleId?: string;
 }
@@ -165,7 +165,7 @@ export interface WorkLogEntry {
   /** MCP server that served the call; picks the row's icon (connector, brand). */
   mcpServer?: string;
   toolCallId?: string;
-  toolStatus?: SynaraMcpToolStatus;
+  toolStatus?: RamspaceMcpToolStatus;
   liveActivity?: WorkLogLiveActivity;
   toolDetails?: WorkLogToolDetails;
   itemType?: ToolLifecycleItemType;
@@ -177,11 +177,11 @@ export interface WorkLogEntry {
   subagentRun?: WorkLogSubagentRun;
   automation?: WorkLogAutomation;
   connectorProposalId?: string;
-  synaraThreadCreation?: WorkLogSynaraThreadCreation;
+  ramspaceThreadCreation?: WorkLogRamspaceThreadCreation;
   // Deterministic coordinator-monitor rows (worker settled / stuck /
   // batch roll-up) render as compact centered pills in the coordinator
   // conversation, each carrying a link into the reported thread.
-  synaraWorkerNotice?: WorkLogSynaraWorkerNotice;
+  ramspaceWorkerNotice?: WorkLogRamspaceWorkerNotice;
   // Completion notices and Monitor updates both anchor the response they woke.
   monitorNotification?: {
     taskId: string;
@@ -212,7 +212,7 @@ export interface WorkLogEntry {
   // renders as a question/answer exchange that stays visible outside the
   // collapsed turn instead of as two bare "User input" log lines.
   userInputExchange?: ReadonlyArray<WorkLogUserInputExchangeItem>;
-  // A visual the agent published with `synara_show_visual`. Like an answered
+  // A visual the agent published with `ramspace_show_visual`. Like an answered
   // question, it renders as its own row that stays visible outside the
   // collapsed turn; the document is fetched by id when the row mounts.
   inlineVisual?: InlineVisualActivityPayload;
@@ -266,7 +266,7 @@ export interface WorkLogComputerControlDenied {
   toolName: string | null;
 }
 
-export interface WorkLogSynaraCreatedThread {
+export interface WorkLogRamspaceCreatedThread {
   threadId: string;
   title: string;
   provider: ProviderKind;
@@ -275,17 +275,17 @@ export interface WorkLogSynaraCreatedThread {
   status: string;
 }
 
-export interface WorkLogSynaraThreadCreation {
+export interface WorkLogRamspaceThreadCreation {
   operationId: string;
   requestedCount: number;
   createdCount: number;
-  threads: ReadonlyArray<WorkLogSynaraCreatedThread>;
+  threads: ReadonlyArray<WorkLogRamspaceCreatedThread>;
   /** Paired computer that owns the threads; absent when they live on this one. */
   environmentId?: string;
   hostName?: string;
 }
 
-export interface WorkLogSynaraWorkerNoticeThread {
+export interface WorkLogRamspaceWorkerNoticeThread {
   threadId: string;
   title: string;
   outcome: string | null;
@@ -330,12 +330,12 @@ export interface WorkLogSubagentProgress {
   outcome?: "completed" | "failed" | "stopped";
 }
 
-export interface WorkLogSynaraWorkerNotice {
+export interface WorkLogRamspaceWorkerNotice {
   kind: "settled" | "stuck" | "needs-you" | "rollup";
   marker: string | null;
   phrase: string | null;
-  threads: ReadonlyArray<WorkLogSynaraWorkerNoticeThread>;
-  /** Synara-native action ids on a needs-you card (retry / stop / open). */
+  threads: ReadonlyArray<WorkLogRamspaceWorkerNoticeThread>;
+  /** Ramspace-native action ids on a needs-you card (retry / stop / open). */
   actions?: ReadonlyArray<"retry" | "stop" | "open">;
 }
 
@@ -540,7 +540,8 @@ export function isMissingCheckpointBaselineActivity(
 
 // Pi unsupported-UI notices are log-only now; hide the rows old hosts stored.
 // Extension notifications themselves (mode changes, saved settings) stay visible.
-const PI_UNSUPPORTED_UI_WARNING = /^Pi extension UI API '[^']+' is not supported in Synara yet\.$/;
+const PI_UNSUPPORTED_UI_WARNING =
+  /^Pi extension UI API '[^']+' is not supported in Ramspace yet\.$/;
 function isLogOnlyPiWarning(activity: OrchestrationThreadActivity): boolean {
   if (activity.kind !== "runtime.warning") return false;
   return PI_UNSUPPORTED_UI_WARNING.test(asTrimmedString(asRecord(activity.payload)?.message) ?? "");
@@ -1406,10 +1407,10 @@ function shouldKeepActivityForWorkLog(
   // coordinator conversation is all turns, so the turn filter would hide every
   // settle/stuck/roll-up pill.
   if (
-    activity.kind === "synara.worker.settled" ||
-    activity.kind === "synara.worker.stuck" ||
-    activity.kind === "synara.worker.needs-you" ||
-    activity.kind === "synara.workers.settled"
+    activity.kind === "ramspace.worker.settled" ||
+    activity.kind === "ramspace.worker.stuck" ||
+    activity.kind === "ramspace.worker.needs-you" ||
+    activity.kind === "ramspace.workers.settled"
   ) {
     return true;
   }
@@ -1496,9 +1497,9 @@ function extractWorkLogAutomation(
   };
 }
 
-function extractWorkLogSynaraThreadCreation(
+function extractWorkLogRamspaceThreadCreation(
   payload: Record<string, unknown> | null,
-): WorkLogSynaraThreadCreation | null {
+): WorkLogRamspaceThreadCreation | null {
   if (!payload) {
     return null;
   }
@@ -1507,7 +1508,7 @@ function extractWorkLogSynaraThreadCreation(
   if (!operationId || rawThreads.length === 0) {
     return null;
   }
-  const threads = rawThreads.flatMap((value): WorkLogSynaraCreatedThread[] => {
+  const threads = rawThreads.flatMap((value): WorkLogRamspaceCreatedThread[] => {
     const thread = asRecord(value);
     const threadId = asTrimmedString(thread?.threadId);
     const title = asTrimmedString(thread?.title);
@@ -1551,18 +1552,18 @@ function extractWorkLogSynaraThreadCreation(
   };
 }
 
-function extractWorkLogSynaraWorkerNotice(
+function extractWorkLogRamspaceWorkerNotice(
   payload: Record<string, unknown> | null,
   activityKind: OrchestrationThreadActivity["kind"],
-): WorkLogSynaraWorkerNotice | null {
+): WorkLogRamspaceWorkerNotice | null {
   if (!payload || payload.source !== "worker_monitor") {
     return null;
   }
-  const parseThreads = (values: unknown): WorkLogSynaraWorkerNoticeThread[] => {
+  const parseThreads = (values: unknown): WorkLogRamspaceWorkerNoticeThread[] => {
     if (!Array.isArray(values)) {
       return [];
     }
-    return values.flatMap((value): WorkLogSynaraWorkerNoticeThread[] => {
+    return values.flatMap((value): WorkLogRamspaceWorkerNoticeThread[] => {
       const thread = asRecord(value);
       const threadId = asTrimmedString(thread?.threadId);
       const title = asTrimmedString(thread?.title);
@@ -1581,14 +1582,14 @@ function extractWorkLogSynaraWorkerNotice(
       ];
     });
   };
-  if (activityKind === "synara.workers.settled") {
+  if (activityKind === "ramspace.workers.settled") {
     const threads = parseThreads(payload.threads);
     return threads.length > 0 ? { kind: "rollup", marker: null, phrase: null, threads } : null;
   }
   if (
-    activityKind === "synara.worker.settled" ||
-    activityKind === "synara.worker.stuck" ||
-    activityKind === "synara.worker.needs-you"
+    activityKind === "ramspace.worker.settled" ||
+    activityKind === "ramspace.worker.stuck" ||
+    activityKind === "ramspace.worker.needs-you"
   ) {
     const threads = parseThreads([payload.thread]);
     if (threads.length === 0) {
@@ -1602,9 +1603,9 @@ function extractWorkLogSynaraWorkerNotice(
       : undefined;
     return {
       kind:
-        activityKind === "synara.worker.needs-you"
+        activityKind === "ramspace.worker.needs-you"
           ? "needs-you"
-          : activityKind === "synara.worker.stuck"
+          : activityKind === "ramspace.worker.stuck"
             ? "stuck"
             : "settled",
       marker: asTrimmedString(payload.marker) ?? null,
@@ -1810,7 +1811,7 @@ export function parseUserInputQuestions(
   return parsed.length > 0 ? parsed : null;
 }
 
-// Answers arrive keyed by question id (Codex, Synara UI) or by question text
+// Answers arrive keyed by question id (Codex, Ramspace UI) or by question text
 // (Claude's AskUserQuestion), as a string, a list, or `{ answers: [...] }`.
 function formatUserInputAnswer(
   answers: Record<string, unknown> | null,
@@ -2151,21 +2152,21 @@ function toDerivedWorkLogEntry(activity: OrchestrationThreadActivity): DerivedWo
       entry.inlineVisual = inlineVisual;
     }
   }
-  if (activity.kind === "synara.threads.created") {
-    const synaraThreadCreation = extractWorkLogSynaraThreadCreation(payload);
-    if (synaraThreadCreation) {
-      entry.synaraThreadCreation = synaraThreadCreation;
+  if (activity.kind === "ramspace.threads.created") {
+    const ramspaceThreadCreation = extractWorkLogRamspaceThreadCreation(payload);
+    if (ramspaceThreadCreation) {
+      entry.ramspaceThreadCreation = ramspaceThreadCreation;
     }
   }
   if (
-    activity.kind === "synara.worker.settled" ||
-    activity.kind === "synara.worker.stuck" ||
-    activity.kind === "synara.worker.needs-you" ||
-    activity.kind === "synara.workers.settled"
+    activity.kind === "ramspace.worker.settled" ||
+    activity.kind === "ramspace.worker.stuck" ||
+    activity.kind === "ramspace.worker.needs-you" ||
+    activity.kind === "ramspace.workers.settled"
   ) {
-    const notice = extractWorkLogSynaraWorkerNotice(payload, activity.kind);
+    const notice = extractWorkLogRamspaceWorkerNotice(payload, activity.kind);
     if (notice) {
-      entry.synaraWorkerNotice = notice;
+      entry.ramspaceWorkerNotice = notice;
     }
   }
   if (activity.kind === COMPUTER_SETUP_REQUIRED_ACTIVITY_KIND) {
@@ -2204,7 +2205,7 @@ function toDerivedWorkLogEntry(activity: OrchestrationThreadActivity): DerivedWo
     toolName,
     title: commandActionDisplay?.title ?? title,
   };
-  const synaraToolTitleInput = {
+  const ramspaceToolTitleInput = {
     toolName,
     title: commandActionDisplay?.title ?? title,
     fallbackLabel: activity.summary,
@@ -2225,7 +2226,7 @@ function toDerivedWorkLogEntry(activity: OrchestrationThreadActivity): DerivedWo
   const resolveToolTitle = (translate: typeof t) =>
     collabTitle ??
     deriveComputerToolDescription(computerToolInput, translate)?.summary ??
-    deriveSynaraMcpToolTitle(synaraToolTitleInput, translate) ??
+    deriveRamspaceMcpToolTitle(ramspaceToolTitleInput, translate) ??
     deriveReadableToolTitle(readableToolTitleInput, translate);
   const readableTitle = resolveToolTitle(sourceTranslate);
   // Task-list rows derive their own progress heading above. The generic
@@ -2313,7 +2314,7 @@ function deriveProviderRuntimeReconciliationCollapseKey(
 function deriveToolLifecycleStatus(
   activityKind: OrchestrationThreadActivity["kind"],
   payload: Record<string, unknown> | null,
-): SynaraMcpToolStatus | undefined {
+): RamspaceMcpToolStatus | undefined {
   if (!isRenderableToolLifecycleActivity(activityKind)) return undefined;
   if (isFailedToolLifecyclePayload(payload)) return "failed";
   if (isCancelledToolLifecyclePayload(payload)) return "cancelled";
@@ -2746,7 +2747,7 @@ function mergeDerivedWorkLogEntries(
     : (next.requestKind ?? previous.requestKind);
   const subagents = next.subagents ?? previous.subagents;
   const subagentAction = next.subagentAction ?? previous.subagentAction;
-  const synaraThreadCreation = next.synaraThreadCreation ?? previous.synaraThreadCreation;
+  const ramspaceThreadCreation = next.ramspaceThreadCreation ?? previous.ramspaceThreadCreation;
   const collapseKey = next.collapseKey ?? previous.collapseKey;
   const toolName = next.toolName ?? previous.toolName;
   const mcpServer = next.mcpServer ?? previous.mcpServer;
@@ -2784,7 +2785,7 @@ function mergeDerivedWorkLogEntries(
     ...(requestKind ? { requestKind } : {}),
     ...(subagents ? { subagents } : {}),
     ...(subagentAction ? { subagentAction } : {}),
-    ...(synaraThreadCreation ? { synaraThreadCreation } : {}),
+    ...(ramspaceThreadCreation ? { ramspaceThreadCreation } : {}),
     ...(collapseKey ? { collapseKey } : {}),
     ...(toolName ? { toolName } : {}),
     ...(mcpServer ? { mcpServer } : {}),

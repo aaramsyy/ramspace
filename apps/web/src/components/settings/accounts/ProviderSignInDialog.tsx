@@ -2,8 +2,8 @@
 // Purpose: Human-in-the-loop provider authentication in the shared isolated terminal.
 // Layer: Settings UI
 
-import { ThreadId, type ProviderKind } from "@synara/contracts";
-import { PROVIDER_AUTHENTICATION } from "@synara/shared/providerCliProfiles";
+import { ThreadId, type ProviderKind } from "@ramspace/contracts";
+import { PROVIDER_AUTHENTICATION } from "@ramspace/shared/providerCliProfiles";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRefreshProviderStatusesNow } from "~/hooks/useProviderStatusRefresh";
@@ -151,7 +151,7 @@ export default function ProviderSignInDialog(props: {
             {t("settings:signInTo")} {props.accountLabel}
           </DialogTitle>
           <DialogDescription>
-            {method.instructions} {t("settings:thisRunsOnTheSynaraServerMachineForThe")}
+            {method.instructions} {t("settings:thisRunsOnTheRamspaceServerMachineForThe")}
           </DialogDescription>
         </DialogHeader>
         <div className="h-[min(55vh,28rem)] min-h-48 overflow-hidden rounded-xl border border-border mx-5">
@@ -172,7 +172,7 @@ export default function ProviderSignInDialog(props: {
           ) : (
             <p className="p-3 text-ui-sm">
               {config.isError
-                ? t("settings:unableToConnectToTheSynaraServer")
+                ? t("settings:unableToConnectToTheRamspaceServer")
                 : t("computer:connecting")}
             </p>
           )}

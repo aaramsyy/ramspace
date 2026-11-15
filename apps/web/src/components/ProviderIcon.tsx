@@ -1,17 +1,17 @@
 /**
  * ProviderIcon - shared provider glyphs for chat, sidebar, and picker surfaces.
  *
- * The glyph artwork itself lives in @synara/profile-ui/provider-icon (shared with the
+ * The glyph artwork itself lives in @ramspace/profile-ui/provider-icon (shared with the
  * public profile page); this wrapper adds the app-only pieces — the Central-asset
  * dark-mode swap for opencode (a public/ asset the package cannot ship) and the
  * contracts-typed map — so new providers still need only one registration.
  */
-import { type ProviderKind } from "@synara/contracts";
+import { type ProviderKind } from "@ramspace/contracts";
 import {
   PROVIDER_GLYPHS,
   providerIconToneClassName,
   type ProviderIconTone,
-} from "@synara/profile-ui/provider-icon";
+} from "@ramspace/profile-ui/provider-icon";
 import type { ReactNode, SVGProps } from "react";
 
 import { CentralIcon } from "~/lib/central-icons";

@@ -6,7 +6,7 @@ import { randomBytes } from "node:crypto";
 import { once } from "node:events";
 import * as NodeServices from "@effect/platform-node/NodeServices";
 import { Effect, Exit, Schema, Scope } from "effect";
-import { OrchestrationThreadStreamItem, WS_FEATURE_PATH } from "@synara/contracts";
+import { OrchestrationThreadStreamItem, WS_FEATURE_PATH } from "@ramspace/contracts";
 import { HttpRouter } from "effect/unstable/http";
 import WebSocket, { WebSocketServer, type RawData } from "ws";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
@@ -37,7 +37,7 @@ describe("remote TLS at the real Effect/Node HTTP boundary", () => {
   let directory: string;
   let identity: RemoteTlsIdentity;
   beforeAll(async () => {
-    directory = await fs.mkdtemp(path.join(os.tmpdir(), "synara-tls-"));
+    directory = await fs.mkdtemp(path.join(os.tmpdir(), "ramspace-tls-"));
     identity = await initializeRemoteTlsIdentity(
       path.join(directory, "identity.json"),
       "test-environment",
@@ -302,7 +302,7 @@ describe("remote TLS at the real Effect/Node HTTP boundary", () => {
         });
       });
       const sessions = {
-        cookieName: "synara-test",
+        cookieName: "ramspace-test",
         issue: () => Effect.succeed({ sessionId: "large-response-session" }),
         issueWebSocketToken: () => Effect.succeed({ token: "large-response-ws-token" }),
         revoke: () => Effect.succeed(true),

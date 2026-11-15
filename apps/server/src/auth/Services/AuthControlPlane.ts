@@ -6,7 +6,7 @@ import type {
   RemotePairingDevice,
   RemotePairingStatus,
   RemoteTrustScope,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { Data, DateTime, Duration, Effect, ServiceMap } from "effect";
 import type { AuthAccessOrigin, SessionRole } from "./SessionCredentialService";
 
@@ -105,5 +105,5 @@ export interface AuthControlPlaneShape {
 }
 
 export class AuthControlPlane extends ServiceMap.Service<AuthControlPlane, AuthControlPlaneShape>()(
-  "synara/auth/Services/AuthControlPlane",
+  "ramspace/auth/Services/AuthControlPlane",
 ) {}

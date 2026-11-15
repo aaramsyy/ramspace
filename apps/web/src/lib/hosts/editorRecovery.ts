@@ -15,7 +15,7 @@ export function readRecoverableEditorDrafts(): unknown[] {
   const records: unknown[] = [];
   for (let index = 0; index < localStorage.length; index++) {
     const key = localStorage.key(index);
-    const match = key && /^synara:execution:([^:]+):editor-recovery:/.exec(key);
+    const match = key && /^ramspace:execution:([^:]+):editor-recovery:/.exec(key);
     if (!match || !key) continue;
     try {
       const namespace: unknown = JSON.parse(decodeURIComponent(match[1]!));

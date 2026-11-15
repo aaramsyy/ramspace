@@ -1,4 +1,4 @@
-import type { ComputerEvent } from "@synara/contracts";
+import type { ComputerEvent } from "@ramspace/contracts";
 import { describe, expect, it, vi } from "vitest";
 
 import { ComputerManager } from "./ComputerManager.ts";

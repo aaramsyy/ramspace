@@ -17,7 +17,7 @@ import {
   type OmpModelOptions,
   type PiThinkingLevel,
   type ProviderModelOptions,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import * as Schema from "effect/Schema";
 
 import {
@@ -27,7 +27,7 @@ import {
   normalizeOmpModelOptions,
   resolveModelSlugForProvider,
   resolveSelectableModel,
-} from "@synara/shared/model";
+} from "@ramspace/shared/model";
 import {
   newChatDefaultInstanceIdFor,
   resolveAppModelSelection,

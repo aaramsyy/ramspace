@@ -5,13 +5,13 @@ import path from "node:path";
 
 import * as NodeHttpServer from "@effect/platform-node/NodeHttpServer";
 import * as NodeServices from "@effect/platform-node/NodeServices";
-import { AuthSessionId } from "@synara/contracts";
+import { AuthSessionId } from "@ramspace/contracts";
 import {
   ATTACHMENT_CANCEL_ROUTE_PATH,
   ATTACHMENT_UPLOAD_ROUTE_PATH,
   LIBRARY_UPLOAD_ROUTE_PATH,
   VOICE_TRANSCRIPTION_UPLOAD_ROUTE_PATH,
-} from "@synara/shared/binaryTransfer";
+} from "@ramspace/shared/binaryTransfer";
 import { DateTime, Effect, Exit, Layer, Option, Scope } from "effect";
 import { HttpRouter } from "effect/unstable/http";
 import { describe, expect, it, vi } from "vitest";
@@ -21,7 +21,7 @@ import {
   RemoteSessionRegistry,
   RemoteSessionRegistryService,
 } from "./remoteSessions/sessionRegistry";
-import { ProjectId } from "@synara/contracts";
+import { ProjectId } from "@ramspace/contracts";
 import {
   SessionCredentialService,
   type SessionCredentialServiceShape,
@@ -54,7 +54,7 @@ const otherSessionId = AuthSessionId.makeUnsafe("22222222-2222-4222-8222-2222222
 
 function makeSessionCredentialService(): SessionCredentialServiceShape {
   return {
-    cookieName: "synara_session",
+    cookieName: "ramspace_session",
   } as SessionCredentialServiceShape;
 }
 
@@ -64,7 +64,7 @@ function makeServerAuth(sideEffects: { count: number }): ServerAuthShape {
     policy: "remote-reachable" as const,
     bootstrapMethods: ["one-time-token" as const],
     sessionMethods: ["browser-session-cookie" as const, "bearer-session-token" as const],
-    sessionCookieName: "synara_session",
+    sessionCookieName: "ramspace_session",
   };
   const mutate = <A>(value: A) =>
     Effect.sync(() => {
@@ -102,7 +102,7 @@ function makeServerAuth(sideEffects: { count: number }): ServerAuthShape {
     logoutSession: () => mutate(true),
     authenticateHttpRequest: (request) => {
       const bearer = request.headers.authorization === "Bearer bearer-token";
-      const cookie = request.cookies.synara_session === "cookie-token";
+      const cookie = request.cookies.ramspace_session === "cookie-token";
       if (!bearer && !cookie) {
         return Effect.fail(new AuthError({ message: "Authentication required.", status: 401 }));
       }
@@ -119,7 +119,7 @@ function makeServerAuth(sideEffects: { count: number }): ServerAuthShape {
       Effect.fail(new AuthError({ message: "Not used in auth route tests.", status: 401 })),
     issueWebSocketToken: () => mutate({ token: "ws-token", expiresAt }),
     issueStartupPairingUrl: () =>
-      Effect.succeed("https://synara.example.test/pair#token=PAIRINGTOKEN"),
+      Effect.succeed("https://ramspace.example.test/pair#token=PAIRINGTOKEN"),
   } satisfies ServerAuthShape;
 }
 
@@ -230,7 +230,7 @@ function mutationRequest(input: {
       ...(input.origin === undefined ? {} : { Origin: input.origin }),
       ...(input.credential === "bearer"
         ? { Authorization: "Bearer bearer-token" }
-        : { Cookie: "synara_session=cookie-token" }),
+        : { Cookie: "ramspace_session=cookie-token" }),
       ...(input.body === undefined ? {} : { "Content-Type": "application/json" }),
     },
     ...(input.body === undefined ? {} : { body: JSON.stringify(input.body) }),
@@ -338,7 +338,7 @@ describe("authEffectRouteLayer", () => {
     const sideEffects = { count: 0 };
     const config = {
       host: "0.0.0.0",
-      publicUrl: new URL("https://synara.example.test/"),
+      publicUrl: new URL("https://ramspace.example.test/"),
     } as ServerConfigShape;
     await withAuthEffectServer(config, makeServerAuth(sideEffects), async (serverOrigin) => {
       for (const route of mutationRoutes) {
@@ -406,13 +406,13 @@ describe("authEffectRouteLayer", () => {
     const sideEffects = { count: 0 };
     const config = {
       host: "0.0.0.0",
-      publicUrl: new URL("https://synara.example.test/"),
+      publicUrl: new URL("https://ramspace.example.test/"),
     } as ServerConfigShape;
     await withAuthEffectServer(config, makeServerAuth(sideEffects), async (serverOrigin) => {
       const response = await fetch(
         `${serverOrigin}/api/auth/logout`,
         mutationRequest({
-          origin: "https://synara.example.test",
+          origin: "https://ramspace.example.test",
           credential: "cookie",
         }),
       );
@@ -420,7 +420,7 @@ describe("authEffectRouteLayer", () => {
       expect(response.status).toBe(200);
       await expect(response.json()).resolves.toEqual({ revoked: true });
       const cookie = response.headers.get("set-cookie") ?? "";
-      expect(cookie).toContain("synara_session=");
+      expect(cookie).toContain("ramspace_session=");
       expect(cookie).toContain("Expires=Thu, 01 Jan 1970 00:00:00 GMT");
       expect(cookie).toContain("Max-Age=0");
       expect(cookie).toContain("HttpOnly");
@@ -434,8 +434,8 @@ describe("authEffectRouteLayer", () => {
 
 describe("binaryUploadEffectRouteLayer", () => {
   it.each([
-    { origin: "synara-beta://app", authorized: true, status: 500 },
-    { origin: "synara-beta://app", authorized: false, status: 401 },
+    { origin: "ramspace-beta://app", authorized: true, status: 500 },
+    { origin: "ramspace-beta://app", authorized: false, status: 401 },
     { origin: "https://untrusted.example.test", authorized: true, status: 403 },
   ])(
     "preserves trusted CORS on failed uploads: $origin / $status",
@@ -444,7 +444,7 @@ describe("binaryUploadEffectRouteLayer", () => {
       await withAuthEffectServer(
         {
           host: "0.0.0.0",
-          publicUrl: new URL("https://synara.example.test/"),
+          publicUrl: new URL("https://ramspace.example.test/"),
         } as ServerConfigShape,
         makeServerAuth({ count: 0 }),
         async (serverOrigin) => {
@@ -594,7 +594,7 @@ describe("binaryUploadEffectRouteLayer", () => {
   it("allows credentialed Canary attachment upload preflights", async () => {
     const config = {
       host: "127.0.0.1",
-      attachmentsDir: fs.mkdtempSync(path.join(os.tmpdir(), "synara-upload-cors-")),
+      attachmentsDir: fs.mkdtempSync(path.join(os.tmpdir(), "ramspace-upload-cors-")),
     } as ServerConfigShape;
     try {
       await withAuthEffectServer(
@@ -604,14 +604,14 @@ describe("binaryUploadEffectRouteLayer", () => {
           const response = await fetch(`${serverOrigin}${ATTACHMENT_UPLOAD_ROUTE_PATH}`, {
             method: "OPTIONS",
             headers: {
-              Origin: "synara-canary://app",
+              Origin: "ramspace-canary://app",
               "Access-Control-Request-Method": "POST",
               "Access-Control-Request-Headers": "content-type",
             },
           });
 
           expect(response.status).toBe(204);
-          expect(response.headers.get("access-control-allow-origin")).toBe("synara-canary://app");
+          expect(response.headers.get("access-control-allow-origin")).toBe("ramspace-canary://app");
           expect(response.headers.get("access-control-allow-credentials")).toBe("true");
           expect(response.headers.get("access-control-allow-methods")).toContain("POST");
           expect(response.headers.get("access-control-allow-headers")?.toLowerCase()).toContain(
@@ -626,10 +626,10 @@ describe("binaryUploadEffectRouteLayer", () => {
   });
 
   it("rejects ambient cookie uploads without an origin and accepts explicit bearer auth", async () => {
-    const attachmentsDir = fs.mkdtempSync(path.join(os.tmpdir(), "synara-upload-route-"));
+    const attachmentsDir = fs.mkdtempSync(path.join(os.tmpdir(), "ramspace-upload-route-"));
     const config = {
       host: "0.0.0.0",
-      publicUrl: new URL("https://synara.example.test/"),
+      publicUrl: new URL("https://ramspace.example.test/"),
       attachmentsDir,
     } as ServerConfigShape;
     try {
@@ -646,7 +646,7 @@ describe("binaryUploadEffectRouteLayer", () => {
           const url = `${serverOrigin}${ATTACHMENT_UPLOAD_ROUTE_PATH}?${params.toString()}`;
           const cookieResponse = await fetch(url, {
             method: "POST",
-            headers: { Cookie: "synara_session=cookie-token" },
+            headers: { Cookie: "ramspace_session=cookie-token" },
             body: Uint8Array.from([1]),
           });
           expect(cookieResponse.status).toBe(403);
@@ -716,8 +716,8 @@ describe("binaryUploadEffectRouteLayer", () => {
   it("rejects unauthenticated library uploads and oversized declared bodies", async () => {
     const config = {
       host: "0.0.0.0",
-      publicUrl: new URL("https://synara.example.test/"),
-      stateDir: fs.mkdtempSync(path.join(os.tmpdir(), "synara-library-upload-")),
+      publicUrl: new URL("https://ramspace.example.test/"),
+      stateDir: fs.mkdtempSync(path.join(os.tmpdir(), "ramspace-library-upload-")),
     } as ServerConfigShape;
     try {
       await withAuthEffectServer(
@@ -741,7 +741,7 @@ describe("binaryUploadEffectRouteLayer", () => {
           // is read, same as the attachment upload path.
           const cookieResponse = await fetch(url, {
             method: "POST",
-            headers: { Cookie: "synara_session=cookie-token" },
+            headers: { Cookie: "ramspace_session=cookie-token" },
             body: Uint8Array.from([1]),
           });
           expect(cookieResponse.status).toBe(403);
@@ -784,11 +784,11 @@ describe("binaryUploadEffectRouteLayer", () => {
   });
 
   it("rejects a name containing a slash and keeps CORS headers on error responses", async () => {
-    const groupsRoot = fs.mkdtempSync(path.join(os.tmpdir(), "synara-library-groups-"));
+    const groupsRoot = fs.mkdtempSync(path.join(os.tmpdir(), "ramspace-library-groups-"));
     const config = {
       host: "0.0.0.0",
-      publicUrl: new URL("https://synara.example.test/"),
-      stateDir: fs.mkdtempSync(path.join(os.tmpdir(), "synara-library-upload-")),
+      publicUrl: new URL("https://ramspace.example.test/"),
+      stateDir: fs.mkdtempSync(path.join(os.tmpdir(), "ramspace-library-upload-")),
       groupsWorkspaceRoot: groupsRoot,
       studioWorkspaceRoot: groupsRoot,
     } as ServerConfigShape;
@@ -818,7 +818,7 @@ describe("binaryUploadEffectRouteLayer", () => {
               method: "POST",
               headers: {
                 Authorization: "Bearer bearer-token",
-                Origin: "https://synara.example.test",
+                Origin: "https://ramspace.example.test",
               },
               body: Uint8Array.from([1]),
             },
@@ -827,7 +827,7 @@ describe("binaryUploadEffectRouteLayer", () => {
           // Upload errors must keep the trusted-origin CORS headers so the web
           // client can read the rejection instead of a network error.
           expect(response.headers.get("access-control-allow-origin")).toBe(
-            "https://synara.example.test",
+            "https://ramspace.example.test",
           );
         },
         binaryUploadEffectRouteLayer,

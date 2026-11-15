@@ -1,5 +1,5 @@
 // FILE: signOutWithToast.ts
-// Purpose: Sign out of the Synara account, reporting a failure as a toast. Shared by the
+// Purpose: Sign out of the Ramspace account, reporting a failure as a toast. Shared by the
 //          account menu in the rail and Settings › Profile.
 // Layer: Account UI support
 // Exports: signOutWithToast

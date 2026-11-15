@@ -35,7 +35,7 @@ import type {
   ThreadId,
   TurnId,
   ProviderTurnStartResult,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { ServiceMap } from "effect";
 import type { Deferred, Effect, Stream } from "effect";
 
@@ -384,5 +384,5 @@ export interface ProviderServiceShape {
  * ProviderService - Service tag for provider orchestration.
  */
 export class ProviderService extends ServiceMap.Service<ProviderService, ProviderServiceShape>()(
-  "synara/provider/Services/ProviderService",
+  "ramspace/provider/Services/ProviderService",
 ) {}

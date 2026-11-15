@@ -3,7 +3,7 @@
 // Layer: Sidebar UI
 
 import { useState } from "react";
-import type { ProjectId } from "@synara/contracts";
+import type { ProjectId } from "@ramspace/contracts";
 import { useQueryClient } from "@tanstack/react-query";
 
 import { ensureNativeApi } from "../nativeApi";
@@ -26,7 +26,7 @@ export function RelocateProjectDialog(props: {
     <RenameDialog
       open
       title={t("workspace:changeProjectPath")}
-      description={t("workspace:enterTheRestoredFolderSPathOnTheSynara")}
+      description={t("workspace:enterTheRestoredFolderSPathOnTheRamspace")}
       initialValue={originalWorkspaceRoot}
       saveLabel={t("workspace:changePath")}
       onOpenChange={props.onOpenChange}

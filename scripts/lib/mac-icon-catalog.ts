@@ -12,7 +12,7 @@ import { desktopIconAssetPaths } from "./brand-assets.ts";
 
 // macOS 26 reads CFBundleIconName out of Assets.car and renders that layered
 // icon with the Liquid Glass material; older releases keep using the ICNS.
-export const MAC_ICON_ASSET_NAME = "Synara";
+export const MAC_ICON_ASSET_NAME = "Ramspace";
 export const MAC_ICON_COMPOSER_DEPLOYMENT_TARGET = "26.0";
 export const MAC_ICON_CATALOG_FILE = "Assets.car";
 export const MAC_ICON_PROVENANCE_FILE = "provenance.json";
@@ -22,7 +22,7 @@ export const MAC_ICON_RELEASE_RUNNER = "macos-26";
 export const MAC_ICON_RELEASE_XCODE_VERSION = "26.3";
 export const MAC_ICON_RELEASE_DEVELOPER_DIR = `/Applications/Xcode_${MAC_ICON_RELEASE_XCODE_VERSION}.app/Contents/Developer`;
 // Every packaged flavor; scripts/mac-icon-catalog.test.ts keeps this equal to
-// SYNARA_PACKAGED_DESKTOP_FLAVORS, which this file cannot import before install.
+// RAMSPACE_PACKAGED_DESKTOP_FLAVORS, which this file cannot import before install.
 export const MAC_ICON_FLAVORS = ["production", "canary", "cua", "beta", "remote"] as const;
 export type MacIconFlavor = (typeof MAC_ICON_FLAVORS)[number];
 

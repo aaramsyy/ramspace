@@ -1,6 +1,6 @@
 import { readExecutionContext } from "~/lib/hosts/executionContext";
 // FILE: AppSnapCoordinator.tsx
-// Purpose: Routes native macOS AppSnaps into the correct Synara composer draft.
+// Purpose: Routes native macOS AppSnaps into the correct Ramspace composer draft.
 // Layer: Root web coordinator
 // Depends on: Desktop bridge, focused chat context, and existing composer attachment intake.
 
@@ -9,7 +9,7 @@ import {
   type DesktopAppSnapShortcut,
   type DesktopBridge,
   type ThreadId,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { useNavigate } from "@tanstack/react-router";
 import { useCallback, useEffect, useRef } from "react";
 
@@ -383,7 +383,7 @@ function LocalAppSnapCoordinator() {
           // fresh-thread creation: the user actively went somewhere else, so
           // follow them there instead of failing the capture.
           const focused = focusedTargetRef.current;
-          if (!focused) throw new Error("Synara could not create a task for this AppSnap.");
+          if (!focused) throw new Error("Ramspace could not create a task for this AppSnap.");
           target = focused;
           openChatThreadPage(target.threadId);
         }
@@ -403,7 +403,7 @@ function LocalAppSnapCoordinator() {
               : t("common:appSnapAdded"),
           description:
             persistenceResult === "unverified"
-              ? t("common:theCaptureIsAttachedButSynaraCouldNotVerify")
+              ? t("common:theCaptureIsAttachedButRamspaceCouldNotVerify")
               : capture.sourceAppName
                 ? t("common:capturedAndAddedItToTheComposer", {
                     value0: capture.sourceAppName,

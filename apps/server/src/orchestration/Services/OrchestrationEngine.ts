@@ -14,7 +14,7 @@ import type {
   OrchestrationCommand,
   OrchestrationEvent,
   OrchestrationReadModel,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { ServiceMap } from "effect";
 import type { Effect, Scope, Stream } from "effect";
 
@@ -100,9 +100,9 @@ export interface OrchestrationEngineShape {
 
   /** Durable Stop evidence for an executing send whose native id may not exist yet. */
   readonly hasThreadStopAfter?: (
-    threadId: import("@synara/contracts").ThreadId,
+    threadId: import("@ramspace/contracts").ThreadId,
     sequenceExclusive: number,
-    turnId?: import("@synara/contracts").TurnId,
+    turnId?: import("@ramspace/contracts").TurnId,
   ) => Effect.Effect<boolean, OrchestrationEventStoreError>;
 
   /** Capture the durable orchestration event-log high-water sequence. */
@@ -184,4 +184,4 @@ export interface OrchestrationEngineShape {
 export class OrchestrationEngineService extends ServiceMap.Service<
   OrchestrationEngineService,
   OrchestrationEngineShape
->()("synara/orchestration/Services/OrchestrationEngine/OrchestrationEngineService") {}
+>()("ramspace/orchestration/Services/OrchestrationEngine/OrchestrationEngineService") {}

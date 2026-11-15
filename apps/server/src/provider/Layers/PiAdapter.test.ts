@@ -13,7 +13,7 @@ import path from "node:path";
 import { ModelRegistry, ModelRuntime } from "@earendil-works/pi-coding-agent";
 import type { Api, Model } from "@earendil-works/pi-ai";
 import { describe, expect, it } from "vitest";
-import { SYNARA_COMPUTER_TOOL_NAMES } from "../../agentGateway/computerToolPermission.ts";
+import { RAMSPACE_COMPUTER_TOOL_NAMES } from "../../agentGateway/computerToolPermission.ts";
 import {
   applyPiRuntimeApiKeysFromEnvironment,
   createPiModelRuntime,
@@ -248,7 +248,7 @@ describe("Pi extension mode in-flight reservations", () => {
   });
 });
 
-describe("Pi native Synara gateway tools", () => {
+describe("Pi native Ramspace gateway tools", () => {
   it("uses canonical MCP schemas and keeps same-cwd thread tokens distinct", async () => {
     const requests: Array<{ readonly token: string | null; readonly body: any }> = [];
     const fetch = async (_input: string | URL | Request, init?: RequestInit) => {
@@ -265,8 +265,8 @@ describe("Pi native Synara gateway tools", () => {
             ? {
                 tools: [
                   {
-                    name: "synara_list_threads",
-                    description: "List Synara threads.",
+                    name: "ramspace_list_threads",
+                    description: "List Ramspace threads.",
                     inputSchema: {
                       type: "object",
                       properties: { limit: { type: "number" } },
@@ -329,8 +329,8 @@ describe("Pi native Synara gateway tools", () => {
           result: {
             tools: [
               {
-                name: "synara_create_threads",
-                description: "Create Synara threads.",
+                name: "ramspace_create_threads",
+                description: "Create Ramspace threads.",
                 inputSchema: { type: "object", properties: {} },
               },
             ],
@@ -367,14 +367,14 @@ describe("Pi native Synara gateway tools", () => {
   });
 
   it("only adds specialist routes when the catalog advertises a canonical Computer tool", () => {
-    expect(piInstalledGatewayToolNames(["synara_list_threads"])).toEqual(
-      new Set(["synara_list_threads"]),
+    expect(piInstalledGatewayToolNames(["ramspace_list_threads"])).toEqual(
+      new Set(["ramspace_list_threads"]),
     );
     for (const unrelated of ["computer_future_tool", "mcp__other__computer_click"]) {
       expect(piInstalledGatewayToolNames([unrelated])).toEqual(new Set([unrelated]));
     }
-    expect(piInstalledGatewayToolNames(["synara_list_threads", "computer_run"])).toEqual(
-      new Set(["synara_list_threads", ...SYNARA_COMPUTER_TOOL_NAMES]),
+    expect(piInstalledGatewayToolNames(["ramspace_list_threads", "computer_run"])).toEqual(
+      new Set(["ramspace_list_threads", ...RAMSPACE_COMPUTER_TOOL_NAMES]),
     );
   });
 
@@ -420,8 +420,8 @@ describe("Pi native Synara gateway tools", () => {
       inputSchema: { type: "object", properties: { x: { type: "number" } } },
     };
     const ordinaryTool = {
-      name: "synara_list_threads",
-      description: "List Synara threads.",
+      name: "ramspace_list_threads",
+      description: "List Ramspace threads.",
       inputSchema: { type: "object", properties: {} },
     };
     let enabled = true;
@@ -456,7 +456,7 @@ describe("Pi native Synara gateway tools", () => {
       });
     const on = await projection();
     expect(new Set(on.map((tool) => tool.name))).toEqual(
-      new Set([ordinaryTool.name, ...SYNARA_COMPUTER_TOOL_NAMES]),
+      new Set([ordinaryTool.name, ...RAMSPACE_COMPUTER_TOOL_NAMES]),
     );
     expect(on[1]?.parameters).toEqual(computerTool.inputSchema);
     const controller = new AbortController();
@@ -610,7 +610,7 @@ describe("getPiDiscoverableModels", () => {
   });
 
   it("isolates extension providers between sessions that share an agent directory", async () => {
-    const agentDir = mkdtempSync(path.join(tmpdir(), "synara-pi-runtime-isolation-"));
+    const agentDir = mkdtempSync(path.join(tmpdir(), "ramspace-pi-runtime-isolation-"));
 
     try {
       const firstRuntime = await createTestPiModelRuntime(
@@ -655,7 +655,7 @@ describe("getPiDiscoverableModels", () => {
   });
 
   it("blocks ambient API-key fallback for an isolated Pi instance", async () => {
-    const agentDir = mkdtempSync(path.join(tmpdir(), "synara-pi-account-isolation-"));
+    const agentDir = mkdtempSync(path.join(tmpdir(), "ramspace-pi-account-isolation-"));
     const previousOpenAiKey = process.env.OPENAI_API_KEY;
     process.env.OPENAI_API_KEY = "ambient-account-key";
 
@@ -683,7 +683,7 @@ describe("getPiDiscoverableModels", () => {
   });
 
   it("resolves custom provider config only from the selected Pi environment", async () => {
-    const agentDir = mkdtempSync(path.join(tmpdir(), "synara-pi-custom-config-isolation-"));
+    const agentDir = mkdtempSync(path.join(tmpdir(), "ramspace-pi-custom-config-isolation-"));
     const previousCustomKey = process.env.CUSTOM_KEY;
     const previousCustomHeader = process.env.CUSTOM_HEADER;
     process.env.CUSTOM_KEY = "ambient-account-key";
@@ -751,7 +751,7 @@ describe("getPiDiscoverableModels", () => {
   });
 
   it("keeps identical config commands scoped to each immutable Pi environment", async () => {
-    const agentDir = mkdtempSync(path.join(tmpdir(), "synara-pi-command-isolation-"));
+    const agentDir = mkdtempSync(path.join(tmpdir(), "ramspace-pi-command-isolation-"));
     const commandConfig = `!${JSON.stringify(process.execPath)} -p ${JSON.stringify(
       "process.env.CUSTOM_KEY",
     )}`;
@@ -804,7 +804,7 @@ describe("getPiDiscoverableModels", () => {
     ["azure", "stored-azure", "Azure OpenAI"],
     ["google-vertex", "gcp-vertex-credentials", "Vertex ADC"],
   ])("fails closed for isolated %s ambient-chain auth", async (provider, key, message) => {
-    const agentDir = mkdtempSync(path.join(tmpdir(), "synara-pi-routing-isolation-"));
+    const agentDir = mkdtempSync(path.join(tmpdir(), "ramspace-pi-routing-isolation-"));
     try {
       writeFileSync(
         path.join(agentDir, "auth.json"),
@@ -825,7 +825,7 @@ describe("getPiDiscoverableModels", () => {
   });
 
   it("resolves Cloudflare routing only from the selected instance", async () => {
-    const agentDir = mkdtempSync(path.join(tmpdir(), "synara-pi-cloudflare-isolation-"));
+    const agentDir = mkdtempSync(path.join(tmpdir(), "ramspace-pi-cloudflare-isolation-"));
     try {
       const runtime = await createTestPiModelRuntime(
         agentDir,
@@ -851,7 +851,7 @@ describe("getPiDiscoverableModels", () => {
   });
 
   it("suppresses ambient OpenAI and Anthropic routing credentials", async () => {
-    const agentDir = mkdtempSync(path.join(tmpdir(), "synara-pi-header-isolation-"));
+    const agentDir = mkdtempSync(path.join(tmpdir(), "ramspace-pi-header-isolation-"));
     const previousOpenAiOrg = process.env.OPENAI_ORG_ID;
     const previousAnthropicToken = process.env.ANTHROPIC_AUTH_TOKEN;
     process.env.OPENAI_ORG_ID = "ambient-org";
@@ -890,7 +890,7 @@ describe("getPiDiscoverableModels", () => {
   ])(
     "discovers bundled $provider/$id with configured credentials",
     async ({ provider, id, auth }) => {
-      const agentDir = mkdtempSync(path.join(tmpdir(), "synara-pi-bundled-models-"));
+      const agentDir = mkdtempSync(path.join(tmpdir(), "ramspace-pi-bundled-models-"));
       try {
         const authPath = path.join(agentDir, "auth.json");
         writeFileSync(authPath, JSON.stringify({ [provider]: auth }));
@@ -965,7 +965,7 @@ describe("getPiDiscoverableModels", () => {
   ])(
     "preserves Kimi request routing for $label across refresh",
     async ({ baseUrl, expected, isolated, ...config }) => {
-      const agentDir = mkdtempSync(path.join(tmpdir(), "synara-pi-kimi-"));
+      const agentDir = mkdtempSync(path.join(tmpdir(), "ramspace-pi-kimi-"));
       const authPath = path.join(agentDir, "auth.json");
       const modelsPath = path.join(agentDir, "models.json");
       const auth = JSON.stringify({ "kimi-coding": { type: "api_key", key: "selected-kimi-key" } });
@@ -1053,7 +1053,7 @@ describe("getPiDiscoverableModels", () => {
   );
 
   it("preserves legacy Azure profiles and model selections alongside the renamed provider", async () => {
-    const agentDir = mkdtempSync(path.join(tmpdir(), "synara-pi-azure-"));
+    const agentDir = mkdtempSync(path.join(tmpdir(), "ramspace-pi-azure-"));
     const legacyProvider = "azure-openai-responses";
     const authPath = path.join(agentDir, "auth.json");
     const modelsPath = path.join(agentDir, "models.json");
@@ -1135,8 +1135,8 @@ describe("getPiDiscoverableModels", () => {
   });
 
   it("discovers and sends with the selected account's current ChatGPT login", async () => {
-    const agentDir = mkdtempSync(path.join(tmpdir(), "synara-pi-chatgpt-"));
-    const otherAgentDir = mkdtempSync(path.join(tmpdir(), "synara-pi-chatgpt-other-"));
+    const agentDir = mkdtempSync(path.join(tmpdir(), "ramspace-pi-chatgpt-"));
+    const otherAgentDir = mkdtempSync(path.join(tmpdir(), "ramspace-pi-chatgpt-other-"));
     try {
       // Shape written by Pi's /login openai; it does not use openai-codex's store key.
       writeFileSync(
@@ -1249,7 +1249,7 @@ describe("getPiDiscoverableModels", () => {
   });
 
   it("includes custom-provider models authenticated through auth.json semantics", async () => {
-    const agentDir = mkdtempSync(path.join(tmpdir(), "synara-pi-models-"));
+    const agentDir = mkdtempSync(path.join(tmpdir(), "ramspace-pi-models-"));
     const modelsPath = path.join(agentDir, "models.json");
     const authPath = path.join(agentDir, "auth.json");
 
@@ -1291,7 +1291,7 @@ describe("getPiDiscoverableModels", () => {
   });
 
   it("restores Fable 5 and Opus 4.8 after an extension replaces the Anthropic catalog", async () => {
-    const agentDir = mkdtempSync(path.join(tmpdir(), "synara-pi-anthropic-"));
+    const agentDir = mkdtempSync(path.join(tmpdir(), "ramspace-pi-anthropic-"));
     const modelsPath = path.join(agentDir, "models.json");
     const authPath = path.join(agentDir, "auth.json");
 

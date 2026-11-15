@@ -16,7 +16,7 @@ import { BetaDiagnostics } from "./betaDiagnostics";
 
 const roots: string[] = [];
 function makeRoot(): string {
-  const root = mkdtempSync(join(tmpdir(), "synara-product-analytics-"));
+  const root = mkdtempSync(join(tmpdir(), "ramspace-product-analytics-"));
   roots.push(root);
   return root;
 }
@@ -785,7 +785,7 @@ it("negotiates before entry, reports each return window once across restarts, an
           ? events.filter((event) => event.cohortStage).map((event) => event.id)
           : [],
       },
-      { headers: supported ? { "x-synara-product-cohorts": "1" } : {} },
+      { headers: supported ? { "x-ramspace-product-cohorts": "1" } : {} },
     );
   });
   const make = () =>
@@ -860,7 +860,7 @@ it("recovers a queued entry after interrupted state persistence and retries its 
     if (entries.length && fail) throw new Error("synthetic response loss");
     return Response.json(
       { cohortAcknowledged: entries.map((event) => event.id) },
-      { headers: { "x-synara-product-cohorts": "1" } },
+      { headers: { "x-ramspace-product-cohorts": "1" } },
     );
   });
   const make = () =>
@@ -897,7 +897,7 @@ it("cannot restore cohort files when opt-out races an asynchronous receipt body"
     if (events.some((event) => event.cohortStage))
       return {
         ok: true,
-        headers: new Headers({ "x-synara-product-cohorts": "1" }),
+        headers: new Headers({ "x-ramspace-product-cohorts": "1" }),
         json: () => {
           receiptPending = true;
           return new Promise((resolve) => {
@@ -905,7 +905,7 @@ it("cannot restore cohort files when opt-out races an asynchronous receipt body"
           });
         },
       } as Response;
-    return Response.json({}, { headers: { "x-synara-product-cohorts": "1" } });
+    return Response.json({}, { headers: { "x-ramspace-product-cohorts": "1" } });
   });
   const analytics = createPrimaryAnalytics({
     homeDir,
@@ -942,7 +942,7 @@ it("prefers a durable replacement entry over valid stale cohort state after rest
     if (cohortEvents.length && fail) throw new Error("synthetic response loss");
     return Response.json(
       { cohortAcknowledged: cohortEvents.map((event) => event.id) },
-      { headers: { "x-synara-product-cohorts": "1" } },
+      { headers: { "x-ramspace-product-cohorts": "1" } },
     );
   });
   const make = () =>
@@ -1011,7 +1011,7 @@ it("emits the independent shared native UUID vectors from the real desktop sende
     emitted.push(...cohortEvents);
     return Response.json(
       { cohortAcknowledged: cohortEvents.map((event) => event.id) },
-      { headers: { "x-synara-product-cohorts": "1" } },
+      { headers: { "x-ramspace-product-cohorts": "1" } },
     );
   });
   for (const expected of fixture.events) {

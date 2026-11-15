@@ -1,48 +1,48 @@
 // FILE: desktopIdentity.ts
 // Purpose: Defines the canonical desktop application identity across packaging and runtime.
 
-export const SYNARA_DESKTOP_SCHEME = "synara";
-export const SYNARA_DESKTOP_ORIGIN = `${SYNARA_DESKTOP_SCHEME}://app`;
-export const SYNARA_DESKTOP_ENTRY_URL = `${SYNARA_DESKTOP_ORIGIN}/index.html`;
-export const SYNARA_DESKTOP_UPDATE_CHANNEL = "synara";
-export const SYNARA_PRODUCTION_BUNDLE_ID = "com.emanueledipietro.synara";
-export const SYNARA_DEVELOPMENT_BUNDLE_ID = `${SYNARA_PRODUCTION_BUNDLE_ID}.dev`;
-export const SYNARA_CANARY_BUNDLE_ID = `${SYNARA_PRODUCTION_BUNDLE_ID}.canary`;
+export const RAMSPACE_DESKTOP_SCHEME = "ramspace";
+export const RAMSPACE_DESKTOP_ORIGIN = `${RAMSPACE_DESKTOP_SCHEME}://app`;
+export const RAMSPACE_DESKTOP_ENTRY_URL = `${RAMSPACE_DESKTOP_ORIGIN}/index.html`;
+export const RAMSPACE_DESKTOP_UPDATE_CHANNEL = "ramspace";
+export const RAMSPACE_PRODUCTION_BUNDLE_ID = "com.aaramsyy.ramspace";
+export const RAMSPACE_DEVELOPMENT_BUNDLE_ID = `${RAMSPACE_PRODUCTION_BUNDLE_ID}.dev`;
+export const RAMSPACE_CANARY_BUNDLE_ID = `${RAMSPACE_PRODUCTION_BUNDLE_ID}.canary`;
 /** Display/setup identity of the GUI host; this value does not confer native authority. */
-export const SYNARA_DESKTOP_BUNDLE_ID_ENV = "SYNARA_DESKTOP_BUNDLE_ID";
-export const SYNARA_CANARY_DESKTOP_SCHEME = "synara-canary";
-export const SYNARA_CANARY_DESKTOP_ORIGIN = `${SYNARA_CANARY_DESKTOP_SCHEME}://app`;
-export const SYNARA_CANARY_DESKTOP_ENTRY_URL = `${SYNARA_CANARY_DESKTOP_ORIGIN}/index.html`;
-export const SYNARA_CUA_BUNDLE_ID = `${SYNARA_PRODUCTION_BUNDLE_ID}.cua`;
-export const SYNARA_CUA_DESKTOP_SCHEME = "synara-cua";
-export const SYNARA_CUA_DESKTOP_ORIGIN = `${SYNARA_CUA_DESKTOP_SCHEME}://app`;
-export const SYNARA_CUA_DESKTOP_ENTRY_URL = `${SYNARA_CUA_DESKTOP_ORIGIN}/index.html`;
-export const SYNARA_BETA_BUNDLE_ID = `${SYNARA_PRODUCTION_BUNDLE_ID}.beta`;
-export const SYNARA_BETA_DESKTOP_SCHEME = "synara-beta";
-export const SYNARA_BETA_DESKTOP_ORIGIN = `${SYNARA_BETA_DESKTOP_SCHEME}://app`;
-export const SYNARA_BETA_DESKTOP_ENTRY_URL = `${SYNARA_BETA_DESKTOP_ORIGIN}/index.html`;
-export const SYNARA_REMOTE_BUNDLE_ID = `${SYNARA_PRODUCTION_BUNDLE_ID}.remote`;
-export const SYNARA_REMOTE_DESKTOP_SCHEME = "synara-remote";
-export const SYNARA_REMOTE_DESKTOP_ORIGIN = `${SYNARA_REMOTE_DESKTOP_SCHEME}://app`;
-export const SYNARA_REMOTE_DESKTOP_ENTRY_URL = `${SYNARA_REMOTE_DESKTOP_ORIGIN}/index.html`;
-export const SYNARA_SOURCE_DESKTOP_BUILD_MARKER = "synara-source-desktop-build-v2";
-export const SYNARA_DESKTOP_SMOKE_USER_DATA_ENV = "SYNARA_DESKTOP_SMOKE_USER_DATA";
+export const RAMSPACE_DESKTOP_BUNDLE_ID_ENV = "RAMSPACE_DESKTOP_BUNDLE_ID";
+export const RAMSPACE_CANARY_DESKTOP_SCHEME = "ramspace-canary";
+export const RAMSPACE_CANARY_DESKTOP_ORIGIN = `${RAMSPACE_CANARY_DESKTOP_SCHEME}://app`;
+export const RAMSPACE_CANARY_DESKTOP_ENTRY_URL = `${RAMSPACE_CANARY_DESKTOP_ORIGIN}/index.html`;
+export const RAMSPACE_CUA_BUNDLE_ID = `${RAMSPACE_PRODUCTION_BUNDLE_ID}.cua`;
+export const RAMSPACE_CUA_DESKTOP_SCHEME = "ramspace-cua";
+export const RAMSPACE_CUA_DESKTOP_ORIGIN = `${RAMSPACE_CUA_DESKTOP_SCHEME}://app`;
+export const RAMSPACE_CUA_DESKTOP_ENTRY_URL = `${RAMSPACE_CUA_DESKTOP_ORIGIN}/index.html`;
+export const RAMSPACE_BETA_BUNDLE_ID = `${RAMSPACE_PRODUCTION_BUNDLE_ID}.beta`;
+export const RAMSPACE_BETA_DESKTOP_SCHEME = "ramspace-beta";
+export const RAMSPACE_BETA_DESKTOP_ORIGIN = `${RAMSPACE_BETA_DESKTOP_SCHEME}://app`;
+export const RAMSPACE_BETA_DESKTOP_ENTRY_URL = `${RAMSPACE_BETA_DESKTOP_ORIGIN}/index.html`;
+export const RAMSPACE_REMOTE_BUNDLE_ID = `${RAMSPACE_PRODUCTION_BUNDLE_ID}.remote`;
+export const RAMSPACE_REMOTE_DESKTOP_SCHEME = "ramspace-remote";
+export const RAMSPACE_REMOTE_DESKTOP_ORIGIN = `${RAMSPACE_REMOTE_DESKTOP_SCHEME}://app`;
+export const RAMSPACE_REMOTE_DESKTOP_ENTRY_URL = `${RAMSPACE_REMOTE_DESKTOP_ORIGIN}/index.html`;
+export const RAMSPACE_SOURCE_DESKTOP_BUILD_MARKER = "ramspace-source-desktop-build-v2";
+export const RAMSPACE_DESKTOP_SMOKE_USER_DATA_ENV = "RAMSPACE_DESKTOP_SMOKE_USER_DATA";
 
-export type SynaraDesktopFlavor =
+export type RamspaceDesktopFlavor =
   | "production"
   | "development"
   | "canary"
   | "cua"
   | "beta"
   | "remote";
-export const SYNARA_PACKAGED_DESKTOP_FLAVORS = [
+export const RAMSPACE_PACKAGED_DESKTOP_FLAVORS = [
   "production",
   "canary",
   "cua",
   "beta",
   "remote",
 ] as const;
-export type SynaraPackagedDesktopFlavor = (typeof SYNARA_PACKAGED_DESKTOP_FLAVORS)[number];
+export type RamspacePackagedDesktopFlavor = (typeof RAMSPACE_PACKAGED_DESKTOP_FLAVORS)[number];
 
 /**
  * electron-updater matches the update channel against the release tag's
@@ -50,16 +50,16 @@ export type SynaraPackagedDesktopFlavor = (typeof SYNARA_PACKAGED_DESKTOP_FLAVOR
  * neither may fall through to the Stable payload.
  *
  * The channel stays architecture-independent: electron-updater derives
- * `<channel>-linux[-arch]` (`synara-linux.yml` for x64, `synara-linux-arm64.yml`
+ * `<channel>-linux[-arch]` (`ramspace-linux.yml` for x64, `ramspace-linux-arm64.yml`
  * for arm64), and the release pipeline publishes those names beside
  * electron-builder's `latest-linux[-arm64].yml`.
  */
-export function desktopUpdateChannel(flavor: SynaraDesktopFlavor): string {
-  return flavor === "beta" || flavor === "remote" ? flavor : SYNARA_DESKTOP_UPDATE_CHANNEL;
+export function desktopUpdateChannel(flavor: RamspaceDesktopFlavor): string {
+  return flavor === "beta" || flavor === "remote" ? flavor : RAMSPACE_DESKTOP_UPDATE_CHANNEL;
 }
 
-export interface SynaraDesktopIdentity {
-  readonly flavor: SynaraDesktopFlavor;
+export interface RamspaceDesktopIdentity {
+  readonly flavor: RamspaceDesktopFlavor;
   readonly displayName: string;
   readonly bundleId: string;
   readonly scheme: string;
@@ -72,11 +72,11 @@ export interface SynaraDesktopIdentity {
   readonly usesScriptedUpdates: boolean;
 }
 
-export function resolveSynaraDesktopFlavor(input: {
+export function resolveRamspaceDesktopFlavor(input: {
   readonly isDevelopment: boolean;
   readonly requestedFlavor?: string | undefined;
   readonly allowDevelopmentOverride?: boolean | undefined;
-}): SynaraDesktopFlavor {
+}): RamspaceDesktopFlavor {
   const requestedFlavor = input.requestedFlavor?.trim().toLowerCase();
   if (requestedFlavor === "cua") {
     return "cua";
@@ -97,13 +97,13 @@ export function resolveSynaraDesktopFlavor(input: {
 }
 
 /** Packaged identity is fixed when the artifact is staged, before it is signed. */
-export function resolveSynaraDesktopRuntimeFlavor(input: {
+export function resolveRamspaceDesktopRuntimeFlavor(input: {
   readonly isPackaged: boolean;
   readonly isDevelopment: boolean;
   readonly packagedFlavor?: unknown;
   readonly requestedFlavor?: string | undefined;
   readonly allowDevelopmentOverride?: boolean | undefined;
-}): SynaraDesktopFlavor {
+}): RamspaceDesktopFlavor {
   if (input.isPackaged && input.packagedFlavor !== undefined) {
     const flavor = input.packagedFlavor;
     if (
@@ -115,7 +115,7 @@ export function resolveSynaraDesktopRuntimeFlavor(input: {
     ) {
       return flavor;
     }
-    throw new Error("The packaged Synara desktop flavor is invalid. Rebuild the application.");
+    throw new Error("The packaged Ramspace desktop flavor is invalid. Rebuild the application.");
   }
   // Source launchers also use an app bundle on macOS. Their build marker keeps
   // the existing environment-based routing, while legacy packaged apps remain
@@ -123,7 +123,7 @@ export function resolveSynaraDesktopRuntimeFlavor(input: {
   if (input.isPackaged && input.allowDevelopmentOverride !== true) {
     return "production";
   }
-  return resolveSynaraDesktopFlavor(input);
+  return resolveRamspaceDesktopFlavor(input);
 }
 
 export function canOverrideDesktopSmokeUserData(input: {
@@ -135,86 +135,86 @@ export function canOverrideDesktopSmokeUserData(input: {
     input.packagedFlavor === "beta" ||
     input.packagedFlavor === "remote" ||
     (input.packagedFlavor === undefined &&
-      input.sourceBuildMarker === SYNARA_SOURCE_DESKTOP_BUILD_MARKER)
+      input.sourceBuildMarker === RAMSPACE_SOURCE_DESKTOP_BUILD_MARKER)
   );
 }
 
-export function synaraDesktopIdentity(flavor: SynaraDesktopFlavor): SynaraDesktopIdentity {
+export function ramspaceDesktopIdentity(flavor: RamspaceDesktopFlavor): RamspaceDesktopIdentity {
   if (flavor === "cua") {
     return {
       flavor,
-      displayName: "Synara Cua",
-      bundleId: SYNARA_CUA_BUNDLE_ID,
-      scheme: SYNARA_CUA_DESKTOP_SCHEME,
-      origin: SYNARA_CUA_DESKTOP_ORIGIN,
-      entryUrl: SYNARA_CUA_DESKTOP_ENTRY_URL,
-      userDataDirectoryName: "synara-cua",
-      defaultHomeDirectoryName: ".synara-cua",
+      displayName: "Ramspace Cua",
+      bundleId: RAMSPACE_CUA_BUNDLE_ID,
+      scheme: RAMSPACE_CUA_DESKTOP_SCHEME,
+      origin: RAMSPACE_CUA_DESKTOP_ORIGIN,
+      entryUrl: RAMSPACE_CUA_DESKTOP_ENTRY_URL,
+      userDataDirectoryName: "ramspace-cua",
+      defaultHomeDirectoryName: ".ramspace-cua",
       usesScriptedUpdates: true,
     };
   }
   if (flavor === "canary") {
     return {
       flavor,
-      displayName: "Synara Canary",
-      bundleId: SYNARA_CANARY_BUNDLE_ID,
-      scheme: SYNARA_CANARY_DESKTOP_SCHEME,
-      origin: SYNARA_CANARY_DESKTOP_ORIGIN,
-      entryUrl: SYNARA_CANARY_DESKTOP_ENTRY_URL,
-      userDataDirectoryName: "synara-canary",
-      defaultHomeDirectoryName: ".synara-canary",
+      displayName: "Ramspace Canary",
+      bundleId: RAMSPACE_CANARY_BUNDLE_ID,
+      scheme: RAMSPACE_CANARY_DESKTOP_SCHEME,
+      origin: RAMSPACE_CANARY_DESKTOP_ORIGIN,
+      entryUrl: RAMSPACE_CANARY_DESKTOP_ENTRY_URL,
+      userDataDirectoryName: "ramspace-canary",
+      defaultHomeDirectoryName: ".ramspace-canary",
       usesScriptedUpdates: true,
     };
   }
   if (flavor === "beta") {
     return {
       flavor,
-      displayName: "Synara Beta",
-      bundleId: SYNARA_BETA_BUNDLE_ID,
-      scheme: SYNARA_BETA_DESKTOP_SCHEME,
-      origin: SYNARA_BETA_DESKTOP_ORIGIN,
-      entryUrl: SYNARA_BETA_DESKTOP_ENTRY_URL,
-      userDataDirectoryName: "synara-beta",
-      defaultHomeDirectoryName: ".synara-beta",
+      displayName: "Ramspace Beta",
+      bundleId: RAMSPACE_BETA_BUNDLE_ID,
+      scheme: RAMSPACE_BETA_DESKTOP_SCHEME,
+      origin: RAMSPACE_BETA_DESKTOP_ORIGIN,
+      entryUrl: RAMSPACE_BETA_DESKTOP_ENTRY_URL,
+      userDataDirectoryName: "ramspace-beta",
+      defaultHomeDirectoryName: ".ramspace-beta",
       usesScriptedUpdates: false,
     };
   }
   if (flavor === "remote") {
     return {
       flavor,
-      displayName: "Synara Remote",
-      bundleId: SYNARA_REMOTE_BUNDLE_ID,
-      scheme: SYNARA_REMOTE_DESKTOP_SCHEME,
-      origin: SYNARA_REMOTE_DESKTOP_ORIGIN,
-      entryUrl: SYNARA_REMOTE_DESKTOP_ENTRY_URL,
-      userDataDirectoryName: "synara-remote",
-      defaultHomeDirectoryName: ".synara-remote",
-      defaultAccountUrl: "https://synara-account-api-trial.synara-orgs.workers.dev",
+      displayName: "Ramspace Remote",
+      bundleId: RAMSPACE_REMOTE_BUNDLE_ID,
+      scheme: RAMSPACE_REMOTE_DESKTOP_SCHEME,
+      origin: RAMSPACE_REMOTE_DESKTOP_ORIGIN,
+      entryUrl: RAMSPACE_REMOTE_DESKTOP_ENTRY_URL,
+      userDataDirectoryName: "ramspace-remote",
+      defaultHomeDirectoryName: ".ramspace-remote",
+      defaultAccountUrl: "https://ramspace-account-api-trial.ramspace-orgs.workers.dev",
       usesScriptedUpdates: false,
     };
   }
   if (flavor === "development") {
     return {
       flavor,
-      displayName: "Synara (Dev)",
-      bundleId: SYNARA_DEVELOPMENT_BUNDLE_ID,
-      scheme: SYNARA_DESKTOP_SCHEME,
-      origin: SYNARA_DESKTOP_ORIGIN,
-      entryUrl: SYNARA_DESKTOP_ENTRY_URL,
-      userDataDirectoryName: "synara-dev",
-      defaultHomeDirectoryName: ".synara-dev",
+      displayName: "Ramspace (Dev)",
+      bundleId: RAMSPACE_DEVELOPMENT_BUNDLE_ID,
+      scheme: RAMSPACE_DESKTOP_SCHEME,
+      origin: RAMSPACE_DESKTOP_ORIGIN,
+      entryUrl: RAMSPACE_DESKTOP_ENTRY_URL,
+      userDataDirectoryName: "ramspace-dev",
+      defaultHomeDirectoryName: ".ramspace-dev",
       usesScriptedUpdates: false,
     };
   }
   return {
     flavor,
-    displayName: "Synara",
-    bundleId: SYNARA_PRODUCTION_BUNDLE_ID,
-    scheme: SYNARA_DESKTOP_SCHEME,
-    origin: SYNARA_DESKTOP_ORIGIN,
-    entryUrl: SYNARA_DESKTOP_ENTRY_URL,
-    userDataDirectoryName: "synara",
-    defaultHomeDirectoryName: ".synara",
+    displayName: "Ramspace",
+    bundleId: RAMSPACE_PRODUCTION_BUNDLE_ID,
+    scheme: RAMSPACE_DESKTOP_SCHEME,
+    origin: RAMSPACE_DESKTOP_ORIGIN,
+    entryUrl: RAMSPACE_DESKTOP_ENTRY_URL,
+    userDataDirectoryName: "ramspace",
+    defaultHomeDirectoryName: ".ramspace",
     usesScriptedUpdates: false,
   };
 }
@@ -225,9 +225,9 @@ export function synaraDesktopIdentity(flavor: SynaraDesktopFlavor): SynaraDeskto
  * the wrong signature, and the launcher's re-sign reset clears them, so source
  * copies of the separately installed Beta and Remote apps get their own.
  */
-export function synaraSourceDesktopIdentity(
-  identity: SynaraDesktopIdentity,
-): SynaraDesktopIdentity {
+export function ramspaceSourceDesktopIdentity(
+  identity: RamspaceDesktopIdentity,
+): RamspaceDesktopIdentity {
   if (identity.flavor !== "beta" && identity.flavor !== "remote") return identity;
   return {
     ...identity,

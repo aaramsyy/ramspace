@@ -8,7 +8,7 @@ import { useTranslation } from "~/i18n";
 // Layer: Chat hooks
 // Exports: useSubagentStripSource, useSubagentRoster, useThreadSubagentRoster
 
-import { ThreadId, type OrchestrationThreadActivity, type TurnId } from "@synara/contracts";
+import { ThreadId, type OrchestrationThreadActivity, type TurnId } from "@ramspace/contracts";
 import { useEffect, useMemo } from "react";
 
 import { deriveWorkLogEntries, isLatestTurnSettled, type WorkLogEntry } from "../../session-logic";

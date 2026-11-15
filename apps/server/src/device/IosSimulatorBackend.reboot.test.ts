@@ -94,7 +94,7 @@ function makeBackend() {
   const helper = new FakeHelper();
   const backend = new IosSimulatorBackend({
     platform: "darwin",
-    helperCacheRoot: "/tmp/synara-device-test-cache",
+    helperCacheRoot: "/tmp/ramspace-device-test-cache",
     makeHelperClient: () => helper as unknown as HelperClient,
     run: async (command, args) => {
       if (command === "xcrun" && args[1] === "list") return simctlResult(DEVICE_LIST_JSON);
@@ -105,7 +105,7 @@ function makeBackend() {
   // The helper is normally compiled on first attach; the fake stands in for the
   // compiled binary so these tests never touch the toolchain.
   Object.defineProperty(backend, "compileHelperIfNeeded", {
-    value: async () => "/tmp/synara-device-test-cache/synara-device-helper",
+    value: async () => "/tmp/ramspace-device-test-cache/ramspace-device-helper",
   });
   return { backend, helper };
 }
@@ -118,7 +118,7 @@ describe("stale descriptor detection", () => {
 });
 
 describe("simulator reboot", () => {
-  it("re-attaches after a Synara-driven shutdown and reboot", async () => {
+  it("re-attaches after a Ramspace-driven shutdown and reboot", async () => {
     const { backend, helper } = makeBackend();
     await backend.tap(DEVICE, 10, 10);
 
@@ -134,7 +134,7 @@ describe("simulator reboot", () => {
     ]);
   });
 
-  it("recovers when the device was rebooted outside Synara", async () => {
+  it("recovers when the device was rebooted outside Ramspace", async () => {
     const { backend, helper } = makeBackend();
     await backend.tap(DEVICE, 10, 10);
 
@@ -205,7 +205,7 @@ describe("concurrent helper starts", () => {
     const disposed = new Set<FakeHelper>();
     const backend = new IosSimulatorBackend({
       platform: "darwin",
-      helperCacheRoot: "/tmp/synara-device-test-cache",
+      helperCacheRoot: "/tmp/ramspace-device-test-cache",
       makeHelperClient: () => {
         const helper = new FakeHelper();
         helper.dispose = async () => {
@@ -230,7 +230,7 @@ describe("concurrent helper starts", () => {
         compile.calls += 1;
         compileStarted.resolve();
         await compiled;
-        return "/tmp/synara-device-test-cache/synara-device-helper";
+        return "/tmp/ramspace-device-test-cache/ramspace-device-helper";
       },
     });
 

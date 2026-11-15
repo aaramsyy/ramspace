@@ -4,7 +4,7 @@
 // Exports: releaseOrphanedWorktreeAfterArchive
 
 import { t } from "~/i18n";
-import type { GitRemoveWorktreeInput, ThreadId } from "@synara/contracts";
+import type { GitRemoveWorktreeInput, ThreadId } from "@ramspace/contracts";
 
 import { toastManager } from "../components/ui/toast";
 import { useStore } from "../store";

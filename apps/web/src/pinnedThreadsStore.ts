@@ -4,7 +4,7 @@ import { getExecutionStorage } from "./lib/hosts/executionStorage";
 // Layer: UI state store
 // Exports: usePinnedThreadsStore
 
-import { type ThreadId } from "@synara/contracts";
+import { type ThreadId } from "@ramspace/contracts";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import { normalizePinnedIds, pinId, prunePinnedIds, unpinId } from "./pinning.logic";
@@ -17,7 +17,7 @@ interface PinnedThreadsStoreState {
   prunePinnedThreads: (threadIds: readonly ThreadId[]) => void;
 }
 
-const PINNED_THREADS_STORAGE_KEY = "synara:pinned-threads:v1";
+const PINNED_THREADS_STORAGE_KEY = "ramspace:pinned-threads:v1";
 
 export const usePinnedThreadsStore = create<PinnedThreadsStoreState>()(
   persist(

@@ -5,7 +5,7 @@ keyboard.rs and press_key.rs hunks were applied to `/Users/devin/repos/cua-src`
 on top of the staged rev-18 tree and `serve.rs` was bumped to
 `synara_native_revision` 19 by hand (the rev-18 stream had already landed the
 17→18 bump, exactly the concurrency case predicted below). The folded patch
-`0001-synara-native.patch` regenerates at sha
+`0001-ramspace-native.patch` regenerates at sha
 `6d9a8c9e50a596cde34b01f337d640e172cf2a9e669d2b261c76be810093a91c` and
 `cuaDriverRelease.json` pins `nativeRevision: 19`. This file remains as the
 authored record of the change; the diff itself is retained beside it.

@@ -1,7 +1,7 @@
 // FILE: transcriptUsageParsers.ts
 // Purpose: Pure line parsers for the usage Claude Code and Codex write to their own
 // session files, so Usage → Analytics can count sessions run anywhere on this Mac
-// (the "This Mac" scope), not only Synara's chats.
+// (the "This Mac" scope), not only Ramspace's chats.
 // Layer: server usage parsing (pure, no filesystem).
 
 /** Token counts for one model response. The five parts are disjoint. */

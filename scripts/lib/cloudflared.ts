@@ -1,8 +1,8 @@
 import { copyFile, mkdir, mkdtemp, rm } from "node:fs/promises";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
-import { installCloudflared } from "@synara/shared/cloudflared";
-import { spawnProcessSync } from "@synara/shared/processRuntime";
+import { installCloudflared } from "@ramspace/shared/cloudflared";
+import { spawnProcessSync } from "@ramspace/shared/processRuntime";
 
 /** Stage only the verified executable; downloaded archives never enter the app. */
 export async function stageCloudflared(
@@ -10,7 +10,7 @@ export async function stageCloudflared(
   platform: "mac" | "linux" | "win",
   arch: "arm64" | "x64" | "universal",
 ) {
-  const temporary = await mkdtemp(join(tmpdir(), "synara-cloudflared-build-"));
+  const temporary = await mkdtemp(join(tmpdir(), "ramspace-cloudflared-build-"));
   await mkdir(destination, { recursive: true });
   const targetPlatform = platform === "mac" ? "darwin" : platform === "win" ? "win32" : "linux";
   const binary = join(destination, platform === "win" ? "cloudflared.exe" : "cloudflared");

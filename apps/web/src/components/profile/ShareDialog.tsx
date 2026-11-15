@@ -7,7 +7,7 @@
 import { type ReactNode, useEffect, useRef, useState } from "react";
 import { SiReddit, SiX } from "react-icons/si";
 import { FaLinkedinIn } from "react-icons/fa6";
-import type { AccountProfile } from "@synara/contracts";
+import type { AccountProfile } from "@ramspace/contracts";
 import { Dialog, DialogPopup, DialogTitle } from "~/components/ui/dialog";
 import { CopyIcon, DownloadIcon, LinkIcon } from "~/lib/icons";
 import { profileShareUrl, publicProfileDisplayUrl } from "~/lib/accountLogic";
@@ -145,7 +145,7 @@ export function ShareDialog({
     return renderNodeToPngBlob(node, CARD_EXPORT_SIZE)
       .then((blob) => {
         if (blob) {
-          downloadBlob(blob, `synara-stats-${localDayKey()}.png`);
+          downloadBlob(blob, `ramspace-stats-${localDayKey()}.png`);
           setStatus("Saved PNG to your downloads.");
         } else {
           setStatus("Could not render the image.");

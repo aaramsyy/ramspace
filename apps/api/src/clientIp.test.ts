@@ -130,7 +130,7 @@ describe("sanitizeForwardableIp", () => {
 
 describe("sanitizeForwardableUserAgent", () => {
   it("passes and trims ordinary user agents, dropping empty ones", () => {
-    expect(sanitizeForwardableUserAgent("  synara/1.0  ")).toBe("synara/1.0");
+    expect(sanitizeForwardableUserAgent("  ramspace/1.0  ")).toBe("ramspace/1.0");
     expect(sanitizeForwardableUserAgent(undefined)).toBeUndefined();
     expect(sanitizeForwardableUserAgent("   ")).toBeUndefined();
   });

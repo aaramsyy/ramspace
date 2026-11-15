@@ -1,6 +1,6 @@
 import { ProviderCommandReactor } from "./Services/ProviderCommandReactor.ts";
 import * as NodeServices from "@effect/platform-node/NodeServices";
-import { ProjectId, ThreadId, TurnId, type OrchestrationCommand } from "@synara/contracts";
+import { ProjectId, ThreadId, TurnId, type OrchestrationCommand } from "@ramspace/contracts";
 import { Deferred, Duration, Effect, FileSystem, Layer, Option } from "effect";
 import { describe, expect, it } from "vitest";
 
@@ -28,7 +28,8 @@ const RECORDED_AT = "2026-06-14T10:00:00.000Z";
 const BEFORE_RECORD = "2026-06-14T09:59:00.000Z";
 const AFTER_RECORD = "2026-06-14T10:00:30.000Z";
 const NOW = "2026-06-14T10:05:00.000Z";
-const PROMPT = "Synara was closed while this chat was still running. Continue where you left off.";
+const PROMPT =
+  "Ramspace was closed while this chat was still running. Continue where you left off.";
 
 const threadId = (id: string) => ThreadId.makeUnsafe(id);
 const turnId = (id: string) => TurnId.makeUnsafe(id);
@@ -111,7 +112,7 @@ describe("crash recovery", () => {
       makeRunningThread("resumed"),
       makeRunningThread("heartbeat"),
       makeRunningThread("agent-turn"),
-      { ...makeRunningThread("delegated"), creationSource: "synara_mcp" },
+      { ...makeRunningThread("delegated"), creationSource: "ramspace_mcp" },
       { ...makeRunningThread("external-delegated"), creationSource: "external_mcp" },
       makeRunningThread("unknown-prompt"),
       { ...makeRunningThread("approval"), hasPendingApprovals: true },
@@ -439,7 +440,7 @@ describe("planQuitResumeTurns", () => {
 
 describe("quit resume record file", () => {
   const serverConfigLayer = ServerConfig.layerTest(process.cwd(), {
-    prefix: "synara-quit-resume-",
+    prefix: "ramspace-quit-resume-",
   }).pipe(Layer.provide(NodeServices.layer));
   const testLayer = Layer.merge(NodeServices.layer, serverConfigLayer);
   const run = <A, E, R>(effect: Effect.Effect<A, E, R>) =>

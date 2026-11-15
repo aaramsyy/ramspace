@@ -1,4 +1,4 @@
-import type { AccountStatus, SavedInboxRecap, StatsGetRecapResult } from "@synara/contracts";
+import type { AccountStatus, SavedInboxRecap, StatsGetRecapResult } from "@ramspace/contracts";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { expect, it, vi } from "vitest";
 import { render } from "vitest-browser-react";

@@ -57,11 +57,11 @@ if (command === "key") {
   console.log(xcode);
   if (!`${xcode}\n`.startsWith(`Xcode ${MAC_ICON_RELEASE_XCODE_VERSION}\n`))
     throw new Error(`The icon catalog requires Xcode ${MAC_ICON_RELEASE_XCODE_VERSION}.`);
-  const work = mkdtempSync(join(tmpdir(), "synara-mac-icon-"));
+  const work = mkdtempSync(join(tmpdir(), "ramspace-mac-icon-"));
   try {
     const compiled = join(work, "compiled");
     mkdirSync(compiled);
-    // The .icon folder must be named Synara to match CFBundleIconName.
+    // The .icon folder must be named Ramspace to match CFBundleIconName.
     execFileSync(
       "xcrun",
       macIconActoolArguments(

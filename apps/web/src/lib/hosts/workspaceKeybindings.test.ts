@@ -1,6 +1,6 @@
 import { afterEach, expect, it, vi } from "vitest";
 import { QueryClient } from "@tanstack/react-query";
-import type { KeybindingCommand, ResolvedKeybindingRule, ServerConfig } from "@synara/contracts";
+import type { KeybindingCommand, ResolvedKeybindingRule, ServerConfig } from "@ramspace/contracts";
 import { resolveShortcutCommand } from "../../keybindings";
 import { serverConfigQueryOptions, serverQueryKeys } from "../serverReactQuery";
 import { subscribeWorkspaceKeybindings } from "./workspaceKeybindings";
@@ -41,7 +41,7 @@ it("uses live controller chords while keeping remote scripts and provider config
   vi.stubGlobal("window", {
     nativeApi: { server: { getConfig: async () => remote } },
     frameElement: {
-      synaraWorkspace: {
+      ramspaceWorkspace: {
         controller: {
           keybindings: {
             read: () => controller,

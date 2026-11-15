@@ -1,5 +1,5 @@
 import { executionSessionStorage } from "./hosts/executionStorage";
-import type { ClientOrchestrationCommand, CommandId, ThreadId } from "@synara/contracts";
+import type { ClientOrchestrationCommand, CommandId, ThreadId } from "@ramspace/contracts";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 
@@ -27,7 +27,7 @@ export const useClaudeCompactionRequests = create<{
         }),
     }),
     {
-      name: "synara:claude-compaction-requests",
+      name: "ramspace:claude-compaction-requests",
       storage: createJSONStorage(() => executionSessionStorage),
       partialize: (state) => ({ requests: state.requests }),
     },

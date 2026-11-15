@@ -3,7 +3,7 @@ import { spawnSync } from "node:child_process";
 import { basename } from "node:path";
 import { createRequire } from "node:module";
 import { fileURLToPath } from "node:url";
-import { SYNARA_PACKAGED_DESKTOP_FLAVORS } from "@synara/shared/desktopIdentity";
+import { RAMSPACE_PACKAGED_DESKTOP_FLAVORS } from "@ramspace/shared/desktopIdentity";
 import { desktopIconAssetPaths } from "./lib/brand-assets.ts";
 
 import {
@@ -55,8 +55,8 @@ describe("createDesktopPlatformBuildConfig", () => {
       target: "AppImage",
       flavor: "remote",
     });
-    assert.equal(linux.linux?.executableName, "synara-remote");
-    assert.deepStrictEqual(linux.linux?.desktop, { entry: { StartupWMClass: "synara-remote" } });
+    assert.equal(linux.linux?.executableName, "ramspace-remote");
+    assert.deepStrictEqual(linux.linux?.desktop, { entry: { StartupWMClass: "ramspace-remote" } });
   });
 
   it("retains TypeScript runtime libraries on every desktop platform", () => {
@@ -90,7 +90,7 @@ describe("createDesktopPlatformBuildConfig", () => {
   });
 
   it("names every packaged Icon Composer asset for CFBundleIconName", () => {
-    for (const flavor of SYNARA_PACKAGED_DESKTOP_FLAVORS) {
+    for (const flavor of RAMSPACE_PACKAGED_DESKTOP_FLAVORS) {
       assert.equal(
         basename(desktopIconAssetPaths(flavor).macIconComposer, ".icon"),
         MAC_ICON_ASSET_NAME,
@@ -120,20 +120,20 @@ describe("createDesktopPlatformBuildConfig", () => {
     assert.equal(dmg.writeUpdateInfo, false);
     assert.equal(mac.entitlements, MAC_ENTITLEMENTS_PATH);
     assert.equal(mac.entitlementsInherit, MAC_INHERITED_ENTITLEMENTS_PATH);
-    assert.equal(MAC_APPSNAP_HELPER_BUNDLE_PATH, "Contents/Helpers/synara-appsnap-helper");
+    assert.equal(MAC_APPSNAP_HELPER_BUNDLE_PATH, "Contents/Helpers/ramspace-appsnap-helper");
     assert.deepStrictEqual(mac.binaries, [
-      "Contents/Helpers/synara-appsnap-helper",
-      "Contents/Frameworks/synara-window-material.node",
+      "Contents/Helpers/ramspace-appsnap-helper",
+      "Contents/Frameworks/ramspace-window-material.node",
       "Contents/Resources/cua-driver/cua-driver",
       "Contents/Resources/cloudflared/cloudflared",
     ]);
     assert.equal(
       mac.x64ArchFiles,
-      "Contents/{Helpers/synara-appsnap-helper,Frameworks/synara-window-material.node,Resources/cua-driver/cua-driver,Resources/cloudflared/cloudflared}",
+      "Contents/{Helpers/ramspace-appsnap-helper,Frameworks/ramspace-window-material.node,Resources/cua-driver/cua-driver,Resources/cloudflared/cloudflared}",
     );
     assert.equal(
       MAC_APPSNAP_HELPER_STAGE_PATH,
-      "apps/desktop/native/appsnap/build/synara-appsnap-helper",
+      "apps/desktop/native/appsnap/build/ramspace-appsnap-helper",
     );
     assert.equal(MAC_APPSNAP_HELPER_ASAR_EXCLUSION, "!apps/desktop/native/appsnap/build/**");
     assert.equal(config.files?.[0], "**/*");
@@ -146,12 +146,12 @@ describe("createDesktopPlatformBuildConfig", () => {
         to: "Resources/cua-driver",
       },
       {
-        from: "apps/desktop/native/appsnap/build/synara-appsnap-helper",
-        to: "Helpers/synara-appsnap-helper",
+        from: "apps/desktop/native/appsnap/build/ramspace-appsnap-helper",
+        to: "Helpers/ramspace-appsnap-helper",
       },
       {
-        from: "apps/desktop/native/window-material/build/synara-window-material.node",
-        to: "Frameworks/synara-window-material.node",
+        from: "apps/desktop/native/window-material/build/ramspace-window-material.node",
+        to: "Frameworks/ramspace-window-material.node",
       },
       {
         from: MAC_DEVICE_HELPER_STAGE_PATH,
@@ -171,11 +171,11 @@ describe("createDesktopPlatformBuildConfig", () => {
     assert.equal(extendInfo.NSAudioCaptureUsageDescription, AUDIO_CAPTURE_USAGE_DESCRIPTION);
     assert.equal(
       extendInfo.NSScreenCaptureUsageDescription,
-      "Synara captures the windows you authorize for Computer use.",
+      "Ramspace captures the windows you authorize for Computer use.",
     );
     assert.equal(
       extendInfo.NSAccessibilityUsageDescription,
-      "Synara controls the windows you authorize for Computer use.",
+      "Ramspace controls the windows you authorize for Computer use.",
     );
   });
 
@@ -243,7 +243,7 @@ describe("createDesktopPlatformBuildConfig", () => {
     const win = createDesktopPlatformBuildConfig({
       platform: "win",
       target: "nsis",
-      windowsAzureSignOptions: { publisherName: "Synara" },
+      windowsAzureSignOptions: { publisherName: "Ramspace" },
     });
 
     assert.equal(linux.mac, undefined);
@@ -257,12 +257,12 @@ describe("createDesktopPlatformBuildConfig", () => {
     assert.deepStrictEqual(linux.asarUnpack, ["node_modules/node-pty/**"]);
     assert.deepStrictEqual(linux.linux, {
       target: ["AppImage"],
-      executableName: "synara",
+      executableName: "ramspace",
       icon: "icon.png",
       category: "Development",
       desktop: {
         entry: {
-          StartupWMClass: "synara",
+          StartupWMClass: "ramspace",
         },
       },
     });
@@ -280,8 +280,8 @@ describe("createDesktopPlatformBuildConfig", () => {
     assert.deepStrictEqual(win.win, {
       target: ["nsis"],
       icon: "icon.ico",
-      publisherName: "Synara",
-      azureSignOptions: { publisherName: "Synara" },
+      publisherName: "Ramspace",
+      azureSignOptions: { publisherName: "Ramspace" },
     });
   });
 

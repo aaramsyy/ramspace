@@ -106,7 +106,7 @@ export function resolveReleaseUpdatePolicy(
   }
   if (normalizedConfig.lane === "clean" && compareCoreVersions(requested.core, bridge.core) <= 0) {
     throw new Error(
-      `Synara releases must be newer than the compatibility release v${normalizedConfig.bridgeVersion}.`,
+      `Ramspace releases must be newer than the compatibility release v${normalizedConfig.bridgeVersion}.`,
     );
   }
 
@@ -147,7 +147,7 @@ export const LINUX_ARM64_UPDATE_MANIFEST = "latest-linux-arm64.yml";
 /**
  * Dedicated arm64 Linux feed for a channel. electron-updater derives Linux
  * manifest names as `<channel>-linux` plus `-<arch>` for any architecture other
- * than x64, so `synara` resolves to `synara-linux-arm64.yml` on arm64.
+ * than x64, so `ramspace` resolves to `ramspace-linux-arm64.yml` on arm64.
  */
 export function linuxArm64ChannelManifestName(channel: string): string {
   if (!CHANNEL_PATTERN.test(channel) || channel === "latest") {
@@ -256,7 +256,7 @@ function writeLinuxArm64Manifest(plan: LinuxArm64ManifestPlan | null): readonly 
   if (!plan) return [];
   copyFileSync(plan.sourcePath, plan.destinationPath, constants.COPYFILE_EXCL);
   // Keep the staged name too: it is the updater's default-channel fallback for
-  // arm64, mirroring how x64 keeps `latest-linux.yml` beside `synara-linux.yml`.
+  // arm64, mirroring how x64 keeps `latest-linux.yml` beside `ramspace-linux.yml`.
   return [plan.destinationName, LINUX_ARM64_UPDATE_MANIFEST];
 }
 
@@ -322,7 +322,7 @@ export function prepareReleaseUpdateManifests(
   // untouched and a published one carries every channel manifest.
   const linuxArm64 = planLinuxArm64Manifest(assetDirectory, channel, true);
   // Stable 0.5.x releases are GitHub Latest, but shipped desktop binaries still
-  // request the dedicated `synara` channel. Keep both filenames in the same
+  // request the dedicated `ramspace` channel. Keep both filenames in the same
   // release so existing installations and new Latest installs use the same feed.
   copyChannelManifests(assetDirectory, sourceNames, destinationNames);
   return [...sourceNames, ...destinationNames, ...writeLinuxArm64Manifest(linuxArm64)];

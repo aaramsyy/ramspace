@@ -18,7 +18,7 @@ export function ProjectImportAnnouncementDialog() {
       open={visible}
       hero={<ProjectImportHeroScene />}
       title={t("workspace:importProjects")}
-      description={t("workspace:bringYourClaudeCodeAndCodexProjectsIntoSynara")}
+      description={t("workspace:bringYourClaudeCodeAndCodexProjectsIntoRamspace")}
       dismissLabel={t("common:notNow")}
       confirmLabel={t("workspace:importProjects")}
       onDismiss={markSeen}

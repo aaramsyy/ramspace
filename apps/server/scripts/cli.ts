@@ -210,7 +210,7 @@ const stageDistributionPackage = Effect.fn("stageDistributionPackage")(function*
   };
 
   const stagedPackageDir = yield* fs.makeTempDirectoryScoped({
-    prefix: "synara-cli-publish-",
+    prefix: "ramspace-cli-publish-",
   });
   yield* fs.copy(path.join(serverDir, "dist"), path.join(stagedPackageDir, "dist"));
   for (const binTarget of Object.values(pkg.bin)) {
@@ -307,7 +307,7 @@ const packCmd = Command.make(
         : path.join(process.cwd(), config.out);
       yield* fs.makeDirectory(outDir, { recursive: true });
 
-      const tarballPath = path.join(outDir, `synara-server-${version}.tar.gz`);
+      const tarballPath = path.join(outDir, `ramspace-server-${version}.tar.gz`);
       yield* runCommand(
         ChildProcess.make("tar", ["-czf", tarballPath, "dist", "package.json"], {
           cwd: stagedPackageDir,
@@ -321,7 +321,7 @@ const packCmd = Command.make(
       yield* Effect.log(`[cli] Wrote server tarball: ${tarballPath}`);
     }),
 ).pipe(
-  Command.withDescription("Produce a synara-server-<version>.tar.gz from the staged package."),
+  Command.withDescription("Produce a ramspace-server-<version>.tar.gz from the staged package."),
 );
 
 // ---------------------------------------------------------------------------
@@ -329,7 +329,7 @@ const packCmd = Command.make(
 // ---------------------------------------------------------------------------
 
 const cli = Command.make("cli").pipe(
-  Command.withDescription("Synara server build & publish CLI."),
+  Command.withDescription("Ramspace server build & publish CLI."),
   Command.withSubcommands([buildCmd, publishCmd, packCmd]),
 );
 

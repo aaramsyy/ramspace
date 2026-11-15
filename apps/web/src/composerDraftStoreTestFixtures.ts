@@ -1,4 +1,4 @@
-import { ThreadId, type ModelSelection, type ProviderModelOptions } from "@synara/contracts";
+import { ThreadId, type ModelSelection, type ProviderModelOptions } from "@ramspace/contracts";
 import { vi } from "vitest";
 import {
   useComposerDraftStore,

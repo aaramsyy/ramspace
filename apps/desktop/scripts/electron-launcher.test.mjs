@@ -21,10 +21,10 @@ import { describe, it } from "node:test";
 import { buildMacLauncher, configureMacLauncher, copyMacAppBundle } from "./electron-launcher.mjs";
 
 function createLauncherFixture(t, { iconComposer = false } = {}) {
-  const root = mkdtempSync(join(tmpdir(), "synara-electron-signing-"));
+  const root = mkdtempSync(join(tmpdir(), "ramspace-electron-signing-"));
   t.after(() => rmSync(root, { recursive: true, force: true }));
   const desktopDirectory = join(root, "apps", "desktop");
-  const iconComposerPath = join(root, "assets", "prod", "Synara.icon");
+  const iconComposerPath = join(root, "assets", "prod", "Ramspace.icon");
   const source = join(root, "vendor", "Electron.app");
   const electronBinaryPath = join(source, "Contents", "MacOS", "Electron");
   const helperDirectory = join(source, "Contents", "Frameworks", "Electron Helper.app");
@@ -36,7 +36,7 @@ function createLauncherFixture(t, { iconComposer = false } = {}) {
   writeFileSync(electronBinaryPath, "original executable");
   writeFileSync(join(source, "Contents", "Info.plist"), "original identity");
   writeFileSync(join(helperDirectory, "Contents", "Info.plist"), "original helper identity");
-  writeFileSync(join(desktopDirectory, "resources", "icon.icns"), "synara icon");
+  writeFileSync(join(desktopDirectory, "resources", "icon.icns"), "ramspace icon");
   writeFileSync(join(desktopDirectory, "package.json"), JSON.stringify({ version: "0.8.3" }));
   if (iconComposer) {
     mkdirSync(iconComposerPath, { recursive: true });
@@ -132,7 +132,7 @@ describe("macOS Electron launcher signature", () => {
     assert.equal(JSON.parse(readFileSync(fixture.metadataPath, "utf8")).launcherVersion, 9);
     assert.equal(
       readFileSync(join(bundle, "Contents", "Resources", "icon.icns"), "utf8"),
-      "synara icon",
+      "ramspace icon",
     );
     assert.equal(
       readFileSync(join(fixture.source, "Contents", "Info.plist"), "utf8"),
@@ -169,7 +169,7 @@ describe("macOS Electron launcher signature", () => {
       "-replace",
       "CFBundleIconName",
       "-string",
-      "Synara",
+      "Ramspace",
       join(bundle, "Contents", "Info.plist"),
     ]);
     assert.equal(
@@ -273,7 +273,7 @@ describe("macOS Electron launcher signature", () => {
           : [],
       );
       assert.equal(
-        resets.every(({ arguments_ }) => /^com\.[\w.]*synara/i.test(arguments_[2])),
+        resets.every(({ arguments_ }) => /^com\.[\w.]*ramspace/i.test(arguments_[2])),
         true,
       );
     });
@@ -288,7 +288,10 @@ describe("macOS Electron launcher signature", () => {
       const fixture = createLauncherFixture(t);
       fixture.failSigning(argument, result);
 
-      assert.throws(() => fixture.build(), /Failed to (sign|verify) the generated Synara launcher/);
+      assert.throws(
+        () => fixture.build(),
+        /Failed to (sign|verify) the generated Ramspace launcher/,
+      );
       assert.equal(existsSync(fixture.metadataPath), false);
       fixture.failSigning(null);
       assert.equal(existsSync(fixture.build()), true);
@@ -344,7 +347,7 @@ describe("macOS source bundle reopen", () => {
     return { loaded, errors, environment };
   }
 
-  it("opens Synara with no argv or inherited environment after the macOS permission restart", (t) => {
+  it("opens Ramspace with no argv or inherited environment after the macOS permission restart", (t) => {
     const fixture = createLauncherFixture(t);
     const executable = fixture.build();
     const desktop = dirname(dirname(fixture.metadataPath));
@@ -352,9 +355,9 @@ describe("macOS source bundle reopen", () => {
     mkdirSync(dirname(entry), { recursive: true });
     writeFileSync(entry, "// current build");
     configureMacLauncher(executable, {
-      SYNARA_HOME: join(desktop, "isolated home"),
+      RAMSPACE_HOME: join(desktop, "isolated home"),
       VITE_DEV_SERVER_URL: "http://localhost:8891",
-      SYNARA_AUTH_TOKEN: "synthetic-secret",
+      RAMSPACE_AUTH_TOKEN: "synthetic-secret",
       PROVIDER_API_KEY: "another-secret",
     });
 
@@ -365,12 +368,12 @@ describe("macOS source bundle reopen", () => {
       ["appPath", desktop],
       ["entry", entry],
     ]);
-    assert.equal(result.environment.SYNARA_HOME, join(desktop, "isolated home"));
+    assert.equal(result.environment.RAMSPACE_HOME, join(desktop, "isolated home"));
     assert.equal(result.environment.VITE_DEV_SERVER_URL, "http://localhost:8891");
-    assert.equal(result.environment.SYNARA_DESKTOP_FLAVOR, "development");
+    assert.equal(result.environment.RAMSPACE_DESKTOP_FLAVOR, "development");
     assert.equal(Object.keys(result.environment).length, 4);
     const configuration = readFileSync(
-      join(desktop, ".electron-runtime", "Synara (Dev).app.launch.json"),
+      join(desktop, ".electron-runtime", "Ramspace (Dev).app.launch.json"),
       "utf8",
     );
     assert.equal(configuration.includes("secret"), false);
@@ -383,30 +386,30 @@ describe("macOS source bundle reopen", () => {
     mkdirSync(join(desktop, "dist-electron"), { recursive: true });
     writeFileSync(join(desktop, "dist-electron/main.js"), "// current build");
     configureMacLauncher(executable, {
-      SYNARA_DESKTOP_FLAVOR: "remote",
-      SYNARA_HOME: "/tmp/stable-home",
-      SYNARA_REMOTE_HOME: "/tmp/remote-home",
+      RAMSPACE_DESKTOP_FLAVOR: "remote",
+      RAMSPACE_HOME: "/tmp/stable-home",
+      RAMSPACE_REMOTE_HOME: "/tmp/remote-home",
     });
-    const result = reopen(executable, { SYNARA_HOME: "/tmp/inherited-stable" });
+    const result = reopen(executable, { RAMSPACE_HOME: "/tmp/inherited-stable" });
     assert.deepEqual(result.errors, []);
-    assert.equal(result.environment.SYNARA_DESKTOP_FLAVOR, "remote");
-    assert.equal(result.environment.SYNARA_REMOTE_HOME, "/tmp/remote-home");
-    assert.equal(result.environment.SYNARA_HOME, "/tmp/remote-home");
+    assert.equal(result.environment.RAMSPACE_DESKTOP_FLAVOR, "remote");
+    assert.equal(result.environment.RAMSPACE_REMOTE_HOME, "/tmp/remote-home");
+    assert.equal(result.environment.RAMSPACE_HOME, "/tmp/remote-home");
   });
 
   it("changes launch routing without rebuilding or re-signing the bundle", (t) => {
     const fixture = createLauncherFixture(t);
     const executable = fixture.build();
     configureMacLauncher(executable, {
-      SYNARA_HOME: "/tmp/first",
+      RAMSPACE_HOME: "/tmp/first",
       VITE_DEV_SERVER_URL: "http://localhost:8891",
     });
     fixture.commands.length = 0;
-    configureMacLauncher(executable, { SYNARA_HOME: "/tmp/second" });
+    configureMacLauncher(executable, { RAMSPACE_HOME: "/tmp/second" });
     assert.equal(fixture.build(), executable);
     assert.deepEqual(fixture.commands, []);
     const configuration = readFileSync(
-      join(dirname(fixture.metadataPath), "Synara (Dev).app.launch.json"),
+      join(dirname(fixture.metadataPath), "Ramspace (Dev).app.launch.json"),
       "utf8",
     );
     assert.equal(configuration.includes("8891"), false);
@@ -420,12 +423,12 @@ describe("macOS source bundle reopen", () => {
     mkdirSync(join(desktop, "dist-electron"), { recursive: true });
     writeFileSync(join(desktop, "dist-electron/main.js"), "// current build");
     const environment = {
-      SYNARA_HOME: "/tmp/smoke-home",
-      SYNARA_SOURCE_DESKTOP_BUILD_MARKER: "test-marker",
+      RAMSPACE_HOME: "/tmp/smoke-home",
+      RAMSPACE_SOURCE_DESKTOP_BUILD_MARKER: "test-marker",
     };
     const result = reopen(executable, environment);
     assert.deepEqual(result.errors, []);
-    assert.equal(result.environment.SYNARA_HOME, "/tmp/smoke-home");
+    assert.equal(result.environment.RAMSPACE_HOME, "/tmp/smoke-home");
     assert.equal(result.loaded.at(-1)[0], "entry");
   });
 
@@ -442,10 +445,10 @@ describe("macOS source bundle reopen", () => {
 
 describe("macOS Electron launcher copy", { skip: process.platform !== "darwin" }, () => {
   it("keeps framework symlink targets relative after relocation", (t) => {
-    const root = mkdtempSync(join(tmpdir(), "synara-electron-launcher-"));
+    const root = mkdtempSync(join(tmpdir(), "ramspace-electron-launcher-"));
     t.after(() => rmSync(root, { recursive: true, force: true }));
     const source = join(root, "source", "Electron.app");
-    const target = join(root, "runtime", "Synara (Dev).app");
+    const target = join(root, "runtime", "Ramspace (Dev).app");
     const framework = join(source, "Contents", "Frameworks", "Electron Framework.framework");
 
     mkdirSync(join(framework, "Versions", "A", "Resources"), { recursive: true });

@@ -10,7 +10,7 @@ import {
   type StatsGetUsageAnalyticsResult,
   type StatsUsageAnalyticsCostSource,
   type StatsUsageAnalyticsScope,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 
 export type UsageAnalyticsRange = "7d" | "30d" | "90d" | "1y";
 export type UsageAnalyticsMetric = "cost" | "tokens";
@@ -149,7 +149,7 @@ export interface UsageAnalyticsView {
   readonly unavailableProviders: ReadonlyArray<ProviderKind>;
   readonly pricing: StatsGetUsageAnalyticsResult["pricing"];
   readonly scope: StatsUsageAnalyticsScope;
-  /** Providers read from their own session files rather than Synara's records. */
+  /** Providers read from their own session files rather than Ramspace's records. */
   readonly sessionFileProviders: ReadonlyArray<ProviderKind>;
   /** Tokens in this period that needed an estimate and got none. */
   readonly unpriced: {

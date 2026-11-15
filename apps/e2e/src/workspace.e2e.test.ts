@@ -8,7 +8,7 @@ import type {
   OrchestrationThreadDetailSnapshot,
   OrchestrationGetSnapshotResult,
   TodoListResult,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { workspaceRpc } from "./harness/rpc";
 import fs from "node:fs/promises";
 import path from "node:path";
@@ -20,7 +20,7 @@ import { requestLocalRemoteAccess } from "../../server/src/remotePairing/cli";
 
 // Explicit build-dependent qualification; the ordinary transport suite remains build-independent.
 it
-  .skipIf(process.env.SYNARA_E2E_WORKSPACE !== "1")
+  .skipIf(process.env.RAMSPACE_E2E_WORKSPACE !== "1")
   .each(["chats", "automations", "surfaces"] as const)(
   "keeps local and remote %s in one browser with independent execution and recovery",
   async (scenario) => {
@@ -78,7 +78,7 @@ it
         "-C",
         root,
         "-c",
-        "user.name=Synara fixture",
+        "user.name=Ramspace fixture",
         "-c",
         "user.email=fixture@example.invalid",
         "-c",
@@ -213,7 +213,7 @@ it
       await page.getByText("LOCAL checkout", { exact: true }).first().waitFor();
       if (scenario === "surfaces") {
         await using local = await workspaceRpc(controller.origin);
-        const remotePage = page.frameLocator('iframe[title^="Synara workspace on"]');
+        const remotePage = page.frameLocator('iframe[title^="Ramspace workspace on"]');
         // Browse owner-scoped surfaces through their actual UI, never a handcrafted remote URL.
         for (const [label, route] of [
           ["Inbox", "/inbox"],
@@ -284,9 +284,9 @@ it
             { timeout: 20_000 },
           )
           .toContain("REMOTE STREAM STARTED");
-        if (process.env.SYNARA_E2E_EVIDENCE)
+        if (process.env.RAMSPACE_E2E_EVIDENCE)
           await page.screenshot({
-            path: path.join(process.env.SYNARA_E2E_EVIDENCE, "workspace-remote-tasks.png"),
+            path: path.join(process.env.RAMSPACE_E2E_EVIDENCE, "workspace-remote-tasks.png"),
           });
         await controller.stop();
         await fs.writeFile(path.join(host.baseDir, "finish-fixture-turn"), "finish");
@@ -305,7 +305,7 @@ it
       }
       if (scenario === "automations") {
         await using automationLocal = await workspaceRpc(controller.origin);
-        const remotePage = page.frameLocator('iframe[title^="Synara workspace on"]');
+        const remotePage = page.frameLocator('iframe[title^="Ramspace workspace on"]');
         // Create through the controller UI, but persist on the selected computer.
         await page.getByRole("button", { name: "Automations", exact: true }).click();
         await page.getByRole("button", { name: "New automation", exact: true }).last().click();
@@ -350,7 +350,7 @@ it
         expect((await listAutomations(automationLocal)).definitions).toEqual([]);
         await page.getByRole("button", { name: /Remote scheduled fixture/ }).waitFor();
         await page.getByRole("button", { name: /Remote scheduled fixture/ }).click();
-        await remotePage.getByText(/Keep Synara running on that computer/).waitFor();
+        await remotePage.getByText(/Keep Ramspace running on that computer/).waitFor();
         expect(new URL(page.url()).searchParams.get("environment")).toBe(linked.row.environmentId);
         // Bring the one-shot deadline forward without waiting for a wall-clock UI minute.
         await initialRemote.request("automation.update", {
@@ -361,9 +361,9 @@ it
           acknowledgedRisks: ["local-checkout"],
         });
         expect((await listAutomations(initialRemote)).runs).toEqual([]);
-        if (process.env.SYNARA_E2E_EVIDENCE)
+        if (process.env.RAMSPACE_E2E_EVIDENCE)
           await page.screenshot({
-            path: path.join(process.env.SYNARA_E2E_EVIDENCE, "workspace-remote-automation.png"),
+            path: path.join(process.env.RAMSPACE_E2E_EVIDENCE, "workspace-remote-automation.png"),
           });
         await controller.stop();
         expect((await listAutomations(initialRemote)).runs).toEqual([]);
@@ -406,7 +406,7 @@ it
           () => (globalThis as unknown as { workspaceSentinel: string }).workspaceSentinel,
         ),
       ).toBe("same-renderer");
-      const remotePage = page.frameLocator('iframe[title^="Synara workspace on"]');
+      const remotePage = page.frameLocator('iframe[title^="Ramspace workspace on"]');
       // The remote frame is hidden when creation begins: activating its old Home route
       // must not supersede the project-specific draft navigation.
       await page.getByText("LOCAL checkout", { exact: true }).first().hover();
@@ -482,9 +482,9 @@ it
       expect(await page.getByRole("textbox", { name: "Project folder path" }).inputValue()).toBe(
         "",
       );
-      if (process.env.SYNARA_E2E_EVIDENCE)
+      if (process.env.RAMSPACE_E2E_EVIDENCE)
         await page.getByRole("dialog", { name: "Create project", exact: true }).screenshot({
-          path: path.join(process.env.SYNARA_E2E_EVIDENCE, "create-project-computer.png"),
+          path: path.join(process.env.RAMSPACE_E2E_EVIDENCE, "create-project-computer.png"),
         });
       await page.getByRole("button", { name: "Source folder", exact: true }).click();
       await page.getByRole("textbox", { name: "Folder path", exact: true }).fill(addedRoot);
@@ -660,9 +660,9 @@ it
       const remoteSearchResult = page.getByRole("option", { name: /Remote continuity fixture/ });
       await remoteSearchResult.waitFor();
       expect(await remoteSearchResult.innerText()).toContain("E2E host");
-      if (process.env.SYNARA_E2E_EVIDENCE)
+      if (process.env.RAMSPACE_E2E_EVIDENCE)
         await page.screenshot({
-          path: path.join(process.env.SYNARA_E2E_EVIDENCE, "workspace-remote-search.png"),
+          path: path.join(process.env.RAMSPACE_E2E_EVIDENCE, "workspace-remote-search.png"),
         });
       await remoteSearchResult.click();
       await expect
@@ -792,9 +792,9 @@ it
       await page.getByRole("button", { name: "Switch to activity view", exact: true }).click();
       await page.getByRole("button", { name: /^Remote continuity fixture, E2E host/ }).click();
       await remotePage.getByText("Remote continuity fixture", { exact: true }).first().waitFor();
-      if (process.env.SYNARA_E2E_EVIDENCE)
+      if (process.env.RAMSPACE_E2E_EVIDENCE)
         await page.screenshot({
-          path: path.join(process.env.SYNARA_E2E_EVIDENCE, "workspace-unified-activity.png"),
+          path: path.join(process.env.RAMSPACE_E2E_EVIDENCE, "workspace-unified-activity.png"),
         });
       await page.getByRole("button", { name: "Switch to classic view", exact: true }).click();
       await page.getByText("Remote continuity fixture", { exact: true }).first().click();
@@ -982,7 +982,7 @@ it
         .getByRole("button", { name: /^REMOTE checkout, E2E host/ })
         .first()
         .waitFor();
-      const evidenceDir = process.env.SYNARA_E2E_EVIDENCE;
+      const evidenceDir = process.env.RAMSPACE_E2E_EVIDENCE;
       if (evidenceDir) {
         await fs.mkdir(evidenceDir, { recursive: true });
         await page.screenshot({ path: path.join(evidenceDir, "workspace-remote.png") });
@@ -1055,11 +1055,11 @@ it
         .allTextContents()
         .catch(() => []))
         console.error("Browser error details:", detail);
-      if (process.env.SYNARA_E2E_EVIDENCE)
+      if (process.env.RAMSPACE_E2E_EVIDENCE)
         await fs
           .copyFile(
             path.join(host.baseDir, "fixture-provider.jsonl"),
-            path.join(process.env.SYNARA_E2E_EVIDENCE, "fixture-provider.jsonl"),
+            path.join(process.env.RAMSPACE_E2E_EVIDENCE, "fixture-provider.jsonl"),
           )
           .catch(() => undefined);
       console.error(
@@ -1076,10 +1076,10 @@ it
             .innerText({ timeout: 3000 })
             .catch(() => "Frame unavailable"),
         );
-      if (process.env.SYNARA_E2E_EVIDENCE)
+      if (process.env.RAMSPACE_E2E_EVIDENCE)
         await page
           .screenshot({
-            path: path.join(process.env.SYNARA_E2E_EVIDENCE, "workspace-failure.png"),
+            path: path.join(process.env.RAMSPACE_E2E_EVIDENCE, "workspace-failure.png"),
             timeout: 3000,
           })
           .catch(() => undefined);

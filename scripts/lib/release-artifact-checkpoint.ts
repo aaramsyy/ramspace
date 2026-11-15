@@ -17,7 +17,7 @@ import type {
 
 // Qualification has no dependency install. Resolve this owned, dependency-free shared
 // module from the checkout, while keeping its types behind the shared subpath export.
-const { matchesDistinguishedName }: typeof import("@synara/shared/windowsCertificate") =
+const { matchesDistinguishedName }: typeof import("@ramspace/shared/windowsCertificate") =
   await import(new URL("../../packages/shared/src/windowsCertificate.ts", import.meta.url).href);
 
 export interface ReleaseArtifactCheckpointInput extends Pick<
@@ -173,7 +173,7 @@ export async function verifyReleaseArtifactCheckpoint(
 
   const arch = input.arch as DesktopArtifactArch;
   const fileArch = payloadArchLabel(input.platform, arch);
-  const productName = { production: "Synara", beta: "Synara-Beta", remote: "Synara-Remote" }[
+  const productName = { production: "Ramspace", beta: "Ramspace-Beta", remote: "Ramspace-Remote" }[
     input.flavor
   ];
   const stem = `${productName}-${input.version}-${fileArch}`;

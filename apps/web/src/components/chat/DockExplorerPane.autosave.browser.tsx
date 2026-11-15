@@ -1,6 +1,6 @@
 import "../../index.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ThreadId, type NativeApi } from "@synara/contracts";
+import { ThreadId, type NativeApi } from "@ramspace/contracts";
 import { page } from "vitest/browser";
 import { afterEach, expect, it, vi } from "vitest";
 import { cleanup, render } from "vitest-browser-react";
@@ -120,7 +120,7 @@ it("waits for the last edits before switching files", async () => {
   const reopened = () =>
     monaco.editor.getEditors().find((candidate) => {
       const uri = candidate.getModel()?.uri;
-      return uri?.scheme === "synara-workspace" && uri.path === "/a.ts";
+      return uri?.scheme === "ramspace-workspace" && uri.path === "/a.ts";
     });
   await expect.poll(() => reopened()?.getValue()).toBe("newest edit");
   // Monaco renders ordinary spaces as NBSPs; the model assertion above must

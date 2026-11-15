@@ -1,7 +1,7 @@
 import http from "node:http";
 import { once } from "node:events";
 import { WebSocketServer } from "ws";
-import { generateDeviceKey, exportPublicJwk } from "@synara/shared/deviceKey";
+import { generateDeviceKey, exportPublicJwk } from "@ramspace/shared/deviceKey";
 import { initializeRemoteTlsIdentity, remoteTlsAnchor } from "../../remoteTransport/certificates";
 import { RemoteTlsServer } from "../../remoteTransport/tunnel";
 import { acceptRemotePairing } from "../../remotePairing/gateway";
@@ -14,10 +14,10 @@ import {
   EnvironmentId,
   GRANT_JWT_TYP,
   HOST_CONNECT_SCOPE,
-  SYNARA_RELAY_AUDIENCE,
+  RAMSPACE_RELAY_AUDIENCE,
   type RemotePairingDevice,
   type RemoteTrustScope,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { Effect, Layer } from "effect";
 import * as SqlClient from "effect/unstable/sql/SqlClient";
 import { calculateJwkThumbprint, exportJWK, generateKeyPair, SignJWT } from "jose";
@@ -49,7 +49,7 @@ function layers(database = SqlitePersistenceMemory) {
   ).pipe(
     Layer.provideMerge(database),
     Layer.provide(ServerSecretStoreLive),
-    Layer.provide(ServerConfig.layerTest(process.cwd(), { prefix: "synara-remote-trust-" })),
+    Layer.provide(ServerConfig.layerTest(process.cwd(), { prefix: "ramspace-remote-trust-" })),
     Layer.provide(NodeServices.layer),
   );
 }
@@ -209,7 +209,7 @@ describe("remote pairing through the durable auth control plane", () => {
   });
 
   it("keeps a revocation tombstone after database reopen and invalidates old generations after re-pair", async () => {
-    const directory = await fs.mkdtemp(path.join(os.tmpdir(), "synara-trust-restart-"));
+    const directory = await fs.mkdtemp(path.join(os.tmpdir(), "ramspace-trust-restart-"));
     const peer = await device();
     const database = () =>
       Layer.effectDiscard(runMigrations()).pipe(
@@ -256,7 +256,7 @@ describe("remote pairing through the durable auth control plane", () => {
     }
   });
   it("pairs over TLS only after proof of the client key and explicit owner approval", async () => {
-    const directory = await fs.mkdtemp(path.join(os.tmpdir(), "synara-pair-flow-"));
+    const directory = await fs.mkdtemp(path.join(os.tmpdir(), "ramspace-pair-flow-"));
     try {
       const identity = await initializeRemoteTlsIdentity(
         path.join(directory, "tls.json"),
@@ -396,7 +396,7 @@ describe("remote pairing through the durable auth control plane", () => {
       grant: (deviceJkt: string, apiKey: CryptoKey) => Promise<string>;
       allowConnections?: boolean;
     }) {
-      const directory = await fs.mkdtemp(path.join(os.tmpdir(), "synara-grant-pair-"));
+      const directory = await fs.mkdtemp(path.join(os.tmpdir(), "ramspace-grant-pair-"));
       const identity = await initializeRemoteTlsIdentity(
         path.join(directory, "tls.json"),
         scope.environmentId,
@@ -512,7 +512,7 @@ describe("remote pairing through the durable auth control plane", () => {
           .setProtectedHeader({ alg: "EdDSA", typ: GRANT_JWT_TYP, kid: "api-1" })
           .setIssuer(apiIssuer)
           .setSubject(overrides.sub ?? scope.userId)
-          .setAudience(SYNARA_RELAY_AUDIENCE)
+          .setAudience(RAMSPACE_RELAY_AUDIENCE)
           .setIssuedAt()
           .setExpirationTime("60s")
           .setJti(crypto.randomUUID())

@@ -6,10 +6,10 @@
 import { fileURLToPath } from "node:url";
 
 import {
-  SYNARA_BETA_WINDOWS_INSTALLER_GUID,
-  SYNARA_STABLE_WINDOWS_INSTALLER_GUID,
-} from "@synara/shared/betaChannel";
-import type { SynaraPackagedDesktopFlavor } from "@synara/shared/desktopIdentity";
+  RAMSPACE_BETA_WINDOWS_INSTALLER_GUID,
+  RAMSPACE_STABLE_WINDOWS_INSTALLER_GUID,
+} from "@ramspace/shared/betaChannel";
+import type { RamspacePackagedDesktopFlavor } from "@ramspace/shared/desktopIdentity";
 
 import {
   createDesktopBundleFilePatterns,
@@ -18,9 +18,9 @@ import {
 import { MAC_ICON_ASSET_NAME, MAC_ICON_COMPOSER_DEPLOYMENT_TARGET } from "./mac-icon-catalog.ts";
 
 export const MICROPHONE_USAGE_DESCRIPTION =
-  "Synara needs microphone access so you can record voice notes and transcribe them into the chat composer, and, if you turn it on, to move the chat message trail with your voice.";
+  "Ramspace needs microphone access so you can record voice notes and transcribe them into the chat composer, and, if you turn it on, to move the chat message trail with your voice.";
 export const AUDIO_CAPTURE_USAGE_DESCRIPTION =
-  "Synara reads how loud your Mac's audio is to animate the chat message trail. The audio itself is never recorded.";
+  "Ramspace reads how loud your Mac's audio is to animate the chat message trail. The audio itself is never recorded.";
 // Bundle metadata uses the product version; electron-updater compares Darwin releases.
 export const MAC_MINIMUM_SYSTEM_VERSION = "13.0";
 export const MAC_MINIMUM_DARWIN_VERSION = "22.0.0";
@@ -28,18 +28,18 @@ export const MAC_ENTITLEMENTS_PATH = "apps/desktop/resources/entitlements.mac.pl
 export const MAC_INHERITED_ENTITLEMENTS_PATH =
   "apps/desktop/resources/entitlements.mac.inherit.plist";
 export const MAC_APPSNAP_HELPER_STAGE_PATH =
-  "apps/desktop/native/appsnap/build/synara-appsnap-helper";
+  "apps/desktop/native/appsnap/build/ramspace-appsnap-helper";
 export const MAC_APPSNAP_HELPER_ASAR_EXCLUSION = "!apps/desktop/native/appsnap/build/**";
-export const MAC_APPSNAP_HELPER_BUNDLE_PATH = "Contents/Helpers/synara-appsnap-helper";
+export const MAC_APPSNAP_HELPER_BUNDLE_PATH = "Contents/Helpers/ramspace-appsnap-helper";
 // In-process Node-API addon for the adjustable window blur (apps/desktop/native/window-material).
 export const MAC_WINDOW_MATERIAL_ADDON_STAGE_PATH =
-  "apps/desktop/native/window-material/build/synara-window-material.node";
+  "apps/desktop/native/window-material/build/ramspace-window-material.node";
 export const MAC_WINDOW_MATERIAL_ADDON_ASAR_EXCLUSION = "!apps/desktop/native/window-material/**";
 export const MAC_WINDOW_MATERIAL_ADDON_BUNDLE_PATH =
-  "Contents/Frameworks/synara-window-material.node";
+  "Contents/Frameworks/ramspace-window-material.node";
 export const MAC_DEVICE_HELPER_STAGE_PATH = "apps/server/dist/device-helper";
 export const MAC_DEVICE_HELPER_RESOURCE_PATH = "Resources/device-helper";
-export const WINDOWS_INSTALLER_GUID = SYNARA_STABLE_WINDOWS_INSTALLER_GUID;
+export const WINDOWS_INSTALLER_GUID = RAMSPACE_STABLE_WINDOWS_INSTALLER_GUID;
 // Remote must install alongside Stable and Beta without owning their uninstaller.
 const REMOTE_WINDOWS_INSTALLER_GUID = "7639a24e-c753-4f4c-b4e3-37b259bdc793";
 // Asset catalog name and deployment target of the compiled Icon Composer icon,
@@ -47,7 +47,7 @@ const REMOTE_WINDOWS_INSTALLER_GUID = "7639a24e-c753-4f4c-b4e3-37b259bdc793";
 export { MAC_ICON_ASSET_NAME, MAC_ICON_COMPOSER_DEPLOYMENT_TARGET };
 export const MAC_ICON_ASSETS_CAR_STAGE_PATH = "apps/desktop/resources/Assets.car";
 export const MAC_ICON_ASSETS_CAR_BUNDLE_PATH = "Resources/Assets.car";
-export { SYNARA_BETA_WINDOWS_INSTALLER_GUID };
+export { RAMSPACE_BETA_WINDOWS_INSTALLER_GUID };
 const MAC_DMG_ICON_PATH = "icon.icns";
 const NODE_PTY_ASAR_UNPACK_GLOBS = ["node_modules/node-pty/**"] as const;
 
@@ -73,7 +73,7 @@ export interface CreateDesktopPlatformBuildConfigInput {
   /** Seal isolated local bundles without selecting a release certificate. */
   readonly adHocSign?: boolean;
   readonly windowsAzureSignOptions?: Record<string, string>;
-  readonly flavor?: SynaraPackagedDesktopFlavor | undefined;
+  readonly flavor?: RamspacePackagedDesktopFlavor | undefined;
 }
 
 export interface DesktopNativeBuildHostInput {
@@ -157,16 +157,16 @@ export function createDesktopPlatformBuildConfig(
       // The universal build stages the same pre-lipo'd helper and addon in both app trees.
       // @electron/universal needs this pattern to preserve those existing fat binaries.
       x64ArchFiles:
-        "Contents/{Helpers/synara-appsnap-helper,Frameworks/synara-window-material.node,Resources/cua-driver/cua-driver,Resources/cloudflared/cloudflared}",
+        "Contents/{Helpers/ramspace-appsnap-helper,Frameworks/ramspace-window-material.node,Resources/cua-driver/cua-driver,Resources/cloudflared/cloudflared}",
       extendInfo: {
         NSMicrophoneUsageDescription: MICROPHONE_USAGE_DESCRIPTION,
         NSAudioCaptureUsageDescription: AUDIO_CAPTURE_USAGE_DESCRIPTION,
         NSScreenCaptureUsageDescription:
-          "Synara captures the windows you authorize for Computer use.",
+          "Ramspace captures the windows you authorize for Computer use.",
         NSAccessibilityUsageDescription:
-          "Synara controls the windows you authorize for Computer use.",
+          "Ramspace controls the windows you authorize for Computer use.",
         NSLocalNetworkUsageDescription:
-          "Synara connects to the browsers it drives on this Mac so agents can browse in the background.",
+          "Ramspace connects to the browsers it drives on this Mac so agents can browse in the background.",
         CFBundleIconName: MAC_ICON_ASSET_NAME,
       },
     } satisfies Record<string, unknown>;
@@ -204,11 +204,11 @@ export function createDesktopPlatformBuildConfig(
         { from: "apps/desktop/resources/cua-driver", to: "Resources/cua-driver" },
         {
           from: MAC_APPSNAP_HELPER_STAGE_PATH,
-          to: "Helpers/synara-appsnap-helper",
+          to: "Helpers/ramspace-appsnap-helper",
         },
         {
           from: MAC_WINDOW_MATERIAL_ADDON_STAGE_PATH,
-          to: "Frameworks/synara-window-material.node",
+          to: "Frameworks/ramspace-window-material.node",
         },
         {
           from: MAC_DEVICE_HELPER_STAGE_PATH,
@@ -242,12 +242,12 @@ export function createDesktopPlatformBuildConfig(
       ],
       linux: {
         target: [input.target],
-        executableName: input.flavor === "remote" ? "synara-remote" : "synara",
+        executableName: input.flavor === "remote" ? "ramspace-remote" : "ramspace",
         icon: "icon.png",
         category: "Development",
         desktop: {
           entry: {
-            StartupWMClass: input.flavor === "remote" ? "synara-remote" : "synara",
+            StartupWMClass: input.flavor === "remote" ? "ramspace-remote" : "ramspace",
           },
         },
       },
@@ -263,7 +263,7 @@ export function createDesktopPlatformBuildConfig(
         input.flavor === "remote"
           ? REMOTE_WINDOWS_INSTALLER_GUID
           : input.flavor === "beta"
-            ? SYNARA_BETA_WINDOWS_INSTALLER_GUID
+            ? RAMSPACE_BETA_WINDOWS_INSTALLER_GUID
             : WINDOWS_INSTALLER_GUID,
     },
     win: {

@@ -6,7 +6,7 @@ import { executionStorage } from "./lib/hosts/executionStorage";
 //          the Environment panel preference on purpose (W1 regression class):
 //          closing Groups must never flip the env default.
 // Layer: Web state
-import type { ProjectId } from "@synara/contracts";
+import type { ProjectId } from "@ramspace/contracts";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 
@@ -17,7 +17,7 @@ interface GroupPanelClosedStoreState {
   setGroupPanelClosed: (projectId: ProjectId, closed: boolean) => void;
 }
 
-const GROUP_PANEL_CLOSED_STORAGE_KEY = "synara:group-panel-closed:v1";
+const GROUP_PANEL_CLOSED_STORAGE_KEY = "ramspace:group-panel-closed:v1";
 
 export const useGroupPanelClosedStore = create<GroupPanelClosedStoreState>()(
   persist(

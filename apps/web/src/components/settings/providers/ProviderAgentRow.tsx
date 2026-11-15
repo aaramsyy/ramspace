@@ -10,7 +10,7 @@ import type {
   ProviderKind,
   ServerProviderStatus,
   ServerSettings,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
@@ -273,7 +273,7 @@ export function ProviderAgentRow(props: {
             {showSelfManagedUpdate && props.providerStatus ? (
               <div className="flex items-center justify-between gap-3">
                 <div className="min-w-0 text-ui leading-snug text-muted-foreground">
-                  {title} {t("settings:managesItsOwnReleasesSoSynaraCannotTellWhether")}
+                  {title} {t("settings:managesItsOwnReleasesSoRamspaceCannotTellWhether")}
                 </div>
                 <ProviderUpdateAction
                   providerStatus={props.providerStatus}

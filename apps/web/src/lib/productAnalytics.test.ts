@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
-import { ORCHESTRATION_WS_METHODS, WS_METHODS, type OrchestrationEvent } from "@synara/contracts";
+import { ORCHESTRATION_WS_METHODS, WS_METHODS, type OrchestrationEvent } from "@ramspace/contracts";
 import {
   ProductTurnObserver,
   productRpcActivity,

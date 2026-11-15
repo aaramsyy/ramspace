@@ -4,7 +4,7 @@
 // Layer: Settings UI components
 // Exports: ConnectionsOtherComputers
 
-import type { AccountHost } from "@synara/contracts";
+import type { AccountHost } from "@ramspace/contracts";
 import { useCallback, useState } from "react";
 
 import { useHostConnections, useHosts } from "~/hooks/useHosts";
@@ -163,14 +163,14 @@ export function ConnectionsOtherComputers() {
               description={
                 <span className="text-destructive">
                   {hostsError instanceof HostsUnsupportedError
-                    ? "This Synara server is too old to manage hosts. Update it and try again."
+                    ? "This Ramspace server is too old to manage hosts. Update it and try again."
                     : accountErrorMessage(hostsError, "Could not load your computers.")}
                 </span>
               }
             />
           ) : pairedHosts === undefined ? (
             <SettingsListRow
-              title="Update Synara on this computer"
+              title="Update Ramspace on this computer"
               description="Update and restart the app to list your paired computers."
             />
           ) : hosts.length === 0 ? (

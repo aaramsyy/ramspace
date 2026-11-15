@@ -9,7 +9,7 @@ import {
   type OrchestrationCommand,
   type RemoteAgentCall,
   type OrchestrationThreadShell,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { appendThreadCreationRecap } from "./creationCoordinator";
 import { makeRemoteAwareTools, receiveRemoteTool } from "./remoteTools";
 import { GatewayToolError, type ToolContext, type ToolEntry } from "./toolRuntime";
@@ -74,12 +74,12 @@ const call: RemoteAgentCall = {
     envMode: "worktree",
     capabilities: ["thread:read", "thread:write"],
   },
-  tool: "synara_read_thread",
+  tool: "ramspace_read_thread",
   arguments: { threadId: "same-id" },
 };
 const payload = (result: McpToolCallResult) =>
   JSON.parse(result.content[0]?.type === "text" ? result.content[0].text : "{}");
-function tool(name = "synara_read_thread", write = false): ToolEntry {
+function tool(name = "ramspace_read_thread", write = false): ToolEntry {
   return {
     definition: { name, description: "test", inputSchema: { type: "object", properties: {} } },
     requiredCapability: write ? "thread:write" : "thread:read",
@@ -140,7 +140,7 @@ function setup(entry = tool()) {
   };
 }
 
-describe("remote Synara agent tools", () => {
+describe("remote Ramspace agent tools", () => {
   it("discovers both computers without exposing transport credentials", async () => {
     const { tools } = setup();
     const result = payload(await Effect.runPromise(tools[0]!.handler({}, context)));
@@ -205,7 +205,7 @@ describe("remote Synara agent tools", () => {
     expect(JSON.stringify(result)).not.toContain("stale");
   });
   it("cancels a pending remote write when the original turn loses authority", async () => {
-    const { run, connections } = setup(tool("synara_send_message", true));
+    const { run, connections } = setup(tool("ramspace_send_message", true));
     let active = true;
     let aborted = false;
     connections.call.mockImplementationOnce(
@@ -231,13 +231,13 @@ describe("remote Synara agent tools", () => {
     expect(aborted).toBe(true);
   });
   it("qualifies follow-up reads from waits", async () => {
-    const { run, connections } = setup(tool("synara_wait_for_threads"));
+    const { run, connections } = setup(tool("ramspace_wait_for_threads"));
     connections.call.mockResolvedValueOnce(
       mcpToolResultJson({
         threads: [
           {
             threadId: "same-id",
-            readThread: { tool: "synara_read_thread", arguments: { threadId: "same-id" } },
+            readThread: { tool: "ramspace_read_thread", arguments: { threadId: "same-id" } },
           },
         ],
       }),
@@ -254,11 +254,11 @@ describe("remote Synara agent tools", () => {
   });
   it.each([
     [
-      "synara_create_thread",
+      "ramspace_create_thread",
       { operationId: "op-remote", requestId: "hi", ...createdThread("remote-thread") },
     ],
     [
-      "synara_create_threads",
+      "ramspace_create_threads",
       {
         operationId: "op-remote",
         requestId: "hi",
@@ -277,10 +277,10 @@ describe("remote Synara agent tools", () => {
     if (recap.type !== "thread.activity.append") throw new Error(recap.type);
     expect(recap.threadId).toBe("same-id");
     expect(recap.activity).toMatchObject({
-      kind: "synara.threads.created",
+      kind: "ramspace.threads.created",
       turnId: "turn",
       payload: {
-        source: "synara_mcp",
+        source: "ramspace_mcp",
         environmentId: "mini",
         hostName: "Mini",
         operationId: "op-remote",
@@ -309,7 +309,7 @@ describe("remote Synara agent tools", () => {
     expect(dispatched[2]?.commandId).not.toBe(recap.commandId);
   });
   it("records no recap when a forwarded creation fails", async () => {
-    const { run, connections, dispatched } = setup(tool("synara_create_threads", true));
+    const { run, connections, dispatched } = setup(tool("ramspace_create_threads", true));
     connections.call.mockResolvedValueOnce({
       ...mcpToolResultJson({ error: { code: "creation_limit_exceeded", message: "no" } }),
       isError: true,
@@ -356,7 +356,7 @@ describe("remote Synara agent tools", () => {
     expect(entry.handler).not.toHaveBeenCalled();
   });
   it("rejects remote writes without a running origin turn", async () => {
-    const entry = tool("synara_send_message", true);
+    const entry = tool("ramspace_send_message", true);
     const result = await Effect.runPromise(
       receiveRemoteTool({
         call: { ...call, tool: entry.definition.name, caller: { ...call.caller, turnId: null } },

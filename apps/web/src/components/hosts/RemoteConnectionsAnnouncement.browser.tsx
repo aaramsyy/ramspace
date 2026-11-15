@@ -1,6 +1,6 @@
 import "../../index.css";
 
-import type { AccountBillingStatus, AccountStatus } from "@synara/contracts";
+import type { AccountBillingStatus, AccountStatus } from "@ramspace/contracts";
 import type { HostEnrollment } from "~/lib/hosts/api";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { page } from "vitest/browser";
@@ -141,7 +141,7 @@ describe("RemoteConnectionsAnnouncement", () => {
 
     expect(fixture.navigate).toHaveBeenCalledWith({
       to: "/settings",
-      search: { section: "usage", target: "settings-synara-plan" },
+      search: { section: "usage", target: "settings-ramspace-plan" },
     });
     expect(acknowledged()).toEqual({ acknowledged: true });
     await expect

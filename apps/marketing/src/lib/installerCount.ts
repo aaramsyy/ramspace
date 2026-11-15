@@ -6,13 +6,13 @@
 import "server-only";
 
 import { unstable_cache } from "next/cache";
-import { countInstallerDownloads } from "@synara/shared/installerDownloads";
+import { countInstallerDownloads } from "@ramspace/shared/installerDownloads";
 
-export { countInstallerDownloads } from "@synara/shared/installerDownloads";
+export { countInstallerDownloads } from "@ramspace/shared/installerDownloads";
 
 import storedInstallerDownloads from "@/data/installer-downloads.json";
 
-const RELEASES_API_URL = "https://api.github.com/repos/Emanuele-web04/synara/releases?per_page=100";
+const RELEASES_API_URL = "https://api.github.com/repos/aaramsyy/ramspace/releases?per_page=100";
 
 // The count the deterministic browser fixture (VISUAL_TEST=1) renders. The
 // visual baselines were captured with this value, and it must not follow the
@@ -69,7 +69,7 @@ async function fetchLiveInstallerCount(): Promise<number> {
 // an outage retries on the next request instead of pinning the fallback.
 const fetchCachedInstallerCount = unstable_cache(
   fetchLiveInstallerCount,
-  ["synara-installer-count"],
+  ["ramspace-installer-count"],
   {
     revalidate: INSTALLER_COUNT_CACHE_TTL_SECONDS,
   },

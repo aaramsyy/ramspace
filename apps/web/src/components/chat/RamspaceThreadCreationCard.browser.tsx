@@ -10,8 +10,8 @@ import {
   removeWorkspaceSession,
   updateWorkspaceSession,
 } from "../../lib/hosts/workspaceSessions";
-import type { WorkLogSynaraThreadCreation } from "../../workLog";
-import { SynaraThreadCreationCard } from "./SynaraThreadCreationCard";
+import type { WorkLogRamspaceThreadCreation } from "../../workLog";
+import { RamspaceThreadCreationCard } from "./RamspaceThreadCreationCard";
 
 vi.mock("~/lib/hosts/executionContext", async (importOriginal) => ({
   ...(await importOriginal<typeof import("~/lib/hosts/executionContext")>()),
@@ -22,7 +22,7 @@ vi.mock("~/lib/hosts/executionContext", async (importOriginal) => ({
   }),
 }));
 
-const creation: WorkLogSynaraThreadCreation = {
+const creation: WorkLogRamspaceThreadCreation = {
   operationId: "gateway:create:remote",
   requestedCount: 1,
   createdCount: 1,
@@ -76,7 +76,7 @@ afterEach(async () => {
 it("opens a local creation through the local thread callback", async () => {
   const onOpenThread = vi.fn();
   const screen = await render(
-    <SynaraThreadCreationCard creation={creation} onOpenThread={onOpenThread} />,
+    <RamspaceThreadCreationCard creation={creation} onOpenThread={onOpenThread} />,
   );
   await expect.element(screen.getByText(/· Local$/)).toBeVisible();
   await screen.getByRole("button", { name: "Open thread" }).click();
@@ -86,7 +86,7 @@ it("opens a local creation through the local thread callback", async () => {
 it("names the computer and hides Open until that computer is connected", async () => {
   const onOpenThread = vi.fn();
   const screen = await render(
-    <SynaraThreadCreationCard creation={remoteCreation} onOpenThread={onOpenThread} />,
+    <RamspaceThreadCreationCard creation={remoteCreation} onOpenThread={onOpenThread} />,
   );
   await expect.element(screen.getByText(/· Local · on Mac mini$/)).toBeVisible();
   expect(screen.container.querySelector("button")).toBeNull();
@@ -97,7 +97,7 @@ it("opens a remote creation in its computer's workspace, not as a local id", asy
   const push = vi.spyOn(appHistory, "push").mockImplementation(() => {});
   const onOpenThread = vi.fn();
   const screen = await render(
-    <SynaraThreadCreationCard creation={remoteCreation} onOpenThread={onOpenThread} />,
+    <RamspaceThreadCreationCard creation={remoteCreation} onOpenThread={onOpenThread} />,
   );
   await screen.getByRole("button", { name: "Open thread" }).click();
   await vi.waitFor(() =>

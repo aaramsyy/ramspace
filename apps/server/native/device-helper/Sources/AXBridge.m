@@ -7,12 +7,12 @@
 
 /// An empty AXPTranslatorResponse, returned when a request cannot be satisfied.
 /// The translator requires *some* response object; nil wedges the read.
-id SynaraEmptyTranslatorResponse(void);
+id RamspaceEmptyTranslatorResponse(void);
 
 // Attribute reads go through objc_msgSend casts rather than declared headers:
 // every one of these classes is private, and a wrong @interface would be a
 // silent ABI mismatch instead of a nil.
-static id SynaraMsgSend0(id target, NSString *selectorName) {
+static id RamspaceMsgSend0(id target, NSString *selectorName) {
   SEL selector = NSSelectorFromString(selectorName);
   if (![target respondsToSelector:selector]) {
     return nil;
@@ -20,12 +20,12 @@ static id SynaraMsgSend0(id target, NSString *selectorName) {
   return ((id (*)(id, SEL))objc_msgSend)(target, selector);
 }
 
-static NSString *SynaraStringAttribute(id element, NSString *selectorName) {
-  id value = SynaraMsgSend0(element, selectorName);
+static NSString *RamspaceStringAttribute(id element, NSString *selectorName) {
+  id value = RamspaceMsgSend0(element, selectorName);
   return [value isKindOfClass:NSString.class] ? value : nil;
 }
 
-static BOOL SynaraBoolAttribute(id element, NSString *selectorName) {
+static BOOL RamspaceBoolAttribute(id element, NSString *selectorName) {
   SEL selector = NSSelectorFromString(selectorName);
   if (![element respondsToSelector:selector]) {
     return NO;
@@ -33,14 +33,14 @@ static BOOL SynaraBoolAttribute(id element, NSString *selectorName) {
   return ((BOOL (*)(id, SEL))objc_msgSend)(element, selector);
 }
 
-static BOOL SynaraRectIsFinite(NSRect rect) {
+static BOOL RamspaceRectIsFinite(NSRect rect) {
   return isfinite(rect.origin.x) && isfinite(rect.origin.y) && isfinite(rect.size.width) &&
          isfinite(rect.size.height);
 }
 
 // `accessibilityValue` is genuinely `id`; anything not JSON-representable is
 // rendered with -description so the tree never fails to serialize.
-static id SynaraJSONValue(id value) {
+static id RamspaceJSONValue(id value) {
   if (value == nil) {
     return NSNull.null;
   }
@@ -54,7 +54,7 @@ static id SynaraJSONValue(id value) {
   return [value description] ?: NSNull.null;
 }
 
-@implementation SynaraAXBridge {
+@implementation RamspaceAXBridge {
   dispatch_queue_t _callbackQueue;
   id _translator;
 }
@@ -66,7 +66,7 @@ static id SynaraJSONValue(id value) {
     // requests from inside a completion handler, and each one blocks waiting for
     // its own completion. On a serial queue that nesting deadlocks the moment a
     // tree needs more than one round-trip.
-    _callbackQueue = dispatch_queue_create("dev.synara.device-helper.ax", DISPATCH_QUEUE_CONCURRENT);
+    _callbackQueue = dispatch_queue_create("dev.ramspace.device-helper.ax", DISPATCH_QUEUE_CONCURRENT);
     _requestTimeout = 5.0;
   }
   return self;
@@ -118,7 +118,7 @@ static id SynaraJSONValue(id value) {
 
   id (^callback)(id) = ^id(id request) {
     if (device == nil) {
-      return SynaraEmptyTranslatorResponse();
+      return RamspaceEmptyTranslatorResponse();
     }
     dispatch_group_t group = dispatch_group_create();
     dispatch_group_enter(group);
@@ -136,9 +136,9 @@ static id SynaraJSONValue(id value) {
     if (dispatch_group_wait(group, deadline) != 0) {
       // A wedged accessibility service must not hang the caller: an empty
       // response ends the read with a partial tree instead of blocking forever.
-      return SynaraEmptyTranslatorResponse();
+      return RamspaceEmptyTranslatorResponse();
     }
-    return response ?: SynaraEmptyTranslatorResponse();
+    return response ?: RamspaceEmptyTranslatorResponse();
   };
   return [callback copy];
 }
@@ -161,7 +161,7 @@ static id SynaraJSONValue(id value) {
   id focused = [self focusedElementUnder:root depth:0];
   if (focused == nil) {
     if (error) {
-      *error = [NSError errorWithDomain:@"dev.synara.device-helper.ax"
+      *error = [NSError errorWithDomain:@"dev.ramspace.device-helper.ax"
                                    code:4
                                userInfo:@{NSLocalizedDescriptionKey: @"no focused element; tap a text field first"}];
     }
@@ -170,27 +170,27 @@ static id SynaraJSONValue(id value) {
   SEL setter = NSSelectorFromString(@"setAccessibilityValue:");
   if (![focused respondsToSelector:setter]) {
     if (error) {
-      *error = [NSError errorWithDomain:@"dev.synara.device-helper.ax"
+      *error = [NSError errorWithDomain:@"dev.ramspace.device-helper.ax"
                                    code:5
                                userInfo:@{NSLocalizedDescriptionKey: @"the focused element does not accept a value"}];
     }
     return nil;
   }
   ((void (*)(id, SEL, id))objc_msgSend)(focused, setter, value);
-  NSString *role = SynaraStringAttribute(focused, @"accessibilityRole");
+  NSString *role = RamspaceStringAttribute(focused, @"accessibilityRole");
   return @{@"role": role ?: @"Unknown"};
 }
 
 /// Depth-first search for the element holding keyboard focus. Bounded like the
 /// serializer so a pathological tree cannot run away.
 - (nullable id)focusedElementUnder:(id)element depth:(NSInteger)depth {
-  if (SynaraBoolAttribute(element, @"isAccessibilityFocused")) {
+  if (RamspaceBoolAttribute(element, @"isAccessibilityFocused")) {
     return element;
   }
   if (depth >= 40) {
     return nil;
   }
-  id children = SynaraMsgSend0(element, @"accessibilityChildren");
+  id children = RamspaceMsgSend0(element, @"accessibilityChildren");
   if (![children isKindOfClass:NSArray.class]) {
     return nil;
   }
@@ -206,7 +206,7 @@ static id SynaraJSONValue(id value) {
 - (nullable id)frontmostElementWithError:(NSError **)error {
   if (_translator == nil) {
     if (error) {
-      *error = [NSError errorWithDomain:@"dev.synara.device-helper.ax"
+      *error = [NSError errorWithDomain:@"dev.ramspace.device-helper.ax"
                                    code:1
                                userInfo:@{NSLocalizedDescriptionKey: @"accessibility translator unavailable"}];
     }
@@ -232,7 +232,7 @@ static id SynaraJSONValue(id value) {
   dispatch_semaphore_wait(resolved, dispatch_time(DISPATCH_TIME_NOW, (int64_t)(30 * NSEC_PER_SEC)));
   if (translation == nil) {
     if (error) {
-      *error = [NSError errorWithDomain:@"dev.synara.device-helper.ax"
+      *error = [NSError errorWithDomain:@"dev.ramspace.device-helper.ax"
                                    code:2
                                userInfo:@{NSLocalizedDescriptionKey: @"no frontmost application (SpringBoard may still be starting)"}];
     }
@@ -248,7 +248,7 @@ static id SynaraJSONValue(id value) {
   id element = ((id (*)(id, SEL, id))objc_msgSend)(_translator, elementSelector, translation);
   if (element == nil) {
     if (error) {
-      *error = [NSError errorWithDomain:@"dev.synara.device-helper.ax"
+      *error = [NSError errorWithDomain:@"dev.ramspace.device-helper.ax"
                                    code:3
                                userInfo:@{NSLocalizedDescriptionKey: @"translation produced no platform element"}];
     }
@@ -261,7 +261,7 @@ static id SynaraJSONValue(id value) {
 - (NSDictionary *)serializeElement:(id)element depth:(NSInteger)depth maxDepth:(NSInteger)maxDepth {
   NSMutableDictionary *node = [NSMutableDictionary new];
 
-  NSString *role = SynaraStringAttribute(element, @"accessibilityRole");
+  NSString *role = RamspaceStringAttribute(element, @"accessibilityRole");
   // Roles come back AX-prefixed ("AXButton"); the contract wants the bare role.
   if ([role hasPrefix:@"AX"] && role.length > 2) {
     node[@"role"] = [role substringFromIndex:2];
@@ -269,19 +269,19 @@ static id SynaraJSONValue(id value) {
     node[@"role"] = role;
   }
 
-  NSString *label = SynaraStringAttribute(element, @"accessibilityLabel");
+  NSString *label = RamspaceStringAttribute(element, @"accessibilityLabel");
   if (label.length > 0) {
     node[@"label"] = label;
   }
-  id value = SynaraJSONValue(SynaraMsgSend0(element, @"accessibilityValue"));
+  id value = RamspaceJSONValue(RamspaceMsgSend0(element, @"accessibilityValue"));
   if (value != NSNull.null) {
     node[@"value"] = value;
   }
-  NSString *identifier = SynaraStringAttribute(element, @"accessibilityIdentifier");
+  NSString *identifier = RamspaceStringAttribute(element, @"accessibilityIdentifier");
   if (identifier.length > 0) {
     node[@"identifier"] = identifier;
   }
-  NSString *title = SynaraStringAttribute(element, @"accessibilityTitle");
+  NSString *title = RamspaceStringAttribute(element, @"accessibilityTitle");
   if (title.length > 0) {
     node[@"title"] = title;
   }
@@ -292,7 +292,7 @@ static id SynaraJSONValue(id value) {
     // Off-screen and lazily laid-out elements (SwiftUI especially) report NaN
     // or infinite frames. Those are not JSON, and they are not a place to tap
     // either, so the frame is omitted and the node is marked unframed.
-    if (SynaraRectIsFinite(frame)) {
+    if (RamspaceRectIsFinite(frame)) {
       node[@"frame"] = @{
         @"x": @(frame.origin.x),
         @"y": @(frame.origin.y),
@@ -319,23 +319,23 @@ static id SynaraJSONValue(id value) {
 
   // AXCheckBox covers both checkboxes and switches on iOS; the subrole is what
   // distinguishes them, and an agent needs it to know "0"/"1" means off/on.
-  NSString *subrole = SynaraStringAttribute(element, @"accessibilitySubrole");
+  NSString *subrole = RamspaceStringAttribute(element, @"accessibilitySubrole");
   if ([subrole hasPrefix:@"AX"] && subrole.length > 2) {
     node[@"subrole"] = [subrole substringFromIndex:2];
   } else if (subrole.length > 0) {
     node[@"subrole"] = subrole;
   }
 
-  node[@"enabled"] = @(SynaraBoolAttribute(element, @"isAccessibilityEnabled"));
+  node[@"enabled"] = @(RamspaceBoolAttribute(element, @"isAccessibilityEnabled"));
   // Sent only when set, to keep the tree small: a focused field is where typed
   // text lands, and a selected tab or segment is state an agent must verify.
-  if (SynaraBoolAttribute(element, @"isAccessibilityFocused")) {
+  if (RamspaceBoolAttribute(element, @"isAccessibilityFocused")) {
     node[@"focused"] = @YES;
   }
-  if (SynaraBoolAttribute(element, @"isAccessibilitySelected")) {
+  if (RamspaceBoolAttribute(element, @"isAccessibilitySelected")) {
     node[@"selected"] = @YES;
   }
-  NSString *placeholder = SynaraStringAttribute(element, @"accessibilityPlaceholderValue");
+  NSString *placeholder = RamspaceStringAttribute(element, @"accessibilityPlaceholderValue");
   if (placeholder.length > 0) {
     node[@"placeholder"] = placeholder;
   }
@@ -346,7 +346,7 @@ static id SynaraJSONValue(id value) {
     return node;
   }
 
-  id rawChildren = SynaraMsgSend0(element, @"accessibilityChildren");
+  id rawChildren = RamspaceMsgSend0(element, @"accessibilityChildren");
   if ([rawChildren isKindOfClass:NSArray.class] && [rawChildren count] > 0) {
     NSMutableArray *children = [NSMutableArray new];
     for (id child in (NSArray *)rawChildren) {
@@ -365,7 +365,7 @@ static id SynaraJSONValue(id value) {
 
 @end
 
-id SynaraEmptyTranslatorResponse(void) {
+id RamspaceEmptyTranslatorResponse(void) {
   Class responseClass = NSClassFromString(@"AXPTranslatorResponse");
   SEL emptySelector = NSSelectorFromString(@"empty");
   if (responseClass == nil || ![responseClass respondsToSelector:emptySelector]) {

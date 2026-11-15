@@ -14,7 +14,7 @@ import {
   type TodoPriority,
   type TodoStreamEvent,
   type TodoUpdateInput,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 
 import { formatRelativeTime, formatRelativeTimeAgo } from "~/lib/relativeTime";
 import { t, getFormatLocale } from "~/i18n";

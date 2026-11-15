@@ -3,7 +3,7 @@ import {
   HostConnectionRegistryService,
 } from "../../hostConnections/registry";
 import { ServerEnvironment } from "../../environment/Services/ServerEnvironment";
-import { EnvironmentId, type HostConnection, type RemoteAgentCall } from "@synara/contracts";
+import { EnvironmentId, type HostConnection, type RemoteAgentCall } from "@ramspace/contracts";
 import { assert, describe, it } from "@effect/vitest";
 import type { ModelInfo, Options as ClaudeQueryOptions } from "@anthropic-ai/claude-agent-sdk";
 import type {
@@ -19,7 +19,7 @@ import type {
   ProviderModelDescriptor,
   ServerProviderStatus,
   ThreadId as ThreadIdType,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import {
   AutomationId,
   CommandId,
@@ -35,8 +35,8 @@ import {
   THREAD_GOAL_MAX_CHARS,
   ThreadId,
   TurnId,
-} from "@synara/contracts";
-import { isTemporaryWorktreeBranch } from "@synara/shared/git";
+} from "@ramspace/contracts";
+import { isTemporaryWorktreeBranch } from "@ramspace/shared/git";
 import { realpathSync } from "node:fs";
 import { homedir } from "node:os";
 
@@ -87,7 +87,7 @@ import { ProviderDiscoveryServiceLive } from "../../provider/Layers/ProviderDisc
 import { ProviderHealth } from "../../provider/Services/ProviderHealth.ts";
 import { ServerConfig } from "../../config.ts";
 import { ServerSettingsService } from "../../serverSettings.ts";
-import { isSynaraGatewayToolName } from "../computerToolPermission.ts";
+import { isRamspaceGatewayToolName } from "../computerToolPermission.ts";
 import { AgentGateway } from "../Services/AgentGateway.ts";
 import { AgentGatewayCredentials } from "../Services/AgentGatewayCredentials.ts";
 import {
@@ -954,7 +954,7 @@ function makeHarnessLayer(
         }
         return {
           worktree: {
-            path: input.path ?? "/tmp/worktrees/generated/synara",
+            path: input.path ?? "/tmp/worktrees/generated/ramspace",
             ref: input.ref,
             branch: input.newBranch ?? null,
           },
@@ -1028,7 +1028,7 @@ function makeHarnessLayer(
           url:
             reference.startsWith("http://") || reference.startsWith("https://")
               ? reference
-              : "https://github.com/Emanuele-web04/synara/pull/841",
+              : "https://github.com/aaramsyy/ramspace/pull/841",
           baseBranch: "main",
           headBranch: "fix/created-at-thread-order",
           state: "open",
@@ -1642,7 +1642,7 @@ describe("AgentGateway", () => {
             const capabilities = toolResultJson(
               (yield* harness.callTool({
                 token: "token-parent",
-                name: "synara_capabilities",
+                name: "ramspace_capabilities",
                 args: {},
               })).result,
             );
@@ -1669,7 +1669,7 @@ describe("AgentGateway", () => {
             // A rejected window must fail before creating a thread or starting a turn.
             const invalid = yield* harness.callTool({
               token: "token-parent",
-              name: "synara_create_thread",
+              name: "ramspace_create_thread",
               args: {
                 requestId: "invalid-window",
                 prompt: "work",
@@ -1700,7 +1700,7 @@ describe("AgentGateway", () => {
               });
               const response = yield* harness.callTool({
                 token: "token-parent",
-                name: "synara_create_thread",
+                name: "ramspace_create_thread",
                 args: {
                   requestId: `window-${JSON.stringify(options)}`,
                   prompt: "work",
@@ -1817,7 +1817,7 @@ describe("AgentGateway", () => {
             const capabilities = toolResultJson(
               (yield* harness.callTool({
                 token: "token-parent",
-                name: "synara_capabilities",
+                name: "ramspace_capabilities",
                 args: {},
               })).result,
             );
@@ -1837,7 +1837,7 @@ describe("AgentGateway", () => {
             for (const key of ["autoCompactWindow", "contextWindow"]) {
               const response = yield* harness.callTool({
                 token: "token-parent",
-                name: "synara_create_thread",
+                name: "ramspace_create_thread",
                 args: {
                   requestId: key,
                   prompt: "work",
@@ -1891,12 +1891,12 @@ describe("AgentGateway", () => {
       assert.isAbove(tools.length, 0);
       for (const tool of tools) {
         assert.isTrue(
-          isSynaraGatewayToolName(`synara_${tool.name}`),
-          `synara_${tool.name} must auto-approve`,
+          isRamspaceGatewayToolName(`ramspace_${tool.name}`),
+          `ramspace_${tool.name} must auto-approve`,
         );
         assert.isTrue(
-          isSynaraGatewayToolName(`mcp__synara__${tool.name}`),
-          `mcp__synara__${tool.name} must auto-approve`,
+          isRamspaceGatewayToolName(`mcp__ramspace__${tool.name}`),
+          `mcp__ramspace__${tool.name} must auto-approve`,
         );
       }
     }).pipe(Effect.provide(gatewayLayer));
@@ -1913,7 +1913,7 @@ describe("AgentGateway", () => {
           id: true,
           method: "tools/call",
           params: {
-            name: "synara_set_thread_title",
+            name: "ramspace_set_thread_title",
             arguments: { title: "Must not run" },
           },
         },
@@ -1972,7 +1972,7 @@ describe("AgentGateway", () => {
       const harness = yield* makeHarness;
       const response = yield* harness.callTool({
         token: "token-parent-readonly",
-        name: "synara_create_threads",
+        name: "ramspace_create_threads",
         args: {
           requestId: "readonly-create",
           threads: [
@@ -1990,7 +1990,7 @@ describe("AgentGateway", () => {
 
       const setGoal = yield* harness.callTool({
         token: "token-parent-readonly",
-        name: "synara_set_thread_goal",
+        name: "ramspace_set_thread_goal",
         args: { goal: "Must not run" },
       });
       assert.equal(
@@ -2124,8 +2124,8 @@ describe("AgentGateway", () => {
       // token-parent was never granted computer control: prefixed spellings of a
       // known family name deny with the card instead of dying as Unknown-tool.
       for (const [id, name] of [
-        [21, "synara_computer_click"],
-        [22, "mcp__synara__computer_click"],
+        [21, "ramspace_computer_click"],
+        [22, "mcp__ramspace__computer_click"],
       ] as const) {
         const response = yield* callComputerTool(id, name);
         assert.equal(response.status, 200);
@@ -2148,7 +2148,7 @@ describe("AgentGateway", () => {
       const harness = yield* makeHarness;
       const response = yield* harness.callTool({
         token: "token-parent-readonly",
-        name: "synara_diagnose_thread",
+        name: "ramspace_diagnose_thread",
         args: { threadId: "thread-parent" },
       });
       const error = toolResultJson(response.result).error as {
@@ -2176,7 +2176,7 @@ describe("AgentGateway", () => {
       const harness = yield* makeHarness;
       const response = yield* harness.callTool({
         token: "token-parent",
-        name: "synara_diagnose_thread",
+        name: "ramspace_diagnose_thread",
         args: { threadId: "thread-parent" },
       });
       assert.isFalse(isToolError(response.result), toolErrorText(response.result));
@@ -2205,7 +2205,7 @@ describe("AgentGateway", () => {
       // Draft creation dispatches thread.create but starts no turn.
       const draft = yield* harness.callTool({
         token: "token-parent",
-        name: "synara_create_kanban_draft",
+        name: "ramspace_create_kanban_draft",
         args: { title: "Draft it", requestId: "wiring-draft" },
       });
       assert.isFalse(isToolError(draft.result), toolErrorText(draft.result));
@@ -2219,7 +2219,7 @@ describe("AgentGateway", () => {
       // Metadata update dispatches a patch and settles no work.
       const updated = yield* harness.callTool({
         token: "token-parent",
-        name: "synara_update_kanban_card",
+        name: "ramspace_update_kanban_card",
         args: { threadId: "thread-child", title: "Child v2" },
       });
       assert.isFalse(isToolError(updated.result), toolErrorText(updated.result));
@@ -2231,7 +2231,7 @@ describe("AgentGateway", () => {
       // Delete dispatches thread removal.
       const deleted = yield* harness.callTool({
         token: "token-parent",
-        name: "synara_delete_kanban_card",
+        name: "ramspace_delete_kanban_card",
         args: { threadId: "thread-child" },
       });
       assert.isFalse(isToolError(deleted.result), toolErrorText(deleted.result));
@@ -2291,7 +2291,7 @@ describe("AgentGateway", () => {
         id,
         method: "tools/call",
         params: {
-          name: "synara_create_threads",
+          name: "ramspace_create_threads",
           arguments: {
             requestId,
             threads: [
@@ -2339,7 +2339,7 @@ describe("AgentGateway", () => {
       assert.equal(initResult.protocolVersion, "2025-06-18");
       assert.isString(initResult.instructions);
       assert.isBelow(String(initResult.instructions).length, 200);
-      assert.notInclude(String(initResult.instructions), "[Synara harness policy");
+      assert.notInclude(String(initResult.instructions), "[Ramspace harness policy");
 
       const list = yield* harness.postRaw({
         authorizationHeader: "Bearer token-parent",
@@ -2361,58 +2361,58 @@ describe("AgentGateway", () => {
       ).result.tools;
       const names = tools.map((tool) => tool.name);
       assert.includeMembers(names, [
-        "synara_context",
-        "synara_capabilities",
-        "synara_list_projects",
-        "synara_list_threads",
-        "synara_read_thread",
-        "synara_read_thread_activity",
-        "synara_read_thread_events",
-        "synara_read_thread_runtime_events",
-        "synara_diagnose_thread",
-        "synara_wait_for_threads",
-        "synara_create_threads",
-        "synara_create_thread",
-        "synara_send_message",
-        "synara_interrupt_thread",
-        "synara_set_thread_title",
-        "synara_set_thread_pull_request",
-        "synara_set_thread_archived",
-        "synara_set_thread_goal",
-        "synara_create_automation",
-        "synara_list_automations",
-        "synara_view_automation",
-        "synara_update_automation",
-        "synara_cancel_automation",
-        "synara_update_automation_memory",
-        "synara_report_automation_result",
-        "synara_read_kanban_board",
-        "synara_read_kanban_card",
-        "synara_create_kanban_task",
-        "synara_create_kanban_draft",
-        "synara_update_kanban_card",
-        "synara_set_kanban_goal",
-        "synara_delete_kanban_card",
-        "synara_move_kanban_card",
-        "synara_create_todo",
-        "synara_list_todos",
-        "synara_update_todo",
+        "ramspace_context",
+        "ramspace_capabilities",
+        "ramspace_list_projects",
+        "ramspace_list_threads",
+        "ramspace_read_thread",
+        "ramspace_read_thread_activity",
+        "ramspace_read_thread_events",
+        "ramspace_read_thread_runtime_events",
+        "ramspace_diagnose_thread",
+        "ramspace_wait_for_threads",
+        "ramspace_create_threads",
+        "ramspace_create_thread",
+        "ramspace_send_message",
+        "ramspace_interrupt_thread",
+        "ramspace_set_thread_title",
+        "ramspace_set_thread_pull_request",
+        "ramspace_set_thread_archived",
+        "ramspace_set_thread_goal",
+        "ramspace_create_automation",
+        "ramspace_list_automations",
+        "ramspace_view_automation",
+        "ramspace_update_automation",
+        "ramspace_cancel_automation",
+        "ramspace_update_automation_memory",
+        "ramspace_report_automation_result",
+        "ramspace_read_kanban_board",
+        "ramspace_read_kanban_card",
+        "ramspace_create_kanban_task",
+        "ramspace_create_kanban_draft",
+        "ramspace_update_kanban_card",
+        "ramspace_set_kanban_goal",
+        "ramspace_delete_kanban_card",
+        "ramspace_move_kanban_card",
+        "ramspace_create_todo",
+        "ramspace_list_todos",
+        "ramspace_update_todo",
         // Group tools the coordinator delegates through — the playbook names
         // these, so a capability regression would silently gut delegation.
-        "synara_project_get_overview",
-        "synara_project_list_tasks",
-        "synara_project_read_document",
-        "synara_project_write_document",
-        "synara_project_report_result",
-        "synara_project_context",
-        "synara_project_remember",
-        "synara_project_forget",
-        "synara_project_link_repository",
-        "synara_project_library_list",
-        "synara_project_library_add",
-        "synara_project_list_threads",
+        "ramspace_project_get_overview",
+        "ramspace_project_list_tasks",
+        "ramspace_project_read_document",
+        "ramspace_project_write_document",
+        "ramspace_project_report_result",
+        "ramspace_project_context",
+        "ramspace_project_remember",
+        "ramspace_project_forget",
+        "ramspace_project_link_repository",
+        "ramspace_project_library_list",
+        "ramspace_project_library_add",
+        "ramspace_project_list_threads",
       ]);
-      const createThreadProperties = tools.find((tool) => tool.name === "synara_create_thread")
+      const createThreadProperties = tools.find((tool) => tool.name === "ramspace_create_thread")
         ?.inputSchema.properties;
       assert.property(createThreadProperties, "baseRef");
       assert.notProperty(createThreadProperties, "baseBranch");
@@ -2421,7 +2421,7 @@ describe("AgentGateway", () => {
         (createThreadProperties?.runtimeMode as { enum?: string[] } | undefined)?.enum,
         ["approval-required", "full-access"],
       );
-      const createThreadsTool = tools.find((tool) => tool.name === "synara_create_threads");
+      const createThreadsTool = tools.find((tool) => tool.name === "ramspace_create_threads");
       const createThreadsItems = (
         createThreadsTool?.inputSchema.properties?.threads as
           | {
@@ -2436,7 +2436,7 @@ describe("AgentGateway", () => {
         ["approval-required", "full-access"],
       );
 
-      const readThread = tools.find((tool) => tool.name === "synara_read_thread");
+      const readThread = tools.find((tool) => tool.name === "ramspace_read_thread");
       const readThreadProperties = readThread?.inputSchema.properties as
         | Record<string, { maximum?: number; minimum?: number; type?: string }>
         | undefined;
@@ -2459,7 +2459,7 @@ describe("AgentGateway", () => {
         type: "string",
       });
 
-      const setThreadGoal = tools.find((tool) => tool.name === "synara_set_thread_goal");
+      const setThreadGoal = tools.find((tool) => tool.name === "ramspace_set_thread_goal");
       assert.include(
         setThreadGoal?.description ?? "",
         "Only set a goal when the user has explicitly asked for one",
@@ -2476,13 +2476,13 @@ describe("AgentGateway", () => {
       assert.include(setThreadGoal?.description ?? "", "blocked: true");
 
       const setThreadPullRequest = tools.find(
-        (tool) => tool.name === "synara_set_thread_pull_request",
+        (tool) => tool.name === "ramspace_set_thread_pull_request",
       );
       assert.include(setThreadPullRequest?.description ?? "", "own deliverable");
       assert.include(setThreadPullRequest?.description ?? "", "only reviews");
       assert.deepEqual(setThreadPullRequest?.inputSchema.required, ["reference"]);
 
-      const createAutomation = tools.find((tool) => tool.name === "synara_create_automation");
+      const createAutomation = tools.find((tool) => tool.name === "ramspace_create_automation");
       assert.include(createAutomation?.description ?? "", "self-contained future-run brief");
       const createAutomationProperties = createAutomation?.inputSchema.properties as
         | Record<string, { description?: string }>
@@ -2511,10 +2511,10 @@ describe("AgentGateway", () => {
       assert.property(createAutomationTarget?.properties, "model");
       assert.property(createAutomationTarget?.properties, "options");
       const updateAutomationMemory = tools.find(
-        (tool) => tool.name === "synara_update_automation_memory",
+        (tool) => tool.name === "ramspace_update_automation_memory",
       );
       const reportAutomationResult = tools.find(
-        (tool) => tool.name === "synara_report_automation_result",
+        (tool) => tool.name === "ramspace_report_automation_result",
       );
       assert.include(
         updateAutomationMemory?.description ?? "",
@@ -2526,7 +2526,7 @@ describe("AgentGateway", () => {
       );
 
       const updateAutomationProperties = tools.find(
-        (tool) => tool.name === "synara_update_automation",
+        (tool) => tool.name === "ramspace_update_automation",
       )?.inputSchema.properties as Record<string, { description?: string }> | undefined;
       assert.equal(
         updateAutomationProperties?.name?.description,
@@ -2551,15 +2551,15 @@ describe("AgentGateway", () => {
           ...makeProjectShell(),
           id: ProjectId.makeUnsafe("project-chat-container"),
           kind: "chat",
-          title: "che progetti ci sono in synara",
-          workspaceRoot: `${homeDir}/Documents/Synara/2026-03-01/chat`,
+          title: "che progetti ci sono in ramspace",
+          workspaceRoot: `${homeDir}/Documents/Ramspace/2026-03-01/chat`,
         },
         {
           ...makeProjectShell(),
           id: ProjectId.makeUnsafe("project-studio-container"),
           kind: "studio",
           title: "Studio",
-          workspaceRoot: `${homeDir}/Documents/Synara/Studio`,
+          workspaceRoot: `${homeDir}/Documents/Ramspace/Studio`,
         },
         {
           ...makeProjectShell(),
@@ -2574,7 +2574,7 @@ describe("AgentGateway", () => {
       const harness = yield* makeHarness;
       const response = yield* harness.callTool({
         token: "token-parent",
-        name: "synara_list_projects",
+        name: "ramspace_list_projects",
         args: {},
       });
       const payload = toolResultJson(response.result);
@@ -2592,7 +2592,7 @@ describe("AgentGateway", () => {
       const harness = yield* makeHarness;
       const response = yield* harness.callTool({
         token: "token-parent",
-        name: "synara_capabilities",
+        name: "ramspace_capabilities",
         args: {},
       });
       const payload = toolResultJson(response.result);
@@ -2687,7 +2687,7 @@ describe("AgentGateway", () => {
       const harness = yield* makeHarness;
       const response = yield* harness.callTool({
         token: "token-parent",
-        name: "synara_capabilities",
+        name: "ramspace_capabilities",
         args: {},
       });
       const payload = toolResultJson(response.result);
@@ -2736,7 +2736,7 @@ describe("AgentGateway", () => {
       const harness = yield* makeHarness;
       const response = yield* harness.callTool({
         token: "token-parent",
-        name: "synara_list_threads",
+        name: "ramspace_list_threads",
         args: {},
       });
       const payload = toolResultJson(response.result);
@@ -2754,7 +2754,7 @@ describe("AgentGateway", () => {
       const harness = yield* makeHarness;
       const response = yield* harness.callTool({
         token: "token-parent",
-        name: "synara_list_threads",
+        name: "ramspace_list_threads",
         args: { limit: 1 },
       });
       const payload = toolResultJson(response.result);
@@ -2770,7 +2770,7 @@ describe("AgentGateway", () => {
       const threads = [
         makeThreadShell("thread-parent", {
           title: "Investigate stream gap",
-          creationSource: "synara_mcp",
+          creationSource: "ramspace_mcp",
           updatedAt: "2026-03-02T10:00:00.000Z",
           latestTurn: {
             turnId: TurnId.makeUnsafe("turn-running"),
@@ -2792,12 +2792,12 @@ describe("AgentGateway", () => {
         const harness = yield* makeHarness;
         const response = yield* harness.callTool({
           token: "token-parent",
-          name: "synara_list_threads",
+          name: "ramspace_list_threads",
           args: {
             provider: "codex",
             status: "working",
             titleContains: "STREAM",
-            creationSource: "synara_mcp",
+            creationSource: "ramspace_mcp",
             updatedAfter: "2026-03-01T00:00:00.000Z",
             updatedBefore: "2026-03-03T00:00:00.000Z",
           },
@@ -2832,7 +2832,7 @@ describe("AgentGateway", () => {
       const first = toolResultJson(
         (yield* harness.callTool({
           token: "token-parent",
-          name: "synara_read_thread_activity",
+          name: "ramspace_read_thread_activity",
           args: { threadId: "thread-parent", limit: 1, includeDetails: true },
         })).result,
       );
@@ -2841,7 +2841,7 @@ describe("AgentGateway", () => {
       const second = toolResultJson(
         (yield* harness.callTool({
           token: "token-parent",
-          name: "synara_read_thread_activity",
+          name: "ramspace_read_thread_activity",
           args: {
             threadId: "thread-parent",
             limit: 1,
@@ -2856,7 +2856,7 @@ describe("AgentGateway", () => {
       });
       const changedFilter = yield* harness.callTool({
         token: "token-parent",
-        name: "synara_read_thread_activity",
+        name: "ramspace_read_thread_activity",
         args: {
           threadId: "thread-parent",
           limit: 1,
@@ -2917,7 +2917,7 @@ describe("AgentGateway", () => {
       const first = toolResultJson(
         (yield* harness.callTool({
           token: "token-parent",
-          name: "synara_read_thread_events",
+          name: "ramspace_read_thread_events",
           args: { threadId, limit: 1 },
         })).result,
       );
@@ -2930,7 +2930,7 @@ describe("AgentGateway", () => {
       const second = toolResultJson(
         (yield* harness.callTool({
           token: "token-parent",
-          name: "synara_read_thread_events",
+          name: "ramspace_read_thread_events",
           args: { threadId, limit: 1, cursor: first.nextCursor },
         })).result,
       );
@@ -3010,7 +3010,7 @@ describe("AgentGateway", () => {
       const payload = toolResultJson(
         (yield* harness.callTool({
           token: "token-parent",
-          name: "synara_diagnose_thread",
+          name: "ramspace_diagnose_thread",
           args: { threadId: "thread-parent" },
         })).result,
       );
@@ -3070,7 +3070,7 @@ describe("AgentGateway", () => {
         const harness = yield* makeHarness;
         const response = yield* harness.callTool({
           token: "token-parent",
-          name: "synara_send_message",
+          name: "ramspace_send_message",
           args: { environmentId: "book", threadId: "remote-target", message: "continue" },
         });
         const denied = kind === "worker" || kind === "coordinator";
@@ -3156,7 +3156,7 @@ describe("AgentGateway", () => {
       const create = () =>
         harness.callTool({
           token: "token-parent",
-          name: "synara_create_thread",
+          name: "ramspace_create_thread",
           args: {
             environmentId: "book",
             requestId: "remote-hi",
@@ -3170,7 +3170,7 @@ describe("AgentGateway", () => {
       const recaps = harness.dispatched.filter(
         (command) =>
           command.type === "thread.activity.append" &&
-          command.activity.kind === "synara.threads.created",
+          command.activity.kind === "ramspace.threads.created",
       );
       assert.lengthOf(recaps, 1);
       const recap = recaps[0];
@@ -3178,7 +3178,7 @@ describe("AgentGateway", () => {
       assert.equal(recap.threadId, ThreadId.makeUnsafe("thread-parent"));
       assert.equal(recap.activity.turnId, TurnId.makeUnsafe("turn-parent-active"));
       assert.deepInclude(recap.activity.payload as Record<string, unknown>, {
-        source: "synara_mcp",
+        source: "ramspace_mcp",
         environmentId: "book",
         hostName: "Book",
         operationId: "gateway:create:remote",
@@ -3210,7 +3210,7 @@ describe("AgentGateway", () => {
             envMode: "worktree",
             capabilities: ["thread:read", "thread:write"],
           },
-          tool: "synara_create_thread",
+          tool: "ramspace_create_thread",
           arguments: {
             requestId: "remote-create",
             prompt: "remote fixture",
@@ -3280,7 +3280,7 @@ describe("AgentGateway", () => {
           envMode: "worktree",
           capabilities: ["thread:write"],
         },
-        tool: "synara_send_message",
+        tool: "ramspace_send_message",
         arguments: { threadId: "thread-parent", message: "do work" },
       };
       const denied = yield* gateway.handleRemoteTool!(call, "remote-device:fixture");
@@ -3318,7 +3318,7 @@ describe("AgentGateway", () => {
       const diagnose = () =>
         harness.callTool({
           token: "token-parent",
-          name: "synara_diagnose_thread",
+          name: "ramspace_diagnose_thread",
           args: { threadId: "thread-parent" },
         });
       const payload = toolResultJson((yield* diagnose()).result);
@@ -3348,7 +3348,7 @@ describe("AgentGateway", () => {
       const harness = yield* makeHarness;
       const response = yield* harness.callTool({
         token: "token-parent",
-        name: "synara_create_thread",
+        name: "ramspace_create_thread",
         args: {
           requestId: "create-grok",
           prompt: "analyze the feature",
@@ -3399,7 +3399,7 @@ describe("AgentGateway", () => {
           };
           const response = yield* harness.callTool({
             token: "token-parent",
-            name: batch ? "synara_create_threads" : "synara_create_thread",
+            name: batch ? "ramspace_create_threads" : "ramspace_create_thread",
             args: batch
               ? {
                   requestId: "completion",
@@ -3430,7 +3430,7 @@ describe("AgentGateway", () => {
       const harness = yield* makeHarness;
       const response = yield* harness.callTool({
         token: "token-parent",
-        name: "synara_create_threads",
+        name: "ramspace_create_threads",
         args: {
           requestId: "create-provider-plan-agents",
           threads: [
@@ -3471,7 +3471,7 @@ describe("AgentGateway", () => {
       const harness = yield* makeHarness;
       const response = yield* harness.callTool({
         token: "token-parent",
-        name: "synara_create_thread",
+        name: "ramspace_create_thread",
         args: {
           requestId: "create-worktree",
           prompt: "refactor module X",
@@ -3509,7 +3509,7 @@ describe("AgentGateway", () => {
       const harness = yield* makeHarness;
       const response = yield* harness.callTool({
         token: "token-parent",
-        name: "synara_create_thread",
+        name: "ramspace_create_thread",
         args: {
           requestId: "explicit-head-from-caller-worktree",
           prompt: "continue from this checkout",
@@ -3534,7 +3534,7 @@ describe("AgentGateway", () => {
       const harness = yield* makeHarness;
       const response = yield* harness.callTool({
         token: "token-parent",
-        name: "synara_create_thread",
+        name: "ramspace_create_thread",
         args: {
           requestId: "github-pr-head",
           prompt: "review the pull request",
@@ -3548,7 +3548,7 @@ describe("AgentGateway", () => {
       assert.deepEqual(harness.fetchedPullRequests, [425]);
       assert.deepEqual(harness.fetchedPullRequestRepositories, ["example/repo"]);
       assert.equal(harness.worktreeCreates[0]?.ref, "fedcba9876543210fedcba9876543210fedcba98");
-      // The worktree is born on a temporary synara/* branch, but no branch is
+      // The worktree is born on a temporary ramspace/* branch, but no branch is
       // ever created for the pull request itself.
       assert.isTrue(isTemporaryWorktreeBranch(harness.worktreeCreates[0]?.newBranch ?? ""));
     }).pipe(Effect.provide(gatewayLayer));
@@ -3560,7 +3560,7 @@ describe("AgentGateway", () => {
       const harness = yield* makeHarness;
       const response = yield* harness.callTool({
         token: "token-parent",
-        name: "synara_create_thread",
+        name: "ramspace_create_thread",
         args: {
           requestId: "local-pull-path-ref",
           prompt: "continue from the local ref",
@@ -3590,7 +3590,7 @@ describe("AgentGateway", () => {
       const harness = yield* makeHarness;
       const response = yield* harness.callTool({
         token: "token-parent",
-        name: "synara_create_thread",
+        name: "ramspace_create_thread",
         args: {
           requestId: "create-crowded",
           prompt: "one more",
@@ -3634,7 +3634,7 @@ describe("AgentGateway", () => {
       [
         ...baseThreads,
         makeThreadShell("agent:restart-child", {
-          creationSource: "synara_mcp",
+          creationSource: "ramspace_mcp",
           sourceThreadId: ThreadId.makeUnsafe("thread-parent"),
           sourceTurnId: TurnId.makeUnsafe("turn-parent-active"),
           gatewayOperationId: "gateway:create:restart",
@@ -4020,7 +4020,7 @@ describe("AgentGateway", () => {
       const harness = yield* makeHarness;
       const response = yield* harness.callTool({
         token: "token-parent",
-        name: "synara_create_threads",
+        name: "ramspace_create_threads",
         args: {
           requestId: "pre-existing-branch",
           threads: [
@@ -4060,7 +4060,7 @@ describe("AgentGateway", () => {
             id: 1,
             method: "tools/call",
             params: {
-              name: "synara_create_threads",
+              name: "ramspace_create_threads",
               arguments: {
                 requestId: "turn-a-plan",
                 threads: [
@@ -4078,7 +4078,7 @@ describe("AgentGateway", () => {
             id: 2,
             method: "tools/call",
             params: {
-              name: "synara_create_threads",
+              name: "ramspace_create_threads",
               arguments: {
                 requestId: "must-not-use-turn-b",
                 threads: [
@@ -4145,7 +4145,7 @@ describe("AgentGateway", () => {
       const harness = yield* makeHarness;
       const attempts = [
         {
-          name: "synara_create_threads",
+          name: "ramspace_create_threads",
           args: {
             requestId: "late-batch",
             threads: [
@@ -4157,7 +4157,7 @@ describe("AgentGateway", () => {
           },
         },
         {
-          name: "synara_create_thread",
+          name: "ramspace_create_thread",
           args: {
             requestId: "late-single",
             prompt: "late",
@@ -4165,31 +4165,31 @@ describe("AgentGateway", () => {
           },
         },
         {
-          name: "synara_send_message",
+          name: "ramspace_send_message",
           args: { threadId: "thread-child", message: "late" },
         },
         {
-          name: "synara_interrupt_thread",
+          name: "ramspace_interrupt_thread",
           args: { threadId: "thread-child" },
         },
         {
-          name: "synara_set_thread_title",
+          name: "ramspace_set_thread_title",
           args: { threadId: "thread-child", title: "Late rename" },
         },
         {
-          name: "synara_set_thread_archived",
+          name: "ramspace_set_thread_archived",
           args: { threadId: "thread-child", archived: true },
         },
         {
-          name: "synara_set_thread_goal",
+          name: "ramspace_set_thread_goal",
           args: { threadId: "thread-child", goal: "Late goal" },
         },
         {
-          name: "synara_create_automation",
+          name: "ramspace_create_automation",
           args: { name: "late monitor", prompt: "late" },
         },
         {
-          name: "synara_cancel_automation",
+          name: "ramspace_cancel_automation",
           args: { automationId: "automation-1" },
         },
       ];
@@ -4212,7 +4212,7 @@ describe("AgentGateway", () => {
 
       const read = yield* harness.callTool({
         token: "token-parent",
-        name: "synara_list_threads",
+        name: "ramspace_list_threads",
         args: {},
       });
       assert.isFalse(isToolError(read.result), toolErrorText(read.result));
@@ -4238,7 +4238,7 @@ describe("AgentGateway", () => {
       };
       const first = yield* harness.callTool({
         token: "token-parent",
-        name: "synara_create_threads",
+        name: "ramspace_create_threads",
         args,
       });
       harness.setProviderStatuses([
@@ -4265,7 +4265,7 @@ describe("AgentGateway", () => {
       ]);
       const replay = yield* harness.callTool({
         token: "token-parent",
-        name: "synara_create_threads",
+        name: "ramspace_create_threads",
         args: {
           ...args,
           threads: args.threads.map((spec) => ({
@@ -4292,7 +4292,7 @@ describe("AgentGateway", () => {
       const creationRecaps = harness.dispatched.filter(
         (command) =>
           command.type === "thread.activity.append" &&
-          command.activity.kind === "synara.threads.created",
+          command.activity.kind === "ramspace.threads.created",
       );
       assert.equal(creationRecaps.length, 1);
       const creationRecap = creationRecaps[0];
@@ -4301,14 +4301,14 @@ describe("AgentGateway", () => {
         assert.equal(creationRecap.threadId, ThreadId.makeUnsafe("thread-parent"));
         assert.equal(creationRecap.activity.turnId, TurnId.makeUnsafe("turn-parent-active"));
         assert.deepInclude(creationRecap.activity.payload as Record<string, unknown>, {
-          source: "synara_mcp",
+          source: "ramspace_mcp",
           requestedCount: 2,
           createdCount: 2,
         });
       }
       const conflict = yield* harness.callTool({
         token: "token-parent",
-        name: "synara_create_threads",
+        name: "ramspace_create_threads",
         args: {
           ...args,
           threads: [
@@ -4335,7 +4335,7 @@ describe("AgentGateway", () => {
           parentThreadId: command.parentThreadId,
         })),
         [0, 1].map((index) => ({
-          creationSource: "synara_mcp" as const,
+          creationSource: "ramspace_mcp" as const,
           sourceThreadId: ThreadId.makeUnsafe("thread-parent"),
           sourceTurnId: TurnId.makeUnsafe("turn-parent-active"),
           gatewayOperationId: operationId,
@@ -4355,7 +4355,7 @@ describe("AgentGateway", () => {
       const call = () =>
         harness.callTool({
           token: "token-parent",
-          name: "synara_create_threads",
+          name: "ramspace_create_threads",
           args: {
             requestId: "concurrent-exact-plan",
             threads: [
@@ -4396,7 +4396,7 @@ describe("AgentGateway", () => {
       const create = (requestId: string, prompt: string) =>
         harness.callTool({
           token: "token-parent",
-          name: "synara_create_threads",
+          name: "ramspace_create_threads",
           args: {
             requestId,
             threads: [{ prompt, target: { provider: "codex", model: "gpt-5.5" } }],
@@ -4405,7 +4405,7 @@ describe("AgentGateway", () => {
       yield* create("first-plan", "first");
       const second = yield* harness.callTool({
         token: "token-parent",
-        name: "synara_create_threads",
+        name: "ramspace_create_threads",
         args: {
           requestId: "second-plan",
           threads: [
@@ -4447,7 +4447,7 @@ describe("AgentGateway", () => {
       const harness = yield* makeHarness;
       const response = yield* harness.callTool({
         token: "token-parent",
-        name: "synara_create_threads",
+        name: "ramspace_create_threads",
         args: {
           requestId: "unavailable-provider",
           threads: [
@@ -4473,7 +4473,7 @@ describe("AgentGateway", () => {
       const harness = yield* makeHarness;
       const response = yield* harness.callTool({
         token: "token-parent",
-        name: "synara_create_threads",
+        name: "ramspace_create_threads",
         args: {
           requestId: "terra-low",
           threads: [
@@ -4508,7 +4508,7 @@ describe("AgentGateway", () => {
       const harness = yield* makeHarness;
       const response = yield* harness.callTool({
         token: "token-parent",
-        name: "synara_create_threads",
+        name: "ramspace_create_threads",
         args: {
           requestId: "atomic-preflight",
           threads: [
@@ -4542,7 +4542,7 @@ describe("AgentGateway", () => {
         const harness = yield* makeHarness;
         const response = yield* harness.callTool({
           token: "token-parent",
-          name: "synara_create_threads",
+          name: "ramspace_create_threads",
           args: {
             requestId: "ownership-marker-failure",
             threads: [
@@ -4580,7 +4580,7 @@ describe("AgentGateway", () => {
       const harness = yield* makeHarness;
       const response = yield* harness.callTool({
         token: "token-parent",
-        name: "synara_create_threads",
+        name: "ramspace_create_threads",
         args: {
           requestId: "ownership-marker-and-cleanup-failure",
           threads: [
@@ -4621,7 +4621,7 @@ describe("AgentGateway", () => {
       const requestFiber = yield* harness
         .callTool({
           token: "token-parent",
-          name: "synara_create_threads",
+          name: "ramspace_create_threads",
           args: {
             requestId: "interrupt-after-reservation",
             threads: [
@@ -4663,7 +4663,7 @@ describe("AgentGateway", () => {
       const requestFiber = yield* harness
         .callTool({
           token: "token-parent",
-          name: "synara_create_threads",
+          name: "ramspace_create_threads",
           args: {
             requestId: "interrupt-after-worktree-create",
             threads: [
@@ -4726,7 +4726,7 @@ describe("AgentGateway", () => {
       const requestFiber = yield* harness
         .callTool({
           token: "token-parent",
-          name: "synara_create_threads",
+          name: "ramspace_create_threads",
           args: {
             requestId: "interrupt-during-setup-script",
             threads: [
@@ -4774,7 +4774,7 @@ describe("AgentGateway", () => {
       const requestFiber = yield* harness
         .callTool({
           token: "token-parent",
-          name: "synara_create_threads",
+          name: "ramspace_create_threads",
           args: {
             requestId: "interrupt-after-thread-create",
             threads: [
@@ -4823,7 +4823,7 @@ describe("AgentGateway", () => {
     });
     const request = {
       token: "token-parent",
-      name: "synara_create_threads",
+      name: "ramspace_create_threads",
       args: {
         requestId: "interrupt-after-operation-complete",
         threads: [
@@ -4880,7 +4880,7 @@ describe("AgentGateway", () => {
       const harness = yield* makeHarness;
       const response = yield* harness.callTool({
         token: "token-parent",
-        name: "synara_create_threads",
+        name: "ramspace_create_threads",
         args: {
           requestId: "compensated-batch",
           threads: [
@@ -4933,7 +4933,7 @@ describe("AgentGateway", () => {
       readStatus = () => harness.getOperationStatus("turn-parent-active");
       const request = {
         token: "token-parent",
-        name: "synara_create_threads",
+        name: "ramspace_create_threads",
         args: {
           requestId: "registration-failure",
           threads: [
@@ -4966,7 +4966,7 @@ describe("AgentGateway", () => {
       const harness = yield* makeHarness;
       const response = yield* harness.callTool({
         token: "token-parent",
-        name: "synara_create_threads",
+        name: "ramspace_create_threads",
         args: {
           requestId: "completion-persistence-failure",
           threads: [
@@ -5003,7 +5003,7 @@ describe("AgentGateway", () => {
       const harness = yield* makeHarness;
       const response = yield* harness.callTool({
         token: "token-parent",
-        name: "synara_create_threads",
+        name: "ramspace_create_threads",
         args: {
           requestId: "cleanup-failure",
           threads: [
@@ -5094,7 +5094,7 @@ describe("AgentGateway", () => {
       const harness = yield* makeHarness;
       const response = yield* harness.callTool({
         token: "token-parent",
-        name: "synara_wait_for_threads",
+        name: "ramspace_wait_for_threads",
         args: {
           threadIds: ["thread-result-a", "thread-result-b"],
           timeoutMs: 0,
@@ -5159,7 +5159,7 @@ describe("AgentGateway", () => {
       const harness = yield* makeHarness;
       const response = yield* harness.callTool({
         token: "token-parent",
-        name: "synara_wait_for_threads",
+        name: "ramspace_wait_for_threads",
         args: { threadIds: ["thread-long-result"], timeoutMs: 0 },
       });
       const result = (
@@ -5169,7 +5169,7 @@ describe("AgentGateway", () => {
       assert.match(result.summary as string, /\[\.\.\. truncated \d+ chars\]$/);
       assert.equal((result.summary as string).length, 2_000);
       assert.deepEqual(result.readThread, {
-        tool: "synara_read_thread",
+        tool: "ramspace_read_thread",
         arguments: { threadId: "thread-long-result" },
       });
     }).pipe(Effect.provide(gatewayLayer));
@@ -5198,7 +5198,7 @@ describe("AgentGateway", () => {
         const harness = yield* makeHarness;
         const response = yield* harness.callTool({
           token: "token-parent",
-          name: "synara_wait_for_threads",
+          name: "ramspace_wait_for_threads",
           args: { threadIds: pending.map((thread) => thread.id), timeoutMs: 0 },
         });
         assert.equal(toolResultJson(response.result).timedOut, true);
@@ -5230,7 +5230,7 @@ describe("AgentGateway", () => {
       const fiber = yield* harness
         .callTool({
           token: "token-parent",
-          name: "synara_wait_for_threads",
+          name: "ramspace_wait_for_threads",
           args: {
             threadIds: ["thread-deleted-during-wait"],
             timeoutMs: 5_000,
@@ -5273,12 +5273,12 @@ describe("AgentGateway", () => {
       };
       const created = yield* harness.callTool({
         token: "token-parent",
-        name: "synara_create_threads",
+        name: "ramspace_create_threads",
         args,
       });
       const replay = yield* harness.callTool({
         token: "token-parent",
-        name: "synara_create_threads",
+        name: "ramspace_create_threads",
         args,
       });
       assert.isFalse(isToolError(created.result), toolErrorText(created.result));
@@ -5327,7 +5327,7 @@ describe("AgentGateway", () => {
 
       const waited = yield* harness.callTool({
         token: "token-parent",
-        name: "synara_wait_for_threads",
+        name: "ramspace_wait_for_threads",
         args: { threadIds, timeoutMs: 0 },
       });
       assert.deepEqual(
@@ -5353,7 +5353,7 @@ describe("AgentGateway", () => {
       );
       const detachedFallback = yield* harness.callTool({
         token: "token-parent",
-        name: "synara_create_threads",
+        name: "ramspace_create_threads",
         args: {
           requestId: "detached-opencode-fallback",
           threads: [
@@ -5430,7 +5430,7 @@ describe("AgentGateway", () => {
       const harness = yield* makeHarness;
       const first = yield* harness.callTool({
         token: "token-parent",
-        name: "synara_wait_for_threads",
+        name: "ramspace_wait_for_threads",
         args: {
           threadIds: ["thread-wait-idle", "thread-wait-failed", "thread-wait-running"],
           timeoutMs: 0,
@@ -5499,7 +5499,7 @@ describe("AgentGateway", () => {
       );
       const second = yield* harness.callTool({
         token: "token-parent",
-        name: "synara_wait_for_threads",
+        name: "ramspace_wait_for_threads",
         args: {
           threadIds: ["thread-wait-running"],
           runIds: ["turn-wait-pinned"],
@@ -5583,7 +5583,7 @@ describe("AgentGateway", () => {
           const before = Date.now();
           const input = {
             token: "token-parent",
-            name: "synara_send_message",
+            name: "ramspace_send_message",
             args: {
               threadId: target.id,
               message: "Continue this task",
@@ -5627,7 +5627,7 @@ describe("AgentGateway", () => {
       const harness = yield* makeHarness;
       const response = yield* harness.callTool({
         token: "token-parent",
-        name: "synara_send_message",
+        name: "ramspace_send_message",
         args: {
           threadId: "thread-child",
           message: "status check please",
@@ -5657,7 +5657,7 @@ describe("AgentGateway", () => {
       const harness = yield* makeHarness;
       const response = yield* harness.callTool({
         token: "token-parent",
-        name: "synara_send_message",
+        name: "ramspace_send_message",
         args: {
           threadId: "thread-full-access",
           message: "run something dangerous",
@@ -5678,7 +5678,7 @@ describe("AgentGateway", () => {
       const harness = yield* makeHarness;
       const response = yield* harness.callTool({
         token: "token-parent",
-        name: "synara_interrupt_thread",
+        name: "ramspace_interrupt_thread",
         args: { threadId: "thread-full-access" },
       });
       assert.isTrue(isToolError(response.result));
@@ -5696,7 +5696,7 @@ describe("AgentGateway", () => {
       const harness = yield* makeHarness;
       const response = yield* harness.callTool({
         token: "token-parent",
-        name: "synara_create_automation",
+        name: "ramspace_create_automation",
         args: {
           name: "escalate",
           prompt: "keep running privileged work",
@@ -5722,7 +5722,7 @@ describe("AgentGateway", () => {
       const harness = yield* makeHarness;
       const response = yield* harness.callTool({
         token: "token-parent",
-        name: "synara_send_message",
+        name: "ramspace_send_message",
         args: { threadId: "thread-local", message: "edit the main checkout" },
       });
       assert.isTrue(isToolError(response.result));
@@ -5743,7 +5743,7 @@ describe("AgentGateway", () => {
       const harness = yield* makeHarness;
       const response = yield* harness.callTool({
         token: "token-parent",
-        name: "synara_create_kanban_draft",
+        name: "ramspace_create_kanban_draft",
         args: {
           title: "Keep this work isolated",
           description: "Do not write a local draft or its notes.",
@@ -5752,7 +5752,7 @@ describe("AgentGateway", () => {
       });
       assert.isTrue(isToolError(response.result));
       assert.include(toolErrorText(response.result), "worktree");
-      assert.include(toolErrorText(response.result), "synara_create_kanban_task");
+      assert.include(toolErrorText(response.result), "ramspace_create_kanban_task");
       assert.lengthOf(harness.dispatched, 0);
       assert.lengthOf(harness.worktreeCreates, 0);
     }).pipe(Effect.provide(gatewayLayer));
@@ -5783,7 +5783,7 @@ describe("AgentGateway", () => {
 
       const rejected = yield* harness.callTool({
         token: "token-parent",
-        name: "synara_create_thread",
+        name: "ramspace_create_thread",
         args: {
           requestId: "create-local-rejected",
           prompt: "touch the main checkout",
@@ -5798,7 +5798,7 @@ describe("AgentGateway", () => {
       // Omitting environment defaults to an isolated worktree, not local.
       const defaulted = yield* harness.callTool({
         token: "token-parent",
-        name: "synara_create_thread",
+        name: "ramspace_create_thread",
         args: {
           requestId: "create-isolated",
           prompt: "do isolated work",
@@ -5821,7 +5821,7 @@ describe("AgentGateway", () => {
       const harness = yield* makeHarness;
       const response = yield* harness.callTool({
         token: "token-parent",
-        name: "synara_create_thread",
+        name: "ramspace_create_thread",
         args: {
           requestId: "create-escalated",
           prompt: "escalate please",
@@ -5841,7 +5841,7 @@ describe("AgentGateway", () => {
       const harness = yield* makeHarness;
       const response = yield* harness.callTool({
         token: "token-parent",
-        name: "synara_create_automation",
+        name: "ramspace_create_automation",
         args: {
           name: "monitor children",
           prompt: "check the child threads",
@@ -5881,7 +5881,7 @@ describe("AgentGateway", () => {
       const harness = yield* makeHarness;
       const response = yield* harness.callTool({
         token: "token-parent",
-        name: "synara_create_automation",
+        name: "ramspace_create_automation",
         args: {
           name: "monitor children",
           prompt: "check the child threads",
@@ -5900,7 +5900,7 @@ describe("AgentGateway", () => {
       const harness = yield* makeHarness;
       const response = yield* harness.callTool({
         token: "token-parent",
-        name: "synara_create_automation",
+        name: "ramspace_create_automation",
         args: {
           name: "Daily review",
           prompt: "Review the project.",
@@ -5935,7 +5935,7 @@ describe("AgentGateway", () => {
       const harness = yield* makeHarness;
       const response = yield* harness.callTool({
         token: "token-parent",
-        name: "synara_create_automation",
+        name: "ramspace_create_automation",
         args: {
           name: "Release watch",
           prompt: "Track the release branch.",
@@ -5965,7 +5965,7 @@ describe("AgentGateway", () => {
       const harness = yield* makeHarness;
       const response = yield* harness.callTool({
         token: "token-parent",
-        name: "synara_create_automation",
+        name: "ramspace_create_automation",
         args: {
           name: "Release watch",
           prompt: "Track the release branch.",
@@ -5986,7 +5986,7 @@ describe("AgentGateway", () => {
       const harness = yield* makeHarness;
       const response = yield* harness.callTool({
         token: "token-parent",
-        name: "synara_create_automation",
+        name: "ramspace_create_automation",
         args: {
           name: "Cross-project review",
           prompt: "Review another project.",
@@ -6009,7 +6009,7 @@ describe("AgentGateway", () => {
         const harness = yield* makeHarness;
         const rejected = yield* harness.callTool({
           token: "token-parent",
-          name: "synara_create_automation",
+          name: "ramspace_create_automation",
           args: {
             name: "Fast monitor",
             prompt: "Check quickly.",
@@ -6021,7 +6021,7 @@ describe("AgentGateway", () => {
 
         const accepted = yield* harness.callTool({
           token: "token-parent",
-          name: "synara_create_automation",
+          name: "ramspace_create_automation",
           args: {
             name: "Fast monitor",
             prompt: "Check quickly.",
@@ -6046,17 +6046,17 @@ describe("AgentGateway", () => {
       const harness = yield* makeHarness;
       const implicit = yield* harness.callTool({
         token: "token-parent",
-        name: "synara_update_automation_memory",
+        name: "ramspace_update_automation_memory",
         args: { memory: "Iteration 1 complete." },
       });
       const legacy = yield* harness.callTool({
         token: "token-parent",
-        name: "synara_update_automation_memory",
+        name: "ramspace_update_automation_memory",
         args: { automationId: "automation-1", content: "Legacy payload." },
       });
       const missing = yield* harness.callTool({
         token: "token-parent",
-        name: "synara_update_automation_memory",
+        name: "ramspace_update_automation_memory",
         args: { automationId: "automation-1" },
       });
 
@@ -6077,7 +6077,7 @@ describe("AgentGateway", () => {
       const harness = yield* makeHarness;
       const response = yield* harness.callTool({
         token: "token-parent",
-        name: "synara_create_automation",
+        name: "ramspace_create_automation",
         args: {
           name: "Suggested monitor",
           prompt: "Watch the build.",
@@ -6123,7 +6123,7 @@ describe("AgentGateway", () => {
       const harness = yield* makeHarness;
       const response = yield* harness.callTool({
         token: "token-parent",
-        name: "synara_view_automation",
+        name: "ramspace_view_automation",
         args: { automationId: definition.id, runLimit: 1 },
       });
 
@@ -6146,7 +6146,7 @@ describe("AgentGateway", () => {
       const harness = yield* makeHarness;
       const response = yield* harness.callTool({
         token: "token-parent",
-        name: "synara_cancel_automation",
+        name: "ramspace_cancel_automation",
         args: { automationId: "automation-1" },
       });
       assert.isFalse(isToolError(response.result), toolErrorText(response.result));
@@ -6181,7 +6181,7 @@ describe("AgentGateway", () => {
       const harness = yield* makeHarness;
       const response = yield* harness.callTool({
         token: "token-parent",
-        name: "synara_cancel_automation",
+        name: "ramspace_cancel_automation",
         args: { automationId: "automation-standalone" },
       });
       assert.isFalse(isToolError(response.result), toolErrorText(response.result));
@@ -6217,7 +6217,7 @@ describe("AgentGateway", () => {
       const harness = yield* makeHarness;
       const response = yield* harness.callTool({
         token: "token-parent",
-        name: "synara_cancel_automation",
+        name: "ramspace_cancel_automation",
         args: { automationId: "automation-standalone" },
       });
       assert.isTrue(isToolError(response.result));
@@ -6231,7 +6231,7 @@ describe("AgentGateway", () => {
       const harness = yield* makeHarness;
       const response = yield* harness.callTool({
         token: "token-parent",
-        name: "synara_create_automation",
+        name: "ramspace_create_automation",
         args: {
           name: "Watch PR 142 CI",
           prompt: "Watch PR 142 and report when CI finishes.",
@@ -6275,7 +6275,7 @@ describe("AgentGateway", () => {
       const harness = yield* makeHarness;
       const response = yield* harness.callTool({
         token: "token-parent",
-        name: "synara_cancel_automation",
+        name: "ramspace_cancel_automation",
         args: { automationId: "automation-elevated" },
       });
       assert.isTrue(isToolError(response.result));
@@ -6293,7 +6293,7 @@ describe("AgentGateway", () => {
       const harness = yield* makeHarness;
       const response = yield* harness.callTool({
         token: "token-parent",
-        name: "synara_update_automation",
+        name: "ramspace_update_automation",
         args: {
           automationId: "automation-1",
           name: "Only a name",
@@ -6313,7 +6313,7 @@ describe("AgentGateway", () => {
       const harness = yield* makeHarness;
       const response = yield* harness.callTool({
         token: "token-parent",
-        name: "synara_update_automation",
+        name: "ramspace_update_automation",
         args: {
           automationId: "automation-1",
           name: "Updated monitor",
@@ -6364,7 +6364,7 @@ describe("AgentGateway", () => {
       for (const [index, target] of targets.entries()) {
         const response = yield* harness.callTool({
           token: "token-parent",
-          name: "synara_create_automation",
+          name: "ramspace_create_automation",
           args: {
             name: `Exact target ${index}`,
             prompt: "Run the scheduled work on this exact target.",
@@ -6412,7 +6412,7 @@ describe("AgentGateway", () => {
 
       const targetedStandalone = yield* harness.callTool({
         token: "token-parent",
-        name: "synara_update_automation",
+        name: "ramspace_update_automation",
         args: { ...makeFullAutomationUpdate(standalone), target },
       });
       assert.isFalse(
@@ -6423,7 +6423,7 @@ describe("AgentGateway", () => {
 
       const targetedDedicated = yield* harness.callTool({
         token: "token-parent",
-        name: "synara_update_automation",
+        name: "ramspace_update_automation",
         args: {
           ...makeFullAutomationUpdate(dedicated),
           target: { ...target, options: { reasoningEffort: "low" } },
@@ -6441,7 +6441,7 @@ describe("AgentGateway", () => {
 
       const preserved = yield* harness.callTool({
         token: "token-parent",
-        name: "synara_update_automation",
+        name: "ramspace_update_automation",
         args: makeFullAutomationUpdate(standalone),
       });
       assert.isFalse(isToolError(preserved.result), toolErrorText(preserved.result));
@@ -6474,7 +6474,7 @@ describe("AgentGateway", () => {
       const create = (target: Record<string, unknown>) =>
         harness.callTool({
           token: "token-parent",
-          name: "synara_create_automation",
+          name: "ramspace_create_automation",
           args: {
             name: "Rejected target",
             prompt: "This must not be created.",
@@ -6520,7 +6520,7 @@ describe("AgentGateway", () => {
 
       const updated = yield* harness.callTool({
         token: "token-parent",
-        name: "synara_update_automation",
+        name: "ramspace_update_automation",
         args: {
           automationId: standalone.id,
           name: standalone.name,
@@ -6553,7 +6553,7 @@ describe("AgentGateway", () => {
       const harness = yield* makeHarness;
       const created = yield* harness.callTool({
         token: "token-parent",
-        name: "synara_create_automation",
+        name: "ramspace_create_automation",
         args: {
           name: "Switch session",
           prompt: "This heartbeat cannot switch its session.",
@@ -6566,7 +6566,7 @@ describe("AgentGateway", () => {
 
       const updated = yield* harness.callTool({
         token: "token-parent",
-        name: "synara_update_automation",
+        name: "ramspace_update_automation",
         args: {
           automationId: definition.id,
           name: definition.name,
@@ -6592,7 +6592,7 @@ describe("AgentGateway", () => {
       const harness = yield* makeHarness;
       const disabled = yield* harness.callTool({
         token: "token-parent",
-        name: "synara_create_automation",
+        name: "ramspace_create_automation",
         args: {
           name: "Staged review",
           prompt: "Review this before enabling it.",
@@ -6613,7 +6613,7 @@ describe("AgentGateway", () => {
 
       const conflicting = yield* harness.callTool({
         token: "token-parent",
-        name: "synara_create_automation",
+        name: "ramspace_create_automation",
         args: { name: "Conflicting", prompt: "x", suggested: true, enabled: true },
       });
       assert.isTrue(isToolError(conflicting.result));
@@ -6635,7 +6635,7 @@ describe("AgentGateway", () => {
       const harness = yield* makeHarness;
       const response = yield* harness.callTool({
         token: "token-parent",
-        name: "synara_list_automations",
+        name: "ramspace_list_automations",
         args: {},
       });
       assert.isFalse(isToolError(response.result), toolErrorText(response.result));
@@ -6652,22 +6652,22 @@ describe("AgentGateway", () => {
       const harness = yield* makeHarness;
       yield* harness.callTool({
         token: "token-parent",
-        name: "synara_set_thread_title",
+        name: "ramspace_set_thread_title",
         args: { threadId: "thread-child", title: "Renamed worker" },
       });
       yield* harness.callTool({
         token: "token-parent",
-        name: "synara_set_thread_archived",
+        name: "ramspace_set_thread_archived",
         args: { threadId: "thread-child", archived: true },
       });
       const setOwnGoal = yield* harness.callTool({
         token: "token-parent",
-        name: "synara_set_thread_goal",
+        name: "ramspace_set_thread_goal",
         args: { goal: "Ship the complete gateway feature" },
       });
       const clearChildGoal = yield* harness.callTool({
         token: "token-parent",
-        name: "synara_set_thread_goal",
+        name: "ramspace_set_thread_goal",
         args: { threadId: "thread-child", goal: null },
       });
 
@@ -6694,9 +6694,9 @@ describe("AgentGateway", () => {
       const harness = yield* makeHarness;
       const response = yield* harness.callTool({
         token: "token-parent",
-        name: "synara_set_thread_pull_request",
+        name: "ramspace_set_thread_pull_request",
         args: {
-          reference: "https://github.com/Emanuele-web04/synara/pull/841",
+          reference: "https://github.com/aaramsyy/ramspace/pull/841",
         },
       });
 
@@ -6727,7 +6727,7 @@ describe("AgentGateway", () => {
       const harness = yield* makeHarness;
       const response = yield* harness.callTool({
         token: "token-parent",
-        name: "synara_set_thread_goal",
+        name: "ramspace_set_thread_goal",
         args: { goal: "x".repeat(THREAD_GOAL_MAX_CHARS + 1) },
       });
 
@@ -6746,7 +6746,7 @@ describe("AgentGateway", () => {
       const harness = yield* makeHarness;
       const response = yield* harness.callTool({
         token: "token-parent",
-        name: "synara_set_thread_goal",
+        name: "ramspace_set_thread_goal",
         args: { threadId: "thread-child", achieved: true },
       });
 
@@ -6772,7 +6772,7 @@ describe("AgentGateway", () => {
       const harness = yield* makeHarness;
       const response = yield* harness.callTool({
         token: "token-parent",
-        name: "synara_set_thread_goal",
+        name: "ramspace_set_thread_goal",
         args: { achieved: true },
       });
 
@@ -6791,7 +6791,7 @@ describe("AgentGateway", () => {
       const harness = yield* makeHarness;
       const response = yield* harness.callTool({
         token: "token-parent",
-        name: "synara_set_thread_goal",
+        name: "ramspace_set_thread_goal",
         args: { threadId: "thread-child", blocked: true },
       });
 
@@ -6810,7 +6810,7 @@ describe("AgentGateway", () => {
     }).pipe(Effect.provide(gatewayLayer));
   });
 
-  it.effect("includes the persistent goal in synara_read_thread", () => {
+  it.effect("includes the persistent goal in ramspace_read_thread", () => {
     const goal = "Keep working until every gateway check passes";
     const { gatewayLayer, makeHarness } = makeHarnessLayer([
       ...baseThreads.filter((thread) => thread.id !== "thread-child"),
@@ -6820,7 +6820,7 @@ describe("AgentGateway", () => {
       const harness = yield* makeHarness;
       const response = yield* harness.callTool({
         token: "token-parent",
-        name: "synara_read_thread",
+        name: "ramspace_read_thread",
         args: { threadId: "thread-child" },
       });
 
@@ -6858,7 +6858,7 @@ describe("AgentGateway", () => {
       const harness = yield* makeHarness;
       const summaryResponse = yield* harness.callTool({
         token: "token-parent",
-        name: "synara_read_thread",
+        name: "ramspace_read_thread",
         args: { threadId: shell.id },
       });
       assert.isFalse(isToolError(summaryResponse.result), toolErrorText(summaryResponse.result));
@@ -6874,7 +6874,7 @@ describe("AgentGateway", () => {
       while (true) {
         const response = yield* harness.callTool({
           token: "token-parent",
-          name: "synara_read_thread",
+          name: "ramspace_read_thread",
           args: {
             threadId: shell.id,
             messageIndex: 0,
@@ -6914,7 +6914,7 @@ describe("AgentGateway", () => {
       });
       const stale = yield* harness.callTool({
         token: "token-parent",
-        name: "synara_read_thread",
+        name: "ramspace_read_thread",
         args: {
           threadId: shell.id,
           messageIndex: 0,
@@ -6938,7 +6938,7 @@ describe("AgentGateway", () => {
 
       const rename = yield* harness.callTool({
         token: "token-parent",
-        name: "synara_set_thread_title",
+        name: "ramspace_set_thread_title",
         args: { threadId: "thread-elevated", title: "Hidden work" },
       });
       assert.isTrue(isToolError(rename.result));
@@ -6946,7 +6946,7 @@ describe("AgentGateway", () => {
 
       const archive = yield* harness.callTool({
         token: "token-parent",
-        name: "synara_set_thread_archived",
+        name: "ramspace_set_thread_archived",
         args: { threadId: "thread-elevated", archived: true },
       });
       assert.isTrue(isToolError(archive.result));
@@ -6954,7 +6954,7 @@ describe("AgentGateway", () => {
 
       const setGoal = yield* harness.callTool({
         token: "token-parent",
-        name: "synara_set_thread_goal",
+        name: "ramspace_set_thread_goal",
         args: { threadId: "thread-elevated", goal: "Escalated goal" },
       });
       assert.isTrue(isToolError(setGoal.result));

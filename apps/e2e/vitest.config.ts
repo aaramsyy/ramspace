@@ -6,7 +6,7 @@ export default mergeConfig(
   baseConfig,
   defineConfig({
     test: {
-      env: { SYNARA_REMOTE_CONNECTIONS: "1", SYNARA_DESKTOP_BUNDLE_ID: "" },
+      env: { RAMSPACE_REMOTE_CONNECTIONS: "1", RAMSPACE_DESKTOP_BUNDLE_ID: "" },
       hookTimeout: 90_000,
       testTimeout: 90_000,
     },

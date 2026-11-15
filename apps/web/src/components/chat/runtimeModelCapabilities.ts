@@ -9,14 +9,14 @@ import type {
   ProviderKind,
   ProviderModelDescriptor,
   ProviderOptionDescriptor,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import {
   getClaudeContextWindowSuffix,
   getDefaultEffort,
   getModelCapabilities,
   normalizeModelSlug,
   trimOrNull,
-} from "@synara/shared/model";
+} from "@ramspace/shared/model";
 import { normalizeCursorModelVariantBaseId } from "../../cursorModelVariants";
 import { normalizeClaudeModelOptionSlug } from "../../providerModelOptions";
 

@@ -3,7 +3,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 
-import type { OrchestrationThread, OrchestrationThreadActivity } from "@synara/contracts";
+import type { OrchestrationThread, OrchestrationThreadActivity } from "@ramspace/contracts";
 import {
   ApprovalRequestId,
   CommandId,
@@ -13,7 +13,7 @@ import {
   ProjectId,
   ThreadId,
   TurnId,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { Effect, Layer, ManagedRuntime, Option } from "effect";
 import { afterEach, describe, expect, it } from "vitest";
 import * as NodeServices from "@effect/platform-node/NodeServices";
@@ -73,7 +73,7 @@ describe("boot-time pending interaction reconciliation", () => {
   });
 
   async function createHarness() {
-    const workspaceRoot = fs.mkdtempSync(path.join(os.tmpdir(), "synara-startup-pending-"));
+    const workspaceRoot = fs.mkdtempSync(path.join(os.tmpdir(), "ramspace-startup-pending-"));
     tempDirs.push(workspaceRoot);
     fs.mkdirSync(path.join(workspaceRoot, ".git"));
 

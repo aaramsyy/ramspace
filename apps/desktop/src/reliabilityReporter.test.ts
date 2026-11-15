@@ -3,7 +3,7 @@ import { existsSync, mkdtempSync, readFileSync, renameSync, rmSync, writeFileSyn
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { afterEach, expect, it, vi } from "vitest";
-import type { ReliabilityRecord } from "@synara/contracts";
+import type { ReliabilityRecord } from "@ramspace/contracts";
 
 import { ReliabilityReporter } from "./reliabilityReporter";
 
@@ -11,7 +11,7 @@ const roots: string[] = [];
 const reporters: ReliabilityReporter[] = [];
 
 function makeHome() {
-  const homeDir = mkdtempSync(join(tmpdir(), "synara-reliability-"));
+  const homeDir = mkdtempSync(join(tmpdir(), "ramspace-reliability-"));
   roots.push(homeDir);
   return {
     homeDir,

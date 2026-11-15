@@ -12,7 +12,7 @@ import type {
   RemotePairingDevice,
   RemotePairingStatus,
   RemoteTrustedDevice,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 
 import { formatRelativeTime } from "~/lib/relativeTime";
 import { trackProductAnalytics } from "~/lib/productAnalytics";

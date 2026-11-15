@@ -1,5 +1,5 @@
 {
-  "name": "@synara/profiles",
+  "name": "@ramspace/profiles",
   "version": "0.0.0",
   "private": true,
   "scripts": {
@@ -12,8 +12,8 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@synara/profile-ui": "workspace:*",
-    "@synara/shared": "workspace:*",
+    "@ramspace/profile-ui": "workspace:*",
+    "@ramspace/shared": "workspace:*",
     "next": "^16.1.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0"

@@ -1,6 +1,6 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "synara-profiles-trial",
+  "name": "ramspace-profiles-trial",
   "account_id": "56e5b3e566be2fc8ade9b7d0eadf5e35",
   "main": ".open-next/worker.js",
   "compatibility_date": "2026-08-01",
@@ -11,10 +11,10 @@
     "binding": "ASSETS",
     "directory": ".open-next/assets",
   },
-  "services": [{ "binding": "WORKER_SELF_REFERENCE", "service": "synara-profiles-trial" }],
+  "services": [{ "binding": "WORKER_SELF_REFERENCE", "service": "ramspace-profiles-trial" }],
   "vars": {
-    "PROFILES_PUBLIC_ORIGIN": "https://trysynara.com",
-    "PROFILES_ASSET_PREFIX": "https://www.trysynara.com/profiles-assets",
+    "PROFILES_PUBLIC_ORIGIN": "https://tryramspace.com",
+    "PROFILES_ASSET_PREFIX": "https://www.tryramspace.com/profiles-assets",
     // Replace with the verified account service, or pass --var at deploy.
     // Never silently read Dylan's account service in a new deployment.
     "ACCOUNT_API_URL": "https://account-api.invalid",

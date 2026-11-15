@@ -5,8 +5,8 @@ import {
   type ListSavedInboxRecapsInput,
   type ListSavedInboxRecapsResponse,
   type SavedInboxRecapIdInput,
-} from "@synara/contracts";
-import { ACCOUNT_INBOX_BETA_FEATURE } from "@synara/shared/betaFeatures";
+} from "@ramspace/contracts";
+import { ACCOUNT_INBOX_BETA_FEATURE } from "@ramspace/shared/betaFeatures";
 import { isServerBetaFeatureEnabled } from "./betaFeatureGate";
 import {
   remoteConnectionsUnavailableReason,
@@ -20,7 +20,7 @@ import {
  * credential file and every WorkOS round trip, and this module is the whole of
  * that. It is a thin adapter over `accountAuth` (the credential file, token
  * refresh, workspace scoping) and `AccountClient` (the HTTP surface) — the
- * `synara auth` CLI flow and the in-app flow share both, and the only thing
+ * `ramspace auth` CLI flow and the in-app flow share both, and the only thing
  * this adds is the parts a GUI needs and a terminal does not: a status that
  * reports "signed out" instead of throwing, a device poll the server runs on
  * the client's behalf, and the in-app email OTP grant.
@@ -62,13 +62,13 @@ import type {
   ConfirmSyncKeyPairingRequest,
   SyncKeyPairingCode,
   SyncKeyPairingRequest,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import {
   AccountApiError,
   DEFAULT_ACCOUNT_URL,
   resolveAccountUrl,
   type AccountClient,
-} from "@synara/shared/account";
+} from "@ramspace/shared/account";
 
 import {
   accountApiIssuer,
@@ -202,7 +202,7 @@ function isTransientSignInFailure(error: unknown): boolean {
 }
 
 export interface AccountSessionOptions {
-  /** Where the credential file lives — the server's Synara home. */
+  /** Where the credential file lives — the server's Ramspace home. */
   readonly baseDir: string;
   /**
    * The account service to talk to. Defaults to the configured one, falling
@@ -318,7 +318,7 @@ export interface HostsAccountSession {
     readonly userId: string;
     readonly accountUrl: string;
     readonly key: CryptoKey;
-    readonly publicJwk: import("@synara/contracts").Es256PublicKeyJwk;
+    readonly publicJwk: import("@ramspace/contracts").Es256PublicKeyJwk;
     readonly jkt: string;
   }>;
   recoverDeviceRegistration(input: {

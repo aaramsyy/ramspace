@@ -12,4 +12,4 @@ export interface UsageLimitRecoveryReactorShape {
 export class UsageLimitRecoveryReactor extends ServiceMap.Service<
   UsageLimitRecoveryReactor,
   UsageLimitRecoveryReactorShape
->()("synara/orchestration/Services/UsageLimitRecoveryReactor") {}
+>()("ramspace/orchestration/Services/UsageLimitRecoveryReactor") {}

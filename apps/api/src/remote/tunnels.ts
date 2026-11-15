@@ -42,7 +42,7 @@ export function createTunnelCoordinator(
           .set({ desired: false, ready: false, updatedAt: new Date() })
           .where(eq(remoteTunnels.id, existing.id));
       const id = randomUUID();
-      const label = `synara-${id.replaceAll("-", "")}`;
+      const label = `ramspace-${id.replaceAll("-", "")}`;
       const [created] = await tx
         .insert(remoteTunnels)
         .values({

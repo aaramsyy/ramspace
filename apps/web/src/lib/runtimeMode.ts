@@ -4,11 +4,11 @@ import type {
   ProviderModelDescriptor,
   RuntimeMode,
   ServerProviderStatus,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import {
   normalizeRuntimeModeForProvider,
   providerSupportsAutoRuntimeMode,
-} from "@synara/shared/runtimeMode";
+} from "@ramspace/shared/runtimeMode";
 
 export { normalizeRuntimeModeForProvider, providerSupportsAutoRuntimeMode };
 

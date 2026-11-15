@@ -3,7 +3,7 @@
 //          polls 10-60 s apart reuse one TLS connection instead of opening one each.
 // Layer: Server account transport
 
-import { createAccountClient, type AccountClient } from "@synara/shared/account";
+import { createAccountClient, type AccountClient } from "@ramspace/shared/account";
 import * as undiciModule from "undici";
 
 /**

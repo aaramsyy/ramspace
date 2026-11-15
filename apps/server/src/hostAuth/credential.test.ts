@@ -8,10 +8,10 @@ import {
   GRANT_JWT_TYP,
   HOST_CONNECT_SCOPE,
   MINT_REQUEST_JWT_TYP,
-  SYNARA_DEVICE_ISSUER,
-  SYNARA_RELAY_AUDIENCE,
+  RAMSPACE_DEVICE_ISSUER,
+  RAMSPACE_RELAY_AUDIENCE,
   type ApiJwks,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import {
   calculateJwkThumbprint,
   exportJWK,
@@ -33,7 +33,7 @@ const ENVIRONMENT_ID = "env-test";
 const HOST_ID = "2f1f9dd7-56a5-45cf-b847-12e6658f3720";
 const USER_ID = "user_1";
 const KEY_GENERATION = 4;
-const HTU = "synara://remote/session";
+const HTU = "ramspace://remote/session";
 const HTM = "CONNECT";
 /**
  * Pinned to the literal, not JWT_CLOCK_TOLERANCE_SECONDS: the freshness
@@ -61,7 +61,7 @@ describe("verifySessionCredential", () => {
 
   beforeEach(async () => {
     hostIdentity = await generateAndPersistHostIdentity(
-      path.join(await mkdtemp(path.join(tmpdir(), "synara-credential-")), "host.json"),
+      path.join(await mkdtemp(path.join(tmpdir(), "ramspace-credential-")), "host.json"),
     );
     api = await keyPair();
     device = await keyPair();
@@ -92,7 +92,7 @@ describe("verifySessionCredential", () => {
       .setProtectedHeader({ alg: "EdDSA", typ: GRANT_JWT_TYP, kid: "api-1" })
       .setIssuer(API_ISSUER)
       .setSubject(USER_ID)
-      .setAudience(SYNARA_RELAY_AUDIENCE)
+      .setAudience(RAMSPACE_RELAY_AUDIENCE)
       .setIssuedAt(NOW)
       .setExpirationTime(NOW + 60)
       .setJti(randomUUID())
@@ -102,9 +102,9 @@ describe("verifySessionCredential", () => {
   async function mintRequest(grantJwt: string): Promise<string> {
     return new SignJWT({ publicKeyJwk: device.publicJwk, grant: grantJwt })
       .setProtectedHeader({ alg: "EdDSA", typ: MINT_REQUEST_JWT_TYP })
-      .setIssuer(SYNARA_DEVICE_ISSUER)
+      .setIssuer(RAMSPACE_DEVICE_ISSUER)
       .setSubject(USER_ID)
-      .setAudience(`synara-host:${ENVIRONMENT_ID}`)
+      .setAudience(`ramspace-host:${ENVIRONMENT_ID}`)
       .setIssuedAt(NOW)
       .setExpirationTime(NOW + 120)
       .setJti(randomUUID())
@@ -217,7 +217,7 @@ describe("verifySessionCredential", () => {
   });
 
   it.each([
-    ["htu naming another endpoint", { htu: "synara://other" }],
+    ["htu naming another endpoint", { htu: "ramspace://other" }],
     ["htm naming another method", { htm: "GET" }],
   ])("refuses a proof harvested from another operation: %s", async (_label, overrides) => {
     // htu/htm bind a proof to one endpoint and method; without them a proof

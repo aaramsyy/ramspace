@@ -1,5 +1,9 @@
 import { EventEmitter, once } from "node:events";
-import { EnvironmentId, WsCompatibilityError, type RemoteExecutionScope } from "@synara/contracts";
+import {
+  EnvironmentId,
+  WsCompatibilityError,
+  type RemoteExecutionScope,
+} from "@ramspace/contracts";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import WebSocket, { WebSocketServer } from "ws";
 import { controllerProtocol, type DialedSession } from "./dialer";

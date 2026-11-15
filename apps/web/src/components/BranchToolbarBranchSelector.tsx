@@ -3,7 +3,12 @@
 // Depends on: git React Query helpers, native API mutations, and toolbar selection rules.
 // Note: the "Create branch" footer row uses raw <button> because it is a
 // menu-item-style affordance inside a ComboboxPopup, not a generic action.
-import type { GitBranch, GitStashInfoResult, GitStatusResult, NativeApi } from "@synara/contracts";
+import type {
+  GitBranch,
+  GitStashInfoResult,
+  GitStatusResult,
+  NativeApi,
+} from "@ramspace/contracts";
 import { pluralize } from "~/i18n/pluralize";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useVirtualizer } from "@tanstack/react-virtual";
@@ -281,7 +286,7 @@ function handleCheckoutError(
                 addBranchRecoveryToast({
                   type: "warning",
                   title: t("common:changesSavedButNotReapplied"),
-                  description: t("common:synaraSwitchedBranchesAndKeptYourChangesInA"),
+                  description: t("common:ramspaceSwitchedBranchesAndKeptYourChangesInA"),
                   data: { copyText: toBranchActionErrorMessage(stashError) },
                   actionProps: {
                     children: "Discard stash",

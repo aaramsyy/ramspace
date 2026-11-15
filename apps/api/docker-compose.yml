@@ -2,17 +2,17 @@ services:
   postgres:
     image: postgres:18
     environment:
-      POSTGRES_USER: synara
-      POSTGRES_PASSWORD: synara
-      POSTGRES_DB: synara_accounts
+      POSTGRES_USER: ramspace
+      POSTGRES_PASSWORD: ramspace
+      POSTGRES_DB: ramspace_accounts
     ports:
       - "5432:5432"
     volumes:
-      - synara-api-pg:/var/lib/postgresql
+      - ramspace-api-pg:/var/lib/postgresql
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U synara -d synara_accounts"]
+      test: ["CMD-SHELL", "pg_isready -U ramspace -d ramspace_accounts"]
       interval: 5s
       timeout: 3s
       retries: 10
 volumes:
-  synara-api-pg:
+  ramspace-api-pg:

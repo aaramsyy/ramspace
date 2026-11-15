@@ -5,7 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { expect, it, vi } from "vitest";
 import { render } from "vitest-browser-react";
 import { page } from "vitest/browser";
-import type { McpConnectorProposal } from "@synara/contracts";
+import type { McpConnectorProposal } from "@ramspace/contracts";
 import { McpConnectorsSettingsPanel } from "./McpConnectorsSettingsPanel";
 
 const api = vi.hoisted(() => ({

@@ -12,8 +12,8 @@ on:
       - scripts/lib/build-timing.ts
       - .github/actions/provision-cua/action.yml
       - .github/workflows/cua-release-cache.yml
-      - assets/prod/Synara.icon/**
-      - assets/beta/Synara.icon/**
+      - assets/prod/Ramspace.icon/**
+      - assets/beta/Ramspace.icon/**
       - scripts/lib/brand-assets.ts
       - scripts/lib/mac-icon-catalog.ts
       - scripts/mac-icon-catalog.ts

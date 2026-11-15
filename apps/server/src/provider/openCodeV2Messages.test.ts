@@ -82,7 +82,7 @@ describe("OpenCode V2 background lifecycle", () => {
       }),
     ).toEqual([
       expect.objectContaining({
-        type: "synara.opencode.execution",
+        type: "ramspace.opencode.execution",
         properties: { sessionID: "ses_child", outcome },
       }),
     ]);

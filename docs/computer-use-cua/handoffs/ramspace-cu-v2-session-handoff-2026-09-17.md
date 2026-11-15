@@ -1,9 +1,9 @@
-# Synara CU v2 — session handoff, 2026-09-17 afternoon
+# Ramspace CU v2 — session handoff, 2026-09-17 afternoon
 
 > Created 2026-09-17 by the session that followed
-> `/tmp/synara-cu-v2-mega-handoff-2026-09-16.md` (master research doc, still
+> `/tmp/ramspace-cu-v2-mega-handoff-2026-09-16.md` (master research doc, still
 > current — this file only covers what happened AFTER it) and
-> `/tmp/synara-cu-v2-exploration-2026-09-17.md`.
+> `/tmp/ramspace-cu-v2-exploration-2026-09-17.md`.
 > Audience: the next agent Kartik hands this to.
 > Standing orders from Kartik (still active): **no commits, no pushes.
 > No approval-gated app launches without asking.** Everything below is
@@ -14,7 +14,7 @@
 
 ## State in one screen
 
-- Clone `/Users/user/synara-computer-use`, branch
+- Clone `/Users/user/ramspace-computer-use`, branch
   `agent/computer-use-preview`, HEAD `e2a1deb06`, ahead of origin by the 3
   local rebase commits (PR #1227 still shows `bb7eb421c` on GitHub).
 - Pipeline `cu-specs` (spec program): CLOSED, root ledger ALL MET.
@@ -29,7 +29,7 @@
 
 1. Verified the session handoff from the earlier agent against the repo:
    accurate. Lane fix, spec docs, evidence files all real.
-2. Rebuilt `~/Applications/Synara Cua Fixture.app` from the current tree so
+2. Rebuilt `~/Applications/Ramspace Cua Fixture.app` from the current tree so
    the fixture bundle contains the uncommitted lane fix (the old bundle did
    not). The rebuild changed the cdhash; the old TCC grant no longer matches.
 3. Ran the G5 fixture proof twice with the new bundle. Result: the three
@@ -43,8 +43,8 @@
      belief stage per run (AppKit-defined events, CPS process notifications,
      SkyLight focus record). Dry-run verified; all six stages post cleanly.
    - `scripts/computer-use-fixtures/canary-main.ts` + `belief-canary.mjs` +
-     `build-canary.mjs` — the canary app bundle (`com.synara.cua-canary`,
-     staged at `~/Applications/Synara Cua Canary.app`).
+     `build-canary.mjs` — the canary app bundle (`com.ramspace.cua-canary`,
+     staged at `~/Applications/Ramspace Cua Canary.app`).
    - First canary run was INVALID: every phase refused with
      `same_pid_keyboard_ambiguity` (no resolved AX element, so the semantic
      route never ran). The app was fixed to resolve the exact element, click
@@ -71,15 +71,15 @@
 ## Your job (pick-up list)
 
 1. **Grant the canary app** (once): System Settings → Privacy & Security →
-   Accessibility → + → `~/Applications/Synara Cua Canary.app`; same for
+   Accessibility → + → `~/Applications/Ramspace Cua Canary.app`; same for
    Screen Recording. Then run:
    ```sh
-   cd /Users/user/synara-computer-use
+   cd /Users/user/ramspace-computer-use
    node scripts/computer-use-fixtures/build-canary.mjs      # canary build ok
    node scripts/computer-use-fixtures/belief-canary.mjs --check
-   rm -rf /private/tmp/synara-cua-implementation/canary-run-1
-   open -g -n -W -a "$HOME/Applications/Synara Cua Canary.app" \
-     --env SYNARA_CUA_CANARY_DIR=/private/tmp/synara-cua-implementation/canary-run-1
+   rm -rf /private/tmp/ramspace-cua-implementation/canary-run-1
+   open -g -n -W -a "$HOME/Applications/Ramspace Cua Canary.app" \
+     --env RAMSPACE_CUA_CANARY_DIR=/private/tmp/ramspace-cua-implementation/canary-run-1
    ```
    Read the report: `report.json` → `summary` is the first phase whose exact
    text landed, or `none-passed`. The six stages are catalogued in
@@ -115,12 +115,12 @@
 6. The queue's nested-scope key check forbids same-pid lane keys at Manager
    level; the lane lives in the backend for that reason. Do not "simplify".
 7. Gate approvals live in `~/.unlazy/approved`; every `gate-check` needs
-   `--cwd /Users/user/synara-computer-use`.
+   `--cwd /Users/user/ramspace-computer-use`.
 8. `scripts/computer-use-fixtures` is excluded from the turbo typecheck
    projects (TS6307 otherwise); typecheck it with an isolated tsc config.
 9. The canary must pass a resolved `{ target, node, point }` to typeText, or
    the driver refuses with `same_pid_keyboard_ambiguity`.
-10. Subagent threads on Synara work run on `opencode-go/deepseek-v4.1-flash#max`.
+10. Subagent threads on Ramspace work run on `opencode-go/deepseek-v4.1-flash#max`.
 
 ## Open decisions for Kartik
 
@@ -131,8 +131,8 @@
 
 ## Artifact index (paths, not copies)
 
-- Research master: `/tmp/synara-cu-v2-mega-handoff-2026-09-16.md`
-- Exploration record: `/tmp/synara-cu-v2-exploration-2026-09-17.md`
+- Research master: `/tmp/ramspace-cu-v2-mega-handoff-2026-09-16.md`
+- Exploration record: `/tmp/ramspace-cu-v2-exploration-2026-09-17.md`
 - Specs (8, all in `docs/computer-use-cua/`): `v2-parity-matrix.md`,
   `option-c-sidecar-spec.md`, `three-window-semantic-fix-spec.md`,
   `workstream-b-scroll-spec.md`, `workstream-c-speed-spec.md`,
@@ -143,7 +143,7 @@
   written — awaits the live run)
 - Evidence: `docs/computer-use-cua/evidence/rev15-electron-2026-09-17-*`
   (report.json, console.txt, notes.md, 5 PNGs); canary runs live under
-  `/private/tmp/synara-cua-implementation/canary-run-*`
+  `/private/tmp/ramspace-cua-implementation/canary-run-*`
 - Fix: `apps/server/src/computer/CuaComputerBackend.ts` (lane) +
   `CuaComputerBackend.test.ts`
 - Canary components: `scripts/computer-use-fixtures/{belief_probe.m,
@@ -151,9 +151,9 @@ build-canary.mjs, canary-main.ts, belief-canary.mjs, space_ctl.m,
 build-space-ctl.sh}`
 - Ledgers: `.unlazy/cu-specs/`, `.unlazy/cu-fix3w/`, `.unlazy/cu-belief/`
 - Approvals: `~/.unlazy/approved/` (do not touch)
-- Apps: `~/Applications/Synara Cua Fixture.app` (rebuilt, ungranted, lane
-  fix inside), `Synara Cua Fixture.app.bak-2026-09-17` (old granted build),
-  `Synara Cua Canary.app` (fixed build, awaiting grant)
+- Apps: `~/Applications/Ramspace Cua Fixture.app` (rebuilt, ungranted, lane
+  fix inside), `Ramspace Cua Fixture.app.bak-2026-09-17` (old granted build),
+  `Ramspace Cua Canary.app` (fixed build, awaiting grant)
 
 ---
 

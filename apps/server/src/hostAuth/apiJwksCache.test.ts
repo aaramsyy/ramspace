@@ -1,4 +1,4 @@
-import type { ApiJwks } from "@synara/contracts";
+import type { ApiJwks } from "@ramspace/contracts";
 import { describe, expect, it } from "vitest";
 
 import { ApiJwksCache } from "./apiJwksCache";

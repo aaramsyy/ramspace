@@ -3,7 +3,7 @@
 //          sponsor roll used by /sponsor and its structured data.
 // Layer: static content (server/client importable).
 // Note: `amount` and `perks` mirror the live tiers on
-//       https://github.com/sponsors/Emanuele-web04. GitHub is the source of
+//       https://github.com/sponsors/aaramsyy. GitHub is the source of
 //       truth — if a tier changes there, change it here too. `label` is
 //       presentation only; GitHub itself only shows the price.
 
@@ -27,7 +27,7 @@ export const SPONSOR_TIERS: readonly SponsorTier[] = [
     amount: 5,
     label: "Supporter",
     plural: "Supporters",
-    tagline: "Support my open-source work and help keep Synara Desktop free.",
+    tagline: "Support my open-source work and help keep Ramspace Desktop free.",
     perks: ["Backs ongoing development of the free desktop app"],
   },
   {
@@ -35,7 +35,7 @@ export const SPONSOR_TIERS: readonly SponsorTier[] = [
     amount: 15,
     label: "Backer",
     plural: "Backers",
-    tagline: "Support Synara's development and get your name on the sponsors page.",
+    tagline: "Support Ramspace's development and get your name on the sponsors page.",
     perks: ["Everything in Supporter", "Your name listed on this sponsors page"],
   },
   {
@@ -43,10 +43,10 @@ export const SPONSOR_TIERS: readonly SponsorTier[] = [
     amount: 49,
     label: "Project sponsor",
     plural: "Project sponsors",
-    tagline: "Support Synara as a project sponsor.",
+    tagline: "Support Ramspace as a project sponsor.",
     perks: [
       "Everything in Backer",
-      "Your name listed on the Synara sponsors page",
+      "Your name listed on the Ramspace sponsors page",
       "Thank you post on X",
     ],
   },
@@ -55,10 +55,10 @@ export const SPONSOR_TIERS: readonly SponsorTier[] = [
     amount: 149,
     label: "Featured sponsor",
     plural: "Featured sponsors",
-    tagline: "Support Synara at a higher level and get more visible recognition.",
+    tagline: "Support Ramspace at a higher level and get more visible recognition.",
     perks: [
       "Everything in Project sponsor",
-      "Featured logo placement on the sponsors page, the Synara home page, and my portfolio",
+      "Featured logo placement on the sponsors page, the Ramspace home page, and my portfolio",
       "Thank you post on X",
     ],
   },
@@ -67,9 +67,9 @@ export const SPONSOR_TIERS: readonly SponsorTier[] = [
     amount: 499,
     label: "Partner",
     plural: "Partners",
-    tagline: "Premium sponsorship for companies that want to support Synara visibly.",
+    tagline: "Premium sponsorship for companies that want to support Ramspace visibly.",
     perks: [
-      "Logo + link in the main sponsor banner on the Synara sponsor page and home page, plus my portfolio",
+      "Logo + link in the main sponsor banner on the Ramspace sponsor page and home page, plus my portfolio",
       "Featured placement above other sponsors",
       "Thank you post on X, plus one dedicated ad post on X after each monthly renewal",
     ],
@@ -92,7 +92,7 @@ export const ONE_TIME_SPONSORSHIP = {
 export const SPONSOR_FUNDING_USES = [
   {
     title: "Development time",
-    body: "The hours that go into new providers, worktree flows, and the parts of Synara that are tedious to get right.",
+    body: "The hours that go into new providers, worktree flows, and the parts of Ramspace that are tedious to get right.",
   },
   {
     title: "Reliable releases",

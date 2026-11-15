@@ -1,18 +1,18 @@
-# Synara Orgs account migration
+# Ramspace Orgs account migration
 
 Status: diagnostics cut over on 2026-09-29 at 01:45 CEST; account API traffic
-cut over at 02:14 CEST and profile links now redirect to Synara Orgs. API,
+cut over at 02:14 CEST and profile links now redirect to Ramspace Orgs. API,
 profiles, avatars and diagnostics are live in the destination. The original
 API and diagnostics URLs remain as compatibility forwarders. Workers Paid
 is active on the destination.
 
 ## Verified destination and scope
 
-- Source account: Synara, `9f9caeb268766deda99bc580c775d50c`.
-- Destination: Synara Orgs, `56e5b3e566be2fc8ade9b7d0eadf5e35`.
-- Destination Workers subdomain: `synara-orgs.workers.dev`.
-- The destination already contains `synara-marketing` and its
-  `synara-marketing-cache` R2 bucket. Preserve both.
+- Source account: Ramspace, `9f9caeb268766deda99bc580c775d50c`.
+- Destination: Ramspace Orgs, `56e5b3e566be2fc8ade9b7d0eadf5e35`.
+- Destination Workers subdomain: `ramspace-orgs.workers.dev`.
+- The destination already contains `ramspace-marketing` and its
+  `ramspace-marketing-cache` R2 bucket. Preserve both.
 - Account renaming does not migrate services or change the Workers subdomain.
 
 | Component                     | Migration action                                                                                                              |
@@ -31,11 +31,11 @@ Remote tunnel implementation is a separate outstanding feature.
 
 ## Completed preparation
 
-- Created destination D1 database `synara-beta-diagnostics`, ID
+- Created destination D1 database `ramspace-beta-diagnostics`, ID
   `642c0f74-6a06-4433-ac72-728bd6d0ed39`, with a Western Europe location hint.
   Its final import contains all six source tables, including the migration journal.
-- Created Standard R2 buckets `synara-beta-crash-dumps` and
-  `synara-profile-avatars-trial`. Both contain the copied source objects. Crash dumps remain private; only
+- Created Standard R2 buckets `ramspace-beta-crash-dumps` and
+  `ramspace-profile-avatars-trial`. Both contain the copied source objects. Crash dumps remain private; only
   the avatar bucket has public access, matching its original behavior.
   The creation UI selected Eastern Europe automatically.
 - Prepared an isolated local diagnostics checkout at source commit
@@ -95,8 +95,8 @@ Remote tunnel implementation is a separate outstanding feature.
    upgrade. This satisfies the Container plan prerequisite. The displayed base
    is USD 5/month plus usage, not a total cost cap.
 3. Choose durable service origins before changing clients. For example,
-   `diagnostics.trysynara.com`, `accounts.trysynara.com` and
-   `profiles.trysynara.com` are proposed names, not deployed routes. Worker
+   `diagnostics.tryramspace.com`, `accounts.tryramspace.com` and
+   `profiles.tryramspace.com` are proposed names, not deployed routes. Worker
    custom domains require an active Cloudflare zone. The domain currently uses
    Vercel nameservers; any DNS move needs a complete record inventory, including
    email verification records, before changing delegation. Account-local
@@ -163,7 +163,7 @@ data. Retain the source deployment/image metadata until validation completes.
 
 ## References
 
-- [Diagnostics migration reference](https://github.com/Emanuele-web04/synara-beta-diagnostics/blob/main/MIGRATION.md)
+- [Diagnostics migration reference](https://github.com/aaramsyy/ramspace-beta-diagnostics/blob/main/MIGRATION.md)
 - [Current profile deployment evidence](READINESS.md)
 - [Cloudflare Worker custom domains](https://developers.cloudflare.com/workers/configuration/routing/custom-domains/)
 - [Cloudflare Containers pricing](https://developers.cloudflare.com/containers/platform/pricing/)
@@ -171,20 +171,20 @@ data. Retain the source deployment/image metadata until validation completes.
 ## Operator checkpoint
 
 Private backups and generated credentials are also saved with owner-only
-permissions under `~/.local/share/synara-ops/cloudflare-migration-20260929` on
+permissions under `~/.local/share/ramspace-ops/cloudflare-migration-20260929` on
 the operator Mac. The source data is retained. Do not blindly restore the
 source now that the destination can accept new events.
 
-The Synara checkout points future Beta builds at the new diagnostics origin;
+The Ramspace checkout points future Beta builds at the new diagnostics origin;
 this has not shipped in a release. Diagnostics desktop tests pass (26 tests),
 and repository formatting, lint (zero errors; 792 existing warnings) and all
 13 typecheck tasks pass. The diagnostics repository passes 101 tests and its
 TypeScript/build checks. The initial sandboxed desktop run could not bind
 loopback sockets; the authorized rerun passed. A scan of 57 changed/untracked
-Synara files found none of the known deployment secret values.
+Ramspace files found none of the known deployment secret values.
 
-Diagnostics deployment changes are recorded in [draft PR #2](https://github.com/Emanuele-web04/synara-beta-diagnostics/pull/2),
-branch `codex/synara-orgs-migration`, latest commit `ce80fc9`. It is not merged.
+Diagnostics deployment changes are recorded in [draft PR #2](https://github.com/aaramsyy/ramspace-beta-diagnostics/pull/2),
+branch `codex/ramspace-orgs-migration`, latest commit `ce80fc9`. It is not merged.
 
 ### Account/profile completion
 
@@ -194,7 +194,7 @@ copies outside Git. Source storage and compute metadata are retained; the old
 API Container receives no traffic through the compatibility bridge and retains
 its existing 30-minute idle policy. No source resource purge was performed.
 
-Normal deployment configs target Synara Orgs. Compatibility endpoints are
+Normal deployment configs target Ramspace Orgs. Compatibility endpoints are
 explicitly configured in `apps/api/wrangler.legacy.jsonc` and
 `apps/profiles/wrangler.legacy.jsonc`; do not use those for normal deployments.
 The same `MIGRATION_PROXY_SECRET` must remain installed on both API Workers.
@@ -208,8 +208,8 @@ Live hosting works independently of those future workflow settings.
 ### Branded subdomain
 
 The operator requested removing their personal account label from public URLs.
-Cloudflare reported `synara.workers.dev` unavailable; the operator selected
-`synara-orgs.workers.dev`, and the account subdomain was changed in the dashboard.
+Cloudflare reported `ramspace.workers.dev` unavailable; the operator selected
+`ramspace-orgs.workers.dev`, and the account subdomain was changed in the dashboard.
 All four Workers inherit that suffix, including the existing marketing Worker.
 Its code and storage were not redeployed. API/profile origin variables, legacy
 forwarders, desktop diagnostics defaults and the diagnostics PR were updated.
@@ -223,6 +223,6 @@ removed: 197 PostgreSQL-dependent API tests were skipped in this run. Their
 previous disposable-PostgreSQL qualification is recorded in READINESS.md.
 Focused post-rename tests pass: 17 API ingress/storage, six profiles and 26
 Beta diagnostics tests. The diagnostics repository passes 101 tests and typecheck.
-A scan of 63 changed/untracked Synara files found no known deployment secret
+A scan of 63 changed/untracked Ramspace files found no known deployment secret
 values. No new UI components were introduced; existing API, profile UI and
 storage code were reused, with small compatibility Workers for old URLs.

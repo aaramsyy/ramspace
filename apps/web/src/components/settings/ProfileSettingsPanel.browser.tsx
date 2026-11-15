@@ -55,10 +55,10 @@ beforeEach(() => {
   fixture.navigate.mockReset();
 });
 
-describe("ProfileSettingsPanel Synara account card", () => {
+describe("ProfileSettingsPanel Ramspace account card", () => {
   it("groups sign out, plan and delete account in one card", async () => {
     await render(<ProfileSettingsPanel />);
-    await expect.element(page.getByText("Synara account", { exact: true })).toBeVisible();
+    await expect.element(page.getByText("Ramspace account", { exact: true })).toBeVisible();
     await expect.element(page.getByText("tester@example.com", { exact: true })).toBeVisible();
 
     await page.getByRole("button", { name: "Sign out", exact: true }).click();
@@ -67,10 +67,10 @@ describe("ProfileSettingsPanel Synara account card", () => {
     await page.getByRole("button", { name: "See plans", exact: true }).click();
     expect(fixture.navigate).toHaveBeenCalledWith({
       to: "/settings",
-      search: { section: "usage", target: "settings-synara-plan" },
+      search: { section: "usage", target: "settings-ramspace-plan" },
     });
 
     await page.getByRole("button", { name: "Delete account…", exact: true }).click();
-    await expect.element(page.getByText("Delete your Synara account?")).toBeVisible();
+    await expect.element(page.getByText("Delete your Ramspace account?")).toBeVisible();
   });
 });

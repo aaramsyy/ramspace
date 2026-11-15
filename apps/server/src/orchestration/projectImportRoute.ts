@@ -13,8 +13,8 @@ import {
   type ModelSelection,
   type ProjectImportProvider,
   type ProviderStartOptions,
-} from "@synara/contracts";
-import { isWorkspaceRootWithin, workspaceRootsEqual } from "@synara/shared/threadWorkspace";
+} from "@ramspace/contracts";
+import { isWorkspaceRootWithin, workspaceRootsEqual } from "@ramspace/shared/threadWorkspace";
 import { Effect } from "effect";
 import type {
   ProjectImportRepository,

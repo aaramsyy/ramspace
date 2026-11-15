@@ -1,7 +1,7 @@
 // FILE: rateLimitStatus.ts
 // Purpose: Current provider quota state and shared warning copy for Usage and chat status.
 
-import type { OrchestrationThreadActivity, ProviderKind } from "@synara/contracts";
+import type { OrchestrationThreadActivity, ProviderKind } from "@ramspace/contracts";
 import { t } from "~/i18n";
 
 export type RateLimitStatus = {

@@ -1,7 +1,7 @@
 // Purpose: Ensures resource leases and ordinary clients cannot restart the desktop owner.
 // Layer: Server RPC admission tests, including busy and failed idleness reads.
 import { Effect } from "effect";
-import { ThreadId, TurnId, type ProviderSession } from "@synara/contracts";
+import { ThreadId, TurnId, type ProviderSession } from "@ramspace/contracts";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { requestDesktopUpdate } from "./desktopUpdateBridge";

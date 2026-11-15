@@ -1,12 +1,12 @@
 import http from "node:http";
 import type { Duplex } from "node:stream";
-import { signDpopProof } from "@synara/shared/deviceKey";
+import { signDpopProof } from "@ramspace/shared/deviceKey";
 import {
   remoteResourcePresentationUrl,
   remoteResourceRoute,
   REMOTE_RESOURCE_PATH,
-} from "@synara/shared/remoteResources";
-import type { RemoteResourceReference } from "@synara/contracts";
+} from "@ramspace/shared/remoteResources";
+import type { RemoteResourceReference } from "@ramspace/contracts";
 import { openRemoteTlsChannel, type DialIdentity, type RemoteChannelInput } from "./dialer";
 import { proxyResourceRequest, resourceRequestHeaders } from "../remoteTransport/resourceProxy";
 

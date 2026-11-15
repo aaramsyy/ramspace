@@ -7,7 +7,7 @@ import { EventEmitter } from "node:events";
 import { describe, expect, it, vi } from "vitest";
 
 import { makeEffectProcessCommand } from "./effectProcessRuntime";
-import { spawnProcess } from "@synara/shared/processRuntime";
+import { spawnProcess } from "@ramspace/shared/processRuntime";
 import { once } from "node:events";
 
 const nodeChildProcess = createRequire(import.meta.url)(
@@ -151,7 +151,7 @@ it.skipIf(process.platform === "win32")(
     const fs = await import("node:fs/promises");
     const path = await import("node:path");
     const os = await import("node:os");
-    const directory = await fs.mkdtemp(path.join(os.tmpdir(), "synara-group-exit-"));
+    const directory = await fs.mkdtemp(path.join(os.tmpdir(), "ramspace-group-exit-"));
     const marker = path.join(directory, "descendant-stopped");
     const descendant = `
     process.on('SIGTERM', () => {

@@ -15,7 +15,7 @@ written addition to the table before it ships.
 
 | Interface        | File                                                       | Role                                                   | Verified in tree                                        |
 | ---------------- | ---------------------------------------------------------- | ------------------------------------------------------ | ------------------------------------------------------- |
-| Native patch     | `apps/desktop/patches/cua-driver/0001-synara-native.patch` | All Synara native changes on the pinned driver         | Yes                                                     |
+| Native patch     | `apps/desktop/patches/cua-driver/0001-ramspace-native.patch` | All Ramspace native changes on the pinned driver       | Yes                                                     |
 | Pin manifest     | `packages/shared/src/cuaDriverRelease.json`                | Version, source, checksums, native revision, toolchain | Yes (`:2`–`:7`)                                         |
 | Host protocol    | `packages/shared/src/cuaDriverProtocol.ts`                 | Socket, handshake, methods, cancellation, cleanup ack  | Yes, but partial coverage — see gap note below          |
 | Desktop host     | `apps/desktop/src/cuaDriverHost.ts`                        | Child lifetime, generation retirement, allowlist       | Yes (allowlist at `:334`; `cancel_input` at `:805`)     |
@@ -25,7 +25,7 @@ written addition to the table before it ships.
 | Backend          | `apps/server/src/computer/CuaComputerBackend.ts`           | Targeting, geometry, effect semantics                  | Yes                                                     |
 | Orchestration    | `apps/server/src/computer/ComputerManager.ts`              | Leases, scheduling, Space policy                       | Yes                                                     |
 | Upstream license | `docs/computer-use-cua/CUA-LICENSE.txt`                    | Cua attribution, MIT text                              | Yes (`:1`, `:3`)                                        |
-| Repo license     | `LICENSE`                                                  | Synara MIT text and holders                            | Yes (`:1`, `:3`–`:4`)                                   |
+| Repo license     | `LICENSE`                                                  | Ramspace MIT text and holders                          | Yes (`:1`, `:3`–`:4`)                                   |
 | Capability audit | `docs/computer-use-cua/capability-audit-2026-09-16.md`     | What is exposed and what is deliberately withheld      | Yes                                                     |
 | Overview         | `docs/computer-use-cua/README.md`                          | Contracts, limits, setup, provenance                   | Yes                                                     |
 | Provenance       | `docs/computer-use-cua/import-provenance.json`             | Imported heads and paths                               | Yes (`:9`)                                              |

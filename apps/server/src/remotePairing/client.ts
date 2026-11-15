@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto";
-import type { RemotePairingBundle } from "@synara/contracts";
+import type { RemotePairingBundle } from "@ramspace/contracts";
 import { calculateJwkThumbprint, SignJWT } from "jose";
 import {
   exchangeRemoteFrame,
@@ -63,9 +63,9 @@ export async function pairRemoteHost(
     signal.throwIfAborted();
     const proof = await new SignJWT({ nonce: challenge.nonce, inviteId: bundle.inviteId })
       .setProtectedHeader({ alg: "ES256", typ: REMOTE_PAIRING_PROOF_TYPE })
-      .setIssuer("synara-device")
+      .setIssuer("ramspace-device")
       .setSubject(identity.userId)
-      .setAudience(`synara-host:${bundle.environmentId}`)
+      .setAudience(`ramspace-host:${bundle.environmentId}`)
       .setIssuedAt()
       .setExpirationTime("60s")
       .setJti(randomUUID())

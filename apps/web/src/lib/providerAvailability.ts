@@ -4,7 +4,7 @@ import {
   type ProviderInstanceId,
   type ProviderKind,
   type ServerProviderStatus,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import type { ProviderInstanceOption } from "../appSettings";
 import { isProviderKind } from "../providerOrdering";
 

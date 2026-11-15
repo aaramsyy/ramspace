@@ -1,6 +1,6 @@
 import "../../index.css";
 
-import type { AccountMe, AccountStatus } from "@synara/contracts";
+import type { AccountMe, AccountStatus } from "@ramspace/contracts";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useState } from "react";
 import { page } from "vitest/browser";

@@ -12,7 +12,7 @@ import {
   type OrchestrationReadModel,
   type OrchestrationThread,
   type UsageLimitRecovery,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { Effect } from "effect";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 

@@ -27,16 +27,16 @@ import {
   RegisterDeviceRequest,
   SESSION_CREDENTIAL_JWT_TYP,
   SESSION_CREDENTIAL_MAX_AGE_SECONDS,
-  SYNARA_DEVICE_ISSUER,
-  SYNARA_RELAY_AUDIENCE,
-  SYNARA_SESSION_AUDIENCE,
+  RAMSPACE_DEVICE_ISSUER,
+  RAMSPACE_RELAY_AUDIENCE,
+  RAMSPACE_SESSION_AUDIENCE,
 } from "./hostAuth";
 
 describe("host auth contracts", () => {
   it("exports the exact host-link typ and decodes its claims", () => {
-    expect(HOST_LINK_JWT_TYP).toBe("synara-host-link+jwt");
+    expect(HOST_LINK_JWT_TYP).toBe("ramspace-host-link+jwt");
     const claims = Schema.decodeUnknownSync(HostLinkClaims)({
-      iss: "synara-host:env-1",
+      iss: "ramspace-host:env-1",
       sub: "env-1",
       aud: "https://accounts.example.com",
       iat: 1,
@@ -104,15 +104,15 @@ describe("host auth contracts", () => {
   it("pins scope, audience, issuer, and typ literals shared by the host and account API", () => {
     // A silent rename here desynchronizes this host from every peer that hardcodes the same literal.
     expect(HOST_CONNECT_SCOPE).toBe("host:connect");
-    expect(SYNARA_RELAY_AUDIENCE).toBe("synara-relay");
-    expect(SYNARA_SESSION_AUDIENCE).toBe("synara-session");
-    expect(SYNARA_DEVICE_ISSUER).toBe("synara-device");
-    expect(HOST_LINK_JWT_TYP).toBe("synara-host-link+jwt");
-    expect(HOST_PROOF_JWT_TYP).toBe("synara-host-proof+jwt");
-    expect(DEVICE_REGISTER_JWT_TYP).toBe("synara-device-register+jwt");
-    expect(GRANT_JWT_TYP).toBe("synara-grant+jwt");
-    expect(MINT_REQUEST_JWT_TYP).toBe("synara-mint-request+jwt");
-    expect(SESSION_CREDENTIAL_JWT_TYP).toBe("synara-session-credential+jwt");
+    expect(RAMSPACE_RELAY_AUDIENCE).toBe("ramspace-relay");
+    expect(RAMSPACE_SESSION_AUDIENCE).toBe("ramspace-session");
+    expect(RAMSPACE_DEVICE_ISSUER).toBe("ramspace-device");
+    expect(HOST_LINK_JWT_TYP).toBe("ramspace-host-link+jwt");
+    expect(HOST_PROOF_JWT_TYP).toBe("ramspace-host-proof+jwt");
+    expect(DEVICE_REGISTER_JWT_TYP).toBe("ramspace-device-register+jwt");
+    expect(GRANT_JWT_TYP).toBe("ramspace-grant+jwt");
+    expect(MINT_REQUEST_JWT_TYP).toBe("ramspace-mint-request+jwt");
+    expect(SESSION_CREDENTIAL_JWT_TYP).toBe("ramspace-session-credential+jwt");
     expect(DPOP_JWT_TYP).toBe("dpop+jwt");
     expect(DEVICE_USER_CODE_ALPHABET).toBe("ABCDEFGHJKLMNPQRSTUVWXYZ23456789");
   });

@@ -19,10 +19,10 @@ const required = [
 ];
 const buildVariables = [
   "AZURE_TRUSTED_SIGNING_SUBJECT_DN",
-  "SYNARA_WEB_SOURCEMAP",
-  "SYNARA_SERVER_SOURCEMAP",
-  "SYNARA_DESKTOP_SOURCEMAP",
-  "SYNARA_STABLE_ACCOUNT_URL",
+  "RAMSPACE_WEB_SOURCEMAP",
+  "RAMSPACE_SERVER_SOURCEMAP",
+  "RAMSPACE_DESKTOP_SOURCEMAP",
+  "RAMSPACE_STABLE_ACCOUNT_URL",
   "VITE_WS_URL",
 ];
 export const sha256 = (bytes: string | Buffer) => createHash("sha256").update(bytes).digest("hex");

@@ -3,9 +3,9 @@ import type {
   AccountStatus,
   ListHostConnectionsResponse,
   RemoteExecutionScope,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { Schema } from "effect";
-import { RemoteExecutionScope as RemoteScopeSchema } from "@synara/contracts";
+import { RemoteExecutionScope as RemoteScopeSchema } from "@ramspace/contracts";
 import type { ActiveHost } from "./activeHost";
 import { readExecutionContext } from "./executionContext";
 import { accountStatusScope, controlAccountScope } from "./controlQueryScope";
@@ -30,7 +30,7 @@ let restored = false;
 function storageKey(): string {
   const controller = readExecutionContext()?.controller;
   if (!controller) throw new Error("The local computer has not been verified");
-  return `synara:workspace-connections:v1:${encodeURIComponent(controller.environmentId)}`;
+  return `ramspace:workspace-connections:v1:${encodeURIComponent(controller.environmentId)}`;
 }
 
 export function parseWorkspaceHost(value: unknown): WorkspaceSession["host"] | null {

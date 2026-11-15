@@ -294,7 +294,7 @@ export async function finalizeMacUpdateZip(
 
   const zippedAppBundleName = await assertMacZipFrameworkSymlinks(zipPath);
 
-  const extractedZipRoot = mkdtempSync(join(tmpdir(), "synara-mac-update-zip-"));
+  const extractedZipRoot = mkdtempSync(join(tmpdir(), "ramspace-mac-update-zip-"));
   try {
     await runArchiveCommand("ditto", ["-x", "-k", zipPath, extractedZipRoot], { verbose });
     verifyMacAppSignature(

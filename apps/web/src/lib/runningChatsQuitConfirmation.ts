@@ -89,7 +89,7 @@ export function listRunningChatsFromDesktopStore(
 
 export function runningChatsQuitCopy(
   chats: ReadonlyArray<RunningChatQuitSummary>,
-  appName = "Synara",
+  appName = "Ramspace",
   translate: typeof t = t,
 ): RunningChatsQuitCopy {
   return {
@@ -108,7 +108,7 @@ export function runningChatsQuitCopy(
 }
 
 /** The ordinary user turn dispatched on each remembered chat at the next launch. */
-export function quitResumeContinuationPrompt(appName = "Synara"): string {
+export function quitResumeContinuationPrompt(appName = "Ramspace"): string {
   return `${appName} was closed while this chat was still running. Continue where you left off.`;
 }
 

@@ -1,10 +1,10 @@
 // FILE: SkillsSettingsPanel.tsx
 // Purpose: Settings → Skills panel. Lists every skill from the unified cross-provider
-// catalog (~/.synara/skills plus each provider's skills folder), shows which provider
+// catalog (~/.ramspace/skills plus each provider's skills folder), shows which provider
 // a skill comes from, and lets the user enable/disable each one. Disabled skills are
 // hidden from the composer skill picker on every provider.
 
-import type { ProviderKind, ServerSettings } from "@synara/contracts";
+import type { ProviderKind, ServerSettings } from "@ramspace/contracts";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useMemo } from "react";
 
@@ -108,18 +108,20 @@ export function SkillsSettingsPanel() {
 
   const totalSkills = skillGroups.length;
   const enabledSkills = skillGroups.filter((group) => !disabledSkillNames.has(group.key)).length;
-  const synaraSkillsDir = catalogQuery.data?.synaraSkillsDir;
+  const ramspaceSkillsDir = catalogQuery.data?.ramspaceSkillsDir;
 
   return (
     <div className="space-y-8">
       <SettingsSection title="settings:skills_portableSkills">
         <SettingsRow
-          id="setting-synara-skills-folder"
-          title="settings:skills_synaraSkillsFolder"
+          id="setting-ramspace-skills-folder"
+          title="settings:skills_ramspaceSkillsFolder"
           description="settings:skillsPlacedHereAreAvailableOnEveryProviderWhen"
           status={
-            synaraSkillsDir ? (
-              <code className="break-all text-ui-sm text-muted-foreground">{synaraSkillsDir}</code>
+            ramspaceSkillsDir ? (
+              <code className="break-all text-ui-sm text-muted-foreground">
+                {ramspaceSkillsDir}
+              </code>
             ) : null
           }
           control={
@@ -141,7 +143,7 @@ export function SkillsSettingsPanel() {
           <SettingsRow
             id="setting-skill-discovery-failed"
             title="settings:skills_discoveryFailed"
-            description="settings:synaraCouldNotScanTheSkillFoldersRetryAfter"
+            description="settings:ramspaceCouldNotScanTheSkillFoldersRetryAfter"
           />
         </SettingsSection>
       ) : null}

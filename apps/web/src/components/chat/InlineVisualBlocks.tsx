@@ -11,8 +11,8 @@ import {
   type InlineVisualBlock,
   type InlineVisualLeafBlock,
   type ThreadId,
-} from "@synara/contracts";
-import { INLINE_VISUAL_SERIES_COLORS } from "@synara/shared/inlineVisual";
+} from "@ramspace/contracts";
+import { INLINE_VISUAL_SERIES_COLORS } from "@ramspace/shared/inlineVisual";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo, useRef, type CSSProperties, type ReactNode } from "react";
 
@@ -98,7 +98,7 @@ export function InlineVisualBlocks({
     );
   }
   if (spec === null) {
-    return <BlocksNotice title={visual.title} message={t("chat:thisVisualNeedsANewerSynara")} />;
+    return <BlocksNotice title={visual.title} message={t("chat:thisVisualNeedsANewerRamspace")} />;
   }
   return (
     <figure

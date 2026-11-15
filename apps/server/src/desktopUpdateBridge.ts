@@ -6,10 +6,10 @@ import {
   DesktopUpdateIpcResponse,
   type DesktopUpdateIpcRequest,
   type ServerDesktopUpdateResult,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { Schema } from "effect";
 
-const DESKTOP_UPDATE_IPC_ENV = "SYNARA_DESKTOP_UPDATE_IPC";
+const DESKTOP_UPDATE_IPC_ENV = "RAMSPACE_DESKTOP_UPDATE_IPC";
 const pending = new Map<
   string,
   {
@@ -73,7 +73,7 @@ export function requestDesktopUpdate(
     timeout.unref();
     pending.set(id, { resolve, reject, timeout });
     try {
-      process.send!({ type: "synara:desktop-update:request", id, ...request }, (error) => {
+      process.send!({ type: "ramspace:desktop-update:request", id, ...request }, (error) => {
         if (error) fail(error);
       });
     } catch (error) {

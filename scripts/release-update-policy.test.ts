@@ -14,7 +14,7 @@ import {
 const cleanConfig: ReleaseUpdatePolicyConfig = {
   lane: "clean",
   bridgeVersion: "0.4.2",
-  channel: "synara",
+  channel: "ramspace",
 };
 
 const defaultManifestNames = ["latest-mac.yml", "latest.yml", "latest-linux.yml"] as const;
@@ -25,8 +25,8 @@ const appImageSha512 = createHash("sha512").update(appImageBytes).digest("base64
 const linuxManifest = (version: string, payload: string) =>
   `version: ${version}\nfiles:\n  - url: ${payload}\n    sha512: ${appImageSha512}\n    size: ${appImageBytes.length}\npath: ${payload}\nsha512: ${appImageSha512}\n`;
 const linuxX64Manifest = (version = "1.5.1") =>
-  linuxManifest(version, `Synara-${version}-x86_64.AppImage`);
-const arm64AppImageName = (version: string) => `Synara-${version}-arm64.AppImage`;
+  linuxManifest(version, `Ramspace-${version}-x86_64.AppImage`);
+const arm64AppImageName = (version: string) => `Ramspace-${version}-arm64.AppImage`;
 const linuxArm64Manifest = (version = "1.5.1") =>
   linuxManifest(version, arm64AppImageName(version));
 
@@ -49,7 +49,7 @@ describe("release update policy", () => {
       makeLatest: true,
       mirrorToStableChannel: false,
       bridgeTag: "v0.4.2",
-      channel: "synara",
+      channel: "ramspace",
     });
     expect(resolveReleaseUpdatePolicy("0.6.0-beta.1", cleanConfig)).toMatchObject({
       isPrerelease: true,
@@ -62,7 +62,7 @@ describe("release update policy", () => {
 
   it("routes isolated prerelease identifiers onto their own channel and flavor", () => {
     expect(resolveReleaseUpdatePolicy("0.6.0", cleanConfig)).toMatchObject({
-      channel: "synara",
+      channel: "ramspace",
       desktopFlavor: "production",
     });
     expect(resolveReleaseUpdatePolicy("0.6.0-beta.4", cleanConfig)).toMatchObject({
@@ -78,19 +78,19 @@ describe("release update policy", () => {
       mirrorToStableChannel: false,
     });
     expect(resolveReleaseUpdatePolicy("0.6.0-alpha.1", cleanConfig)).toMatchObject({
-      channel: "synara",
+      channel: "ramspace",
       desktopFlavor: "production",
       isPrerelease: true,
     });
     expect(resolveReleaseUpdatePolicy("0.6.0-rc.2", cleanConfig)).toMatchObject({
-      channel: "synara",
+      channel: "ramspace",
       desktopFlavor: "production",
       isPrerelease: true,
     });
   });
 
   it("publishes all Remote platform feeds without exposing Latest or Stable aliases", () => {
-    const root = mkdtempSync(join(tmpdir(), "synara-remote-release-policy-"));
+    const root = mkdtempSync(join(tmpdir(), "ramspace-remote-release-policy-"));
     try {
       for (const name of defaultManifestNames)
         writeFileSync(resolve(root, name), "version: 1.0.6-remote.1\n");
@@ -109,7 +109,7 @@ describe("release update policy", () => {
       );
       for (const name of [
         ...defaultManifestNames,
-        ...channelManifestNames("synara"),
+        ...channelManifestNames("ramspace"),
         ...channelManifestNames("beta"),
       ]) {
         expect(existsSync(resolve(root, name))).toBe(false);
@@ -120,7 +120,7 @@ describe("release update policy", () => {
   });
 
   it("copies manifests under the resolved beta channel name", () => {
-    const root = mkdtempSync(join(tmpdir(), "synara-release-policy-"));
+    const root = mkdtempSync(join(tmpdir(), "ramspace-release-policy-"));
     try {
       for (const name of [...defaultManifestNames, "latest-linux-arm64.yml"]) {
         writeFileSync(resolve(root, name), name);
@@ -134,7 +134,7 @@ describe("release update policy", () => {
         "beta-linux-arm64.yml",
         "latest-linux-arm64.yml",
       ]);
-      for (const channelName of channelManifestNames("synara")) {
+      for (const channelName of channelManifestNames("ramspace")) {
         expect(existsSync(resolve(root, channelName))).toBe(false);
       }
       for (const [index, channelName] of channelManifestNames("beta").entries()) {
@@ -154,7 +154,7 @@ describe("release update policy", () => {
   });
 
   it("publishes one dedicated arm64 Linux feed beside the x86_64 feed", () => {
-    const root = mkdtempSync(join(tmpdir(), "synara-release-policy-"));
+    const root = mkdtempSync(join(tmpdir(), "ramspace-release-policy-"));
     try {
       for (const name of defaultManifestNames) writeFileSync(resolve(root, name), name);
       writeFileSync(resolve(root, "latest-linux.yml"), linuxX64Manifest());
@@ -166,12 +166,12 @@ describe("release update policy", () => {
       stageLinuxArm64(root);
       expect(prepareReleaseUpdateManifests(root, cleanConfig)).toEqual([
         ...defaultManifestNames,
-        ...channelManifestNames("synara"),
-        "synara-linux-arm64.yml",
+        ...channelManifestNames("ramspace"),
+        "ramspace-linux-arm64.yml",
         "latest-linux-arm64.yml",
       ]);
-      expect(readFileSync(resolve(root, "synara-linux.yml"), "utf8")).toBe(linuxX64Manifest());
-      expect(readFileSync(resolve(root, "synara-linux-arm64.yml"), "utf8")).toBe(
+      expect(readFileSync(resolve(root, "ramspace-linux.yml"), "utf8")).toBe(linuxX64Manifest());
+      expect(readFileSync(resolve(root, "ramspace-linux-arm64.yml"), "utf8")).toBe(
         linuxArm64Manifest(),
       );
       expect(existsSync(resolve(root, "latest-linux-arm64.yml"))).toBe(true);
@@ -181,10 +181,10 @@ describe("release update policy", () => {
   });
 
   it.each([
-    { channel: "synara", version: "1.5.1" },
+    { channel: "ramspace", version: "1.5.1" },
     { channel: "beta", version: "1.5.2-beta.1" },
   ])("validates the staged AppImage before copying the $channel feed", ({ channel, version }) => {
-    const root = mkdtempSync(join(tmpdir(), "synara-release-policy-"));
+    const root = mkdtempSync(join(tmpdir(), "ramspace-release-policy-"));
     try {
       for (const name of defaultManifestNames) writeFileSync(resolve(root, name), name);
       writeFileSync(resolve(root, "latest-linux.yml"), linuxX64Manifest(version));
@@ -210,7 +210,7 @@ describe("release update policy", () => {
       const manifestPath = resolve(root, "latest-linux-arm64.yml");
       writeFileSync(
         manifestPath,
-        linuxArm64Manifest(version).replace("path: Synara-", "path: Other-"),
+        linuxArm64Manifest(version).replace("path: Ramspace-", "path: Other-"),
       );
       expect(() => prepareReleaseUpdateManifests(root, cleanConfig, channel)).toThrow(
         "conflicting AppImage metadata",
@@ -228,7 +228,7 @@ describe("release update policy", () => {
   });
 
   it("rejects an arm64 feed that describes another release or payload", () => {
-    const root = mkdtempSync(join(tmpdir(), "synara-release-policy-"));
+    const root = mkdtempSync(join(tmpdir(), "ramspace-release-policy-"));
     try {
       for (const name of defaultManifestNames) writeFileSync(resolve(root, name), name);
       writeFileSync(resolve(root, "latest-linux.yml"), linuxX64Manifest("1.5.1"));
@@ -240,32 +240,32 @@ describe("release update policy", () => {
 
       writeFileSync(
         resolve(root, "latest-linux-arm64.yml"),
-        linuxManifest("1.5.1", "Synara-1.5.1-x86_64.AppImage"),
+        linuxManifest("1.5.1", "Ramspace-1.5.1-x86_64.AppImage"),
       );
       expect(() => prepareReleaseUpdateManifests(root, cleanConfig)).toThrow("non-arm64 payload");
-      expect(existsSync(resolve(root, "synara-linux-arm64.yml"))).toBe(false);
+      expect(existsSync(resolve(root, "ramspace-linux-arm64.yml"))).toBe(false);
     } finally {
       rmSync(root, { recursive: true, force: true });
     }
   });
 
   it("keeps the arm64 feed optional for the compatibility release", () => {
-    const root = mkdtempSync(join(tmpdir(), "synara-release-policy-"));
+    const root = mkdtempSync(join(tmpdir(), "ramspace-release-policy-"));
     try {
       for (const name of defaultManifestNames) writeFileSync(resolve(root, name), "bridge");
 
       expect(prepareReleaseUpdateManifests(root, { ...cleanConfig, lane: "bridge" })).toEqual([
         ...defaultManifestNames,
-        ...channelManifestNames("synara"),
+        ...channelManifestNames("ramspace"),
       ]);
-      expect(existsSync(resolve(root, "synara-linux-arm64.yml"))).toBe(false);
+      expect(existsSync(resolve(root, "ramspace-linux-arm64.yml"))).toBe(false);
     } finally {
       rmSync(root, { recursive: true, force: true });
     }
   });
 
   it("copies the arm64 feed on a compatibility release that built one", () => {
-    const root = mkdtempSync(join(tmpdir(), "synara-release-policy-"));
+    const root = mkdtempSync(join(tmpdir(), "ramspace-release-policy-"));
     try {
       for (const name of defaultManifestNames) writeFileSync(resolve(root, name), "bridge");
       writeFileSync(resolve(root, "latest-linux.yml"), linuxX64Manifest());
@@ -273,11 +273,11 @@ describe("release update policy", () => {
 
       expect(prepareReleaseUpdateManifests(root, { ...cleanConfig, lane: "bridge" })).toEqual([
         ...defaultManifestNames,
-        ...channelManifestNames("synara"),
-        "synara-linux-arm64.yml",
+        ...channelManifestNames("ramspace"),
+        "ramspace-linux-arm64.yml",
         "latest-linux-arm64.yml",
       ]);
-      expect(readFileSync(resolve(root, "synara-linux-arm64.yml"), "utf8")).toBe(
+      expect(readFileSync(resolve(root, "ramspace-linux-arm64.yml"), "utf8")).toBe(
         linuxArm64Manifest(),
       );
       expect(existsSync(resolve(root, "latest-linux-arm64.yml"))).toBe(true);
@@ -287,16 +287,16 @@ describe("release update policy", () => {
   });
 
   it("leaves the release directory untouched when one feed already exists", () => {
-    const root = mkdtempSync(join(tmpdir(), "synara-release-policy-"));
+    const root = mkdtempSync(join(tmpdir(), "ramspace-release-policy-"));
     try {
       for (const name of defaultManifestNames) writeFileSync(resolve(root, name), name);
       writeFileSync(resolve(root, "latest-linux-arm64.yml"), "arm64");
-      writeFileSync(resolve(root, "synara-linux-arm64.yml"), "existing");
+      writeFileSync(resolve(root, "ramspace-linux-arm64.yml"), "existing");
 
       expect(() => prepareReleaseUpdateManifests(root, cleanConfig)).toThrow(
-        "Refusing to overwrite existing update manifest: synara-linux-arm64.yml",
+        "Refusing to overwrite existing update manifest: ramspace-linux-arm64.yml",
       );
-      expect(existsSync(resolve(root, "synara-mac.yml"))).toBe(false);
+      expect(existsSync(resolve(root, "ramspace-mac.yml"))).toBe(false);
       expect(existsSync(resolve(root, "latest-linux-arm64.yml"))).toBe(true);
     } finally {
       rmSync(root, { recursive: true, force: true });
@@ -304,18 +304,18 @@ describe("release update policy", () => {
   });
 
   it("keeps the staged arm64 feed when a legacy channel manifest already exists", () => {
-    const root = mkdtempSync(join(tmpdir(), "synara-release-policy-"));
+    const root = mkdtempSync(join(tmpdir(), "ramspace-release-policy-"));
     try {
       for (const name of defaultManifestNames) writeFileSync(resolve(root, name), name);
       writeFileSync(resolve(root, "latest-linux.yml"), linuxX64Manifest());
       stageLinuxArm64(root);
-      writeFileSync(resolve(root, "synara.yml"), "existing");
+      writeFileSync(resolve(root, "ramspace.yml"), "existing");
 
       expect(() => prepareReleaseUpdateManifests(root, cleanConfig)).toThrow(
-        "Refusing to overwrite existing update manifest: synara.yml",
+        "Refusing to overwrite existing update manifest: ramspace.yml",
       );
       expect(existsSync(resolve(root, "latest-linux-arm64.yml"))).toBe(true);
-      expect(existsSync(resolve(root, "synara-linux-arm64.yml"))).toBe(false);
+      expect(existsSync(resolve(root, "ramspace-linux-arm64.yml"))).toBe(false);
     } finally {
       rmSync(root, { recursive: true, force: true });
     }
@@ -334,7 +334,7 @@ describe("release update policy", () => {
   });
 
   it("keeps clean release metadata on Latest and dedicated channel filenames", () => {
-    const root = mkdtempSync(join(tmpdir(), "synara-release-policy-"));
+    const root = mkdtempSync(join(tmpdir(), "ramspace-release-policy-"));
     try {
       mkdirSync(root, { recursive: true });
       for (const name of defaultManifestNames) {
@@ -345,8 +345,8 @@ describe("release update policy", () => {
 
       expect(prepareReleaseUpdateManifests(root, cleanConfig)).toEqual([
         ...defaultManifestNames,
-        ...channelManifestNames("synara"),
-        "synara-linux-arm64.yml",
+        ...channelManifestNames("ramspace"),
+        "ramspace-linux-arm64.yml",
         "latest-linux-arm64.yml",
       ]);
       for (const name of defaultManifestNames) {
@@ -354,7 +354,7 @@ describe("release update policy", () => {
           name === "latest-linux.yml" ? linuxX64Manifest() : name,
         );
       }
-      for (const [index, channelName] of channelManifestNames("synara").entries()) {
+      for (const [index, channelName] of channelManifestNames("ramspace").entries()) {
         const defaultName = defaultManifestNames[index];
         if (!defaultName) throw new Error(`Missing default manifest mapping for ${channelName}`);
         expect(readFileSync(resolve(root, channelName), "utf8")).toBe(
@@ -367,16 +367,16 @@ describe("release update policy", () => {
   });
 
   it("keeps default metadata and copies same-version channel placeholders on the compatibility release", () => {
-    const root = mkdtempSync(join(tmpdir(), "synara-release-policy-"));
+    const root = mkdtempSync(join(tmpdir(), "ramspace-release-policy-"));
     try {
       for (const name of defaultManifestNames) {
         writeFileSync(resolve(root, name), `bridge:${name}`);
       }
       expect(prepareReleaseUpdateManifests(root, { ...cleanConfig, lane: "bridge" })).toEqual([
         ...defaultManifestNames,
-        ...channelManifestNames("synara"),
+        ...channelManifestNames("ramspace"),
       ]);
-      for (const [index, channelName] of channelManifestNames("synara").entries()) {
+      for (const [index, channelName] of channelManifestNames("ramspace").entries()) {
         const defaultName = defaultManifestNames[index];
         if (!defaultName) throw new Error(`Missing default manifest mapping for ${channelName}`);
         expect(readFileSync(resolve(root, channelName), "utf8")).toBe(
@@ -392,25 +392,25 @@ describe("release update policy", () => {
   });
 
   it("refuses to overwrite a compatibility channel placeholder", () => {
-    const root = mkdtempSync(join(tmpdir(), "synara-release-policy-"));
+    const root = mkdtempSync(join(tmpdir(), "ramspace-release-policy-"));
     try {
       for (const name of defaultManifestNames) {
         writeFileSync(resolve(root, name), "bridge");
       }
-      writeFileSync(resolve(root, "synara-mac.yml"), "existing");
+      writeFileSync(resolve(root, "ramspace-mac.yml"), "existing");
 
       expect(() => prepareReleaseUpdateManifests(root, { ...cleanConfig, lane: "bridge" })).toThrow(
-        "Refusing to overwrite existing update manifest: synara-mac.yml",
+        "Refusing to overwrite existing update manifest: ramspace-mac.yml",
       );
-      expect(existsSync(resolve(root, "synara.yml"))).toBe(false);
-      expect(existsSync(resolve(root, "synara-linux.yml"))).toBe(false);
+      expect(existsSync(resolve(root, "ramspace.yml"))).toBe(false);
+      expect(existsSync(resolve(root, "ramspace-linux.yml"))).toBe(false);
     } finally {
       rmSync(root, { recursive: true, force: true });
     }
   });
 
   it("rejects a clean Latest release with missing default metadata", () => {
-    const root = mkdtempSync(join(tmpdir(), "synara-release-policy-"));
+    const root = mkdtempSync(join(tmpdir(), "ramspace-release-policy-"));
     try {
       writeFileSync(resolve(root, "latest-mac.yml"), "bridge");
 

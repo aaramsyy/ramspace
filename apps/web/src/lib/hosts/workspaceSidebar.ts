@@ -12,7 +12,7 @@ import type { Project, SidebarThreadSummary } from "../../types";
 import { checkoutKey } from "../projectCatalog/model";
 import type { WorkspaceSummary } from "./workspaceFrame";
 import type { WorkspaceSession } from "./workspaceSessions";
-import { ProjectId, ThreadId, type SpaceId } from "@synara/contracts";
+import { ProjectId, ThreadId, type SpaceId } from "@ramspace/contracts";
 
 export interface WorkspaceProjectEntry {
   readonly key: string;

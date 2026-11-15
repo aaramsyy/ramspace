@@ -14,8 +14,8 @@ import {
   type ProviderKind,
   type ServerProviderStatus,
   type ThreadHandoffImportedMessage,
-} from "@synara/contracts";
-import { getDefaultModel } from "@synara/shared/model";
+} from "@ramspace/contracts";
+import { getDefaultModel } from "@ramspace/shared/model";
 import type { ProviderInstanceOption } from "../appSettings";
 import { type Thread } from "../types";
 import {

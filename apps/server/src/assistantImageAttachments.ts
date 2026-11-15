@@ -13,9 +13,9 @@ import {
   PROVIDER_SEND_TURN_MAX_ATTACHMENTS,
   PROVIDER_SEND_TURN_MAX_IMAGE_BYTES,
   PROVIDER_SEND_TURN_MAX_INPUT_CHARS,
-} from "@synara/contracts";
-import { isSupportedLocalImagePath } from "@synara/shared/localPreviewFiles";
-import { isWindowsAbsolutePath } from "@synara/shared/path";
+} from "@ramspace/contracts";
+import { isSupportedLocalImagePath } from "@ramspace/shared/localPreviewFiles";
+import { isWindowsAbsolutePath } from "@ramspace/shared/path";
 import { Cause, Effect, Option } from "effect";
 import { fromMarkdown } from "mdast-util-from-markdown";
 

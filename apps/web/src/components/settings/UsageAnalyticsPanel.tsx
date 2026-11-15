@@ -1,15 +1,15 @@
 // FILE: UsageAnalyticsPanel.tsx
 // Purpose: The Usage Analytics tab: cost and tokens by day, provider, model, and
-//          project, plus cache use, turn origin, and weekly rhythm. "In Synara" uses
-//          Synara's own records; "This Mac" also reads Claude Code and Codex session
+//          project, plus cache use, turn origin, and weekly rhythm. "In Ramspace" uses
+//          Ramspace's own records; "This Mac" also reads Claude Code and Codex session
 //          files. Cost is at API rates: the provider's own figure when it reports
 //          one, else the tokens at API list prices.
 // Layer: Web settings feature
 // Exports: UsageAnalyticsPanel
 
-import type { StatsUsageAnalyticsScope } from "@synara/contracts";
-import { formatCompact, formatNumber } from "@synara/profile-ui/formatting";
-import { InsightRow, ModelUsageRow, StatTileGrid } from "@synara/profile-ui/sections";
+import type { StatsUsageAnalyticsScope } from "@ramspace/contracts";
+import { formatCompact, formatNumber } from "@ramspace/profile-ui/formatting";
+import { InsightRow, ModelUsageRow, StatTileGrid } from "@ramspace/profile-ui/sections";
 import { useQuery } from "@tanstack/react-query";
 import { type ReactNode, useMemo, useState } from "react";
 
@@ -120,7 +120,7 @@ function percentOf(part: number, total: number): number {
 export function UsageAnalyticsPanel() {
   const [range, setRange] = useState<UsageAnalyticsRange>("30d");
   const [metricChoice, setMetricChoice] = useState<UsageAnalyticsMetric | null>(null);
-  const [scope, setScope] = useState<StatsUsageAnalyticsScope>("synara");
+  const [scope, setScope] = useState<StatsUsageAnalyticsScope>("ramspace");
   const todayKey = localDayKey(new Date());
   // Recomputed once a day so the query keys stay stable within a day.
   const windows = useMemo(() => {
@@ -182,7 +182,7 @@ export function UsageAnalyticsPanel() {
           value={scope}
           onValueChange={setScope}
           options={[
-            { value: "synara", label: "In Synara" },
+            { value: "ramspace", label: "In Ramspace" },
             { value: "mac", label: "This Mac" },
           ]}
         />
@@ -208,8 +208,8 @@ export function UsageAnalyticsPanel() {
             title="No usage in this period"
             description={
               scope === "mac"
-                ? "Chats in Synara and Claude Code or Codex sessions on this Mac show up here."
-                : "Chats you run in Synara show up here as they use tokens."
+                ? "Chats in Ramspace and Claude Code or Codex sessions on this Mac show up here."
+                : "Chats you run in Ramspace show up here as they use tokens."
             }
           />
         </SettingsCard>
@@ -487,7 +487,7 @@ function UsageAnalyticsBody(props: {
               title="Who started the work"
               detail={
                 view.scope === "mac"
-                  ? "Tokens by turn origin, in Synara chats."
+                  ? "Tokens by turn origin, in Ramspace chats."
                   : "Tokens by turn origin."
               }
             />
@@ -553,11 +553,11 @@ function UsageAnalyticsBody(props: {
               <li>
                 {view.sessionFileProviders.map((provider) => providerLabel(provider)).join(", ")}:
                 every session on this Mac, read from their own session files. Other providers: chats
-                run in Synara.
+                run in Ramspace.
               </li>
             ) : (
               <li>
-                Only chats run in Synara are counted. Deleted chats keep the turns you started.
+                Only chats run in Ramspace are counted. Deleted chats keep the turns you started.
               </li>
             )}
             {view.scope === "mac" && view.sessionFileProviders.includes("claudeAgent") ? (

@@ -7,8 +7,8 @@ import {
   extractSubagentIdentityHints as extractParsedSubagentIdentityHints,
   isWorkerTierSubagentRole,
   resolveSubagentIdentityFromDirectory,
-} from "@synara/shared/subagents";
-import { formatModelDisplayName } from "@synara/shared/model";
+} from "@ramspace/shared/subagents";
+import { formatModelDisplayName } from "@ramspace/shared/model";
 import { t } from "~/i18n";
 
 const SUBAGENT_ACCENT_PALETTE = [

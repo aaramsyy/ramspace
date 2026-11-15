@@ -6,7 +6,7 @@ import {
   type ExecutionEnvironmentDescriptor,
   type HostConnection,
   type ListHostConnectionsResponse,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { Schema } from "effect";
 import { WsTransport, rawSocketUrl } from "../../wsTransport";
 import { readActiveHost } from "./activeHost";

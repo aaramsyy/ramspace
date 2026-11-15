@@ -1,4 +1,4 @@
-import { ProjectId, ThreadId, type ProjectAgentSummary } from "@synara/contracts";
+import { ProjectId, ThreadId, type ProjectAgentSummary } from "@ramspace/contracts";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import type { AppState } from "../store";

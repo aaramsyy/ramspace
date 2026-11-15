@@ -8,7 +8,7 @@ import { withCredentialFileLock } from "./accountCredentialLock";
 
 const roots: string[] = [];
 async function fixture() {
-  const root = await fs.mkdtemp(path.join(os.tmpdir(), "synara-credential-lock-"));
+  const root = await fs.mkdtemp(path.join(os.tmpdir(), "ramspace-credential-lock-"));
   roots.push(root);
   return path.join(root, "credentials.json");
 }

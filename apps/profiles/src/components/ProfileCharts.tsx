@@ -7,8 +7,8 @@
 // computed on the server.
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import { ActivityHeatmap, type HeatmapCell } from "@synara/profile-ui/heatmap";
-import { formatCompact, formatHourLabel } from "@synara/profile-ui/formatting";
+import { ActivityHeatmap, type HeatmapCell } from "@ramspace/profile-ui/heatmap";
+import { formatCompact, formatHourLabel } from "@ramspace/profile-ui/formatting";
 import type { DailyPoint } from "../lib/dailySeries";
 
 const AREA_WIDTH = 640;

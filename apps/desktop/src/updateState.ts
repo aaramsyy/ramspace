@@ -1,6 +1,6 @@
 // Owns updater admission and progress policy; package lanes must never replace one another.
-import type { DesktopUpdateState } from "@synara/contracts";
-import type { SynaraDesktopFlavor } from "@synara/shared/desktopIdentity";
+import type { DesktopUpdateState } from "@ramspace/contracts";
+import type { RamspaceDesktopFlavor } from "@ramspace/shared/desktopIdentity";
 
 export type DownloadProgressSample = {
   readonly percent?: number | null;
@@ -154,7 +154,7 @@ export function isUpdateVersionNewer(currentVersion: string, candidateVersion: s
  */
 export function isUpdateVersionAllowedForFlavor(
   candidateVersion: string,
-  flavor: SynaraDesktopFlavor,
+  flavor: RamspaceDesktopFlavor,
 ): boolean {
   const candidate = parseUpdateVersion(candidateVersion);
   if (!candidate) {
@@ -229,7 +229,7 @@ export function getAutoUpdateDisabledReason(args: {
     return "Automatic updates are only available in packaged production builds.";
   }
   if (args.disabledByEnv) {
-    return "Automatic updates are disabled by the SYNARA_DISABLE_AUTO_UPDATE setting.";
+    return "Automatic updates are disabled by the RAMSPACE_DISABLE_AUTO_UPDATE setting.";
   }
   if (args.platform === "linux" && !args.appImage) {
     return "Automatic updates on Linux require running the AppImage build.";
@@ -291,7 +291,7 @@ function payloadBasename(value: string): string {
 export function shouldAcceptAvailableUpdate(input: {
   readonly currentVersion: string;
   readonly version: string | null | undefined;
-  readonly flavor: SynaraDesktopFlavor;
+  readonly flavor: RamspaceDesktopFlavor;
   readonly info: {
     readonly path?: string | undefined;
     readonly files?: ReadonlyArray<{ readonly url?: string | undefined }> | undefined;

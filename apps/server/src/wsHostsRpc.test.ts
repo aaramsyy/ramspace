@@ -6,9 +6,9 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 
-import { EnvironmentId, WS_METHODS } from "@synara/contracts";
-import { AccountApiError, type AccountClient } from "@synara/shared/account";
-import { deviceThumbprint } from "@synara/shared/deviceKey";
+import { EnvironmentId, WS_METHODS } from "@ramspace/contracts";
+import { AccountApiError, type AccountClient } from "@ramspace/shared/account";
+import { deviceThumbprint } from "@ramspace/shared/deviceKey";
 import { Effect, Path as EffectPath } from "effect";
 import { decodeJwt } from "jose";
 import { afterEach, describe, expect, it, vi } from "vitest";
@@ -140,7 +140,7 @@ const OWNER_SESSION = {
 const temporaryDirectories: string[] = [];
 
 async function makeBaseDir(): Promise<string> {
-  const baseDir = await fs.mkdtemp(path.join(os.tmpdir(), "synara-ws-hosts-rpc-"));
+  const baseDir = await fs.mkdtemp(path.join(os.tmpdir(), "ramspace-ws-hosts-rpc-"));
   temporaryDirectories.push(baseDir);
   return baseDir;
 }

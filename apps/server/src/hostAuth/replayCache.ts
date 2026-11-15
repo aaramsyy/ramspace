@@ -1,4 +1,4 @@
-import { JWT_CLOCK_TOLERANCE_SECONDS } from "@synara/contracts";
+import { JWT_CLOCK_TOLERANCE_SECONDS } from "@ramspace/contracts";
 
 export class JwtReplayCache {
   readonly #entries = new Map<string, number>();

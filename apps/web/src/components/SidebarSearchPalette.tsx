@@ -27,8 +27,8 @@ import {
   type ProjectImportProvider,
   PROVIDER_DISPLAY_NAMES,
   type ProviderInstanceId,
-} from "@synara/contracts";
-import { isGenericChatThreadTitle } from "@synara/shared/chatThreads";
+} from "@ramspace/contracts";
+import { isGenericChatThreadTitle } from "@ramspace/shared/chatThreads";
 import { Autocomplete as AutocompletePrimitive } from "@base-ui/react/autocomplete";
 import { LuArrowLeft, LuCornerLeftUp } from "react-icons/lu";
 import { type ComponentType, useEffect, useMemo, useState, type KeyboardEvent } from "react";

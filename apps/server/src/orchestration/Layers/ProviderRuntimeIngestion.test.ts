@@ -15,7 +15,7 @@ import type {
   ProviderKind,
   ProviderRuntimeEvent,
   ProviderSession,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import {
   ApprovalRequestId,
   CommandId,
@@ -28,7 +28,7 @@ import {
   RuntimeTaskId,
   ThreadId,
   TurnId,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import {
   Effect,
   Deferred,
@@ -437,7 +437,7 @@ describe("ProviderRuntimeIngestion", () => {
     readonly computerManager?: ComputerManager;
     readonly deviceManager?: DeviceManager;
   }) {
-    const workspaceRoot = makeTempDir("synara-provider-project-");
+    const workspaceRoot = makeTempDir("ramspace-provider-project-");
     fs.mkdirSync(path.join(workspaceRoot, ".git"));
     const provider = createProviderServiceHarness(
       options?.persistedStream === true ? { persistedStream: true } : undefined,
@@ -1410,7 +1410,7 @@ describe("ProviderRuntimeIngestion", () => {
         durableDelayMs: summary(durableDelayMs),
         elapsedMs: performance.now() - start,
       };
-      const measureDir = process.env.SYNARA_RUNTIME_DELTA_MEASURE_DIR;
+      const measureDir = process.env.RAMSPACE_RUNTIME_DELTA_MEASURE_DIR;
       if (measureDir) {
         fs.mkdirSync(measureDir, { recursive: true });
         fs.writeFileSync(
@@ -3585,7 +3585,7 @@ describe("ProviderRuntimeIngestion", () => {
         turnId,
         payload: {
           state: "cancelled",
-          stopReason: outcome === "user-cancel" ? "cancelled" : "synara.devin.wedge-recovery",
+          stopReason: outcome === "user-cancel" ? "cancelled" : "ramspace.devin.wedge-recovery",
         },
       });
       await waitForThread(harness.engine, (thread) => thread.session?.status === "interrupted");
@@ -3638,7 +3638,7 @@ describe("ProviderRuntimeIngestion", () => {
           payload: {
             message: "Arbitrary failure message",
             class: "transport_error",
-            detail: { reason: "synara.devin.wedge-recovery" },
+            detail: { reason: "ramspace.devin.wedge-recovery" },
           },
         });
         thread = await waitForThread(
@@ -8076,7 +8076,7 @@ describe("ProviderRuntimeIngestion", () => {
         ? (data.rawOutput as Record<string, unknown>)
         : {};
 
-    expect(data.__synaraTruncated).toBe(true);
+    expect(data.__ramspaceTruncated).toBe(true);
     expect(JSON.stringify(data).length).toBeLessThan(17_000);
     expect(rawInput.command).toBe("bun run something");
     expect(String(rawOutput.stdout ?? "").length).toBeLessThan(3_000);
@@ -9173,7 +9173,7 @@ describe("ProviderRuntimeIngestion", () => {
                   args: [
                     fileURLToPath(new URL("../../../scripts/acp-mock-agent.ts", import.meta.url)),
                   ],
-                  env: { SYNARA_ACP_DEVIN_TASK_REPLAY: "1" },
+                  env: { RAMSPACE_ACP_DEVIN_TASK_REPLAY: "1" },
                 },
                 authPolicy: "on-demand",
               }).pipe(

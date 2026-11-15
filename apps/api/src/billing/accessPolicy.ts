@@ -1,4 +1,4 @@
-import type { AccountBillingStatus } from "@synara/contracts";
+import type { AccountBillingStatus } from "@ramspace/contracts";
 
 // Commercial checks are separate from host ownership, pairing and local agent access.
 export const REMOTE_BILLING_MAX_STATUS_AGE_MS = 60_000;

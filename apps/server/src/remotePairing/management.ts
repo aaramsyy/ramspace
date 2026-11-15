@@ -10,8 +10,8 @@ import {
   type RemoteAccessRequest,
   type RemoteAccessResult,
   type RemotePairingBundle,
-} from "@synara/contracts";
-import { desktopFlavorFromBundleId } from "@synara/shared/betaFeatures";
+} from "@ramspace/contracts";
+import { desktopFlavorFromBundleId } from "@ramspace/shared/betaFeatures";
 import { Effect } from "effect";
 import { accountApiIssuer, readAccountFile, withFreshAccessToken } from "../accountAuth";
 import { AccountDeviceKeyRevokedError } from "../accountDeviceRegistration";
@@ -144,8 +144,8 @@ export function makeRemoteAccessManagement(
         .replace(/^(.{4})(.{4})$/, "$1-$2");
       const device = await options.account.dialIdentity({ expectedAccount });
       const proof = await new SignJWT({ code })
-        .setProtectedHeader({ alg: "ES256", typ: "synara-pairing-code+jwt" })
-        .setIssuer("synara-device")
+        .setProtectedHeader({ alg: "ES256", typ: "ramspace-pairing-code+jwt" })
+        .setIssuer("ramspace-device")
         .setSubject(binding.userId)
         .setAudience(binding.accountAuthority)
         .setIssuedAt()
@@ -380,7 +380,7 @@ export function makeRemoteAccessManagement(
           }
         }
         const invitation = await Effect.runPromise(options.control.remotePairing.create(scope));
-        const flavor = desktopFlavorFromBundleId(process.env.SYNARA_DESKTOP_BUNDLE_ID);
+        const flavor = desktopFlavorFromBundleId(process.env.RAMSPACE_DESKTOP_BUNDLE_ID);
         const channel: RemotePairingBundle["channel"] =
           flavor === "beta"
             ? "beta"

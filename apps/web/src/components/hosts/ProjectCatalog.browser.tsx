@@ -37,8 +37,8 @@ import { ProjectCatalogDialog } from "./ProjectCatalogDialog";
 const first: CatalogCheckout = {
   environmentId: "mini",
   projectId: "same-id",
-  name: "Synara",
-  cwd: "/code/synara",
+  name: "Ramspace",
+  cwd: "/code/ramspace",
   hostName: "Mac mini",
   channel: "beta",
   observedAt: "2026-09-27T21:00:00Z",
@@ -47,7 +47,7 @@ const first: CatalogCheckout = {
 const second: CatalogCheckout = {
   ...first,
   environmentId: "catalog-controller",
-  cwd: "/Users/me/Developer/synara",
+  cwd: "/Users/me/Developer/ramspace",
   hostName: "MacBook",
 };
 afterEach(() => {
@@ -67,13 +67,15 @@ it.each(["light", "dark"])(
         <ProjectCatalogDialog onClose={fixture.close} />
       </QueryClientProvider>,
     );
-    await page.getByRole("checkbox", { name: "Select Synara on Mac mini" }).click();
-    await page.getByRole("checkbox", { name: "Select Synara on MacBook" }).click();
-    await page.getByRole("textbox", { name: "New group name" }).fill("Synara across my computers");
+    await page.getByRole("checkbox", { name: "Select Ramspace on Mac mini" }).click();
+    await page.getByRole("checkbox", { name: "Select Ramspace on MacBook" }).click();
+    await page
+      .getByRole("textbox", { name: "New group name" })
+      .fill("Ramspace across my computers");
     await page.getByRole("button", { name: "Link selected" }).click();
     await expect
       .element(page.getByRole("textbox", { name: "Group name", exact: true }))
-      .toHaveValue("Synara across my computers");
+      .toHaveValue("Ramspace across my computers");
     expect(fixture.open).not.toHaveBeenCalled();
     await page.screenshot({ path: `./__screenshots__/project-catalog-${theme}.png` });
     await page.getByRole("button", { name: "Switch and open", exact: true }).click();
@@ -91,7 +93,7 @@ it("shows an offline catalog without allowing an execution or metadata change", 
   await expect.element(page.getByRole("status")).toHaveTextContent("Offline catalog");
   await expect.element(page.getByRole("button", { name: "Switch and open" })).toBeDisabled();
   await expect
-    .element(page.getByRole("checkbox", { name: "Select Synara on Mac mini" }))
+    .element(page.getByRole("checkbox", { name: "Select Ramspace on Mac mini" }))
     .toBeDisabled();
   expect(fixture.open).not.toHaveBeenCalled();
 });

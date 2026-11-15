@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1.7-labs
-# Synara account API. Build context is the repository root so the Bun
+# Ramspace account API. Build context is the repository root so the Bun
 # workspace graph (root package.json + bun.lock + workspace packages) resolves;
 # point the builder at this file with dockerfilePath=apps/api/Dockerfile.
 FROM --platform=$BUILDPLATFORM oven/bun:1.4.4-slim AS deps
@@ -21,7 +21,7 @@ COPY --parents apps/*/package.json packages/*/package.json scripts/package.json 
 # execute its installer. Optional native packages still target the runtime CPU.
 RUN case "$TARGETARCH" in amd64) cpu=x64 ;; arm64) cpu=arm64 ;; *) exit 1 ;; esac \
     && bun install --frozen-lockfile --ignore-scripts --production \
-       --filter @synara/api --os=linux --cpu="$cpu"
+       --filter @ramspace/api --os=linux --cpu="$cpu"
 
 FROM oven/bun:1.4.4-slim
 WORKDIR /app
@@ -34,7 +34,7 @@ COPY --from=deps /app/apps/api/node_modules apps/api/node_modules
 COPY --from=deps /app/packages/contracts/node_modules packages/contracts/node_modules
 COPY package.json bun.lock ./
 COPY packages/contracts packages/contracts
-# Dependency-free subpaths only (e.g. @synara/shared/socialLinks); no node_modules needed.
+# Dependency-free subpaths only (e.g. @ramspace/shared/socialLinks); no node_modules needed.
 COPY packages/shared packages/shared
 COPY apps/api apps/api
 

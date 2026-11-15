@@ -1,23 +1,23 @@
-// FILE: SynaraThreadCreationCard.tsx
-// Purpose: End-of-turn recap for threads created through the Synara MCP harness.
+// FILE: RamspaceThreadCreationCard.tsx
+// Purpose: End-of-turn recap for threads created through the Ramspace MCP harness.
 // Layer: Chat transcript UI
 
-import { PROVIDER_DISPLAY_NAMES } from "@synara/contracts";
-import { formatModelDisplayName } from "@synara/shared/model";
+import { PROVIDER_DISPLAY_NAMES } from "@ramspace/contracts";
+import { formatModelDisplayName } from "@ramspace/shared/model";
 import { memo } from "react";
 
 import {
   readAvailableWorkspaceNavigation,
   useWorkspaceSessions,
 } from "../../lib/hosts/workspaceSessions";
-import type { WorkLogSynaraThreadCreation } from "../../session-logic";
+import type { WorkLogRamspaceThreadCreation } from "../../session-logic";
 import { ProviderIcon } from "../ProviderIcon";
-import { SynaraLogo } from "@synara/profile-ui/logo";
+import { RamspaceLogo } from "@ramspace/profile-ui/logo";
 import { Button } from "../ui/button";
 import { useTranslation } from "~/i18n";
 
 function threadMeta(
-  thread: WorkLogSynaraThreadCreation["threads"][number],
+  thread: WorkLogRamspaceThreadCreation["threads"][number],
   hostName: string | undefined,
 ): string {
   const model = formatModelDisplayName(thread.model) ?? thread.model;
@@ -28,7 +28,7 @@ function threadMeta(
 
 /** Threads on another computer open in its connected workspace, never as local ids. */
 function useCreatedThreadOpener(
-  creation: WorkLogSynaraThreadCreation,
+  creation: WorkLogRamspaceThreadCreation,
   onOpenThread: ((threadId: string) => void) | undefined,
 ): ((threadId: string) => void) | undefined {
   const sessions = useWorkspaceSessions();
@@ -47,11 +47,11 @@ function useCreatedThreadOpener(
   };
 }
 
-export const SynaraThreadCreationCard = memo(function SynaraThreadCreationCard({
+export const RamspaceThreadCreationCard = memo(function RamspaceThreadCreationCard({
   creation,
   onOpenThread: onOpenLocalThread,
 }: {
-  readonly creation: WorkLogSynaraThreadCreation;
+  readonly creation: WorkLogRamspaceThreadCreation;
   readonly onOpenThread?: (threadId: string) => void;
 }) {
   const { t } = useTranslation();
@@ -71,11 +71,11 @@ export const SynaraThreadCreationCard = memo(function SynaraThreadCreationCard({
   return (
     <div
       className="overflow-hidden rounded-[0.65rem] border border-[color:var(--color-border-light)] bg-[var(--color-background-elevated-primary)] dark:border-[color:color-mix(in_srgb,var(--color-border-light)_55%,transparent)]"
-      data-synara-thread-creation-card="true"
+      data-ramspace-thread-creation-card="true"
     >
       <div className="flex min-w-0 items-center gap-3 px-3 py-2.5">
         <span className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-[var(--color-background-elevated-secondary)] text-foreground">
-          <SynaraLogo className="h-[22px] w-auto" aria-label="Synara" />
+          <RamspaceLogo className="h-[22px] w-auto" aria-label="Ramspace" />
         </span>
         <div className="min-w-0 flex-1">
           <p className="truncate font-system-ui text-ui-lg font-medium text-foreground/95">

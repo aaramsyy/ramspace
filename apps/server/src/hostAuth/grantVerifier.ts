@@ -3,9 +3,9 @@ import {
   GRANT_JWT_TYP,
   GRANT_MAX_AGE_SECONDS,
   JWT_CLOCK_TOLERANCE_SECONDS,
-  SYNARA_RELAY_AUDIENCE,
+  RAMSPACE_RELAY_AUDIENCE,
   type ApiJwks,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { Schema } from "effect";
 import { createLocalJWKSet, errors, jwtVerify } from "jose";
 
@@ -95,7 +95,7 @@ export class HostGrantVerifier {
     const verifyGrant = async (jwks: ApiJwks) =>
       jwtVerify(grantJwt, createLocalJWKSet(jwks as Parameters<typeof createLocalJWKSet>[0]), {
         algorithms: ["EdDSA"],
-        audience: SYNARA_RELAY_AUDIENCE,
+        audience: RAMSPACE_RELAY_AUDIENCE,
         issuer: this.options.apiIssuer,
         typ: GRANT_JWT_TYP,
         clockTolerance: JWT_CLOCK_TOLERANCE_SECONDS,

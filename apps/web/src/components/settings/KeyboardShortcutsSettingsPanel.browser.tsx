@@ -1,7 +1,7 @@
 import "../../index.css";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import type { ResolvedKeybindingRule } from "@synara/contracts";
+import type { ResolvedKeybindingRule } from "@ramspace/contracts";
 import { afterEach, expect, it, vi } from "vitest";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-react";
@@ -42,7 +42,7 @@ afterEach(() => {
 it("opens controller settings instead of editing or resetting a remote computer's shortcuts", async () => {
   const navigate = vi.fn();
   const frame = Object.assign(document.createElement("iframe"), {
-    synaraWorkspace: { controller: { navigate } },
+    ramspaceWorkspace: { controller: { navigate } },
   });
   vi.spyOn(window, "frameElement", "get").mockReturnValue(frame);
   const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });

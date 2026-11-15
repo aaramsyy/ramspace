@@ -2,7 +2,7 @@ import { once } from "node:events";
 import WebSocket, { WebSocketServer } from "ws";
 import { afterEach, expect, it, vi } from "vitest";
 import { HostConnectionRegistry } from "./registry";
-import { AccountApiError } from "@synara/shared/account";
+import { AccountApiError } from "@ramspace/shared/account";
 import { backgroundRetryDelayMs, superviseHostConnections } from "./supervisor";
 import { RemoteHostTrustError } from "./failure";
 import { controllerProtocol, HostDialError } from "./dialer";
@@ -160,7 +160,7 @@ it("keeps short retries for a brief outage and spaces them out for a long or ref
       cause: new AccountApiError({
         status: 403,
         code: "subscription_required",
-        message: "Remote access requires an active Synara Alto subscription",
+        message: "Remote access requires an active Ramspace Alto subscription",
       }),
     },
   );

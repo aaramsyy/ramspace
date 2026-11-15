@@ -3,7 +3,7 @@
 // handle sanitizing/validation, and display derivations.
 // Layer: Web account feature unit tests.
 
-import type { AccountMe } from "@synara/contracts";
+import type { AccountMe } from "@ramspace/contracts";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import {
@@ -203,8 +203,8 @@ describe("display derivations", () => {
   });
 
   it("builds the public profile URL from the handle", () => {
-    expect(publicProfileUrl("ada")).toBe("https://trysynara.com/@ada");
-    expect(publicProfileDisplayUrl("ada")).toBe("trysynara.com/@ada");
+    expect(publicProfileUrl("ada")).toBe("https://tryramspace.com/@ada");
+    expect(publicProfileDisplayUrl("ada")).toBe("tryramspace.com/@ada");
   });
 
   it("uses the trial origin for opening, copying and sharing a public profile", () => {
@@ -220,7 +220,7 @@ describe("display derivations", () => {
     {
       profile: { handle: "ada", public: true },
       available: true,
-      expected: "https://trysynara.com/@ada",
+      expected: "https://tryramspace.com/@ada",
     },
     { profile: { handle: "ada", public: true }, available: false, expected: null },
     { profile: { handle: "ada", public: true }, available: undefined, expected: null },

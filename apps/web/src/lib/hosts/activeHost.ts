@@ -2,9 +2,9 @@ import { readWorkspaceFrame, workspaceRoute } from "./workspaceFrame";
 import { addWorkspaceSession } from "./workspaceSessions";
 import { recoverBeforeLocalEscape } from "./executionSwitch";
 // Window selection contains only controller-verified identity metadata.
-import type { RemoteExecutionScope } from "@synara/contracts";
+import type { RemoteExecutionScope } from "@ramspace/contracts";
 
-const ACTIVE_HOST_STORAGE_KEY = "synara:active-host:v1";
+const ACTIVE_HOST_STORAGE_KEY = "ramspace:active-host:v1";
 
 export interface ActiveHost {
   readonly executionScope?: RemoteExecutionScope;

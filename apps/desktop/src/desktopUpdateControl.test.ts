@@ -3,8 +3,8 @@
 import { EventEmitter } from "node:events";
 import type { ChildProcess } from "node:child_process";
 
-import type { DesktopUpdateState, ServerDesktopUpdateResult } from "@synara/contracts";
-import type { SynaraPackagedDesktopFlavor } from "@synara/shared/desktopIdentity";
+import type { DesktopUpdateState, ServerDesktopUpdateResult } from "@ramspace/contracts";
+import type { RamspacePackagedDesktopFlavor } from "@ramspace/shared/desktopIdentity";
 import { describe, expect, it, vi } from "vitest";
 
 import { attachDesktopUpdateControl } from "./desktopUpdateControl";
@@ -12,7 +12,7 @@ import { createInitialDesktopUpdateState } from "./updateMachine";
 
 function fixture(
   options: {
-    flavor?: SynaraPackagedDesktopFlavor;
+    flavor?: RamspacePackagedDesktopFlavor;
     isPackaged?: boolean;
     platform?: NodeJS.Platform;
     updaterConfigured?: boolean;
@@ -63,7 +63,7 @@ function fixture(
   let nextId = 0;
   const request = (input: Record<string, unknown>) => {
     child.emit("message", {
-      type: "synara:desktop-update:request",
+      type: "ramspace:desktop-update:request",
       id: String(++nextId),
       authority: "device-a",
       action: "install",
@@ -85,7 +85,7 @@ function fixture(
       state = { ...state, downloadedVersion: "1.0.2-remote.1" };
     },
     requireRelaunch: () => {
-      installBlockedReason = "Restart Synara on the Mac before trying again.";
+      installBlockedReason = "Restart Ramspace on the Mac before trying again.";
     },
     resumeDownload: () => {
       state = { ...state, status: "downloading" };
@@ -164,7 +164,7 @@ describe("desktop updater control", () => {
     f.request({ restartToken: token });
     expect(f.responses.at(-1)?.result.accepted).toBe(false);
     f.child.emit("message", {
-      type: "synara:desktop-update:request",
+      type: "ramspace:desktop-update:request",
       id: "bad",
       action: "install",
     });
@@ -175,7 +175,7 @@ describe("desktop updater control", () => {
   it("refuses an updater recovery blocker and a payload that resumes downloading before handoff", () => {
     const blocked = fixture();
     blocked.requireRelaunch();
-    expect(blocked.request({})?.status.message).toContain("Restart Synara on the Mac");
+    expect(blocked.request({})?.status.message).toContain("Restart Ramspace on the Mac");
     expect(blocked.request({})?.accepted).toBe(false);
     const downloading = fixture();
     const token = downloading.request({})?.restartToken;

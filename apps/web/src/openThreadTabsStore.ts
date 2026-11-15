@@ -6,7 +6,7 @@ import { executionStorage } from "./lib/hosts/executionStorage";
 // Layer: UI state store
 // Exports: useOpenThreadTabsStore
 
-import type { ThreadId } from "@synara/contracts";
+import type { ThreadId } from "@ramspace/contracts";
 import { create } from "zustand";
 import { createJSONStorage, persist, type StateStorage } from "zustand/middleware";
 
@@ -27,10 +27,10 @@ interface OpenThreadTabsStoreState {
   pruneThreadTabs: (isKept: (threadId: ThreadId) => boolean) => void;
 }
 
-const OPEN_THREAD_TABS_STORAGE_KEY = "synara:open-thread-tabs:v1";
+const OPEN_THREAD_TABS_STORAGE_KEY = "ramspace:open-thread-tabs:v1";
 // The editor rail's own per-project chat tabs, which this store replaced. Not migrated
 // (the rail's tabs were a subset of the threads on screen); dropped on the first write.
-const LEGACY_EDITOR_RAIL_CHAT_TABS_STORAGE_KEY = "synara.editor.railChatTabsByProjectId";
+const LEGACY_EDITOR_RAIL_CHAT_TABS_STORAGE_KEY = "ramspace.editor.railChatTabsByProjectId";
 
 function createOpenThreadTabsStorage(): StateStorage {
   return {

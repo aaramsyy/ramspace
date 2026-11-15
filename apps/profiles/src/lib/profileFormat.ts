@@ -1,4 +1,4 @@
-// The few display helpers @synara/profile-ui/formatting doesn't cover, specific to the
+// The few display helpers @ramspace/profile-ui/formatting doesn't cover, specific to the
 // public page's copy: the "joined" line and the compact streak.
 
 /** "Joined 30 days ago" from the account's creation instant and the owner's today. */

@@ -8,7 +8,7 @@
 // Exports: deriveComposerSubagentStripItems, toSubagentStripItem,
 // mergeSubagentSnapshots, and the row types
 
-import { ThreadId, type TurnId } from "@synara/contracts";
+import { ThreadId, type TurnId } from "@ramspace/contracts";
 import { t } from "~/i18n";
 
 import type { WorkLogEntry, WorkLogSubagent } from "../../session-logic";

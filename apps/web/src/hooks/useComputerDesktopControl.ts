@@ -1,5 +1,5 @@
 import { useTranslation } from "~/i18n";
-import type { ThreadId } from "@synara/contracts";
+import type { ThreadId } from "@ramspace/contracts";
 import { useMutation } from "@tanstack/react-query";
 
 import { interruptThreadTurn } from "~/lib/threadTurnInterrupt";

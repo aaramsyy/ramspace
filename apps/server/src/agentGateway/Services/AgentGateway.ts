@@ -1,10 +1,10 @@
-import type { RemoteAgentCall } from "@synara/contracts";
+import type { RemoteAgentCall } from "@ramspace/contracts";
 import type { McpToolCallResult } from "../protocol";
 /**
- * AgentGateway - Synara app-control tool surface for provider agents.
+ * AgentGateway - Ramspace app-control tool surface for provider agents.
  *
- * Serves the `synara_*` MCP tools that let any provider session (Codex,
- * Claude, Grok, ...) inspect and control Synara itself: list projects and
+ * Serves the `ramspace_*` MCP tools that let any provider session (Codex,
+ * Claude, Grok, ...) inspect and control Ramspace itself: list projects and
  * threads, read thread status, spawn child threads, send messages, and manage
  * heartbeat automations. The HTTP route delegates every `POST /mcp` request
  * here; authentication and JSON-RPC handling both live behind this interface.
@@ -37,5 +37,5 @@ export interface AgentGatewayShape {
 }
 
 export class AgentGateway extends ServiceMap.Service<AgentGateway, AgentGatewayShape>()(
-  "synara/agentGateway/Services/AgentGateway",
+  "ramspace/agentGateway/Services/AgentGateway",
 ) {}

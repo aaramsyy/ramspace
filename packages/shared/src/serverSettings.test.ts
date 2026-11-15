@@ -3,7 +3,7 @@ import {
   ProviderSessionStartInput,
   ServerSettings,
   ServerSettingsPatch,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { Schema } from "effect";
 import { describe, expect, it } from "vitest";
 import {

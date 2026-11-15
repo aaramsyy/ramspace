@@ -10,7 +10,7 @@ import type {
   AccountStatus,
   EnvironmentId,
   NativeApi,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import type { ComponentProps, ReactNode } from "react";
 import { renderToStaticMarkup } from "react-dom/server";

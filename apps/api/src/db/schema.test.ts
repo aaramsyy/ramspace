@@ -224,7 +224,7 @@ describe.skipIf(!url)("schema", () => {
   });
 
   it("migrates a seeded legacy host and removes the host-token surface", async () => {
-    const databaseName = `synara_slice_a_${crypto.randomUUID().replaceAll("-", "")}`;
+    const databaseName = `ramspace_slice_a_${crypto.randomUUID().replaceAll("-", "")}`;
     const admin = new pg.Pool({ connectionString: url! });
     const targetUrl = new URL(url!);
     targetUrl.pathname = `/${databaseName}`;

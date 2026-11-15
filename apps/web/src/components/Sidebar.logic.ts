@@ -8,13 +8,13 @@ import {
   type ProjectId,
   type SpaceId,
   type ThreadId,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { isGroupThreadRoute } from "./SidebarGroupsSurface.logic";
-import { isSidechatThread } from "@synara/shared/sidechatThread";
+import { isSidechatThread } from "@ramspace/shared/sidechatThread";
 import { t } from "~/i18n";
-import { collectSubagentDescendants } from "@synara/shared/threadHierarchy";
-import { resolveThreadEnvironmentMode } from "@synara/shared/threadEnvironment";
-import { isWorkspaceRootWithin, workspaceRootsEqual } from "@synara/shared/threadWorkspace";
+import { collectSubagentDescendants } from "@ramspace/shared/threadHierarchy";
+import { resolveThreadEnvironmentMode } from "@ramspace/shared/threadEnvironment";
+import { isWorkspaceRootWithin, workspaceRootsEqual } from "@ramspace/shared/threadWorkspace";
 import type { SidebarProjectSortOrder, SidebarThreadSortOrder } from "../appSettings";
 import { resolveRestorableThreadRoute, type LastThreadRoute } from "../chatRouteRestore";
 import type { ChatMessage, Project, SidebarThreadSummary, Thread } from "../types";
@@ -52,7 +52,7 @@ export {
 
 export const THREAD_SELECTION_SAFE_SELECTOR = "[data-thread-item], [data-thread-selection-safe]";
 export const SIDEBAR_THREAD_PREWARM_LIMIT = 10;
-export const DEBUG_FEATURE_FLAGS_MENU_STORAGE_KEY = "synara:show-debug-feature-flags-menu";
+export const DEBUG_FEATURE_FLAGS_MENU_STORAGE_KEY = "ramspace:show-debug-feature-flags-menu";
 export type SidebarNewThreadEnvMode = "local" | "worktree";
 export type SidebarView = "threads" | "groups";
 
@@ -126,7 +126,7 @@ export function pullRequestRepositoryConfigFingerprint(
 /**
  * Shared project roots can serve several threads, so their live Git status is environment state,
  * not thread ownership. Only a materialized worktree is thread-scoped: coding agents may checkout
- * or create a new branch there without going through Synara's branch picker, so its checked-out
+ * or create a new branch there without going through Ramspace's branch picker, so its checked-out
  * branch is authoritative even when the persisted branch metadata is stale.
  */
 export function shouldUseLivePullRequestForSidebarThread(input: {
@@ -237,7 +237,7 @@ export function resolveThreadProjectLabel(
   project: Pick<Project, "kind" | "name" | "folderName"> | null | undefined,
 ): string {
   if (!project || project.kind !== "project") {
-    return "Synara";
+    return "Ramspace";
   }
   return nonEmptyDisplayValue(project.name) ?? project.folderName;
 }
@@ -359,7 +359,7 @@ export type SidebarProjectEntry = {
 
 function isAgentCreatedChild(thread: SidebarThreadSummary): boolean {
   return (
-    thread.creationSource === "synara_mcp" &&
+    thread.creationSource === "ramspace_mcp" &&
     thread.sourceThreadId !== null &&
     thread.sourceThreadId !== undefined &&
     thread.sourceThreadId !== thread.id
@@ -426,7 +426,7 @@ export function collectAgentCreatedDescendants(
 }
 
 /**
- * Reorders threads depth-first so agent-created threads (synara_mcp) sit under the thread that
+ * Reorders threads depth-first so agent-created threads (ramspace_mcp) sit under the thread that
  * created them in the same project. A thread whose creator is absent or in another project,
  * or that is in `detachedIds` (such as a pinned thread), stays top-level with its children.
  */
@@ -1690,7 +1690,7 @@ export function mayBelongToGroup(input: {
     (input.groupProjectIds.size > 0 && !input.membersLoaded) ||
     // A coordinator's worker shows up before its index row, and a closed Hub never sends
     // that row here. Its provenance already names the Hub, the rule the server uses too.
-    (input.creationSource === "synara_mcp" &&
+    (input.creationSource === "ramspace_mcp" &&
       !!input.sourceThreadId &&
       input.coordinatorThreadIds.has(input.sourceThreadId)) ||
     isGroupThreadRoute({

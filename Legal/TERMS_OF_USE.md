@@ -1,18 +1,18 @@
 # Terms of Use
 
-Updated November 2, 2026. Synara is provided by Emanuele Di Pietro. Support: emandipietro@gmail.com.
+Updated November 2, 2026. Ramspace is provided by aaramsyy. Support: emandipietro@gmail.com.
 
 ## Local use and the companion
 
-Local desktop use is free. The iPhone and iPad app is a free companion for your own computer; it requires a compatible host that is running, awake and reachable. Agents, tools and projects execute on that host. Synara does not include an AI-provider subscription or credits.
+Local desktop use is free. The iPhone and iPad app is a free companion for your own computer; it requires a compatible host that is running, awake and reachable. Agents, tools and projects execute on that host. Ramspace does not include an AI-provider subscription or credits.
 
 ## Accounts and permissions
 
 Use only computers, accounts and files you own or are authorized to access. Keep account and pairing credentials private. Pairing requires the host's approval; a subscription never grants ownership of a computer or approves a device automatically. Review tool permissions and approvals before allowing an agent to act.
 
-## Synara Pro
+## Ramspace Pro
 
-When the paid Remote service is enabled, remote access requires an eligible Synara Pro subscription. The companion does not sell subscriptions or AI credits. A subscription is subject to the price, taxes, billing interval and applicable purchase terms presented when it was purchased. Polar is the merchant of record where Polar billing is used.
+When the paid Remote service is enabled, remote access requires an eligible Ramspace Pro subscription. The companion does not sell subscriptions or AI credits. A subscription is subject to the price, taxes, billing interval and applicable purchase terms presented when it was purchased. Polar is the merchant of record where Polar billing is used.
 
 ## Renewal, cancellation and refunds
 

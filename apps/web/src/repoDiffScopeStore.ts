@@ -4,7 +4,7 @@ import { executionStorage } from "./lib/hosts/executionStorage";
 // Layer: Web UI state store
 // Exports: repo diff scope labels, validation, and a persisted Zustand store.
 
-import type { GitReadWorkingTreeDiffInput } from "@synara/contracts";
+import type { GitReadWorkingTreeDiffInput } from "@ramspace/contracts";
 import { useMemo } from "react";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
@@ -68,7 +68,7 @@ export interface RepoDiffScopeSelection {
   compareRef: string | null;
 }
 
-const REPO_DIFF_SCOPE_STORAGE_KEY = "synara:repo-diff-scope:v1";
+const REPO_DIFF_SCOPE_STORAGE_KEY = "ramspace:repo-diff-scope:v1";
 
 export function sanitizeRepoDiffCompareRefs(value: unknown): Record<string, string> {
   if (typeof value !== "object" || value === null) {

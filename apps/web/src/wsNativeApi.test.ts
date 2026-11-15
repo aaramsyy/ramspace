@@ -22,7 +22,7 @@ import {
   WS_METHODS,
   type WsPush,
   type ServerProviderStatus,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const transportInstances: Array<{
@@ -202,7 +202,7 @@ describe("wsNativeApi", () => {
     };
     Object.assign(getWindowForTest(), {
       frameElement: {
-        synaraWorkspace: { host: selected, controllerWsUrl: "ws://127.0.0.1:58001" },
+        ramspaceWorkspace: { host: selected, controllerWsUrl: "ws://127.0.0.1:58001" },
       },
     });
     let environments = 0;
@@ -307,7 +307,11 @@ describe("wsNativeApi", () => {
     const listener = vi.fn();
     onServerWelcome(listener);
 
-    const payload = { cwd: "/tmp/workspace", homeDir: "/Users/tester", projectName: "synara-code" };
+    const payload = {
+      cwd: "/tmp/workspace",
+      homeDir: "/Users/tester",
+      projectName: "ramspace-code",
+    };
     emitPush(WS_CHANNELS.serverWelcome, payload);
 
     expect(listener).toHaveBeenCalledTimes(1);
@@ -335,7 +339,7 @@ describe("wsNativeApi", () => {
     emitPush(WS_CHANNELS.serverWelcome, {
       cwd: "/tmp/workspace",
       homeDir: "/Users/tester",
-      projectName: "synara-code",
+      projectName: "ramspace-code",
     });
 
     expect(listener).toHaveBeenCalledTimes(2);
@@ -343,7 +347,7 @@ describe("wsNativeApi", () => {
       expect.objectContaining({
         cwd: "/tmp/workspace",
         homeDir: "/Users/tester",
-        projectName: "synara-code",
+        projectName: "ramspace-code",
       }),
     );
   });
@@ -868,7 +872,7 @@ describe("wsNativeApi", () => {
             policy: "loopback-browser",
             bootstrapMethods: ["one-time-token"],
             sessionMethods: ["browser-session-cookie", "bearer-session-token"],
-            sessionCookieName: "synara_session",
+            sessionCookieName: "ramspace_session",
           },
         }),
         { status: 200, headers: { "Content-Type": "application/json" } },

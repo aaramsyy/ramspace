@@ -9,7 +9,7 @@
  *
  * @module OrchestrationEventStore
  */
-import { OrchestrationEvent, type ThreadId, type TurnId } from "@synara/contracts";
+import { OrchestrationEvent, type ThreadId, type TurnId } from "@ramspace/contracts";
 import { ServiceMap } from "effect";
 import type { Effect, Stream } from "effect";
 
@@ -114,4 +114,4 @@ export interface OrchestrationEventStoreShape {
 export class OrchestrationEventStore extends ServiceMap.Service<
   OrchestrationEventStore,
   OrchestrationEventStoreShape
->()("synara/persistence/Services/OrchestrationEventStore") {}
+>()("ramspace/persistence/Services/OrchestrationEventStore") {}

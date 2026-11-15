@@ -5,7 +5,7 @@
 
 import { useEffect, useState } from "react";
 
-import type { DesktopCustomTitleBarState } from "@synara/contracts";
+import type { DesktopCustomTitleBarState } from "@ramspace/contracts";
 
 import { isDesktopPresentation } from "~/lib/hosts/workspacePresentation";
 import { readWorkspaceFrame } from "~/lib/hosts/workspaceFrame";

@@ -47,7 +47,7 @@ const makeTestLayer = (
       ServerConfig.layerTest(
         process.cwd(),
         {
-          prefix: "synara-auth-server-test-",
+          prefix: "ramspace-auth-server-test-",
         },
         config,
       ),
@@ -62,7 +62,7 @@ const requestMetadata = {
   ipAddress: "192.168.1.23",
 };
 
-function makeCookieRequest(sessionToken: string, cookieName = "synara_session"): AuthRequest {
+function makeCookieRequest(sessionToken: string, cookieName = "ramspace_session"): AuthRequest {
   return {
     headers: {},
     cookies: {
@@ -497,7 +497,7 @@ describe("ServerAuthLive", () => {
 
         const authenticated = yield* serverAuth.authenticateHttpRequest({
           headers: { authorization: `Bearer ${bearerSession.sessionToken}` },
-          cookies: { synara_session: cookieSession.sessionToken },
+          cookies: { ramspace_session: cookieSession.sessionToken },
         });
 
         expect(authenticated.credentialSource).toBe("bearer");

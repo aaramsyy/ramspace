@@ -8,7 +8,7 @@ import {
   COMPLETION_PREVIEW_PROOF_TYPE,
   type CompletionPreviewWatch,
   type LiveActivityHostSnapshot,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { Effect, Layer } from "effect";
 import * as SqlClient from "effect/unstable/sql/SqlClient";
 import { calculateJwkThumbprint, exportJWK, generateKeyPair, SignJWT } from "jose";
@@ -37,7 +37,7 @@ const expected = {
 };
 
 it("encrypts only the settled final line for the approved recipient and keeps generic delivery safe", async () => {
-  const directory = await mkdtemp(join(tmpdir(), "synara-notification-preview-"));
+  const directory = await mkdtemp(join(tmpdir(), "ramspace-notification-preview-"));
   try {
     const tlsIdentityPath = join(directory, "remote-tls.json");
     const { rootFingerprint } = remoteTlsAnchor(
@@ -58,8 +58,8 @@ it("encrypts only the settled final line for the approved recipient and keeps ge
     const now = Math.floor(Date.now() / 1_000);
     const proof = await new SignJWT({ ...binding, hostId: host.hostId, key })
       .setProtectedHeader({ alg: "ES256", typ: COMPLETION_PREVIEW_PROOF_TYPE })
-      .setIssuer("synara-device")
-      .setAudience(`synara-host:${host.environmentId}`)
+      .setIssuer("ramspace-device")
+      .setAudience(`ramspace-host:${host.environmentId}`)
       .setSubject(host.userId)
       .setIssuedAt(now)
       .setExpirationTime(now + 86_400)

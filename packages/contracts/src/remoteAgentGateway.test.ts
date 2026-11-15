@@ -15,7 +15,7 @@ describe("remote gateway wire contracts", () => {
         envMode: "worktree",
         capabilities: ["thread:read", "thread:write"],
       },
-      tool: "synara_create_threads",
+      tool: "ramspace_create_threads",
       arguments: {
         requestId: "create",
         threads: [

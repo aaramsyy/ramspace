@@ -1,6 +1,6 @@
 // Anonymous daily host counters reuse usage_turns; short-lived receipts admit updates once.
 // New rows contain a fixed placeholder instead of installation/account/device identifiers.
-import type { HostUsageWindow } from "@synara/contracts/hostUsage";
+import type { HostUsageWindow } from "@ramspace/contracts/hostUsage";
 import { USAGE_TURN_CATEGORIES_SQL } from "./usagePrivacySql";
 
 /** Atomically admit one fixed day, then add each dimension only for that admission. */

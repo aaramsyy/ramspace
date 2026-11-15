@@ -1,4 +1,4 @@
-// synara-device-helper — the native side of Synara's Device Pane.
+// ramspace-device-helper — the native side of Ramspace's Device Pane.
 //
 // Protocol: newline-delimited JSON-RPC 2.0 over stdio (one object per line).
 // Frames do not travel on stdio; they go to the Unix socket given to
@@ -159,8 +159,8 @@ final class HelperSession {
   let deviceSet: SimulatorDeviceSet
 
   private(set) var device: SimulatorDevice?
-  private(set) var hid: SynaraHIDBridge?
-  private(set) var accessibility: SynaraAXBridge?
+  private(set) var hid: RamspaceHIDBridge?
+  private(set) var accessibility: RamspaceAXBridge?
   private var stream: FrameStream?
   private var displayDescriptor: NSObject?
   /// The boot the current attachment belongs to. Compared against the device's
@@ -185,7 +185,7 @@ final class HelperSession {
       throw RPCError(.simulatorFailure, "display has no framebuffer surface yet")
     }
 
-    let hidBridge = SynaraHIDBridge()
+    let hidBridge = RamspaceHIDBridge()
     var hidFailure: String?
     var hidReady = false
     do {
@@ -199,7 +199,7 @@ final class HelperSession {
 
     // The accessibility translator is a process-wide singleton, so it is primed
     // once per attach and rebound to the current device.
-    let axBridge = SynaraAXBridge()
+    let axBridge = RamspaceAXBridge()
     axBridge.device = device.handle
     let axReady = axBridge.prepare()
     if !axReady {
@@ -250,7 +250,7 @@ final class HelperSession {
     return device
   }
 
-  func requireHID() throws -> SynaraHIDBridge {
+  func requireHID() throws -> RamspaceHIDBridge {
     // Verify first: a stale boot session re-attaches and replaces `hid`, so
     // the guard must read the post-verification client, not the old one.
     try verifyBootSession()
@@ -291,7 +291,7 @@ final class HelperSession {
     }
   }
 
-  func requireAccessibility() throws -> SynaraAXBridge {
+  func requireAccessibility() throws -> RamspaceAXBridge {
     guard let accessibility else {
       throw RPCError(.notAttached, "accessibility translation is unavailable for this simulator")
     }
@@ -376,12 +376,12 @@ final class HelperSession {
 
 /// Run one HID injection and fail if the bridge could not deliver it.
 ///
-/// Every injection path in SynaraHIDBridge returns silently when it has no
+/// Every injection path in RamspaceHIDBridge returns silently when it has no
 /// client or a private symbol is missing, and this layer used to answer
 /// `{"ok": true}` regardless. A half-attached HID client therefore looked
 /// exactly like a working one: taps were acked and nothing moved. Comparing the
 /// undelivered counter around the call turns that into a real error.
-private func withHIDDelivery(_ hid: SynaraHIDBridge, _ body: () -> Void) throws {
+private func withHIDDelivery(_ hid: RamspaceHIDBridge, _ body: () -> Void) throws {
   hid.beginInput()
   let before = hid.undeliveredEventCount
   body()
@@ -457,7 +457,7 @@ func handle(method: String, params: Params, session: HelperSession) throws -> An
     let startY = try params.normalized("startY")
     let endX = try params.normalized("endX")
     let endY = try params.normalized("endY")
-    let edge: SynaraTouchEdge
+    let edge: RamspaceTouchEdge
     switch params.optionalString("edge") ?? "none" {
     case "none": edge = .none
     case "top": edge = .top
@@ -504,8 +504,8 @@ func handle(method: String, params: Params, session: HelperSession) throws -> An
   case "button":
     let hid = try session.requireHID()
     let name = try params.string("name")
-    var button = SynaraHardwareButton.home
-    guard SynaraHardwareButtonFromName(name, &button) else {
+    var button = RamspaceHardwareButton.home
+    guard RamspaceHardwareButtonFromName(name, &button) else {
       throw RPCError(
         .invalidParams,
         "unknown button '\(name)'; expected home, lock, side, siri, volume-up or volume-down")
@@ -643,7 +643,7 @@ var signalSources: [DispatchSourceSignal] = []
 // Requests are served on a background queue: several handlers block (HID holds,
 // synchronous accessibility XPC), and the main run loop must stay free to
 // service the display callbacks that drive the frame stream.
-let requestQueue = DispatchQueue(label: "dev.synara.device-helper.rpc")
+let requestQueue = DispatchQueue(label: "dev.ramspace.device-helper.rpc")
 
 func handleLine(_ line: Data) {
   guard !line.isEmpty else { return }

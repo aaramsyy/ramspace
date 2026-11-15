@@ -4,8 +4,8 @@
 // Exports: MCP_CONNECTOR_CATEGORIES, MCP_CONNECTOR_PRESETS, findMcpConnectorPreset,
 //   normalizeMcpConnectorUrl, defaultMcpConnectorName, mcpConnectorSlug, mcpConnectorServerName
 
-/** Synara-owned gateway identity, shared with provider diagnostics and config builders. */
-export const SYNARA_MCP_SERVER_NAME = "synara";
+/** Ramspace-owned gateway identity, shared with provider diagnostics and config builders. */
+export const RAMSPACE_MCP_SERVER_NAME = "ramspace";
 /** Catalog shelves, in display order. */
 export const MCP_CONNECTOR_CATEGORIES = ["popular", "developer", "productivity"] as const;
 export type McpConnectorCategory = (typeof MCP_CONNECTOR_CATEGORIES)[number];
@@ -31,10 +31,10 @@ export interface McpConnectorPreset {
 /**
  * Hosted MCP servers that work with one click: each accepts an anonymous
  * client through OAuth dynamic client registration or needs no sign-in.
- * Vercel documents an allowlist of reviewed clients but admitted Synara end to
- * end (2026-10-14); until it reviews Synara, its consent page says "An MCP client".
+ * Vercel documents an allowlist of reviewed clients but admitted Ramspace end to
+ * end (2026-10-14); until it reviews Ramspace, its consent page says "An MCP client".
  * Slack registers no clients, so its preset asks for the user's own Slack app.
- * Vendors that refuse registration outright (Figma) or need an app Synara has
+ * Vendors that refuse registration outright (Figma) or need an app Ramspace has
  * not registered (GitHub, Asana) are absent; a custom URL can still use the
  * user's own app.
  */
@@ -278,8 +278,8 @@ export function defaultMcpConnectorName(url: string): string {
 
 /**
  * Lowercase letters, digits, and single underscores, starting with a letter.
- * Names that could pass for Synara's own server (`synara…`) get a prefix,
- * because tool policy treats `synara` tools as trusted.
+ * Names that could pass for Ramspace's own server (`ramspace…`) get a prefix,
+ * because tool policy treats `ramspace` tools as trusted.
  */
 export function mcpConnectorSlug(name: string): string {
   let slug = name
@@ -288,7 +288,7 @@ export function mcpConnectorSlug(name: string): string {
     .replace(/[^a-z0-9]+/gu, "_")
     .replace(/^_+|_+$/gu, "");
   if (!/^[a-z]/u.test(slug)) slug = `mcp_${slug}`.replace(/_+$/u, "");
-  if (slug.startsWith("synara")) slug = `custom_${slug}`;
+  if (slug.startsWith("ramspace")) slug = `custom_${slug}`;
   return slug.slice(0, MAX_SLUG_LENGTH).replace(/_+$/u, "");
 }
 
@@ -317,7 +317,7 @@ export function serverNameFromMcpConnectorMentionPath(path: string): string | nu
 
 /**
  * Providers whose sessions receive connector servers. ACP agents negotiate
- * HTTP or use Synara's stdio proxy; Pi, Devin, and Antigravity receive none.
+ * HTTP or use Ramspace's stdio proxy; Pi, Devin, and Antigravity receive none.
  */
 export const MCP_CONNECTOR_PROVIDER_IDS = [
   "claudeAgent",

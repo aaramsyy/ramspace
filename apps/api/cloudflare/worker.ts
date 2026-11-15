@@ -42,7 +42,7 @@ type OptionalSecrets = Partial<
     | "REMOTE_TEST_USER_IDS"
     | "REMOTE_TEST_ADDITIONAL_USER_IDS"
     | "REMOTE_BETA_ACCESS_ENABLED"
-    | "SYNARA_API_PERF"
+    | "RAMSPACE_API_PERF"
     | "S3_ENDPOINT"
     | "S3_BUCKET"
     | "S3_ACCESS_KEY_ID"
@@ -103,7 +103,7 @@ export class AccountApi extends Container<Cloudflare.Env & OptionalSecrets> {
           "REMOTE_TEST_USER_IDS",
           "REMOTE_BETA_ACCESS_ENABLED",
           // Opt-in request timings; unset keeps the API uninstrumented.
-          "SYNARA_API_PERF",
+          "RAMSPACE_API_PERF",
           "S3_ENDPOINT",
           "S3_BUCKET",
           "S3_ACCESS_KEY_ID",
@@ -281,15 +281,15 @@ export default {
     // Cross-account subrequests have a shared Cloudflare IP. Only our legacy
     // relay may supply the original client address, for rate limiting only.
     const expected = new TextEncoder().encode(env.MIGRATION_PROXY_SECRET ?? "");
-    const supplied = new TextEncoder().encode(headers.get("x-synara-migration-secret") ?? "");
-    const relayIp = headers.get("x-synara-client-ip");
+    const supplied = new TextEncoder().encode(headers.get("x-ramspace-migration-secret") ?? "");
+    const relayIp = headers.get("x-ramspace-client-ip");
     const trustedRelay =
       expected.length > 0 &&
       expected.length === supplied.length &&
       timingSafeEqual(expected, supplied);
     const ip = trustedRelay && relayIp && isIP(relayIp) ? relayIp : headers.get("cf-connecting-ip");
-    headers.delete("x-synara-migration-secret");
-    headers.delete("x-synara-client-ip");
+    headers.delete("x-ramspace-migration-secret");
+    headers.delete("x-ramspace-client-ip");
     if (ip && isIP(ip)) headers.set("x-forwarded-for", ip);
     try {
       // One instance preserves the API's existing process-local rate limits.

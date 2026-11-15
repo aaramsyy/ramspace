@@ -1,6 +1,6 @@
 // Exercises the singleton profile sync with real React effects, theme storage,
 // and account mutations; only the native account transport is substituted.
-import type { AccountMe, AccountStatus, AccountUpdateProfileInput } from "@synara/contracts";
+import type { AccountMe, AccountStatus, AccountUpdateProfileInput } from "@ramspace/contracts";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { flushSync } from "react-dom";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";

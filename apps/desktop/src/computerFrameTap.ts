@@ -5,12 +5,12 @@ import { createServer, type Server, type Socket } from "node:net";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { createInterface, type Interface } from "node:readline";
-import { ByteAccumulator } from "@synara/shared/byteAccumulator";
+import { ByteAccumulator } from "@ramspace/shared/byteAccumulator";
 import {
   cuaComputerTaskKey,
   type CuaComputerTask,
   type CuaPreviewTarget,
-} from "@synara/shared/cuaDriverProtocol";
+} from "@ramspace/shared/cuaDriverProtocol";
 import { DESKTOP_IPC_CHANNELS } from "./ipcChannels";
 import { stopNativeHelper } from "./stopNativeHelper";
 
@@ -184,7 +184,7 @@ export class ComputerFrameTap implements ComputerFrameTapHost {
     if (this.directory) return this.directory;
     if (!this.directoryPromise) {
       const pending = (async () => {
-        const directory = await mkdtemp(join(tmpdir(), "synara-frames-"));
+        const directory = await mkdtemp(join(tmpdir(), "ramspace-frames-"));
         await chmod(directory, 0o700);
         this.directory = directory;
         return directory;

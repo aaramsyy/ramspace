@@ -1,4 +1,4 @@
-import type { OrchestrationEvent, OrchestrationReadModel, ThreadId } from "@synara/contracts";
+import type { OrchestrationEvent, OrchestrationReadModel, ThreadId } from "@ramspace/contracts";
 import {
   OrchestrationCheckpointSummary,
   OrchestrationMessage,
@@ -7,18 +7,18 @@ import {
   ThreadAsyncUserInputAnsweredPayload,
   ThreadClaudeCacheSetPayload,
   type OrchestrationMessageTextSegment,
-} from "@synara/contracts";
-import { clearRemovedAsyncUserInputResponses } from "@synara/shared/asyncUserInput";
-import { isGroupContainerKind } from "@synara/shared/projectContainers";
-import { isSidechatThread } from "@synara/shared/sidechatThread";
+} from "@ramspace/contracts";
+import { clearRemovedAsyncUserInputResponses } from "@ramspace/shared/asyncUserInput";
+import { isGroupContainerKind } from "@ramspace/shared/projectContainers";
+import { isSidechatThread } from "@ramspace/shared/sidechatThread";
 import {
   addPinnedMessage,
   removePinnedMessage,
   setPinnedMessageDone,
   setPinnedMessageLabel,
-} from "@synara/shared/pinnedMessages";
+} from "@ramspace/shared/pinnedMessages";
 import { Effect, Schema } from "effect";
-import { resolveModelSelectionInstanceId } from "@synara/shared/providerInstances";
+import { resolveModelSelectionInstanceId } from "@ramspace/shared/providerInstances";
 
 import { toProjectorDecodeError, type OrchestrationProjectorDecodeError } from "./Errors.ts";
 import {
@@ -52,7 +52,7 @@ import {
   ThreadTurnStartRequestedPayload,
 } from "./Schemas.ts";
 import { resolveStableMessageTurnId } from "./messageTurnId.ts";
-import { deriveTurnStopActivity } from "@synara/shared/turnStopActivity";
+import { deriveTurnStopActivity } from "@ramspace/shared/turnStopActivity";
 import { maxIso, settleTurnStateFromSession } from "./turnLifecycle.ts";
 import {
   canAdoptFirstTurnProvider,

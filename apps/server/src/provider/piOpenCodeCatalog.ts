@@ -2,7 +2,7 @@ import type { Api, Model } from "@earendil-works/pi-ai";
 import { isModelType } from "@earendil-works/pi-ai/utils/model-operations";
 import { opencodeProvider } from "@earendil-works/pi-ai/providers/opencode";
 import type { ModelRuntime } from "@earendil-works/pi-coding-agent";
-import { outboundHttp, decodeOutboundJson } from "@synara/shared/outboundHttp";
+import { outboundHttp, decodeOutboundJson } from "@ramspace/shared/outboundHttp";
 
 const CATALOG_URL = "https://pi.dev/api/models/providers/opencode";
 const INVENTORY_URL = "https://opencode.ai/inference/v1/models";

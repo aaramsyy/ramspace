@@ -5,11 +5,11 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 : "${CLOUDFLARE_ACCOUNT_ID:?set CLOUDFLARE_ACCOUNT_ID to the account being exported}"
 out=export
-bucket=synara-beta-crash-dumps
+bucket=ramspace-beta-crash-dumps
 if [ -e "$out" ]; then echo "$out/ already exists; move it away first" >&2; exit 1; fi
 mkdir -p "$out/r2"
 
-npx wrangler d1 export synara-beta-diagnostics --remote --output "$out/db.sql"
+npx wrangler d1 export ramspace-beta-diagnostics --remote --output "$out/db.sql"
 
 token=$(npx wrangler auth token --json | node -pe 'JSON.parse(require("fs").readFileSync(0, "utf8")).token')
 list="https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/r2/buckets/$bucket/objects?per_page=1000"

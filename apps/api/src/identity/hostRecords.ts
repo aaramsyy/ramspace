@@ -1,4 +1,4 @@
-import type { AccountHost, EnvironmentId } from "@synara/contracts";
+import type { AccountHost, EnvironmentId } from "@ramspace/contracts";
 
 import { hosts } from "../db/schema";
 

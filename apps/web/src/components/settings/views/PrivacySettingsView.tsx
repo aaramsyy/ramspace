@@ -1,5 +1,5 @@
 // FILE: PrivacySettingsView.tsx
-// Purpose: Settings › Privacy: what Synara shares (product analytics) and what it may read
+// Purpose: Settings › Privacy: what Ramspace shares (product analytics) and what it may read
 //          on this computer (Safari sign-ins for the in-app browser).
 // Layer: Settings view
 // Exports: PrivacySettingsView

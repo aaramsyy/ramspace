@@ -3,7 +3,7 @@ import {
   MessageId,
   type NativeApi,
   type ThreadId,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { Schema } from "effect";
 
 import type { ComposerThreadDraftState } from "../composerDraftDomain";
@@ -49,7 +49,7 @@ export function composerTurnMayHaveBeenSent(error: unknown): boolean {
 
 const activeClaims = new Set<string>();
 const storageKey = (threadId: ThreadId) =>
-  `synara:composer-turn-settlement:${encodeURIComponent(threadId)}`;
+  `ramspace:composer-turn-settlement:${encodeURIComponent(threadId)}`;
 const acceptedQueuePrefix = (threadId: ThreadId) => `${storageKey(threadId)}:accepted:`;
 const acceptedQueueKey = (threadId: ThreadId, queuedTurnId: string) =>
   `${acceptedQueuePrefix(threadId)}${encodeURIComponent(queuedTurnId)}`;

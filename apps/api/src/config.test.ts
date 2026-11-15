@@ -136,7 +136,7 @@ describe("loadApiConfig", () => {
     const metadata = {
       APNS_KEY_ID: "ABCD123456",
       APNS_TEAM_ID: "TESTTEAM12",
-      APNS_BUNDLE_ID: "com.example.synara",
+      APNS_BUNDLE_ID: "com.example.ramspace",
       APNS_ENVIRONMENT: "sandbox",
     };
     for (const key of [pem, pem.replace(/\n/g, "\\n")]) {

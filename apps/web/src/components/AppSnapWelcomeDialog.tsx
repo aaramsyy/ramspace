@@ -17,7 +17,7 @@ import { AnnouncementSheet } from "./AnnouncementSheet";
 import { DIALOG_HERO_ITEM_SHADOW_CLASS_NAME } from "./DialogHeroBand";
 import { useTranslation } from "~/i18n";
 
-const APP_SNAP_WELCOME_STORAGE_KEY = "synara:appsnap-welcome:v1";
+const APP_SNAP_WELCOME_STORAGE_KEY = "ramspace:appsnap-welcome:v1";
 
 const AppSnapWelcomeStorageSchema = Schema.Struct({
   acknowledged: Schema.Boolean,
@@ -95,7 +95,7 @@ export function AppSnapWelcomeDialog({ children }: { children?: ReactNode }) {
       <AnnouncementSheet
         open={dialogOpen}
         hero={<AppSnapScene />}
-        title={t("common:synaraAppSnapsAreLive")}
+        title={t("common:ramspaceAppSnapsAreLive")}
         description={t("common:pressBothOptionKeysToSnapAnyAppS")}
         dismissLabel={t("common:notNow")}
         confirmLabel={t("common:setUpAppSnap")}

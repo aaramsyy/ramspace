@@ -3,9 +3,9 @@ title: Connectors
 description: Connect remote and local MCP tools from Settings or chat, with approval and provider-specific limits.
 ---
 
-Connectors are available in **Synara Stable and Beta**. Open **Settings → Connectors**, select a catalog entry, enter a public HTTPS MCP URL, or choose **Add local server** for a loopback HTTP URL or a stdio command. Complete any required sign-in in your browser. This lets an agent use another service's tools. [External MCP](/docs/workflows/external-mcp) works in the other direction, allowing outside agents to call Synara.
+Connectors are available in **Ramspace Stable and Beta**. Open **Settings → Connectors**, select a catalog entry, enter a public HTTPS MCP URL, or choose **Add local server** for a loopback HTTP URL or a stdio command. Complete any required sign-in in your browser. This lets an agent use another service's tools. [External MCP](/docs/workflows/external-mcp) works in the other direction, allowing outside agents to call Ramspace.
 
-You can also ask in a chat: “add the Paper MCP at http://127.0.0.1:29979/mcp” or “add stdio MCP: ~/.paper/bin/paper mcp”. Synara shows a card before connecting or running anything. Choose **Review connection** to see the exact command, arguments, working directory and environment keys, then **Approve connector**; values stay hidden. Removing a connector also requires confirmation.
+You can also ask in a chat: “add the Paper MCP at http://127.0.0.1:29979/mcp” or “add stdio MCP: ~/.paper/bin/paper mcp”. Ramspace shows a card before connecting or running anything. Choose **Review connection** to see the exact command, arguments, working directory and environment keys, then **Approve connector**; values stay hidden. Removing a connector also requires confirmation.
 
 Cards show the app's icon when recognized, its name and connection status. A **Custom** badge identifies connectors outside the built-in catalog. Open **Connection details** to inspect their configuration.
 
@@ -18,14 +18,14 @@ After connecting, start a new provider session to receive the connector's tools.
 | Provider                      | Availability                                                |
 | ----------------------------- | ----------------------------------------------------------- |
 | Claude, Codex, OpenCode       | Remote HTTP, local HTTP and stdio connectors are supported. |
-| Cursor, Grok, Droid, Oh My Pi | Uses ACP HTTP support or Synara's stdio proxy.              |
+| Cursor, Grok, Droid, Oh My Pi | Uses ACP HTTP support or Ramspace's stdio proxy.              |
 | Pi, Devin, Antigravity        | Connectors are unavailable.                                 |
 
 Codex keeps user-configured servers: a connector with a conflicting server name is omitted. If its effective configuration cannot be checked, connectors are omitted for that session. OpenCode skips a connector that fails to start. A catalog entry does not guarantee that the service accepts your account or client registration.
 
 ## Sign-in and recovery
 
-Sign-in requires Synara to listen only on loopback, because the callback returns to this machine. Custom endpoints use public HTTPS, or HTTP on `localhost`, `127.0.0.0/8` or `::1`, and cannot embed URL credentials. Services that require a pre-registered OAuth application may reject automatic registration.
+Sign-in requires Ramspace to listen only on loopback, because the callback returns to this machine. Custom endpoints use public HTTPS, or HTTP on `localhost`, `127.0.0.0/8` or `::1`, and cannot embed URL credentials. Services that require a pre-registered OAuth application may reject automatic registration.
 
 If a local app is closed, its connector remains saved as **Not running**. Unavailable connectors are omitted from new sessions. Start the app and allow the background status check to reconnect it, then start a new chat.
 
@@ -37,8 +37,8 @@ When a service rejects refreshed credentials, the connector shows **needs sign-i
 
 Connector credentials and local environment values stay in the server's local secret store. They are not returned in chat management-tool results. OAuth credentials stay in the gateway; configured environment values reach only the local MCP subprocess. Tool requests and their arguments are sent to the selected service. Review the service and the requested action before approving it.
 
-Stable and Beta use the same connector functionality, but keep their own credentials and data homes. Sign in separately in each app; Beta credentials are not copied into Stable. See [Synara Beta](/docs/features/synara-beta).
+Stable and Beta use the same connector functionality, but keep their own credentials and data homes. Sign in separately in each app; Beta credentials are not copied into Stable. See [Ramspace Beta](/docs/features/ramspace-beta).
 
 Source evidence: `docs/mcp-connectors.md`, `packages/contracts/src/mcpConnectors.ts`, `apps/server/src/mcpConnectors/runtime.ts`, `apps/server/src/agentGateway/connectorTools.ts`, `apps/server/src/agentGateway/mcpInjection.ts` and `apps/web/src/components/settings/McpConnectorsSettingsPanel.tsx`.
 
-Source evidence for 1.0.9: Synara release `ebd0d22b39ce3a0f7c6051dddc6090e9b85dc7c3`; `docs/releases/1.0.9-source-audit.md`, `docs/providers.md`, `docs/core-concepts.md`, `docs/editor/intelligence.md`, `docs/mcp-connectors.md`, `apps/server/src/persistence/MigrationBackup.ts` and `docs/release.md`.
+Source evidence for 1.0.9: Ramspace release `ebd0d22b39ce3a0f7c6051dddc6090e9b85dc7c3`; `docs/releases/1.0.9-source-audit.md`, `docs/providers.md`, `docs/core-concepts.md`, `docs/editor/intelligence.md`, `docs/mcp-connectors.md`, `apps/server/src/persistence/MigrationBackup.ts` and `docs/release.md`.

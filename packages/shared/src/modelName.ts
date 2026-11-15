@@ -1,5 +1,5 @@
 // FILE: modelName.ts
-// Purpose: Turns raw model slugs and provider labels into Synara's canonical display names
+// Purpose: Turns raw model slugs and provider labels into Ramspace's canonical display names
 // ("gpt-6-astra" → "GPT-6 Astra", "claude-opus-4-8" → "Claude Opus 4.8"). Dependency-free so
 // surfaces that avoid the contracts package (the public profile app) share the exact same
 // naming as the desktop; model.ts layers the built-in catalog names on top.
@@ -88,7 +88,7 @@ export function humanizeModelSlug(slug: string): string {
 }
 
 /**
- * Normalizes a provider-supplied display name to Synara's canonical casing:
+ * Normalizes a provider-supplied display name to Ramspace's canonical casing:
  * known brand tokens are re-cased ("Swe" → "SWE", "Deepseek" → "DeepSeek"),
  * slug separators become spaces ("GLM-5.3-Flash" → "GLM 5.3 Flash"), digit
  * fragments rejoin as versions, and GPT versions keep their hyphen. Gated on a

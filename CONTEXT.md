@@ -1,4 +1,4 @@
-# Synara
+# Ramspace
 
 A multi-provider web GUI for coding agents. One account, many hosts: clients reach any of the user's hosts directly (LAN, SSH, Tailscale) or through a cloud relay.
 
@@ -7,11 +7,11 @@ A multi-provider web GUI for coding agents. One account, many hosts: clients rea
 ### Hosts & Environments
 
 **Host**:
-A user's machine running a Synara server, registered on their account. Host = Environment, 1:1 — the environment id is the host's stable identity; one machine runs one Synara environment.
+A user's machine running a Ramspace server, registered on their account. Host = Environment, 1:1 — the environment id is the host's stable identity; one machine runs one Ramspace environment.
 _Avoid_: device (that's a client), remote host (all hosts are the same entity, reachable or not)
 
 **Environment**:
-The running Synara server instance a host is. Not modeled separately from Host; there is deliberately no multi-environment-per-machine concept.
+The running Ramspace server instance a host is. Not modeled separately from Host; there is deliberately no multi-environment-per-machine concept.
 
 **Owner**:
 The user who registered a host. Hosts are user-owned; the org is tenancy, not automatic shared ownership.

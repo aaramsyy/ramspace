@@ -3,7 +3,7 @@
 // streak derivation, hour histogram, model row mapping, heatmap, empty summary.
 
 import { describe, expect, it } from "vitest";
-import type { UsageSummary } from "@synara/contracts";
+import type { UsageSummary } from "@ramspace/contracts";
 import {
   ACCOUNT_HEATMAP_WINDOW_DAYS,
   computeAccountStreaks,

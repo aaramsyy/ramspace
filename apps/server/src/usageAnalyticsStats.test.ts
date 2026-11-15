@@ -67,7 +67,7 @@ const usage = (
 });
 
 // Two Claude files (the second resumed the first and copied its response) and
-// one Codex session in a folder Synara does not know.
+// one Codex session in a folder Ramspace does not know.
 const SESSION_FILES: TranscriptUsageReader = {
   scan: async () => ({
     files: [
@@ -448,7 +448,7 @@ describe("UsageAnalyticsQuery estimates", () => {
 });
 
 describe("UsageAnalyticsQuery on this Mac", () => {
-  it("retains Synara totals when a provider has no session records in the period", async () => {
+  it("retains Ramspace totals when a provider has no session records in the period", async () => {
     const result = await runTest(
       Effect.gen(function* () {
         yield* seed;
@@ -478,7 +478,7 @@ describe("UsageAnalyticsQuery on this Mac", () => {
     ).toBe(40_000);
   });
 
-  it("reads Claude and Codex from their session files instead of Synara's rows", async () => {
+  it("reads Claude and Codex from their session files instead of Ramspace's rows", async () => {
     const result = await runTest(
       Effect.gen(function* () {
         yield* seed;
@@ -489,7 +489,7 @@ describe("UsageAnalyticsQuery on this Mac", () => {
 
     expect(result.scope).toBe("mac");
     expect(result.sessionFileProviders).toEqual(["claudeAgent", "codex"]);
-    // Synara's own Codex rows are replaced by the session files; Cursor stays.
+    // Ramspace's own Codex rows are replaced by the session files; Cursor stays.
     expect(result.tokens.every((row) => row.origin === null)).toBe(true);
     expect(result.tokens).toEqual(
       expect.arrayContaining([

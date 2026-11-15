@@ -35,9 +35,9 @@ export async function startWorkspace(
         PATH: [path.dirname(process.execPath), "/usr/bin", "/bin"].join(path.delimiter),
         HOME: baseDir,
         TMPDIR: process.env.TMPDIR,
-        SYNARA_REMOTE_CONNECTIONS: "1",
-        SYNARA_DESKTOP_BUNDLE_ID: "",
-        SYNARA_CLOUDFLARED_PATH: remote.connectorExecutable,
+        RAMSPACE_REMOTE_CONNECTIONS: "1",
+        RAMSPACE_DESKTOP_BUNDLE_ID: "",
+        RAMSPACE_CLOUDFLARED_PATH: remote.connectorExecutable,
         NODE_EXTRA_CA_CERTS: remote.publicCa,
       },
       stdio: ["ignore", log.fd, log.fd],
@@ -62,11 +62,11 @@ export async function startWorkspace(
     } finally {
       clearTimeout(kill);
       await log.close();
-      if (process.env.SYNARA_E2E_EVIDENCE) {
-        await fs.mkdir(process.env.SYNARA_E2E_EVIDENCE, { recursive: true });
+      if (process.env.RAMSPACE_E2E_EVIDENCE) {
+        await fs.mkdir(process.env.RAMSPACE_E2E_EVIDENCE, { recursive: true });
         await fs.copyFile(
           path.join(baseDir, "workspace.log"),
-          path.join(process.env.SYNARA_E2E_EVIDENCE, `${path.basename(baseDir)}.log`),
+          path.join(process.env.RAMSPACE_E2E_EVIDENCE, `${path.basename(baseDir)}.log`),
         );
       }
     }

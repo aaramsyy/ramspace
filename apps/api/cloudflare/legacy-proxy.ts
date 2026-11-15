@@ -23,11 +23,11 @@ export default {
       target.pathname = source.pathname;
       target.search = source.search;
       const headers = new Headers(request.headers);
-      headers.delete("x-synara-client-ip");
-      headers.delete("x-synara-migration-secret");
+      headers.delete("x-ramspace-client-ip");
+      headers.delete("x-ramspace-migration-secret");
       const ip = headers.get("cf-connecting-ip");
-      if (ip && isIP(ip)) headers.set("x-synara-client-ip", ip);
-      headers.set("x-synara-migration-secret", env.MIGRATION_PROXY_SECRET);
+      if (ip && isIP(ip)) headers.set("x-ramspace-client-ip", ip);
+      headers.set("x-ramspace-migration-secret", env.MIGRATION_PROXY_SECRET);
       // Stream uploads and responses. Never send credentials to a redirect target.
       return await fetch(
         new Request(target, new Request(request, { headers, redirect: "manual" })),

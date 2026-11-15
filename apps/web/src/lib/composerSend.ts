@@ -13,9 +13,9 @@ import {
   type ClaudeCodeEffort,
   type ProviderKind,
   type UploadChatAttachment,
-} from "@synara/contracts";
-import { applyClaudePromptEffortPrefix, getModelCapabilities } from "@synara/shared/model";
-import { parseComputerInvocation } from "@synara/shared/computerInvocation";
+} from "@ramspace/contracts";
+import { applyClaudePromptEffortPrefix, getModelCapabilities } from "@ramspace/shared/model";
+import { parseComputerInvocation } from "@ramspace/shared/computerInvocation";
 
 import {
   cloneComposerImageAttachment,
@@ -129,7 +129,7 @@ export async function prepareComposerImageAttachmentsFromFiles(input: {
       error =
         cause instanceof ComposerImagePreparationError
           ? cause.message
-          : `Synara could not prepare '${file.name || "image"}'.`;
+          : `Ramspace could not prepare '${file.name || "image"}'.`;
     }
   }
 

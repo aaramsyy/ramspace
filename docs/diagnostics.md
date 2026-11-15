@@ -189,7 +189,7 @@ because older Workers drop the unknown fields. `/v1/crash` remains
 retired with HTTP 410 in every flavor. `/v1/events` accepts Beta and
 Remote diagnostics; Remote events follow the sharing switch.
 
-### Synara Remote
+### Ramspace Remote
 
 From version **1.0.6-remote.18**, Remote product events use the `remote` channel and
 are **on by default** until the user turns sharing off; the choice persists per

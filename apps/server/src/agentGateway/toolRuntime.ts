@@ -1,4 +1,4 @@
-import type { ProviderKind, RemoteAgentCallerPolicy } from "@synara/contracts";
+import type { ProviderKind, RemoteAgentCallerPolicy } from "@ramspace/contracts";
 import type { Effect } from "effect";
 
 import type { AgentGatewayTargetError } from "./targetResolver.ts";

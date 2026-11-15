@@ -22,7 +22,7 @@ import {
   type ProviderKind,
   type ProviderRuntimeEvent,
   type RuntimeMode,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import {
   Cache,
   Cause,
@@ -36,10 +36,13 @@ import {
   Stream,
 } from "effect";
 import * as Semaphore from "effect/Semaphore";
-import { makeDrainableWorker, startDrainableWorkerProducers } from "@synara/shared/DrainableWorker";
-import { isGroupContainerKind } from "@synara/shared/projectContainers";
-import { providerSupportsNativeTurnSteering } from "@synara/shared/providerMetadata";
-import { isProviderKind } from "@synara/shared/providerInstances";
+import {
+  makeDrainableWorker,
+  startDrainableWorkerProducers,
+} from "@ramspace/shared/DrainableWorker";
+import { isGroupContainerKind } from "@ramspace/shared/projectContainers";
+import { providerSupportsNativeTurnSteering } from "@ramspace/shared/providerMetadata";
+import { isProviderKind } from "@ramspace/shared/providerInstances";
 import {
   coalesceProviderRuntimeProgress,
   providerRuntimeCommandProgressKey,
@@ -51,7 +54,7 @@ import {
   collectSubagentProviderThreadIds,
   extractSubagentIdentityHints,
   resolveSubagentIdentityFromDirectory,
-} from "@synara/shared/subagents";
+} from "@ramspace/shared/subagents";
 
 import {
   generatedImageMarkdown,
@@ -223,7 +226,8 @@ const MAX_BUFFERED_REASONING_SUMMARY_CHARS = 8_000;
 const MAX_BUFFERED_REASONING_SUMMARY_PARTS = 24;
 const REASONING_PREVIEW_INTERVAL_MS = 250;
 const BUFFERED_TEXT_TRUNCATION_MARKER = "... [truncated]";
-const STRICT_PROVIDER_LIFECYCLE_GUARD = process.env.SYNARA_STRICT_PROVIDER_LIFECYCLE_GUARD !== "0";
+const STRICT_PROVIDER_LIFECYCLE_GUARD =
+  process.env.RAMSPACE_STRICT_PROVIDER_LIFECYCLE_GUARD !== "0";
 
 /**
  * Back off the durable-journal safety poll while the live persisted-event
@@ -1928,7 +1932,7 @@ const make = Effect.gen(function* () {
     turnId?: TurnId;
     createdAt: string;
     commandTag: string;
-    asyncQuestions?: import("@synara/contracts").AsyncUserInputQuestions;
+    asyncQuestions?: import("@ramspace/contracts").AsyncUserInputQuestions;
   }) =>
     Effect.gen(function* () {
       const commandId = providerCommandId(input.event, input.commandTag, input.messageId);
@@ -1956,7 +1960,7 @@ const make = Effect.gen(function* () {
     commandTag: string;
     finalDeltaCommandTag: string;
     fallbackText?: string;
-    asyncQuestions?: import("@synara/contracts").AsyncUserInputQuestions;
+    asyncQuestions?: import("@ramspace/contracts").AsyncUserInputQuestions;
   }) =>
     Effect.gen(function* () {
       const bufferedText = yield* getBufferedAssistantText(input.messageId);
@@ -2568,7 +2572,7 @@ const make = Effect.gen(function* () {
                       id: overflowId,
                       tone: "error",
                       kind: "subagent.materialization.capped",
-                      summary: `Subagent limit reached: Synara shows up to ${MAX_NATIVE_CHILDREN_PER_PARENT_TURN} subagents per turn. Additional subagents keep running, but their work is not shown.`,
+                      summary: `Subagent limit reached: Ramspace shows up to ${MAX_NATIVE_CHILDREN_PER_PARENT_TURN} subagents per turn. Additional subagents keep running, but their work is not shown.`,
                       payload: {
                         source: "provider_native",
                         cap: MAX_NATIVE_CHILDREN_PER_PARENT_TURN,
@@ -3057,7 +3061,7 @@ const make = Effect.gen(function* () {
             );
           }
 
-          let terminalRecovery: import("@synara/contracts").UsageLimitRecovery | undefined;
+          let terminalRecovery: import("@ramspace/contracts").UsageLimitRecovery | undefined;
           if (
             event.type === "turn.completed" &&
             event.payload.state === "failed" &&
@@ -3225,7 +3229,7 @@ const make = Effect.gen(function* () {
             event.provider === "devin" &&
             event.type === "turn.completed" &&
             event.payload.state === "cancelled" &&
-            event.payload.stopReason === "synara.devin.wedge-recovery";
+            event.payload.stopReason === "ramspace.devin.wedge-recovery";
           if (isTerminalTurnEvent && !isDevinWedgeRecoveryCancellation) {
             // The command read model advances synchronously with goal tools.
             // Reading it here prevents a fast terminal provider event from
@@ -3826,7 +3830,7 @@ const make = Effect.gen(function* () {
           // recovery can now pause its goal. Never pause a different turn.
           if (
             event.provider === "devin" &&
-            asObject(event.payload.detail)?.reason === "synara.devin.wedge-recovery" &&
+            asObject(event.payload.detail)?.reason === "ramspace.devin.wedge-recovery" &&
             eventTurnId !== undefined &&
             thread.latestTurn?.turnId === eventTurnId
           ) {

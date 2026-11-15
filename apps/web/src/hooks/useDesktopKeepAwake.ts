@@ -3,7 +3,7 @@
 // Layer: Web hook over the desktop bridge
 // Depends on: desktopBridge.keepAwake (absent in plain browsers and older desktop builds).
 
-import type { DesktopKeepAwakeState } from "@synara/contracts";
+import type { DesktopKeepAwakeState } from "@ramspace/contracts";
 import { useCallback, useEffect, useState } from "react";
 
 export interface DesktopKeepAwake {

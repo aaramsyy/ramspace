@@ -5,7 +5,7 @@ import {
   OrchestrationProposedPlanId,
   TurnId,
   type OrchestrationThreadActivity,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { describe, expect, it } from "vitest";
 import {
   buildTurnDiffSummaryByAssistantMessageId,
@@ -482,7 +482,7 @@ describe("computeStableMessagesTimelineRows", () => {
             tone: "info",
             automation: {
               id: "automation-7",
-              name: "Watch Synara PR 231",
+              name: "Watch Ramspace PR 231",
               cadenceLabel: "Every 5m",
             },
           },
@@ -2816,11 +2816,11 @@ describe("deriveMessagesTimelineRows", () => {
       id: EventId.makeUnsafe("tool-call"),
       tone: "tool",
       kind: "tool.started",
-      summary: "synara_show_visual started",
+      summary: "ramspace_show_visual started",
       payload: {
         itemType: "mcp_tool_call",
-        title: "synara_show_visual",
-        data: { toolName: "synara_show_visual", input: { title: "Build", html: "<svg><rect" } },
+        title: "ramspace_show_visual",
+        data: { toolName: "ramspace_show_visual", input: { title: "Build", html: "<svg><rect" } },
       },
       turnId: TurnId.makeUnsafe("t1"),
       createdAt: "2026-01-01T00:00:02.500Z",
@@ -3018,7 +3018,7 @@ describe("deriveMessagesTimelineRows", () => {
       placed,
       assistantEntry("a1", "2026-01-01T00:00:03Z", {
         turnId: "t1",
-        text: `Before.\n\n\`\`\`synara-visual\n${visualId}\n\`\`\`\n\nAfter.`,
+        text: `Before.\n\n\`\`\`ramspace-visual\n${visualId}\n\`\`\`\n\nAfter.`,
         completedAt: "2026-01-01T00:00:04Z",
       }),
     ];
@@ -3038,7 +3038,7 @@ describe("deriveMessagesTimelineRows", () => {
         userEntry("u2", "2026-01-01T00:01:00Z", "t2"),
         assistantEntry("a2", "2026-01-01T00:01:01Z", {
           turnId: "t2",
-          text: `\`\`\`synara-visual\n${visualId}\n\`\`\``,
+          text: `\`\`\`ramspace-visual\n${visualId}\n\`\`\``,
         }),
       ],
     });
@@ -3097,7 +3097,7 @@ describe("deriveMessagesTimelineRows", () => {
       createdAt,
       label,
       tone: "info",
-      synaraWorkerNotice: {
+      ramspaceWorkerNotice: {
         kind: "settled",
         marker: "✓",
         phrase: "finished",
@@ -3177,19 +3177,19 @@ describe("deriveMessagesTimelineRows", () => {
     const monitorRow = rows.find(
       (row): row is Extract<MessagesTimelineRow, { kind: "work" }> =>
         row.kind === "work" &&
-        row.groupedEntries.some((entry) => entry.synaraWorkerNotice !== undefined),
+        row.groupedEntries.some((entry) => entry.ramspaceWorkerNotice !== undefined),
     );
     expect(monitorRow?.id).toBe("entry-m1");
     const assistant = messageRow(rows, "a1")!;
     expect(
       (assistant.leadingWorkEntries ?? []).some(
-        (entry) => entry.synaraWorkerNotice !== undefined,
+        (entry) => entry.ramspaceWorkerNotice !== undefined,
       ) ||
         (assistant.inlineWorkEntries ?? []).some(
-          (entry) => entry.synaraWorkerNotice !== undefined,
+          (entry) => entry.ramspaceWorkerNotice !== undefined,
         ) ||
         (assistant.collapsedTurnItems ?? []).some(
-          (item) => item.kind === "work" && item.entry.synaraWorkerNotice !== undefined,
+          (item) => item.kind === "work" && item.entry.ramspaceWorkerNotice !== undefined,
         ),
     ).toBe(false);
   });
@@ -3211,12 +3211,12 @@ describe("deriveMessagesTimelineRows", () => {
     const monitorRow = rows.find(
       (row): row is Extract<MessagesTimelineRow, { kind: "work" }> =>
         row.kind === "work" &&
-        row.groupedEntries.some((entry) => entry.synaraWorkerNotice !== undefined),
+        row.groupedEntries.some((entry) => entry.ramspaceWorkerNotice !== undefined),
     );
     expect(monitorRow?.id).toBe("entry-m1");
     expect(
       (messageRow(rows, "a1")?.inlineWorkEntries ?? []).some(
-        (entry) => entry.synaraWorkerNotice !== undefined,
+        (entry) => entry.ramspaceWorkerNotice !== undefined,
       ),
     ).toBe(false);
   });

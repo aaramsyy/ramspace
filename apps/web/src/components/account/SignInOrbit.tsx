@@ -1,6 +1,6 @@
 // FILE: SignInOrbit.tsx
-// Purpose: Hero of the sign-in dialog — the Synara app icon inside a slow orbit of the
-//          agents Synara runs, on the dotted band the announcement dialogs use. The code
+// Purpose: Hero of the sign-in dialog — the Ramspace app icon inside a slow orbit of the
+//          agents Ramspace runs, on the dotted band the announcement dialogs use. The code
 //          step swaps the travelling signal for a "code sent" badge on the icon.
 //          The onboarding's ProviderRing is the full-stage version of this idea; its
 //          560px layout, links and tiles do not fit a 196px dialog band.

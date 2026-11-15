@@ -1,5 +1,5 @@
 {
-  "name": "@synara/api",
+  "name": "@ramspace/api",
   "version": "0.0.1",
   "private": true,
   "type": "module",
@@ -17,8 +17,8 @@
   "dependencies": {
     "@hono/node-server": "^1.14.0",
     "@polar-sh/sdk": "1.0.2",
-    "@synara/contracts": "workspace:*",
-    "@synara/shared": "workspace:*",
+    "@ramspace/contracts": "workspace:*",
+    "@ramspace/shared": "workspace:*",
     "drizzle-orm": "^0.45.2",
     "effect": "catalog:",
     "hono": "^4.7.0",

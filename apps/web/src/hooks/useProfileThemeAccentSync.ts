@@ -1,6 +1,6 @@
 // Publishes theme edits once from GlobalAccountDialogs, through the regular profile mutation.
 // The debounce coalesces color-picker drags; account writes and onboarding take precedence.
-import type { AccountStatus } from "@synara/contracts";
+import type { AccountStatus } from "@ramspace/contracts";
 import { useIsMutating, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useRef } from "react";
 import { accountQueryKeys } from "~/lib/accountReactQuery";

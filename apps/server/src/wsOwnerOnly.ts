@@ -7,7 +7,7 @@
 // bind — the machine account is owner state on remote hosts too — so the
 // check here is the session role and nothing else.
 
-import { type ServerProviderStatus, WsRpcError } from "@synara/contracts";
+import { type ServerProviderStatus, WsRpcError } from "@ramspace/contracts";
 import { Effect } from "effect";
 
 import { withoutProviderAccountIdentity } from "./provider/providerStatusCache";

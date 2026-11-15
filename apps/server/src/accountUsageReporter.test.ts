@@ -9,7 +9,7 @@ import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import * as NodeServices from "@effect/platform-node/NodeServices";
-import type { PushUsageRequest } from "@synara/contracts";
+import type { PushUsageRequest } from "@ramspace/contracts";
 import { Effect, Layer } from "effect";
 import * as SqlClient from "effect/unstable/sql/SqlClient";
 import type * as Statement from "effect/unstable/sql/Statement";
@@ -1444,7 +1444,7 @@ describe("createAccountUsageReporter", () => {
     );
   });
   it("replaces historical usage for a late import and resumes its durable rewind after a failed push", async () => {
-    const home = await mkdtemp(join(tmpdir(), "synara-usage-import-"));
+    const home = await mkdtemp(join(tmpdir(), "ramspace-usage-import-"));
     repairHomes.push(home);
     await runReporterTest(
       Effect.gen(function* () {

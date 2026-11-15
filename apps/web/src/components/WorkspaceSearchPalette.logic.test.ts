@@ -45,9 +45,9 @@ describe("resolveWorkspaceSearchFilesystemTarget", () => {
     [
       "custom server home",
       "~/notes/todo.md",
-      "/srv/synara/workspace",
-      "/srv/synara-user",
-      "/srv/synara-user/notes/todo.md",
+      "/srv/ramspace/workspace",
+      "/srv/ramspace-user",
+      "/srv/ramspace-user/notes/todo.md",
     ],
     [
       "Windows home and position",

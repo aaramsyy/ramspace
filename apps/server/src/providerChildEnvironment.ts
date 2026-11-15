@@ -1,5 +1,5 @@
 // FILE: providerChildEnvironment.ts
-// Purpose: Builds provider child environments without Synara control-plane authority.
+// Purpose: Builds provider child environments without Ramspace control-plane authority.
 // Layer: Server provider process security
 
 export type ProviderChildKind =
@@ -88,27 +88,29 @@ const INHERITED_NATIVE_CAPABILITY_KEYS = new Set([
 ]);
 
 /**
- * Ordinary user environment for a program Synara launches on the user's behalf (a
- * debuggee or its adapter): no Synara control-plane keys or inherited injection hooks.
+ * Ordinary user environment for a program Ramspace launches on the user's behalf (a
+ * debuggee or its adapter): no Ramspace control-plane keys or inherited injection hooks.
  * Keys are compared case-insensitively because Windows environments are. Environment
  * hygiene, not a sandbox; pair with `withoutProviderCredentialEnvironment`.
  */
-export function stripSynaraControlPlaneEnvironment(env: NodeJS.ProcessEnv): NodeJS.ProcessEnv {
+export function stripRamspaceControlPlaneEnvironment(env: NodeJS.ProcessEnv): NodeJS.ProcessEnv {
   return Object.fromEntries(
     Object.entries(env).filter(([key]) => {
       const normalized = key.toUpperCase();
-      return !normalized.startsWith("SYNARA_") && !INHERITED_NATIVE_CAPABILITY_KEYS.has(normalized);
+      return (
+        !normalized.startsWith("RAMSPACE_") && !INHERITED_NATIVE_CAPABILITY_KEYS.has(normalized)
+      );
     }),
   );
 }
 
 const isTestHarnessKey = (key: string, env: NodeJS.ProcessEnv): boolean =>
-  Boolean(env.VITEST) && (key.startsWith("SYNARA_FAKE_") || key.startsWith("SYNARA_ACP_"));
+  Boolean(env.VITEST) && (key.startsWith("RAMSPACE_FAKE_") || key.startsWith("RAMSPACE_ACP_"));
 
 export function buildProviderChildEnvironment(input: {
   readonly provider: ProviderChildKind;
   readonly baseEnv?: NodeJS.ProcessEnv;
-  readonly inheritedSynaraKeys?: ReadonlyArray<string>;
+  readonly inheritedRamspaceKeys?: ReadonlyArray<string>;
   readonly inheritedNativeCapabilityKeys?: ReadonlyArray<string>;
   readonly overrides?: NodeJS.ProcessEnv;
 }): NodeJS.ProcessEnv {
@@ -116,15 +118,15 @@ export function buildProviderChildEnvironment(input: {
     ...(input.baseEnv ?? process.env),
     ...input.overrides,
   };
-  const allowedSynaraKeys = new Set(input.inheritedSynaraKeys ?? []);
+  const allowedRamspaceKeys = new Set(input.inheritedRamspaceKeys ?? []);
   const allowedNativeCapabilities = new Set(input.inheritedNativeCapabilityKeys ?? []);
   const credentialGrants = PROVIDER_CREDENTIAL_GRANTS[input.provider];
   const childEnv: NodeJS.ProcessEnv = {};
 
   for (const [key, value] of Object.entries(baseEnv)) {
     if (
-      key.startsWith("SYNARA_") &&
-      !allowedSynaraKeys.has(key) &&
+      key.startsWith("RAMSPACE_") &&
+      !allowedRamspaceKeys.has(key) &&
       !isTestHarnessKey(key, baseEnv)
     ) {
       continue;

@@ -1,5 +1,5 @@
 import { useTranslation } from "~/i18n";
-import { OrchestrationThreadActivity, type TurnId } from "@synara/contracts";
+import { OrchestrationThreadActivity, type TurnId } from "@ramspace/contracts";
 import { useMemo } from "react";
 import { setsEqual, useStableValue } from "../../hooks/useStableValue";
 import {

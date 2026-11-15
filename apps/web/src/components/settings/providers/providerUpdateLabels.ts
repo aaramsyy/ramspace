@@ -5,7 +5,7 @@
 // Exports: formatProviderVersion, providerUpdateStatusLabel, providerUpdateFailureMessage,
 //          providerStatusDisplayName
 
-import { PROVIDER_DISPLAY_NAMES, type ServerProviderStatus } from "@synara/contracts";
+import { PROVIDER_DISPLAY_NAMES, type ServerProviderStatus } from "@ramspace/contracts";
 
 import { t } from "~/i18n";
 import { isProviderKind } from "~/providerOrdering";

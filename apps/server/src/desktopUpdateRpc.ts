@@ -14,7 +14,7 @@ import {
   type ServerDesktopUpdateInput,
   type ServerDesktopUpdateStatus,
   type ThreadId,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { Effect, ServiceMap } from "effect";
 
 import { desktopUpdateBridgeAvailable, requestDesktopUpdate } from "./desktopUpdateBridge";
@@ -83,7 +83,7 @@ export function hasDesktopUpdateProviderWork(
 
 const approvedRemoteSessions = new Map<string, string>();
 export const CurrentDesktopUpdateAuthority = ServiceMap.Reference<string | undefined>(
-  "synara/ws/DesktopUpdateAuthority",
+  "ramspace/ws/DesktopUpdateAuthority",
   { defaultValue: () => undefined },
 );
 
@@ -138,7 +138,7 @@ export function makeDesktopUpdateRpcHandlers<E, R>(readBusy: Effect.Effect<boole
         state: null,
         busy: isBusy,
         message:
-          "Updates from iOS require the packaged Synara Desktop app on macOS with its updater enabled.",
+          "Updates from iOS require the packaged Ramspace Desktop app on macOS with its updater enabled.",
       } satisfies ServerDesktopUpdateStatus;
     const result = yield* request({ action: "status", authority: caller });
     return {
@@ -146,7 +146,7 @@ export function makeDesktopUpdateRpcHandlers<E, R>(readBusy: Effect.Effect<boole
       busy: isBusy || result.status.busy,
       message:
         result.status.message ??
-        (isBusy ? "Finish running chats and tasks before restarting Synara." : null),
+        (isBusy ? "Finish running chats and tasks before restarting Ramspace." : null),
     };
   });
   const action = (input: ServerDesktopUpdateInput) =>
@@ -170,7 +170,7 @@ export function makeDesktopUpdateRpcHandlers<E, R>(readBusy: Effect.Effect<boole
           status: {
             ...current,
             busy: true,
-            message: "Finish running chats and tasks before restarting Synara.",
+            message: "Finish running chats and tasks before restarting Ramspace.",
           },
         };
       }

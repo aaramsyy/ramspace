@@ -9,7 +9,7 @@ import {
   PROVIDER_DISPLAY_NAMES,
   type ProviderKind,
   type ServerProviderStatus,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 
 import {
   getProviderInstanceOptions,

@@ -1,6 +1,6 @@
 import net from "node:net";
 import { setTimeout as delay } from "node:timers/promises";
-import { spawnParentBoundProcess } from "@synara/shared/parentBoundProcess";
+import { spawnParentBoundProcess } from "@ramspace/shared/parentBoundProcess";
 
 async function metricsPort(): Promise<number> {
   const server = net.createServer();

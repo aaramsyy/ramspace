@@ -2,7 +2,7 @@
 // model, summing the reasoning levels it ran at (the API reports each level separately), named
 // with the desktop's display names ("gpt-6-astra" → "GPT-6 Astra").
 
-import { humanizeModelSlug } from "@synara/shared/modelName";
+import { humanizeModelSlug } from "@ramspace/shared/modelName";
 import type { PublicProfileModelUsage } from "./publicProfile";
 
 export type ModelUsageGroup = {

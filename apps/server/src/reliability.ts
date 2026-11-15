@@ -1,5 +1,5 @@
 import { Schema } from "effect";
-import { ReliabilityInput, type ReliabilityCode } from "@synara/contracts";
+import { ReliabilityInput, type ReliabilityCode } from "@ramspace/contracts";
 
 const lastSocketReport = new Map<ReliabilityCode, number>();
 const SOCKET_REPORT_INTERVAL_MS = 30_000;
@@ -16,7 +16,7 @@ export function reportReliabilityIssue(code: ReliabilityCode): void {
       if (previous !== undefined && now - previous < SOCKET_REPORT_INTERVAL_MS) return;
       lastSocketReport.set(code, now);
     }
-    process.send({ type: "synara:reliability", issue: { code } }, () => {
+    process.send({ type: "ramspace:reliability", issue: { code } }, () => {
       // A retiring parent must never turn reporting into an uncaught IPC error.
     });
   } catch {

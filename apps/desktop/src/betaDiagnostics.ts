@@ -1,5 +1,5 @@
 // FILE: betaDiagnostics.ts
-// Purpose: Diagnostics queue for Synara Beta and Synara Remote desktop builds.
+// Purpose: Diagnostics queue for Ramspace Beta and Ramspace Remote desktop builds.
 // Layer: Desktop telemetry (runs only when the baked build flavor is "beta" or
 // "remote"; Remote follows the user's usage-sharing switch).
 //
@@ -37,7 +37,7 @@ import {
   DesktopDiagnosticIssue,
   type DesktopDiagnosticReportStatus,
   type ProviderKind,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import {
   classifyDesktopUpdateFailure,
   diagnosticErrorFingerprint,
@@ -46,12 +46,13 @@ import {
   redactDiagnosticText,
   sanitizeDesktopUpdateFailureReason,
   sanitizeDiagnosticError,
-} from "@synara/shared/diagnosticsRedaction";
+} from "@ramspace/shared/diagnosticsRedaction";
 import { Schema } from "effect";
 
 /** Override point for self-hosted / dev ingestion; production default ships in the binary. */
-export const BETA_DIAGNOSTICS_ENDPOINT = "https://synara-beta-diagnostics.synara-orgs.workers.dev";
-export const BETA_DIAGNOSTICS_ENDPOINT_ENV = "SYNARA_BETA_DIAGNOSTICS_URL";
+export const BETA_DIAGNOSTICS_ENDPOINT =
+  "https://ramspace-beta-diagnostics.ramspace-orgs.workers.dev";
+export const BETA_DIAGNOSTICS_ENDPOINT_ENV = "RAMSPACE_BETA_DIAGNOSTICS_URL";
 
 const FLUSH_INTERVAL_MS = 5 * 60 * 1000;
 // Crash events can carry a ~16 KiB log tail, so the queue gets headroom for a

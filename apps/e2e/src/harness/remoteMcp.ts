@@ -1,4 +1,4 @@
-import type { OrchestrationThreadDetailSnapshot } from "@synara/contracts";
+import type { OrchestrationThreadDetailSnapshot } from "@ramspace/contracts";
 import { randomUUID } from "node:crypto";
 import fs from "node:fs/promises";
 import path from "node:path";
@@ -36,7 +36,7 @@ export async function verifyRemoteMcp(input: {
   }
   const environmentId = descriptor.environmentId;
   const creation = {
-    name: "synara_create_thread",
+    name: "ramspace_create_thread",
     arguments: {
       environmentId,
       requestId: "remote-mcp-create",
@@ -50,23 +50,23 @@ export async function verifyRemoteMcp(input: {
     JSON.stringify({
       endpoint: `${input.controller.origin}/mcp`,
       steps: [
-        { name: "synara_list_connections", arguments: {} },
-        { name: "synara_list_projects", arguments: { environmentId } },
-        { name: "synara_list_threads", arguments: { environmentId, projectId: input.projectId } },
-        { name: "synara_read_thread", arguments: { environmentId, threadId } },
-        { name: "synara_capabilities", arguments: { environmentId, projectId: input.projectId } },
+        { name: "ramspace_list_connections", arguments: {} },
+        { name: "ramspace_list_projects", arguments: { environmentId } },
+        { name: "ramspace_list_threads", arguments: { environmentId, projectId: input.projectId } },
+        { name: "ramspace_read_thread", arguments: { environmentId, threadId } },
+        { name: "ramspace_capabilities", arguments: { environmentId, projectId: input.projectId } },
         creation,
         creation,
         {
-          name: "synara_set_thread_title",
+          name: "ramspace_set_thread_title",
           arguments: { environmentId, threadId, title: "REMOTE MCP renamed" },
         },
         {
-          name: "synara_send_message",
+          name: "ramspace_send_message",
           arguments: { environmentId, threadId, message: "Remote fixture follow-up" },
         },
         {
-          name: "synara_wait_for_threads",
+          name: "ramspace_wait_for_threads",
           arguments: { environmentId, threadIds: [threadId], timeoutMs: 0 },
         },
       ],
@@ -85,7 +85,7 @@ export async function verifyRemoteMcp(input: {
       envMode: "local",
       capabilities: ["thread:read"],
     },
-    tool: "synara_list_threads",
+    tool: "ramspace_list_threads",
     arguments: {},
   });
   expect(denied.isError).toBe(true);

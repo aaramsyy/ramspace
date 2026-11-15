@@ -15,7 +15,7 @@ New package `apps/e2e` (vitest, no UI). Boots, in one process:
 1. **Real API** — `createApp()` from `apps/api` against the docker-compose Postgres (`TEST_DATABASE_URL`), with `fakeWorkos` as the identity provider (the only substitution — WorkOS is a third party, not our contract).
 2. **Real relay** — `createRelayApp()` from `apps/relay`, pointed at the API's origin and JWKS.
 3. **Real host** — `apps/server` in its test configuration, pointed at the API and relay.
-4. **Headless client** — a small library (not a UI) doing what Slice D's client will: device keypair (ES256), device registration with PoP, grant fetch, transport selection, mint handshake, then normal Synara WS traffic.
+4. **Headless client** — a small library (not a UI) doing what Slice D's client will: device keypair (ES256), device registration with PoP, grant fetch, transport selection, mint handshake, then normal Ramspace WS traffic.
 
 Each gets an ephemeral port; no fixed ports, so the suite is parallel-safe and CI-safe.
 

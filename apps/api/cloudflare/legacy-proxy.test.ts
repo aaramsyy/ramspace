@@ -17,8 +17,8 @@ describe("legacy account API forwarding", () => {
           authorization: "Bearer existing-session",
           "content-type": "image/webp",
           "cf-connecting-ip": "2001:db8::1",
-          "x-synara-client-ip": "192.0.2.123",
-          "x-synara-migration-secret": "forged",
+          "x-ramspace-client-ip": "192.0.2.123",
+          "x-ramspace-migration-secret": "forged",
         },
       }),
       { MIGRATION_TARGET: "https://new.example", MIGRATION_PROXY_SECRET: "relay-key" },
@@ -30,8 +30,8 @@ describe("legacy account API forwarding", () => {
     expect(sent.redirect).toBe("manual");
     expect(sent.headers.get("authorization")).toBe("Bearer existing-session");
     expect(sent.headers.get("content-type")).toBe("image/webp");
-    expect(sent.headers.get("x-synara-client-ip")).toBe("2001:db8::1");
-    expect(sent.headers.get("x-synara-migration-secret")).toBe("relay-key");
+    expect(sent.headers.get("x-ramspace-client-ip")).toBe("2001:db8::1");
+    expect(sent.headers.get("x-ramspace-migration-secret")).toBe("relay-key");
     expect(await sent.text()).toBe("image bytes");
   });
 

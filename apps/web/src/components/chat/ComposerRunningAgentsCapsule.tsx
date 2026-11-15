@@ -6,7 +6,7 @@ import { useTranslation } from "~/i18n";
 // Layer: Chat composer UI
 // Exports: ComposerRunningAgentsCapsule
 
-import { pluralize } from "@synara/shared/text";
+import { pluralize } from "@ramspace/shared/text";
 
 import { BotIcon } from "~/lib/icons";
 import { ComposerCapsule } from "./ComposerCapsule";

@@ -1,5 +1,5 @@
 import { afterAll, expect, it } from "vitest";
-import { EnvironmentId } from "@synara/contracts";
+import { EnvironmentId } from "@ramspace/contracts";
 import { initializeExecutionContext, executionKey } from "./executionContext";
 import { openIndexedDbDatabase, awaitIdbRequest, waitForIdbTransaction } from "../indexedDb";
 import {
@@ -9,7 +9,7 @@ import {
   deleteOrphanedComposerImageBlobs,
 } from "../composerImageBlobStore";
 
-const legacy = "synara-composer-images";
+const legacy = "ramspace-composer-images";
 const environmentId = EnvironmentId.makeUnsafe(`fixture-${crypto.randomUUID()}`);
 const descriptor = {
   environmentId,
@@ -32,7 +32,7 @@ afterAll(() => {
   indexedDB.deleteDatabase(legacy);
   indexedDB.deleteDatabase(executionKey(legacy));
   localStorage.removeItem(executionKey("composer-image-migration:v1"));
-  localStorage.removeItem("synara:legacy-execution-owner:v1");
+  localStorage.removeItem("ramspace:legacy-execution-owner:v1");
 });
 
 it("copies legacy image bytes without moving them, preserves newer drafts on retry and scopes GC", async () => {

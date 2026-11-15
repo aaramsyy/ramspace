@@ -91,8 +91,8 @@ describe.skipIf(process.platform === "win32")("Apple submission retention", () =
     expect(wait).not.toHaveBeenCalled();
   });
   it("keeps retained submission directories out of packaged app discovery", () => {
-    const entries = [basename(appNotaryStateDirectory("/stage/Synara.app")), "Synara.app"];
-    expect(entries.filter((entry) => entry.endsWith(".app"))).toEqual(["Synara.app"]);
+    const entries = [basename(appNotaryStateDirectory("/stage/Ramspace.app")), "Ramspace.app"];
+    expect(entries.filter((entry) => entry.endsWith(".app"))).toEqual(["Ramspace.app"]);
   });
   it("resumes an unchanged submitted payload after wait failure without uploading again", async () => {
     const f = fixture();

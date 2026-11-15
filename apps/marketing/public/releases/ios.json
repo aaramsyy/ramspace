@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "bundleIdentifier": "com.emanueledipietro.SynaraIOS",
+  "bundleIdentifier": "com.aaramsyy.RamspaceIOS",
   "releases": [
     {
       "channel": "testFlight",

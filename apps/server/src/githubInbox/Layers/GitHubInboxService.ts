@@ -4,8 +4,8 @@ import type {
   GitHubInboxListResult,
   GitHubInboxRepositoryBatch,
   OrchestrationProject,
-} from "@synara/contracts";
-import { pullRequestListProjectContexts } from "@synara/shared/githubRepository";
+} from "@ramspace/contracts";
+import { pullRequestListProjectContexts } from "@ramspace/shared/githubRepository";
 import { Effect, Layer, Scope, Stream } from "effect";
 
 import type { GitHubCliError } from "../../git/Errors";

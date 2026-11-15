@@ -1,7 +1,7 @@
-import { ExecutionEnvironmentDescriptor } from "@synara/contracts";
+import { ExecutionEnvironmentDescriptor } from "@ramspace/contracts";
 import { Schema } from "effect";
 
-const key = "synara:verified-controller:v1";
+const key = "ramspace:verified-controller:v1";
 /** Display-only recovery metadata. Never authorizes a connection or initializes execution stores. */
 export function rememberVerifiedController(descriptor: ExecutionEnvironmentDescriptor): void {
   try {

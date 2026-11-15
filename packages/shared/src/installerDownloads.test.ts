@@ -10,10 +10,10 @@ describe("public installer counters", () => {
       countInstallerDownloads([
         {
           assets: [
-            { name: "Synara.dmg", download_count: 10 },
-            { name: "Synara.EXE", download_count: 2 },
-            { name: "Synara.AppImage", download_count: 0 },
-            { name: "Synara.exe.blockmap", download_count: 999 },
+            { name: "Ramspace.dmg", download_count: 10 },
+            { name: "Ramspace.EXE", download_count: 2 },
+            { name: "Ramspace.AppImage", download_count: 0 },
+            { name: "Ramspace.exe.blockmap", download_count: 999 },
             { name: "latest.yml", download_count: 999 },
           ],
         },
@@ -21,7 +21,7 @@ describe("public installer counters", () => {
     ).toBe(12);
     for (const count of [-1, Infinity, NaN, 0.5, Number.MAX_SAFE_INTEGER + 1, undefined]) {
       expect(() =>
-        countInstallerDownloads([{ assets: [{ name: "Synara.dmg", download_count: count }] }]),
+        countInstallerDownloads([{ assets: [{ name: "Ramspace.dmg", download_count: count }] }]),
       ).toThrow();
     }
   });

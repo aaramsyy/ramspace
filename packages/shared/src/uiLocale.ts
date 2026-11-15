@@ -1,4 +1,4 @@
-import { UI_LOCALES, type UiLocale } from "@synara/contracts/uiLocale";
+import { UI_LOCALES, type UiLocale } from "@ramspace/contracts/uiLocale";
 
 export { UI_LOCALES };
 export type { UiLocale };

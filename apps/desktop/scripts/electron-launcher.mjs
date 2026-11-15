@@ -1,4 +1,4 @@
-// This file mostly exists because we want dev mode to say "Synara (Dev)" instead of "electron"
+// This file mostly exists because we want dev mode to say "Ramspace (Dev)" instead of "electron"
 
 import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
@@ -15,22 +15,22 @@ import {
   writeFileSync,
 } from "node:fs";
 import { createRequire } from "node:module";
-import { TCC_SERVICE_NAMES } from "@synara/shared/computerGrants";
+import { TCC_SERVICE_NAMES } from "@ramspace/shared/computerGrants";
 import {
-  resolveSynaraDesktopFlavor,
-  synaraDesktopIdentity,
-  synaraSourceDesktopIdentity,
-} from "@synara/shared/desktopIdentity";
+  resolveRamspaceDesktopFlavor,
+  ramspaceDesktopIdentity,
+  ramspaceSourceDesktopIdentity,
+} from "@ramspace/shared/desktopIdentity";
 import { basename, dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { createSourceDesktopEnvironment } from "./source-desktop-launch.mjs";
 
-const desktopFlavor = resolveSynaraDesktopFlavor({
+const desktopFlavor = resolveRamspaceDesktopFlavor({
   // Packaged apps launch their bundled main directly; this launcher is source-only.
   isDevelopment: true,
-  requestedFlavor: process.env.SYNARA_DESKTOP_FLAVOR,
+  requestedFlavor: process.env.RAMSPACE_DESKTOP_FLAVOR,
 });
-const desktopIdentity = synaraSourceDesktopIdentity(synaraDesktopIdentity(desktopFlavor));
+const desktopIdentity = ramspaceSourceDesktopIdentity(ramspaceDesktopIdentity(desktopFlavor));
 const APP_DISPLAY_NAME = desktopIdentity.displayName;
 const APP_BUNDLE_ID = desktopIdentity.bundleId;
 const LAUNCHER_VERSION = 9;
@@ -38,12 +38,12 @@ const LAUNCHER_VERSION = 9;
 // icon constants in scripts/lib/desktop-platform-build-config.ts. The packaged
 // build compiles the same asset; this launcher does it for dev and Canary,
 // which run from a renamed Electron bundle instead of a packaged app.
-const ICON_COMPOSER_ASSET_NAME = "Synara";
+const ICON_COMPOSER_ASSET_NAME = "Ramspace";
 const ICON_COMPOSER_DEPLOYMENT_TARGET = "26.0";
 const MICROPHONE_USAGE_DESCRIPTION =
-  "Synara needs microphone access so you can record voice notes and transcribe them into the chat composer, and, if you turn it on, to move the chat message trail with your voice.";
+  "Ramspace needs microphone access so you can record voice notes and transcribe them into the chat composer, and, if you turn it on, to move the chat message trail with your voice.";
 const AUDIO_CAPTURE_USAGE_DESCRIPTION =
-  "Synara reads how loud your Mac's audio is to animate the chat message trail. The audio itself is never recorded.";
+  "Ramspace reads how loud your Mac's audio is to animate the chat message trail. The audio itself is never recorded.";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 export const desktopDir = resolve(__dirname, "..");
@@ -55,10 +55,10 @@ export function configureMacLauncher(electronPath, environment = process.env) {
   const sourceEnvironment = createSourceDesktopEnvironment({ environment });
   const configuration = Object.fromEntries(
     [
-      "SYNARA_HOME",
-      "SYNARA_REMOTE_HOME",
-      "SYNARA_DESKTOP_FLAVOR",
-      "SYNARA_SOURCE_DESKTOP_BUILD_MARKER",
+      "RAMSPACE_HOME",
+      "RAMSPACE_REMOTE_HOME",
+      "RAMSPACE_DESKTOP_FLAVOR",
+      "RAMSPACE_SOURCE_DESKTOP_BUILD_MARKER",
       "VITE_DEV_SERVER_URL",
     ].flatMap((name) =>
       sourceEnvironment[name] === undefined ? [] : [[name, sourceEnvironment[name]]],
@@ -204,19 +204,19 @@ function patchMainBundleInfoPlist(appBundlePath, iconPath, runCommand) {
   setPlistString(
     infoPlistPath,
     "NSScreenCaptureUsageDescription",
-    "Synara captures the windows you authorize for Computer use.",
+    "Ramspace captures the windows you authorize for Computer use.",
     runCommand,
   );
   setPlistString(
     infoPlistPath,
     "NSAccessibilityUsageDescription",
-    "Synara controls the windows you authorize for Computer use.",
+    "Ramspace controls the windows you authorize for Computer use.",
     runCommand,
   );
   setPlistString(
     infoPlistPath,
     "NSLocalNetworkUsageDescription",
-    "Synara connects to the browsers it drives on this Mac so agents can browse in the background.",
+    "Ramspace connects to the browsers it drives on this Mac so agents can browse in the background.",
     runCommand,
   );
 
@@ -300,7 +300,7 @@ function signMacLauncherBundle(appBundlePath, runCommand) {
         .join("\n")
         .trim();
       throw new Error(
-        `Failed to ${action} the generated Synara launcher at ${appBundlePath} (codesign exit ${result.status}). Check the codesign error and retry; the invalid bundle will not be launched. ${details}`.trim(),
+        `Failed to ${action} the generated Ramspace launcher at ${appBundlePath} (codesign exit ${result.status}). Check the codesign error and retry; the invalid bundle will not be launched. ${details}`.trim(),
         result.error ? { cause: result.error } : undefined,
       );
     }
@@ -349,7 +349,7 @@ export function buildMacLauncher(
   const targetAppBundlePath = join(runtimeDir, `${APP_DISPLAY_NAME}.app`);
   const targetBinaryPath = join(targetAppBundlePath, "Contents", "MacOS", "Electron");
   const iconPath = join(desktopDirectory, "resources", "icon.icns");
-  const iconComposerPath = resolve(desktopDirectory, "../../assets/prod/Synara.icon");
+  const iconComposerPath = resolve(desktopDirectory, "../../assets/prod/Ramspace.icon");
   const hasIconComposerSource = existsSync(iconComposerPath);
   const metadataPath = join(runtimeDir, "metadata.json");
   const desktopPackage = JSON.parse(readFileSync(join(desktopDirectory, "package.json"), "utf8"));

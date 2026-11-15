@@ -1,5 +1,5 @@
 import { assert, describe, it } from "vitest";
-import { ProjectId, ThreadId } from "@synara/contracts";
+import { ProjectId, ThreadId } from "@ramspace/contracts";
 import type { WorkspaceSession } from "../lib/hosts/workspaceSessions";
 
 import {
@@ -31,8 +31,8 @@ const actions: SidebarSearchAction[] = [
   },
   {
     id: "feedback",
-    label: "Feedback Synara",
-    description: "Send feedback or report an issue to the Synara team.",
+    label: "Feedback Ramspace",
+    description: "Send feedback or report an issue to the Ramspace team.",
     keywords: ["feedback", "bug", "issue", "report", "support"],
   },
   {

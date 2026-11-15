@@ -15,23 +15,23 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// Where a contact starts. Non-zero turns a swipe into the OS edge gesture
 /// (back, notification shade, home, Control Center).
-typedef NS_ENUM(uint64_t, SynaraTouchEdge) {
-  SynaraTouchEdgeNone = 0,
-  SynaraTouchEdgeTop = 1,
-  SynaraTouchEdgeLeft = 2,
-  SynaraTouchEdgeBottom = 3,
-  SynaraTouchEdgeRight = 4,
+typedef NS_ENUM(uint64_t, RamspaceTouchEdge) {
+  RamspaceTouchEdgeNone = 0,
+  RamspaceTouchEdgeTop = 1,
+  RamspaceTouchEdgeLeft = 2,
+  RamspaceTouchEdgeBottom = 3,
+  RamspaceTouchEdgeRight = 4,
 };
 
 /// Whether this host's CoreSimulator routes input through `dtuhidd` and drops
 /// legacy Indigo input. Decided by version alone: `dtuhidd` is demand-launched,
 /// so whether it happens to be running says nothing.
-BOOL SynaraCoreSimulatorUsesDTUHID(void);
+BOOL RamspaceCoreSimulatorUsesDTUHID(void);
 
 /// The loaded CoreSimulator version string, or nil when it cannot be read.
-NSString *_Nullable SynaraCoreSimulatorVersion(void);
+NSString *_Nullable RamspaceCoreSimulatorVersion(void);
 
-@interface SynaraDTUHIDTransport : NSObject
+@interface RamspaceDTUHIDTransport : NSObject
 
 /// Starts connecting to `device` (a `SimDevice`) in the background and proving
 /// a live daemon answers. Returns immediately; input waits for readiness.
@@ -46,7 +46,7 @@ NSString *_Nullable SynaraCoreSimulatorVersion(void);
 
 /// One digitizer contact. `down` after a previous `down` is a move; `up` ends
 /// the contact. Coordinates are normalized 0..1, origin top-left.
-- (BOOL)sendTouchAtX:(double)x y:(double)y down:(BOOL)down edge:(SynaraTouchEdge)edge;
+- (BOOL)sendTouchAtX:(double)x y:(double)y down:(BOOL)down edge:(RamspaceTouchEdge)edge;
 
 /// A USB HID keyboard usage, down or up.
 - (BOOL)sendKeyUsage:(uint32_t)usage down:(BOOL)down;

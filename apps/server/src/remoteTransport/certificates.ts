@@ -41,7 +41,7 @@ export function remoteTlsIdentityPath(secretsDir: string): string {
 export function remoteTlsServerName(environmentId: string): string {
   if (!/^[a-zA-Z0-9-]{1,63}$/.test(environmentId))
     throw new Error("Invalid remote environment identity");
-  return `host-${environmentId.toLowerCase()}.synara.invalid`;
+  return `host-${environmentId.toLowerCase()}.ramspace.invalid`;
 }
 
 export function remoteTlsAnchor(
@@ -162,7 +162,7 @@ async function initializeIdentity(
   const keys = await webcrypto.subtle.generateKey(KEY_ALGORITHM, true, ["sign", "verify"]);
   const root = await x509.X509CertificateGenerator.createSelfSigned({
     serialNumber: randomBytes(16).toString("hex"),
-    name: `CN=Synara ${environmentId} remote root`,
+    name: `CN=Ramspace ${environmentId} remote root`,
     keys: keys as unknown as CryptoKeyPair,
     signingAlgorithm: SIGN_ALGORITHM,
     notBefore: new Date(now - 60_000),

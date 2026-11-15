@@ -1,5 +1,5 @@
 // FILE: AboutSettingsView.tsx
-// Purpose: Settings › About: the release channel (Synara Beta), version, and release history.
+// Purpose: Settings › About: the release channel (Ramspace Beta), version, and release history.
 // Layer: Settings view
 // Exports: AboutSettingsView
 

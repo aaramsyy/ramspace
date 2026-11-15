@@ -3,8 +3,8 @@
 // for provider runtime events so UI components can stay presentation-only.
 
 import { t } from "~/i18n";
-import type { OrchestrationThread } from "@synara/contracts";
-import { providerUsageLearnMoreHref } from "@synara/shared/providerUsage";
+import type { OrchestrationThread } from "@ramspace/contracts";
+import { providerUsageLearnMoreHref } from "@ramspace/shared/providerUsage";
 
 export interface RateLimitWindow {
   window: string;

@@ -1,4 +1,4 @@
-import { normalizeGitHubPullRequestUrl } from "@synara/shared/githubRepository";
+import { normalizeGitHubPullRequestUrl } from "@ramspace/shared/githubRepository";
 // FILE: environmentPullRequest.logic.ts
 // Purpose: Pure display/prompt helpers for the Environment panel "Pull request" section —
 //          check-rollup summaries, review-comment display models, the repair prompts that
@@ -13,8 +13,8 @@ import {
   type PullRequestAutoFixState,
   type PullRequestCheck,
   type PullRequestComment,
-} from "@synara/contracts";
-import { pluralize } from "@synara/shared/text";
+} from "@ramspace/contracts";
+import { pluralize } from "@ramspace/shared/text";
 
 import {
   type PullRequestContextDraft,
@@ -408,7 +408,7 @@ export function buildFixFindingsPrompt(input: {
 
 // Handed to the agent by the conflicts row's "Fix" button. The prompt names the PR branch
 // as it exists on GitHub but points the agent at the current checkout: fork threads check
-// the PR out under a different local branch name (e.g. `synara/pr-N/<branch>`).
+// the PR out under a different local branch name (e.g. `ramspace/pr-N/<branch>`).
 export function buildResolveConflictsPrompt(input: {
   prNumber: number;
   prUrl: string;

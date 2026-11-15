@@ -3,7 +3,7 @@
 // Layer: Settings UI
 // Exports: ProviderUpdateAction
 
-import type { ProviderInstanceId, ProviderKind, ServerProviderStatus } from "@synara/contracts";
+import type { ProviderInstanceId, ProviderKind, ServerProviderStatus } from "@ramspace/contracts";
 import type { MouseEvent } from "react";
 
 import { useTranslation } from "~/i18n";

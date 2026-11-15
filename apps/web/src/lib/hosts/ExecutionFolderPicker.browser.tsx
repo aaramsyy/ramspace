@@ -24,7 +24,7 @@ it.each(["light", "dark"])(
         return {
           parentPath: "/Users/mini/Developer",
           entries: [
-            { name: "Synara", fullPath: "/Users/mini/Developer/synara" },
+            { name: "Ramspace", fullPath: "/Users/mini/Developer/ramspace" },
             { name: "Remodex", fullPath: "/Users/mini/Developer/remodex" },
           ],
         };
@@ -38,7 +38,7 @@ it.each(["light", "dark"])(
     await expect.element(page.getByRole("button", { name: "Use folder" })).toBeDisabled();
     await page.getByRole("button", { name: "Go", exact: true }).click();
     await page.getByRole("button", { name: "Developer", exact: true }).click();
-    await expect.element(page.getByRole("button", { name: "Synara", exact: true })).toBeVisible();
+    await expect.element(page.getByRole("button", { name: "Ramspace", exact: true })).toBeVisible();
     await page.screenshot({ path: `./__screenshots__/folder-picker-${theme}.png` });
     await page.getByRole("button", { name: "Use folder" }).click();
     expect(await selected).toBe("/Users/mini/Developer");

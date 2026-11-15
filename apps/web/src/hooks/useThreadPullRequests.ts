@@ -10,8 +10,8 @@ import type {
   OrchestrationThreadPullRequest,
   ProjectId,
   ThreadId,
-} from "@synara/contracts";
-import { resolveThreadWorkspaceCwd } from "@synara/shared/threadEnvironment";
+} from "@ramspace/contracts";
+import { resolveThreadWorkspaceCwd } from "@ramspace/shared/threadEnvironment";
 import { useQueries } from "@tanstack/react-query";
 import { useMemo } from "react";
 

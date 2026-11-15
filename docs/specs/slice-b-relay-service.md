@@ -19,21 +19,21 @@ Bun + Hono service in `apps/relay`, structured like `apps/api` (`config.ts`, `ap
 
 Single instance in v1 (ADR 0005 defers regional relays). Horizontal scaling is explicitly out of scope: the jti cache and host map are per-process, so two instances would let one grant splice twice. `RELAY_MAX_PAIRS` (default 1024) caps concurrent splices; over it, new clients get `1013`.
 
-## 2. Verification (shared, from `@synara/contracts`)
+## 2. Verification (shared, from `@ramspace/contracts`)
 
 The relay never sees host keys. Everything it verifies is API-signed and checked against `GET {API_BASE_URL}/api/v1/keys/jwks`:
 
 - JWKS fetched at boot, refreshed hourly and on unknown `kid` (rate-limited to one refetch per 60s so an attacker cannot drive fetch storms). Last-known-good is retained on fetch failure — a JWKS outage must not drop live sessions or block splices for already-cached keys.
-- Verification pins, for every token: `alg: EdDSA`, `typ`, `aud = SYNARA_RELAY_AUDIENCE`, `iss = API_ISSUER` (configured, exact), `clockTolerance: 60`, bounded lifetime (`exp > iat`, `exp - iat ≤ cap`, `iat ≤ now + 60`, and **`exp ≥ now`** — expiry is absolute, matching the API's `verifyBoundedJwt`).
+- Verification pins, for every token: `alg: EdDSA`, `typ`, `aud = RAMSPACE_RELAY_AUDIENCE`, `iss = API_ISSUER` (configured, exact), `clockTolerance: 60`, bounded lifetime (`exp > iat`, `exp - iat ≤ cap`, `iat ≤ now + 60`, and **`exp ≥ now`** — expiry is absolute, matching the API's `verifyBoundedJwt`).
 - Claim decode uses the Effect schemas `RelayTicketClaims` / `GrantClaims`, so scope tuples and shapes are checked, not just signatures.
 
-A shared package (`packages/relay-protocol`, new) carries the control-message schemas and close codes so `apps/relay`, `apps/server` (Slice C), and the harness cannot drift. Where a shape already exists in `@synara/contracts` (grant/ticket claims, revocation events) it is imported, not redefined.
+A shared package (`packages/relay-protocol`, new) carries the control-message schemas and close codes so `apps/relay`, `apps/server` (Slice C), and the harness cannot drift. Where a shape already exists in `@ramspace/contracts` (grant/ticket claims, revocation events) it is imported, not redefined.
 
 ## 3. Endpoints
 
 - `GET /healthz` — liveness; reports connected host count and pair count.
-- `GET /host/control?ticket=<jwt>` — host control socket. Verifies `synara-relay-ticket+jwt` (typ, `aud`, `iss`, scope `["relay:control"]`, ≤5min). `sub` is the **hostId** and is the only routing key. Replaces any existing socket for that host.
-- `GET /client/session?grant=<jwt>` — client data socket. Verifies `synara-grant+jwt` (scope `["host:connect"]`, ≤60s), enforces single-use on `jti`, requires a live control socket for `claims.hostId`, then registers a pending splice and signals the host. Holds the socket until the host dials back or the 10s timer fires.
+- `GET /host/control?ticket=<jwt>` — host control socket. Verifies `ramspace-relay-ticket+jwt` (typ, `aud`, `iss`, scope `["relay:control"]`, ≤5min). `sub` is the **hostId** and is the only routing key. Replaces any existing socket for that host.
+- `GET /client/session?grant=<jwt>` — client data socket. Verifies `ramspace-grant+jwt` (scope `["host:connect"]`, ≤60s), enforces single-use on `jti`, requires a live control socket for `claims.hostId`, then registers a pending splice and signals the host. Holds the socket until the host dials back or the 10s timer fires.
 - `GET /host/data?splice=<id>` — host data socket. Matches a pending splice, pairs 1:1, and from then on forwards frames verbatim in both directions. The splice id is a 32-byte random value, single-use, and only meaningful to the host that was signaled (it arrives over that host's authenticated control socket, so it needs no separate auth — but the relay still checks the dialing socket belongs to the same host).
 
 Query-param tokens are used because browsers cannot set headers on WebSocket upgrades. Tokens are ≤60s/≤5min and single-use where it matters; the relay must not log full query strings.

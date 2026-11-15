@@ -13,7 +13,7 @@ import {
   WS_NEGOTIATE_HTTP_PATH,
   WS_NEGOTIATE_QUERY,
   WsCompatibilityError,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { Duration, Effect, Exit, Layer, Schema, Scope } from "effect";
 import { HttpRouter } from "effect/unstable/http";
 import { describe, expect, it, vi } from "vitest";
@@ -46,7 +46,7 @@ import {
   REMOTE_ATTACHMENT_QUERY,
 } from "./registry";
 
-const desktopOrigin = "synara://app";
+const desktopOrigin = "ramspace://app";
 
 /** Only synthetic owner/client credentials are exposed to this isolated loopback fixture. */
 async function withRemoteNegotiation(
@@ -93,7 +93,7 @@ async function withRemoteNegotiation(
           Layer.provideMerge(
             ServerConfig.layerTest(
               process.cwd(),
-              { prefix: "synara-remote-negotiate-" },
+              { prefix: "ramspace-remote-negotiate-" },
               { host: "127.0.0.1" },
             ),
           ),
@@ -331,7 +331,7 @@ async function withLiveRemoteBridge(
     Layer.provide(
       ServerConfig.layerTest(
         process.cwd(),
-        { prefix: "synara-bridge-lifetime-" },
+        { prefix: "ramspace-bridge-lifetime-" },
         {
           host: "127.0.0.1",
         },

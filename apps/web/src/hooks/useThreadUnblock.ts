@@ -3,7 +3,7 @@
 // Layer: Web chat recovery hook
 // Exports: useThreadUnblock
 
-import type { ThreadId } from "@synara/contracts";
+import type { ThreadId } from "@ramspace/contracts";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import { toastManager } from "../components/ui/toast";
@@ -52,7 +52,7 @@ export function useThreadUnblock(input: {
       void (async () => {
         try {
           const api = readNativeApi();
-          if (!api) throw new Error(t("common:notConnectedToTheSynaraServer"));
+          if (!api) throw new Error(t("common:notConnectedToTheRamspaceServer"));
           const result = await unblockThreadFromClient(api.orchestration, resolvedThreadId);
           onUnblocked(resolvedThreadId);
           toastManager.add(describeThreadUnblockResult(result));

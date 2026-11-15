@@ -1,6 +1,6 @@
 import { connect } from "node:http2";
 import { importPKCS8, SignJWT } from "jose";
-import type { CompletionPreviewEnvelope } from "@synara/contracts";
+import type { CompletionPreviewEnvelope } from "@ramspace/contracts";
 import type { ApnsConfig } from "../config";
 
 export type ActivityDelivery = {
@@ -32,7 +32,7 @@ function serializeNotification(delivery: NotificationDelivery): string {
   const generic = {
     aps: {
       alert: {
-        title: "Synara",
+        title: "Ramspace",
         body: delivery.result === "completed" ? "Response ready" : "Run failed",
       },
       sound: "default",

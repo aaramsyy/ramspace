@@ -10,7 +10,7 @@ import type {
   HostSession,
   RemoteAccessRequest,
   RemoteTrustedDevice,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { type ReactNode, useEffect, useState } from "react";
 
 import { useAccount } from "~/hooks/useAccount";
@@ -152,7 +152,7 @@ export function ConnectionsThisComputer({
         <SettingsCard>
           {onViewProPlans ? (
             <SettingsListRow
-              title={t("settings:synaraAltoPro")}
+              title={t("settings:ramspaceAltoPro")}
               description={`Alto includes remote access to this ${computerNoun}. Local use stays free.`}
               actions={
                 <Button size="xs" shape="capsule" variant="subtle" onClick={onViewProPlans}>
@@ -286,7 +286,7 @@ function AccountAdvanced() {
   const unlink = async () => {
     if (
       !(await confirmAction(
-        "Unlink this machine?\n\nIts key is removed from your account and other devices' sessions to it end. Synara keeps working locally.",
+        "Unlink this machine?\n\nIts key is removed from your account and other devices' sessions to it end. Ramspace keeps working locally.",
       ))
     )
       return;
@@ -371,7 +371,7 @@ function AccountAdvanced() {
         <SettingsSection title="This machine on your account">
           <SettingsListRow
             title={remote.enrollment.host.name}
-            description="Signing out unlinks it automatically. Synara keeps working locally."
+            description="Signing out unlinks it automatically. Ramspace keeps working locally."
             actions={
               <Button
                 size="xs"

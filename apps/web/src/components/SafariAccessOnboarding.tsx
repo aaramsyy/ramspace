@@ -1,4 +1,4 @@
-import type { DesktopSafariAccessInfo } from "@synara/contracts";
+import type { DesktopSafariAccessInfo } from "@ramspace/contracts";
 import { Schema } from "effect";
 import { SettingsIcon } from "~/lib/icons";
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
@@ -12,16 +12,16 @@ import { useAnnouncementSheetSlot, useAnnouncementSheetSlotStore } from "./annou
 import { Dialog } from "./ui/dialog";
 import { useTranslation } from "~/i18n";
 
-export const SAFARI_ACCESS_STORAGE_KEY = "synara:safari-access-onboarding:v1";
-const OPEN_EVENT = "synara:safari-access-setup";
+export const SAFARI_ACCESS_STORAGE_KEY = "ramspace:safari-access-onboarding:v1";
+const OPEN_EVENT = "ramspace:safari-access-setup";
 /** "continued" is a legacy value from the earlier two-button intro; treat it like "later". */
 const Decision = Schema.Literals(["unseen", "later", "continued"]);
 const SAFARI_ICON_SRC = "/app-icons/safari.png";
-const SYNARA_ICON_SRC = "/app-icons/dark.png";
+const RAMSPACE_ICON_SRC = "/app-icons/dark.png";
 
 const STATUS = {
-  settingsOpened: "System Settings is open. Once Synara is switched on, quit and reopen it.",
-  appRevealed: "Synara is selected in Finder. Drag it into the Full Disk Access list.",
+  settingsOpened: "System Settings is open. Once Ramspace is switched on, quit and reopen it.",
+  appRevealed: "Ramspace is selected in Finder. Drag it into the Full Disk Access list.",
   openFailed: "Couldn't open it automatically. It lives in System Settings › Privacy & Security.",
 } as const;
 
@@ -140,7 +140,7 @@ export function SafariAccessOnboarding({
         <AnnouncementSheetPopup
           hero={<SafariAccessScene />}
           title={t("onboarding:bringYourSafariLoginsAlong")}
-          description={t("onboarding:synaraSBrowserCanPickUpSitesYouRe")}
+          description={t("onboarding:ramspaceSBrowserCanPickUpSitesYouRe")}
           details={
             <div className="flex flex-col gap-3 pt-4">
               {info?.supported && info.fullDiskAccess === "granted" ? (
@@ -180,7 +180,7 @@ export function SafariAccessOnboarding({
                       </>
                     ) : null}
                   </Step>
-                  <Step n={3}>{t("onboarding:quitAndReopenSynara")}</Step>
+                  <Step n={3}>{t("onboarding:quitAndReopenRamspace")}</Step>
                 </ol>
               ) : null}
 
@@ -225,7 +225,7 @@ function Step({ n, children }: { n: number; children: ReactNode }) {
   );
 }
 
-/** Safari's icon handing a key to Synara's, with the macOS switch that allows it. */
+/** Safari's icon handing a key to Ramspace's, with the macOS switch that allows it. */
 function SafariAccessScene() {
   const { t } = useTranslation();
   const appIconClassName = "size-14 select-none drop-shadow-[0_8px_16px_rgba(0,0,0,0.18)]";
@@ -240,7 +240,7 @@ function SafariAccessScene() {
         />
         <DialogHeroLink badge={<Key01Icon className="size-3.5" />} />
         <img
-          src={SYNARA_ICON_SRC}
+          src={RAMSPACE_ICON_SRC}
           alt=""
           draggable={false}
           className={cn(appIconClassName, "scene-float [animation-delay:-3s]")}

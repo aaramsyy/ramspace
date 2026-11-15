@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import { Effect } from "effect";
-import { BrowserAutomationErrorMessages } from "@synara/contracts";
+import { BrowserAutomationErrorMessages } from "@ramspace/contracts";
 
 import { BrowserHostRpcError } from "../browserAutomation/browserHostRpcClient.ts";
 import type { BrowserAutomationHostShape } from "../browserAutomation/Services/BrowserAutomationHost.ts";
@@ -148,7 +148,7 @@ describe("agent gateway browser tools", () => {
     const execute = vi.fn(() =>
       Effect.fail(
         new BrowserHostRpcError("remote", "Browser evaluation failed.", {
-          type: "synara_browser_error",
+          type: "ramspace_browser_error",
           version: 1,
           error: {
             code: "BrowserEvaluationFailed",
@@ -325,7 +325,7 @@ describe("agent gateway browser tools", () => {
       "browser_upload",
       "browser_run",
       "browser_close",
-      "synara_e2e_review",
+      "ramspace_e2e_review",
     ]);
     expect(tools.every((tool) => tool.requiredCapability === "browser:control")).toBe(true);
     expect(tools.every((tool) => tool.requiresActiveTurn === true)).toBe(true);
@@ -467,7 +467,7 @@ describe("agent gateway browser tools", () => {
 
     const requests = execute.mock.calls.map(([request]) => request);
     const keys = requests.map((request) => request.arguments.idempotencyKey);
-    expect(keys[0]).toMatch(/^synara-mcp-[a-f0-9]{40}$/u);
+    expect(keys[0]).toMatch(/^ramspace-mcp-[a-f0-9]{40}$/u);
     expect(keys[1]).toBe(keys[0]);
     expect(keys[2]).not.toBe(keys[0]);
     expect(keys[3]).not.toBe(keys[0]);

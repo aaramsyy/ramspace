@@ -1,11 +1,11 @@
 // FILE: CrossTaskOriginLabel.tsx
-// Purpose: Identify the source thread for conversations created by another Synara agent.
+// Purpose: Identify the source thread for conversations created by another Ramspace agent.
 // Layer: Chat transcript UI
 
-import { type ProviderKind, type ThreadId } from "@synara/contracts";
+import { type ProviderKind, type ThreadId } from "@ramspace/contracts";
 import { memo, type ReactNode } from "react";
 
-import { SynaraLogo } from "@synara/profile-ui/logo";
+import { RamspaceLogo } from "@ramspace/profile-ui/logo";
 import { cn } from "~/lib/utils";
 import { useTranslation, t } from "~/i18n";
 
@@ -17,7 +17,7 @@ export interface CrossTaskOrigin {
 }
 
 // A single, app-level attribution: the message reached this thread from another
-// Synara thread, so it reads as "Sent by Synara" with the Synara mark (the origin
+// Ramspace thread, so it reads as "Sent by Ramspace" with the Ramspace mark (the origin
 // provider is not surfaced here to keep one consistent label). A group
 // coordinator's brief names the group instead, so a worker thread says who
 // handed it the task and where the result goes back to.
@@ -25,14 +25,14 @@ function crossTaskOriginText(origin: CrossTaskOrigin): string {
   const groupName = origin.coordinatorGroupName?.trim();
   return groupName
     ? t("chat:sentByTheCoordinator", { value0: groupName })
-    : t("chat:sentBySynaraFromAnotherThread");
+    : t("chat:sentByRamspaceFromAnotherThread");
 }
 
 function OriginContent({ text }: { readonly text: string }): ReactNode {
   return (
     <>
       <span className="flex size-4 shrink-0 items-center justify-center text-muted-foreground/70">
-        <SynaraLogo className="h-4 w-auto" aria-label="Synara" />
+        <RamspaceLogo className="h-4 w-auto" aria-label="Ramspace" />
       </span>
       <span className="truncate">{text}</span>
     </>

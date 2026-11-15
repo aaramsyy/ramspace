@@ -6,7 +6,7 @@ import { page, userEvent } from "vitest/browser";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { render } from "vitest-browser-react";
 
-import { EnvironmentId } from "@synara/contracts";
+import { EnvironmentId } from "@ramspace/contracts";
 import { readExecutionContext, type WindowExecutionContext } from "~/lib/hosts/executionContext";
 import { readWorkspaceFrame } from "~/lib/hosts/workspaceFrame";
 import { createWorkspaceResourceRequester } from "~/lib/hosts/workspaceResources";
@@ -97,7 +97,7 @@ describe("ExpandedImageOverlay", () => {
               type="button"
               onClick={() =>
                 preview.setExpandedImage({
-                  images: [{ src: `${window.location.origin}/synara.png`, name: "Attachment" }],
+                  images: [{ src: `${window.location.origin}/ramspace.png`, name: "Attachment" }],
                   index: 0,
                 })
               }

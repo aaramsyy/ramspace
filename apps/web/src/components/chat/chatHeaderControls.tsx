@@ -24,7 +24,7 @@ import {
   useRef,
 } from "react";
 
-import { CHAT_SURFACE_HEADER_HEIGHT_PX } from "@synara/shared/desktopChrome";
+import { CHAT_SURFACE_HEADER_HEIGHT_PX } from "@ramspace/shared/desktopChrome";
 
 import { CentralIcon } from "~/lib/central-icons";
 import { type LucideIcon } from "~/lib/icons";
@@ -45,7 +45,7 @@ import { useTranslation } from "~/i18n";
  * breathing room below them rather than hugging the very top of the window.
  *
  * The pixel height is owned by `CHAT_SURFACE_HEADER_HEIGHT_PX` in
- * `@synara/shared/desktopChrome` (the single source of truth the Electron main
+ * `@ramspace/shared/desktopChrome` (the single source of truth the Electron main
  * process also reads to center the native traffic lights). Tailwind only emits CSS
  * for class names it can scan literally, so the class stays a literal here — but its
  * TYPE is derived from the shared number, so the build fails if the two ever drift.

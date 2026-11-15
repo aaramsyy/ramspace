@@ -4,14 +4,14 @@
 // Layer: Chat transcript row content
 // Exports: InlineVisualFrame
 
-import type { InlineVisualActivityPayload, ThreadId } from "@synara/contracts";
+import type { InlineVisualActivityPayload, ThreadId } from "@ramspace/contracts";
 import {
   buildInlineVisualDocument,
   clampInlineVisualHeight,
   inlineVisualThemeMessage,
   readInlineVisualFrameMessage,
   type InlineVisualTheme,
-} from "@synara/shared/inlineVisual";
+} from "@ramspace/shared/inlineVisual";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 

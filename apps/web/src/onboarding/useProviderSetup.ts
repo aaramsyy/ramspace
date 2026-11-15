@@ -1,4 +1,4 @@
-import type { ProviderKind, ServerProviderStatus } from "@synara/contracts";
+import type { ProviderKind, ServerProviderStatus } from "@ramspace/contracts";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useMemo, useRef, useState } from "react";
 

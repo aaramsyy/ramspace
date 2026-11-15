@@ -15,18 +15,18 @@ import {
   migrationRecoveryMarkerPath,
   parseMigrationRecoveryResumeState,
   type MigrationSchemaTooNewRecovery,
-} from "@synara/shared/migrationRecovery";
+} from "@ramspace/shared/migrationRecovery";
 export {
   migrationBackupDirectory,
   migrationBackupProvenancePath,
   migrationRecoveryMarkerPath,
-} from "@synara/shared/migrationRecovery";
+} from "@ramspace/shared/migrationRecovery";
 
 import {
   sameFileIdentity,
   syncDirectoryEntry,
   syncRegularFile,
-} from "@synara/shared/filesystemPlatform";
+} from "@ramspace/shared/filesystemPlatform";
 import { ensurePrivateDirectorySync, repairPrivateFile } from "../privatePathPermissions.ts";
 import { withDatabaseLifecycleLock } from "./DatabaseLifecycleLock.ts";
 import {
@@ -66,7 +66,7 @@ export class MigrationRecoveryRequiredError extends Error {
     detail?: string,
   ) {
     super(
-      `Migration recovery is required for ${dbPath}.${detail ? ` ${detail}` : ""} Stop every Synara process, then run: synara-restore-migration-backup ${shellQuote(dbPath)}`,
+      `Migration recovery is required for ${dbPath}.${detail ? ` ${detail}` : ""} Stop every Ramspace process, then run: ramspace-restore-migration-backup ${shellQuote(dbPath)}`,
     );
     this.name = "MigrationRecoveryRequiredError";
   }
@@ -100,7 +100,7 @@ export class InsufficientMigrationBackupSpaceError extends Error {
     super(
       `Not enough free disk space to back up the database before upgrading it. ` +
         `About ${formatBytes(requiredBytes)} is needed in ${directory}, but only ` +
-        `${formatBytes(availableBytes)} is free. Free up disk space and start Synara again.`,
+        `${formatBytes(availableBytes)} is free. Free up disk space and start Ramspace again.`,
     );
     this.name = "InsufficientMigrationBackupSpaceError";
   }
@@ -911,11 +911,11 @@ function migrationRecoveryPayload(dbPath: string, backup: MigrationBackupResult)
     createdAt: backup.createdAt,
     resumeAttempts: 0,
     restore: {
-      executable: "synara-restore-migration-backup",
+      executable: "ramspace-restore-migration-backup",
       arguments: [dbPath],
     },
     recovery:
-      "Stop every Synara process, then run the explicit migration-backup restore command for this database.",
+      "Stop every Ramspace process, then run the explicit migration-backup restore command for this database.",
   } as const;
 }
 
@@ -1047,7 +1047,7 @@ const restoreSqliteMigrationBackup = (input: {
         const expected = failedBundle.files[index];
         const sourceFingerprint = await restoreFileFingerprint(source);
         const destinationFingerprint = await restoreFileFingerprint(destination);
-        // The lifecycle lock excludes other Synara writers. Only continue an
+        // The lifecycle lock excludes other Ramspace writers. Only continue an
         // earlier move when the destination is the exact file recorded before
         // the swap, and never rename over an existing destination.
         if (
@@ -1495,7 +1495,7 @@ export const inspectPendingMigrationRecovery = (dbPath: string) =>
     const restoring = marker.payload.phase === "migration-restore-in-progress";
     if (target > latestMigrationId && !restoring) {
       throw new Error(
-        `This database has an interrupted migration targeting schema ${target}, but this build supports ${latestMigrationId}. Update Synara before resuming.`,
+        `This database has an interrupted migration targeting schema ${target}, but this build supports ${latestMigrationId}. Update Ramspace before resuming.`,
       );
     }
     if (restoring || marker.resumeAttempts >= MIGRATION_RECOVERY_MAX_RESUME_ATTEMPTS) {
@@ -1623,7 +1623,7 @@ async function recordCompletedRestore(dbPath: string, marker: Record<string, unk
 
 /**
  * Explicit one-shot restore path for the active recovery marker or the latest
- * completed migration provenance. The operator must stop every Synara process
+ * completed migration provenance. The operator must stop every Ramspace process
  * before invoking it; startup itself deliberately never calls this function.
  */
 export interface RestoreMarkedMigrationBackupOptions {

@@ -1,4 +1,4 @@
-import type { LiveActivityHostSnapshot } from "@synara/contracts";
+import type { LiveActivityHostSnapshot } from "@ramspace/contracts";
 
 type HostTurn = LiveActivityHostSnapshot["turns"][number];
 export type LiveActivityConversation = {
@@ -20,8 +20,8 @@ function widgetConversation(item: LiveActivityConversation) {
   const waiting = item.state === "usageLimit" || item.state === "resuming";
   return {
     id: item.id,
-    title: "Synara task",
-    detail: "Synara",
+    title: "Ramspace task",
+    detail: "Ramspace",
     state: {
       running: "Running",
       needsApproval: "Approval needed",

@@ -5,8 +5,8 @@ import path from "node:path";
 import { Effect } from "effect";
 import { generateKeyPair, exportJWK, calculateJwkThumbprint } from "jose";
 import { beforeEach, expect, it, vi } from "vitest";
-import { EnvironmentId, type RemotePairingBundle } from "@synara/contracts";
-import { AccountApiError } from "@synara/shared/account";
+import { EnvironmentId, type RemotePairingBundle } from "@ramspace/contracts";
+import { AccountApiError } from "@ramspace/shared/account";
 import { AccountDeviceKeyRevokedError } from "../accountDeviceRegistration";
 import {
   initializeRemoteTlsIdentity,
@@ -25,8 +25,8 @@ vi.mock("../accountAuth", async (original) => ({
   readAccountFile: mocks.readAccount,
   withFreshAccessToken: (_options: unknown, action: (token: string) => unknown) => action("token"),
 }));
-vi.mock("@synara/shared/account", async (original) => ({
-  ...(await original<typeof import("@synara/shared/account")>()),
+vi.mock("@ramspace/shared/account", async (original) => ({
+  ...(await original<typeof import("@ramspace/shared/account")>()),
   createAccountClient: () => ({ redeemRemotePairingCode: mocks.redeem }),
 }));
 vi.mock("../remoteFeaturePolicy", () => ({ requireRemoteConnections: () => {} }));
@@ -262,7 +262,7 @@ it("rejects an old revoked-key check that finishes after a replacement is regist
 });
 
 it("reports and switches the owner's Allow connections setting without touching devices", async () => {
-  const secretsDir = await mkdtemp(path.join(tmpdir(), "synara-allow-"));
+  const secretsDir = await mkdtemp(path.join(tmpdir(), "ramspace-allow-"));
   try {
     await initializeRemoteTlsIdentity(remoteTlsIdentityPath(secretsDir), "controller");
     mocks.readAccount.mockResolvedValue({

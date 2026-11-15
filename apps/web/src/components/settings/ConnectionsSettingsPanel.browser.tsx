@@ -6,7 +6,11 @@
 
 import "../../index.css";
 
-import type { AccountBillingStatus, AccountStatus, DesktopKeepAwakeState } from "@synara/contracts";
+import type {
+  AccountBillingStatus,
+  AccountStatus,
+  DesktopKeepAwakeState,
+} from "@ramspace/contracts";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { StrictMode, type CSSProperties } from "react";
 import { page } from "vitest/browser";
@@ -421,7 +425,7 @@ describe("Connections settings", () => {
         title: "Connection closed",
         description: "This window could not update its saved computer list.",
       });
-      expect(sessionStorage.getItem("synara:workspace-connections:v1:controller")).toBeNull();
+      expect(sessionStorage.getItem("ramspace:workspace-connections:v1:controller")).toBeNull();
     },
   );
 
@@ -567,11 +571,11 @@ describe("Connections settings", () => {
       await vi.waitFor(() => expect(fixture.billingStatus).toHaveBeenCalledOnce());
       await expect.element(page.getByRole("button", { name: "Connect a device" })).toBeVisible();
       if (access === "none") {
-        await expect.element(page.getByText("Synara Alto (Pro)", { exact: true })).toBeVisible();
+        await expect.element(page.getByText("Ramspace Alto (Pro)", { exact: true })).toBeVisible();
         await page.getByRole("button", { name: "View Alto plans" }).click();
         expect(fixture.navigate).toHaveBeenCalledWith({
           to: "/settings",
-          search: { section: "usage", target: "settings-synara-plan" },
+          search: { section: "usage", target: "settings-ramspace-plan" },
         });
         expect(CREATE_CALLS()).toHaveLength(0);
         await expect

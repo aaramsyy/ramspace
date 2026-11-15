@@ -1,4 +1,4 @@
-import type { AccountMe } from "@synara/contracts";
+import type { AccountMe } from "@ramspace/contracts";
 import { Schema } from "effect";
 import { renderToStaticMarkup } from "react-dom/server";
 import { beforeEach, describe, expect, it, vi } from "vitest";
@@ -33,9 +33,9 @@ beforeEach(() => {
   };
   account.profileSyncEnabled = true;
   vi.clearAllMocks();
-  setLocalStorageItem("synara:profile:name:v1", "Local Name", Schema.String);
+  setLocalStorageItem("ramspace:profile:name:v1", "Local Name", Schema.String);
   setLocalStorageItem(
-    "synara:profile:avatarImage:v1",
+    "ramspace:profile:avatarImage:v1",
     "data:image/png;base64,local",
     Schema.String,
   );
@@ -92,7 +92,7 @@ describe("profile identity source", () => {
         avatarImage: null,
       }),
     ).rejects.toThrow("Finish setting up");
-    expect(getLocalStorageItem("synara:profile:name:v1", Schema.String)).toBe("Local Name");
+    expect(getLocalStorageItem("ramspace:profile:name:v1", Schema.String)).toBe("Local Name");
     expect(account.updateProfile.mutateAsync).not.toHaveBeenCalled();
   });
 
@@ -106,7 +106,7 @@ describe("profile identity source", () => {
         avatarImage: "data:image/png;base64,new",
       }),
     ).rejects.toThrow("Profile editing is unavailable");
-    expect(getLocalStorageItem("synara:profile:avatarImage:v1", Schema.String)).toBe(
+    expect(getLocalStorageItem("ramspace:profile:avatarImage:v1", Schema.String)).toBe(
       "data:image/png;base64,local",
     );
     expect(account.updateProfile.mutateAsync).not.toHaveBeenCalled();

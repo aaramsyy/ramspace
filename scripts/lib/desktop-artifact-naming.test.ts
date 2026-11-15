@@ -30,8 +30,8 @@ describe("desktop artifact naming", () => {
       "latest-linux-arm64.yml",
     );
     expect(retargetStagedEntry("latest-linux.yml", "linux", "x64")).toBe("latest-linux.yml");
-    expect(retargetStagedEntry("Synara-1.5.1-arm64.AppImage", "linux", "arm64")).toBe(
-      "Synara-1.5.1-arm64.AppImage",
+    expect(retargetStagedEntry("Ramspace-1.5.1-arm64.AppImage", "linux", "arm64")).toBe(
+      "Ramspace-1.5.1-arm64.AppImage",
     );
     expect(retargetStagedEntry("latest.yml", "win", "arm64")).toBe("latest.yml");
   });
@@ -40,6 +40,8 @@ describe("desktop artifact naming", () => {
     expect(retargetStagedEntry("latest-mac.yml", "mac", "x64")).toBe("latest-mac-x64.yml");
     expect(retargetStagedEntry("latest-mac.yml", "mac", "arm64")).toBe("latest-mac.yml");
     expect(retargetStagedEntry("latest-mac-x64.yml", "mac", "x64")).toBe("latest-mac-x64.yml");
-    expect(retargetStagedEntry("Synara-1.5.1-x64.dmg", "mac", "x64")).toBe("Synara-1.5.1-x64.dmg");
+    expect(retargetStagedEntry("Ramspace-1.5.1-x64.dmg", "mac", "x64")).toBe(
+      "Ramspace-1.5.1-x64.dmg",
+    );
   });
 });

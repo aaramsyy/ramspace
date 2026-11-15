@@ -25,7 +25,7 @@ afterEach(() => {
 });
 
 function makeRoot(): string {
-  const root = mkdtempSync(join(tmpdir(), "synara-beta-usage-test-"));
+  const root = mkdtempSync(join(tmpdir(), "ramspace-beta-usage-test-"));
   roots.push(root);
   return root;
 }
@@ -112,9 +112,9 @@ describe("bundle gate", () => {
     const callIndex = mainSource.lastIndexOf("startBetaUsageSnapshotJob");
     expect(callIndex).toBeGreaterThan(0);
     const gate = mainSource.slice(callIndex - 400, callIndex + 100);
-    expect(gate).toContain("const desktopBundleId = process.env[SYNARA_DESKTOP_BUNDLE_ID_ENV];");
+    expect(gate).toContain("const desktopBundleId = process.env[RAMSPACE_DESKTOP_BUNDLE_ID_ENV];");
     expect(gate).toContain(
-      "desktopBundleId === SYNARA_BETA_BUNDLE_ID || desktopBundleId === SYNARA_REMOTE_BUNDLE_ID",
+      "desktopBundleId === RAMSPACE_BETA_BUNDLE_ID || desktopBundleId === RAMSPACE_REMOTE_BUNDLE_ID",
     );
   });
 });

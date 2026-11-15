@@ -1,10 +1,10 @@
 // FILE: composerSlashCommands.ts
-// Purpose: Share Synara's built-in composer slash command names across web UI
+// Purpose: Share Ramspace's built-in composer slash command names across web UI
 //          parsing and server-side profile stats backfills.
 // Layer: Shared runtime utility
 // Exports: command-name constants and normalization helpers.
 
-import { BUILT_IN_COMPOSER_SLASH_COMMANDS } from "@synara/contracts/composerSlashCommands";
+import { BUILT_IN_COMPOSER_SLASH_COMMANDS } from "@ramspace/contracts/composerSlashCommands";
 export { BUILT_IN_COMPOSER_SLASH_COMMANDS };
 
 export type BuiltInComposerSlashCommand = (typeof BUILT_IN_COMPOSER_SLASH_COMMANDS)[number];

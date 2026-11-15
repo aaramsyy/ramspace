@@ -7,7 +7,7 @@ import * as NodeServices from "@effect/platform-node/NodeServices";
 import { Effect, Layer } from "effect";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import type { ServerProviderUsageSnapshot } from "@synara/contracts";
+import type { ServerProviderUsageSnapshot } from "@ramspace/contracts";
 
 import { ServerConfig } from "../config";
 import { ServerSettingsService } from "../serverSettings";
@@ -25,7 +25,7 @@ const recoveryIdentityMock = vi.fn<(ctx: ProviderUsageContext) => Promise<string
 const resolveExecutableMock = vi.fn<(command: string) => string | null>();
 const localUsageLinesMock = vi.fn();
 
-vi.mock("@synara/shared/executable", () => ({
+vi.mock("@ramspace/shared/executable", () => ({
   resolveExecutable: (command: string) => resolveExecutableMock(command),
 }));
 
@@ -464,13 +464,13 @@ describe("providerUsageRecoveryBindingKey", () => {
   const key = () => providerUsageRecoveryBindingKey({ provider: "codex", instanceId: "codex" });
 
   it("survives usage token rotation and unrelated server credentials changing across restart", async () => {
-    vi.stubEnv("SYNARA_AUTH_TOKEN", "server-token-before");
+    vi.stubEnv("RAMSPACE_AUTH_TOKEN", "server-token-before");
     const result = await Effect.runPromise(
       Effect.gen(function* () {
         const first = yield* key();
         cacheKeyMock.mockResolvedValue("rotated-refresh-token-cache-key");
-        vi.stubEnv("SYNARA_AUTH_TOKEN", "server-token-after");
-        vi.stubEnv("SYNARA_WS_TOKEN", "new-transport-token");
+        vi.stubEnv("RAMSPACE_AUTH_TOKEN", "server-token-after");
+        vi.stubEnv("RAMSPACE_WS_TOKEN", "new-transport-token");
         vi.stubEnv("PATH", "/different/restart/path");
         const second = yield* key();
         return { first, second };

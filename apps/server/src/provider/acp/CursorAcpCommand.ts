@@ -13,7 +13,7 @@ import {
   executableCandidates,
   executableNameCandidates,
   windowsPathExtensions,
-} from "@synara/shared/executable";
+} from "@ramspace/shared/executable";
 import { buildProviderChildEnvironment } from "../../providerChildEnvironment.ts";
 import {
   commandExistsOnPath,
@@ -239,7 +239,7 @@ function wrapPowerShellCommand(command: string, args: ReadonlyArray<string>): Cu
   };
 }
 
-// Resolves persisted/default Cursor binary settings into the executable Synara should spawn.
+// Resolves persisted/default Cursor binary settings into the executable Ramspace should spawn.
 export function resolveCursorAgentBinaryPath(
   binaryPath: string | null | undefined,
   options: ProviderBinaryResolutionOptions = {},

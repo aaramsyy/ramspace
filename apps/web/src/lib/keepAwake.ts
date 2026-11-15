@@ -4,7 +4,7 @@
 // Exports: Localized mode options and status label helpers.
 
 import { t } from "~/i18n";
-import type { KeepAwakeMode, ServerKeepAwakeState } from "@synara/contracts";
+import type { KeepAwakeMode, ServerKeepAwakeState } from "@ramspace/contracts";
 
 export interface KeepAwakeModeOption {
   readonly value: KeepAwakeMode;

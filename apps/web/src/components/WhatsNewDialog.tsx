@@ -9,7 +9,7 @@
 import { useState } from "react";
 
 import { ArrowLeftIcon, ArrowRightIcon } from "~/lib/icons";
-import { SynaraLogo } from "@synara/profile-ui/logo";
+import { RamspaceLogo } from "@ramspace/profile-ui/logo";
 
 import { ChangelogAccordion } from "../whatsNew/ChangelogAccordion";
 import { FeatureSection } from "../whatsNew/FeatureSection";
@@ -146,7 +146,7 @@ function CurrentHeader({
 
   return (
     <div className="flex items-center gap-3">
-      <SynaraLogo aria-hidden className="size-8 shrink-0 text-foreground" />
+      <RamspaceLogo aria-hidden className="size-8 shrink-0 text-foreground" />
       <div className="flex min-w-0 flex-col">
         <DialogTitle className="text-base">{t("common:whatSNew")}</DialogTitle>
         <DialogDescription className="text-ui leading-snug">

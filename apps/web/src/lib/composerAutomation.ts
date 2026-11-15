@@ -5,7 +5,7 @@
 // Depends on: automationIntent parsing and automation form helpers.
 
 import { t } from "~/i18n";
-import { DEFAULT_AUTOMATION_FAST_INTERVAL_MAX_ITERATIONS } from "@synara/contracts";
+import { DEFAULT_AUTOMATION_FAST_INTERVAL_MAX_ITERATIONS } from "@ramspace/contracts";
 import type {
   AutomationMode,
   ModelSelection,
@@ -15,7 +15,7 @@ import type {
   ServerGenerateAutomationIntentInput,
   ServerGenerateAutomationIntentResult,
   ThreadId,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 
 import {
   applyScheduleToForm,
@@ -23,8 +23,8 @@ import {
   isFormSubmittable,
   type AutomationFormState,
 } from "./automationForm";
-import { stopWhenFromCompletionPolicy } from "@synara/shared/automationCompletionPolicy";
-import { automationRequiresTargetThread } from "@synara/shared/automationMode";
+import { stopWhenFromCompletionPolicy } from "@ramspace/shared/automationCompletionPolicy";
+import { automationRequiresTargetThread } from "@ramspace/shared/automationMode";
 import {
   acknowledgedWarningIdsForAutomaticChatAutomation,
   buildAutomationDraftWarnings,

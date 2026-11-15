@@ -10,7 +10,7 @@ it.each([false, true])(
     const pane = {
       innerWidth: 700,
       parent,
-      frameElement: { synaraWorkspace: { controller: { desktop } } },
+      frameElement: { ramspaceWorkspace: { controller: { desktop } } },
     };
     vi.stubGlobal("window", pane);
     const presentation = await import("./workspacePresentation");

@@ -9,8 +9,8 @@ import {
   type OrchestrationLatestTurn,
   type OrchestrationReadModel,
   type OrchestrationSession,
-} from "@synara/contracts";
-import { deriveThreadSummaryMetadata } from "@synara/shared/threadSummary";
+} from "@ramspace/contracts";
+import { deriveThreadSummaryMetadata } from "@ramspace/shared/threadSummary";
 import { Effect } from "effect";
 import { describe, expect, it } from "vitest";
 

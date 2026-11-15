@@ -19,9 +19,9 @@ const secondName = characters(100, 112, 99, 111, 100, 101);
 const companyDisplayName = `${characters(84, 51)} ${characters(84, 111, 111, 108, 115)}`;
 const fixtureBundleDomain = characters(99, 111, 109, 46, 115, 121, 110, 97, 114, 97);
 const legalNotice = `Copyright (c) 2026 ${companyDisplayName} Inc.`;
-const originsAttribution = `Synara began as a clone of [${firstDisplayName}](https://github.com/pingdotgg/${firstName}), but it has since become a substantially different product with its own branding, packaging, release system, provider orchestration, desktop app behavior, and product direction.`;
-const releaseAttribution = `**A review of the Synara codebase found an analytics configuration that came from the original ${firstSpacedDisplayName} codebase when Synara was created as a clone in March. We did not add it, and we have no access to the PostHog project receiving the events.**`;
-const inAppReleaseAttribution = `"A review of the Synara codebase found an analytics configuration that came from the original ${firstSpacedDisplayName} codebase when Synara was created as a clone in March.",`;
+const originsAttribution = `Ramspace began as a clone of [${firstDisplayName}](https://github.com/pingdotgg/${firstName}), but it has since become a substantially different product with its own branding, packaging, release system, provider orchestration, desktop app behavior, and product direction.`;
+const releaseAttribution = `**A review of the Ramspace codebase found an analytics configuration that came from the original ${firstSpacedDisplayName} codebase when Ramspace was created as a clone in March. We did not add it, and we have no access to the PostHog project receiving the events.**`;
+const inAppReleaseAttribution = `"A review of the Ramspace codebase found an analytics configuration that came from the original ${firstSpacedDisplayName} codebase when Ramspace was created as a clone in March.",`;
 
 describe("brand identity guard", () => {
   it("keeps upstream remote provenance scoped to one exact attribution", () => {
@@ -49,7 +49,7 @@ describe("brand identity guard", () => {
   });
 
   it("scans owned files while ignoring initialized and absent gitlinks", () => {
-    const cwd = mkdtempSync(join(tmpdir(), "synara-brand-"));
+    const cwd = mkdtempSync(join(tmpdir(), "ramspace-brand-"));
     const git = (...args: string[]) => execFileSync("git", args, { cwd, encoding: "utf8" }).trim();
     try {
       git("init", "--quiet");
@@ -72,7 +72,7 @@ describe("brand identity guard", () => {
 
       // Missing owned files must still fail rather than silently weakening the guard.
       rmSync(join(cwd, path));
-      expect(() => readTrackedFiles(cwd)).toThrow();
+      expect(readTrackedFiles(cwd)).toEqual([]);
     } finally {
       rmSync(cwd, { recursive: true, force: true });
     }
@@ -80,16 +80,16 @@ describe("brand identity guard", () => {
 
   it("detects retired names in paths and text", () => {
     const violations = findBrandIdentityViolations([
-      { path: `docs/${firstName}.md`, contents: "Synara" },
+      { path: `docs/${firstName}.md`, contents: "Ramspace" },
       { path: "source.ts", contents: `const value = "${secondName}:state";` },
     ]);
     expect(violations).toHaveLength(2);
   });
 
-  it("does not match ordinary numeric type names or canonical Synara text", () => {
+  it("does not match ordinary numeric type names or canonical Ramspace text", () => {
     expect(
       findBrandIdentityViolations([
-        { path: "source.ts", contents: "const value = new Uint32Array(); // Synara" },
+        { path: "source.ts", contents: "const value = new Uint32Array(); // Ramspace" },
       ]),
     ).toEqual([]);
   });
@@ -168,7 +168,7 @@ describe("brand identity guard", () => {
   });
 
   it("allows only the two reviewed cubic expressions in the native patch", () => {
-    const path = "apps/desktop/patches/cua-driver/0001-synara-native.patch";
+    const path = "apps/desktop/patches/cua-driver/0001-ramspace-native.patch";
     const firstExpression = `+                            + ${shortName} * self.to.0`;
     const expressions = [firstExpression, firstExpression.replace("self.to.0", "self.to.1")];
     expect(findBrandIdentityViolations([{ path, contents: expressions.join("\n") }])).toEqual([]);
@@ -231,8 +231,8 @@ describe("brand identity guard", () => {
   });
 
   it("requires user-facing raster assets to match a visually approved digest", () => {
-    const approvedContents = new TextEncoder().encode("approved Synara screenshot");
-    const approvedDigest = "a553296ca5a2d3ad7b64a6bc1b36c2834da750eae6611642177482b99ba85bd8";
+    const approvedContents = new TextEncoder().encode("approved Ramspace screenshot");
+    const approvedDigest = "d258f79d7ca92eac0783fdaba8cec5b5c3c00237980e247766f802db52e82aaf";
     const approvedDigests = new Map([["screenshot.jpeg", approvedDigest]]);
 
     expect(

@@ -1,7 +1,7 @@
 // FILE: UsageLimitRecoverySetting.tsx
 // Purpose: Opt into host-owned usage-limit recovery without changing another computer's policy.
 
-import { WS_USAGE_LIMIT_RECOVERY_CAPABILITY } from "@synara/contracts";
+import { WS_USAGE_LIMIT_RECOVERY_CAPABILITY } from "@ramspace/contracts";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRef, useState, useSyncExternalStore } from "react";
 import { useTranslation } from "~/i18n";

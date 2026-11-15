@@ -1,9 +1,9 @@
-import { ORCHESTRATION_WS_METHODS, WS_METHODS } from "@synara/contracts";
+import { ORCHESTRATION_WS_METHODS, WS_METHODS } from "@ramspace/contracts";
 import { Deferred, Effect, Fiber, Layer, Logger } from "effect";
 import { TestClock } from "effect/testing";
 import { describe, expect, it } from "vitest";
 
-import { classifyWsRequest } from "@synara/shared/wsRequestClass";
+import { classifyWsRequest } from "@ramspace/shared/wsRequestClass";
 
 import { makeWsRequestAdmission, WS_REQUEST_REJECTION_LOG_INTERVAL_MS } from "./wsRequestAdmission";
 

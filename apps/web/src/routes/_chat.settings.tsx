@@ -3,7 +3,7 @@
 // Layer: Route screen
 // Exports: Settings route component for `/settings`
 
-import type { ProviderKind } from "@synara/contracts";
+import type { ProviderKind } from "@ramspace/contracts";
 import { createFileRoute, useNavigate, useSearch } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 

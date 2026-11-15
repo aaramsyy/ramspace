@@ -1,7 +1,7 @@
 import http from "node:http";
 import path from "node:path";
 import { once } from "node:events";
-import { EnvironmentId } from "@synara/contracts";
+import { EnvironmentId } from "@ramspace/contracts";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { initializeRemoteTlsIdentity, remoteTlsAnchor } from "../remoteTransport/certificates";
 import { createRemoteDialFixture } from "../__fixtures__/remoteDial";

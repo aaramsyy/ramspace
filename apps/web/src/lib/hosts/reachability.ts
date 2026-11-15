@@ -3,7 +3,7 @@
 // Layer: Web remote-access feature logic.
 // Exports: attempt-based reachability labels and display tokens.
 
-import type { TransportKind } from "@synara/shared/transportRace";
+import type { TransportKind } from "@ramspace/shared/transportRace";
 
 /**
  * Reachability as this app renders it (ADR 0010).

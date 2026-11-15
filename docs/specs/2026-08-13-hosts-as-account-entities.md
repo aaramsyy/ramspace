@@ -4,7 +4,7 @@
 
 ## Summary
 
-A host is a user's machine running a Synara server, registered on their account and synced to all their devices. Clients (Desktop, iOS, web) reach any host over the cheapest working transport — loopback, LAN, Tailscale, SSH (desktop-only), or the cloud relay. The cloud is a directory + pipe: it stores identity, endpoints, presence, and E2E-encrypted config; hosts own all session state.
+A host is a user's machine running a Ramspace server, registered on their account and synced to all their devices. Clients (Desktop, iOS, web) reach any host over the cheapest working transport — loopback, LAN, Tailscale, SSH (desktop-only), or the cloud relay. The cloud is a directory + pipe: it stores identity, endpoints, presence, and E2E-encrypted config; hosts own all session state.
 
 ## Domain model
 
@@ -33,7 +33,7 @@ Separate stateless Railway service (`relay.*`), sharing token/schema code via a 
 
 - **Splice authorization**: client fetches a **Relay Grant** from the API — short-lived (~60s), single-use, host-scoped, signed. API applies the rule (owner, or discoverable + same org); relay verifies signature/host/expiry statelessly, no DB.
 - **Session credential**: minted by the **host**, not the cloud (ADR 0011). On splice, the relay forwards a short-lived client-bound mint request; the host verifies it against directory keys and mints the credential the client actually uses.
-- **Splice**: 1:1, one data socket per session. Client presents grant → relay signals the host's control socket → host dials a fresh data socket → relay splices. Spliced traffic is opaque end-to-end (the normal Synara WS protocol).
+- **Splice**: 1:1, one data socket per session. Client presents grant → relay signals the host's control socket → host dials a fresh data socket → relay splices. Spliced traffic is opaque end-to-end (the normal Ramspace WS protocol).
 - **Control channel**: hosts hold a supervisor-kept control socket for splice signaling. Clients hold none. "Dumb pipe" applies to spliced data; the host control socket speaks the small relay protocol.
 
 ## Cloud data (delta from current `apps/api` schema)
@@ -59,6 +59,6 @@ Multi-env-per-machine; per-user access grants; org-owned hosts or ownership tran
 
 ## Borrowed from upstream
 
-Reference: the project Synara was forked from, linked in README "Origins".
+Reference: the project Ramspace was forked from, linked in README "Origins".
 
 Host-minted credentials with signed link challenges (`infra/relay/src/environments/EnvironmentLinker.ts`, `EnvironmentConnector.ts`) and attempt-based reachability (`packages/client-runtime/src/connection/supervisor.ts`) are adopted. Worth stealing during implementation: capability-scoped session tokens via RFC 8693-style exchange (`docs/internals/environment-auth.md`), pairing tokens carried in the URL hash so the hosted origin never sees them, DPoP-bound relay sessions, and account-side deregister that revokes links for dead hosts.

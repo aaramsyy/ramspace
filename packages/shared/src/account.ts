@@ -79,19 +79,19 @@ import {
   PutSyncKeyWrapResponse as PutSyncKeyWrapResponseSchema,
   type GetSyncKeyWrapResponse,
   GetSyncKeyWrapResponse as GetSyncKeyWrapResponseSchema,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { Option, Schema } from "effect";
 
 /** Environment variable that points every client at a different account service. */
-export const ACCOUNT_URL_ENV_NAME = "SYNARA_ACCOUNT_URL";
+export const ACCOUNT_URL_ENV_NAME = "RAMSPACE_ACCOUNT_URL";
 
 /**
- * The hosted Synara account service. Declared here, once, because both callers
- * — the `synara auth` CLI flow and the server's in-app account session — must
+ * The hosted Ramspace account service. Declared here, once, because both callers
+ * — the `ramspace auth` CLI flow and the server's in-app account session — must
  * agree on which service the stored credentials belong to; a second copy would
  * eventually point one of them somewhere else.
  */
-export const DEFAULT_ACCOUNT_URL = "https://api.synara.vrbty.dev";
+export const DEFAULT_ACCOUNT_URL = "https://api.ramspace.vrbty.dev";
 
 export interface AccountUrlResolutionInput {
   readonly flag?: string | undefined;

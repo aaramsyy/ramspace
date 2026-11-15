@@ -1,4 +1,4 @@
-import { MessageId, ThreadId } from "@synara/contracts";
+import { MessageId, ThreadId } from "@ramspace/contracts";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useComposerDraftStore, type QueuedComposerTurn } from "../composerDraftStore";
@@ -248,7 +248,7 @@ describe("dispatchQueuedComposerTurnHeadless", () => {
     nativeApiMocks.dispatchCommand.mockImplementationOnce(() => preparation);
     vi.stubGlobal("window", {
       desktopBridge: { getWsUrl: () => null },
-      location: { origin: "synara-remote://app" },
+      location: { origin: "ramspace-remote://app" },
     });
     vi.stubEnv("VITE_WS_URL", "");
     const fetchMock = vi.fn<typeof fetch>();

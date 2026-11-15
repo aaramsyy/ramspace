@@ -1,5 +1,8 @@
-import type { OrchestrationEvent, ProjectId, ThreadId } from "@synara/contracts";
-import { makeDrainableWorker, startDrainableWorkerProducers } from "@synara/shared/DrainableWorker";
+import type { OrchestrationEvent, ProjectId, ThreadId } from "@ramspace/contracts";
+import {
+  makeDrainableWorker,
+  startDrainableWorkerProducers,
+} from "@ramspace/shared/DrainableWorker";
 import { Cause, Duration, Effect, Layer, Schedule, Stream } from "effect";
 
 import {

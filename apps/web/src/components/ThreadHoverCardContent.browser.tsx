@@ -1,6 +1,6 @@
 import "../index.css";
 
-import { ThreadId, type ProviderModelDescriptor } from "@synara/contracts";
+import { ThreadId, type ProviderModelDescriptor } from "@ramspace/contracts";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { expect, it } from "vitest";
 import { render } from "vitest-browser-react";
@@ -85,7 +85,7 @@ it("marks a chat on another computer with the connection globe and its computer"
           threadId={ThreadId.makeUnsafe("hover-remote")}
           title="Audit PRs and merge order"
           timeLabel="23m"
-          projectName="synara"
+          projectName="ramspace"
           projectCwd={null}
           projectAppearance={null}
           sourceProjectName={null}

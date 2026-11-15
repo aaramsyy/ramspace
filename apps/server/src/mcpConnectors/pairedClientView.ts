@@ -5,7 +5,7 @@
 // Layer: Connectors
 // Exports: connectorsForPairedClient
 
-import type { McpConnector } from "@synara/contracts";
+import type { McpConnector } from "@ramspace/contracts";
 
 export function connectorsForPairedClient(
   connectors: readonly McpConnector[],

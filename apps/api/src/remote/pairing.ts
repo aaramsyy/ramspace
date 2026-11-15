@@ -1,5 +1,5 @@
 import { randomBytes, createHash } from "node:crypto";
-import { DEVICE_USER_CODE_ALPHABET, type RemotePairingBundle } from "@synara/contracts";
+import { DEVICE_USER_CODE_ALPHABET, type RemotePairingBundle } from "@ramspace/contracts";
 import { and, eq, gt, isNull, lt, sql } from "drizzle-orm";
 import type { NodePgDatabase } from "drizzle-orm/node-postgres";
 import { decodeJwt } from "jose";
@@ -137,9 +137,9 @@ export function createPairingRendezvous(db: NodePgDatabase<typeof schema>, apiIs
         if (!device) throw invalid("device_unavailable");
         try {
           await verifyJwtWithEmbeddedJwk(proof, {
-            typ: "synara-pairing-code+jwt",
+            typ: "ramspace-pairing-code+jwt",
             audience: apiIssuer,
-            issuer: "synara-device",
+            issuer: "ramspace-device",
             algorithms: ["ES256"],
             maxAgeSeconds: 60,
             publicKeyJwk: device.publicKeyJwk,

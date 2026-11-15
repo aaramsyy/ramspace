@@ -22,7 +22,7 @@ import {
   McpConnector,
   type McpConnectorConnectInput,
   type McpConnectorConnectResult,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import {
   defaultMcpConnectorName,
   findMcpConnectorPreset,
@@ -31,7 +31,7 @@ import {
   mcpConnectorServerName,
   mcpConnectorSlug,
   normalizeMcpConnectorUrl,
-} from "@synara/shared/mcpConnectors";
+} from "@ramspace/shared/mcpConnectors";
 
 import type { AgentGatewayConnectorRegistration } from "../agentGateway/Services/AgentGatewayCredentials.ts";
 import { normalizeConnectorInput } from "./config.ts";
@@ -311,7 +311,7 @@ export interface McpConnectorRuntimeDeps {
 }
 
 const reconnectMessage = (name: string) =>
-  `${name} needs to be reconnected. Ask the user to reconnect it in Synara under Settings → Connectors.`;
+  `${name} needs to be reconnected. Ask the user to reconnect it in Ramspace under Settings → Connectors.`;
 
 // Provider MCP clients read HTTP 401 as "sign in to this server" and would
 // start OAuth against the gateway, so a lost sign-in answers each request
@@ -343,10 +343,10 @@ function describeSignInStartError(name: string, error: unknown): McpConnectorFai
   if (/dynamic client registration/iu.test(detail)) return ownAppRequired(name);
   if (/\b403\b/u.test(detail)) {
     return new McpConnectorFailure(
-      `${name} did not let Synara register as an app (HTTP 403). It may only accept apps it has approved.`,
+      `${name} did not let Ramspace register as an app (HTTP 403). It may only accept apps it has approved.`,
     );
   }
-  return new McpConnectorFailure(`${name} did not accept Synara's sign-in request.`);
+  return new McpConnectorFailure(`${name} did not accept Ramspace's sign-in request.`);
 }
 
 export class McpConnectorRuntime {
@@ -526,7 +526,7 @@ export class McpConnectorRuntime {
       return {
         ok: false,
         title: "This sign-in link expired",
-        message: "Start again from Synara under Settings → Connectors.",
+        message: "Start again from Ramspace under Settings → Connectors.",
       };
     }
     // Keep the claimed attempt reachable so Disconnect can fence an exchange
@@ -540,8 +540,8 @@ export class McpConnectorRuntime {
           ok: false,
           title: `${target.name} was not connected`,
           message: reason
-            ? `${target.name} did not authorize Synara: ${reason}`
-            : `${target.name} did not authorize Synara.`,
+            ? `${target.name} did not authorize Ramspace: ${reason}`
+            : `${target.name} did not authorize Ramspace.`,
         };
       }
 
@@ -566,7 +566,7 @@ export class McpConnectorRuntime {
         return {
           ok: false,
           title: `${target.name} was not connected`,
-          message: `${target.name} did not issue access for Synara. Try connecting again.`,
+          message: `${target.name} did not issue access for Ramspace. Try connecting again.`,
         };
       }
       const { tokens, clientInformation, discovery } = authorization;
@@ -574,7 +574,7 @@ export class McpConnectorRuntime {
         return {
           ok: false,
           title: `${target.name} was not connected`,
-          message: `${target.name} did not issue access for Synara. Try connecting again.`,
+          message: `${target.name} did not issue access for Ramspace. Try connecting again.`,
         };
       }
       // Concurrent sign-ins each passed the limit when they started.
@@ -611,7 +611,7 @@ export class McpConnectorRuntime {
         return {
           ok: false,
           title: `${target.name} was not connected`,
-          message: "Synara could not save the connection. Try again.",
+          message: "Ramspace could not save the connection. Try again.",
         };
       }
       return { ok: true, name: target.name };
@@ -661,7 +661,7 @@ export class McpConnectorRuntime {
     if (!connector) {
       return jsonRpcErrorResult(
         request.body,
-        "This connector was disconnected in Synara. Its tools are no longer available.",
+        "This connector was disconnected in Ramspace. Its tools are no longer available.",
         404,
       );
     }
@@ -675,7 +675,7 @@ export class McpConnectorRuntime {
         return Promise.resolve(
           jsonRpcErrorResult(
             request.body,
-            "This connector was disconnected in Synara. Its tools are no longer available.",
+            "This connector was disconnected in Ramspace. Its tools are no longer available.",
             404,
           ),
         );
@@ -721,7 +721,7 @@ export class McpConnectorRuntime {
       });
       return jsonRpcErrorResult(
         request.body,
-        `Synara could not refresh access to ${connector.name}. Try again shortly.`,
+        `Ramspace could not refresh access to ${connector.name}. Try again shortly.`,
       );
     }
   }
@@ -815,7 +815,7 @@ export class McpConnectorRuntime {
     const write = this.writes.then(async () => {
       if (this.loadFailed) {
         throw new McpConnectorFailure(
-          "Synara could not read your saved connectors, so it won't change them. Restart Synara and try again.",
+          "Ramspace could not read your saved connectors, so it won't change them. Restart Ramspace and try again.",
         );
       }
       const next = change();

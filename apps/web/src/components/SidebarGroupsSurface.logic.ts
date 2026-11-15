@@ -5,7 +5,7 @@
 // Exports: resolveGroupCoordinatorRowLabel, resolveGroupsListEmptyState,
 //          resolveGroupChatTargetProjectId, activateThreadWhenHydrated
 
-import type { ProjectAgentSummary, ProjectId, ThreadId } from "@synara/contracts";
+import type { ProjectAgentSummary, ProjectId, ThreadId } from "@ramspace/contracts";
 
 import { resolveGroupCoordinatorDisplayName } from "../lib/groupCoordinatorName";
 import type { Project } from "../types";

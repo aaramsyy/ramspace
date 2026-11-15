@@ -11,7 +11,7 @@ import type {
   NewThreadDefaults,
   ProviderInstanceId,
   ServerSettingsPatch,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import * as Equal from "effect/Equal";
 
 import type { ComposerDraftStoreState, SharedNewThreadDefaults } from "../composerDraftStore";

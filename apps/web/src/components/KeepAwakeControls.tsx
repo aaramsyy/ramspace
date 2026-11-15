@@ -1,4 +1,4 @@
-import type { KeepAwakeMode, ServerKeepAwakeState } from "@synara/contracts";
+import type { KeepAwakeMode, ServerKeepAwakeState } from "@ramspace/contracts";
 import type { ReactNode } from "react";
 
 import type { DesktopKeepAwake } from "~/hooks/useDesktopKeepAwake";

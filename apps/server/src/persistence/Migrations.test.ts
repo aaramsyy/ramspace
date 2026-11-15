@@ -47,49 +47,51 @@ const tableIndexNames = (sql: SqlClient.SqlClient, tableName: string) =>
 
 layer("reconcileMigrationLineage", (it) => {
   // An imported database whose tracker high-water
-  // mark is at or beyond Synara's latest migration ID. The migrator's max-ID
-  // gate then skips every Synara migration — including the #032 self-heal —
+  // mark is at or beyond Ramspace's latest migration ID. The migrator's max-ID
+  // gate then skips every Ramspace migration — including the #032 self-heal —
   // and startup crashes on the missing env_mode column.
-  it.effect("re-runs skipped migrations when an imported tracker outruns Synara's latest ID", () =>
-    Effect.gen(function* () {
-      const sql = yield* SqlClient.SqlClient;
+  it.effect(
+    "re-runs skipped migrations when an imported tracker outruns Ramspace's latest ID",
+    () =>
+      Effect.gen(function* () {
+        const sql = yield* SqlClient.SqlClient;
 
-      // Bring the schema to the last shared migration.
-      yield* runMigrations({ toMigrationInclusive: 16 });
+        // Bring the schema to the last shared migration.
+        yield* runMigrations({ toMigrationInclusive: 16 });
 
-      // Record a foreign lineage from 17 through past Synara's latest ID.
-      const latestSynaraId = Math.max(...migrationEntries.map(([id]) => id));
-      for (let id = 17; id <= latestSynaraId + 3; id++) {
-        yield* sql`
+        // Record a foreign lineage from 17 through past Ramspace's latest ID.
+        const latestRamspaceId = Math.max(...migrationEntries.map(([id]) => id));
+        for (let id = 17; id <= latestRamspaceId + 3; id++) {
+          yield* sql`
           INSERT INTO effect_sql_migrations (migration_id, name)
           VALUES (${id}, ${`ForeignMigration${id}`})
         `;
-      }
+        }
 
-      // The foreign lineage added some of the same columns, so the
-      // re-run must tolerate columns that already exist.
-      yield* sql`ALTER TABLE projection_threads ADD COLUMN archived_at TEXT`;
+        // The foreign lineage added some of the same columns, so the
+        // re-run must tolerate columns that already exist.
+        yield* sql`ALTER TABLE projection_threads ADD COLUMN archived_at TEXT`;
 
-      const beforeColumns = yield* projectionThreadsColumnNames(sql);
-      assert.notInclude(beforeColumns, "env_mode");
+        const beforeColumns = yield* projectionThreadsColumnNames(sql);
+        assert.notInclude(beforeColumns, "env_mode");
 
-      const executed = yield* runMigrations();
-      assert.deepStrictEqual(
-        executed.map(([id]) => id),
-        migrationEntries.map(([id]) => id).filter((id) => id >= 17),
-      );
+        const executed = yield* runMigrations();
+        assert.deepStrictEqual(
+          executed.map(([id]) => id),
+          migrationEntries.map(([id]) => id).filter((id) => id >= 17),
+        );
 
-      const afterColumns = yield* projectionThreadsColumnNames(sql);
-      assert.include(afterColumns, "env_mode");
-      assert.include(afterColumns, "archived_at");
+        const afterColumns = yield* projectionThreadsColumnNames(sql);
+        assert.include(afterColumns, "env_mode");
+        assert.include(afterColumns, "archived_at");
 
-      // The tracker now mirrors the Synara lineage exactly; foreign rows are gone.
-      const rows = yield* trackerRows(sql);
-      assert.deepStrictEqual(
-        rows.map((row) => [row.migration_id, row.name]),
-        migrationEntries.map(([id, name]) => [id, name]),
-      );
-    }),
+        // The tracker now mirrors the Ramspace lineage exactly; foreign rows are gone.
+        const rows = yield* trackerRows(sql);
+        assert.deepStrictEqual(
+          rows.map((row) => [row.migration_id, row.name]),
+          migrationEntries.map(([id, name]) => [id, name]),
+        );
+      }),
   );
 
   it.effect(
@@ -210,7 +212,7 @@ layer("reconcileMigrationLineage", (it) => {
     }),
   );
 
-  it.effect("refuses writable migration startup for a newer Synara schema", () =>
+  it.effect("refuses writable migration startup for a newer Ramspace schema", () =>
     Effect.gen(function* () {
       const sql = yield* SqlClient.SqlClient;
 
@@ -218,7 +220,7 @@ layer("reconcileMigrationLineage", (it) => {
       const futureId = Math.max(...migrationEntries.map(([id]) => id)) + 1;
       yield* sql`
         INSERT INTO effect_sql_migrations (migration_id, name)
-        VALUES (${futureId}, 'FutureSynaraMigration')
+        VALUES (${futureId}, 'FutureRamspaceMigration')
       `;
 
       const rowsBefore = yield* trackerRows(sql);

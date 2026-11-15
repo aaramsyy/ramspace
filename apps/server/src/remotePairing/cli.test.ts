@@ -5,7 +5,7 @@ import path from "node:path";
 import { once } from "node:events";
 import { WebSocketServer } from "ws";
 import { expect, it } from "vitest";
-import { WS_COMPATIBILITY_QUERY, WS_METHODS } from "@synara/contracts";
+import { WS_COMPATIBILITY_QUERY, WS_METHODS } from "@ramspace/contracts";
 import {
   computeExternalMcpRuntimeProof,
   EXTERNAL_MCP_RUNTIME_CHALLENGE_HEADER,
@@ -16,7 +16,7 @@ import { requestLocalRemoteAccess } from "./cli";
 it.each([true, false])(
   "negotiates with a separately identified owner process only after its runtime proof (valid=%s)",
   async (validProof) => {
-    const directory = await fs.mkdtemp(path.join(os.tmpdir(), "synara-remote-cli-test-"));
+    const directory = await fs.mkdtemp(path.join(os.tmpdir(), "ramspace-remote-cli-test-"));
     const secret = "isolated-runtime-secret-12345678901234567890";
     const peerInstance = "separate-server-process-instance";
     let upgraded = false;

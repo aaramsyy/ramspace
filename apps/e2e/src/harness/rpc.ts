@@ -4,7 +4,7 @@ import {
   WsBootstrapNegotiateResult,
   WS_NEGOTIATE_QUERY,
   WS_COMPATIBILITY_QUERY,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { controllerProtocol } from "../../../server/src/hostConnections/dialer";
 
 /** Ordinary wire RPC, including real peer negotiation. No app state is injected. */

@@ -1,4 +1,4 @@
-import type { ExecutionEnvironmentDescriptor, RemoteExecutionScope } from "@synara/contracts";
+import type { ExecutionEnvironmentDescriptor, RemoteExecutionScope } from "@ramspace/contracts";
 
 export interface WindowExecutionContext {
   readonly controller: ExecutionEnvironmentDescriptor;
@@ -31,5 +31,5 @@ export function executionNamespace(): string | undefined {
 }
 export function executionKey(key: string): string {
   const namespace = executionNamespace();
-  return namespace ? `synara:execution:${encodeURIComponent(namespace)}:${key}` : key;
+  return namespace ? `ramspace:execution:${encodeURIComponent(namespace)}:${key}` : key;
 }

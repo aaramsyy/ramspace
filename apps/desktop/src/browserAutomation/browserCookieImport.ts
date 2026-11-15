@@ -1,8 +1,8 @@
 import { BetterWright, listCookieSourceBrowsers, listCookieSourceProfiles } from "betterwright";
-import type { BrowserCookieImportInput, BrowserCookieImportResult } from "@synara/contracts";
+import type { BrowserCookieImportInput, BrowserCookieImportResult } from "@ramspace/contracts";
 import type { DesktopBrowserManager } from "../browserManager";
 import { getBetterwrightNetworkGuard } from "./betterwrightNetworkGuard";
-import { synaraHostTarget } from "./betterwrightHostTarget";
+import { ramspaceHostTarget } from "./betterwrightHostTarget";
 
 const SOURCES = new Set(["chrome", "safari", "edge"]);
 
@@ -64,7 +64,7 @@ export class BrowserCookieImport {
       // no signal, so mid-sync cancellation works by revoking the transport
       // (stop() below), not through this controller.
       const interrupt = new AbortController();
-      const hostTarget = synaraHostTarget(runtime.webContents, {
+      const hostTarget = ramspaceHostTarget(runtime.webContents, {
         cookieImport: true,
         signal: interrupt.signal,
       });

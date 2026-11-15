@@ -56,7 +56,7 @@ it.each(["light", "dark"])(
         <HostConnectionControl />
       </div>,
     );
-    await page.getByRole("button", { name: /Mac mini.*Synara Beta/ }).click();
+    await page.getByRole("button", { name: /Mac mini.*Ramspace Beta/ }).click();
     await expect
       .element(page.getByRole("menuitem", { name: "Back to this computer" }))
       .toBeVisible();

@@ -2,7 +2,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 
-import { signDeviceRegistration } from "@synara/shared/deviceKey";
+import { signDeviceRegistration } from "@ramspace/shared/deviceKey";
 import { importJWK, jwtVerify } from "jose";
 import { describe, expect, it } from "vitest";
 
@@ -10,7 +10,7 @@ import { deviceIdentityPath, loadOrCreateDeviceIdentity } from "./store";
 
 describe("device identity persistence", () => {
   it("atomically persists a reloadable ES256 key and returns a non-extractable signer", async () => {
-    const root = await fs.mkdtemp(path.join(os.tmpdir(), "synara-device-identity-"));
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), "ramspace-device-identity-"));
     const filePath = deviceIdentityPath(path.join(root, "secrets"));
 
     try {

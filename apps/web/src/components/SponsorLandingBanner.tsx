@@ -1,4 +1,4 @@
-// Purpose: Dismissible empty-landing promotion that opens Synara's sponsorship page.
+// Purpose: Dismissible empty-landing promotion that opens Ramspace's sponsorship page.
 
 import { Schema } from "effect";
 
@@ -8,7 +8,7 @@ import { openExternalLink } from "~/lib/linkChips";
 import { cn } from "~/lib/utils";
 import { useTranslation } from "~/i18n";
 
-const DISMISSED_STORAGE_KEY = "synara:sponsor-landing-banner:dismissed:v1";
+const DISMISSED_STORAGE_KEY = "ramspace:sponsor-landing-banner:dismissed:v1";
 
 export function SponsorLandingBanner(props: { className?: string }) {
   const { t } = useTranslation();
@@ -21,7 +21,7 @@ export function SponsorLandingBanner(props: { className?: string }) {
         type="button"
         data-testid={"sponsor-landing-banner"}
         className="flex w-full cursor-pointer items-center gap-4 rounded-2xl px-4 py-3 text-left transition-colors duration-150 ease-out hover:bg-foreground/[0.04] focus-visible:bg-foreground/[0.04] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/60 motion-reduce:transition-none"
-        onClick={() => openExternalLink("https://www.trysynara.com/sponsor")}
+        onClick={() => openExternalLink("https://www.tryramspace.com/sponsor")}
       >
         <span
           aria-hidden="true"
@@ -31,7 +31,7 @@ export function SponsorLandingBanner(props: { className?: string }) {
         </span>
         <span className="flex min-w-0 flex-col gap-0.5">
           <span className="truncate text-ui font-medium text-foreground">
-            {t("common:supportSynara")}
+            {t("common:supportRamspace")}
           </span>
           <span className="truncate text-ui text-muted-foreground">
             {t("common:exploreSponsorshipsAndHelpFundDevelopment")}

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import type { BrowserVaultMethods } from "@synara/contracts";
+import type { BrowserVaultMethods } from "@ramspace/contracts";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { useTranslation } from "~/i18n";

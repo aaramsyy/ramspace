@@ -6,7 +6,7 @@
 // Layer: profiles app route.
 
 import { ImageResponse } from "next/og";
-import { SYNARA_LOGO_PATHS } from "@synara/profile-ui/logo";
+import { RAMSPACE_LOGO_PATHS } from "@ramspace/profile-ui/logo";
 import { handleFromParam } from "../../../../lib/handleParam";
 import { drawableAvatar } from "../../../../lib/imageAvatar";
 import { imageFonts } from "../../../../lib/imageFonts";
@@ -62,16 +62,16 @@ export async function GET(request: Request, { params }: Params) {
       headers: {
         // Publication can be revoked at any time, like the page and its preview.
         "Cache-Control": "private, no-store",
-        "Content-Disposition": `inline; filename="synara-${profile.handle}-${format}.png"`,
+        "Content-Disposition": `inline; filename="ramspace-${profile.handle}-${format}.png"`,
       },
     },
   );
 }
 
-function SynaraMark({ edge, color }: { edge: number; color: string }) {
+function RamspaceMark({ edge, color }: { edge: number; color: string }) {
   return (
-    <svg viewBox="0 0 470 504" width={edge} height={Math.round(edge * (504 / 470))} fill="none">
-      {SYNARA_LOGO_PATHS.map((path) => (
+    <svg viewBox="0 0 135 139" width={edge} height={Math.round(edge * (504 / 470))} fill="none">
+      {RAMSPACE_LOGO_PATHS.map((path) => (
         <path key={path} d={path} fill={color} />
       ))}
     </svg>
@@ -217,10 +217,10 @@ function Poster({
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <SynaraMark edge={30} color={INK} />
-          <span>Synara</span>
+          <RamspaceMark edge={30} color={INK} />
+          <span>Ramspace</span>
         </div>
-        <span style={{ color: MUTED }}>trysynara.com/@{profile.handle}</span>
+        <span style={{ color: MUTED }}>tryramspace.com/@{profile.handle}</span>
       </div>
     </div>
   );
@@ -266,8 +266,8 @@ function Receipt({ profile, data }: { profile: PublicProfile; data: ShareCardDat
         }}
       >
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12 }}>
-          <SynaraMark edge={44} color="#1c1c1a" />
-          <span style={{ fontSize: 28, fontWeight: 700, letterSpacing: "0.14em" }}>SYNARA</span>
+          <RamspaceMark edge={44} color="#1c1c1a" />
+          <span style={{ fontSize: 28, fontWeight: 700, letterSpacing: "0.14em" }}>RAMSPACE</span>
           <span style={{ color: "#7a7a75" }}>@{profile.handle}</span>
         </div>
 
@@ -378,7 +378,7 @@ function Receipt({ profile, data }: { profile: PublicProfile; data: ShareCardDat
             ))}
           </div>
           <span style={{ fontSize: 18, color: "#7a7a75" }}>LAST 30 DAYS, ONE BAR PER DAY</span>
-          <span style={{ fontSize: 20 }}>trysynara.com/@{profile.handle}</span>
+          <span style={{ fontSize: 20 }}>tryramspace.com/@{profile.handle}</span>
         </div>
       </div>
     </div>

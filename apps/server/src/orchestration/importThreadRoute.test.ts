@@ -10,7 +10,7 @@ import {
   type ProviderSession,
   type ProviderStartOptions,
   ThreadId,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import * as NodeServices from "@effect/platform-node/NodeServices";
 import { it, vi } from "@effect/vitest";
 import { Effect, FileSystem, Option, Path } from "effect";
@@ -44,7 +44,7 @@ it("expands instance Claude homes for historical-session imports", () => {
   assert.equal(environment?.CLAUDE_IMPORT_TEST, "1");
 });
 
-it("expands instance Claude homes against the configured Synara home", () => {
+it("expands instance Claude homes against the configured Ramspace home", () => {
   const environment = claudeHistoricalSessionEnvironment(
     {
       claudeAgent: {
@@ -52,15 +52,15 @@ it("expands instance Claude homes against the configured Synara home", () => {
         environment: { CLAUDE_IMPORT_TEST: "1" },
       },
     } satisfies ProviderStartOptions,
-    { homeDir: "/synara/home" },
+    { homeDir: "/ramspace/home" },
   );
 
-  assert.equal(environment?.HOME, path.join("/synara/home", "claude-work"));
+  assert.equal(environment?.HOME, path.join("/ramspace/home", "claude-work"));
   assert.equal(environment?.CLAUDE_IMPORT_TEST, "1");
 });
 
 it("scopes environment-only Claude imports to the selected provider instance", () => {
-  const isolationRootDir = "/synara/userdata";
+  const isolationRootDir = "/ramspace/userdata";
   const providerInstanceId = "claude_work" as ProviderInstanceId;
   const environment = claudeHistoricalSessionEnvironment(
     {
@@ -69,7 +69,7 @@ it("scopes environment-only Claude imports to the selected provider instance", (
       },
     } satisfies ProviderStartOptions,
     {
-      homeDir: "/synara/home",
+      homeDir: "/ramspace/home",
       isolationRootDir,
       providerInstanceId,
     },
@@ -77,7 +77,7 @@ it("scopes environment-only Claude imports to the selected provider instance", (
 
   const accountHome = claudeIsolatedHomePath({ isolationRootDir, providerInstanceId });
   if (process.platform === "darwin") {
-    assert.equal(environment?.HOME, "/synara/home");
+    assert.equal(environment?.HOME, "/ramspace/home");
     assert.equal(environment?.CLAUDE_CONFIG_DIR, path.join(accountHome, ".claude"));
     assert.equal(environment?.CLAUDE_SECURESTORAGE_CONFIG_DIR, environment?.CLAUDE_CONFIG_DIR);
   } else {
@@ -92,10 +92,10 @@ it("does not remerge ambient credentials into Claude import child environments",
   process.env.ANTHROPIC_API_KEY = "ambient-key";
   try {
     const environment: NodeJS.ProcessEnv = claudeHistoricalSessionChildEnvironment({
-      HOME: "/tmp/synara-claude-import",
+      HOME: "/tmp/ramspace-claude-import",
     });
 
-    assert.deepEqual(environment, { HOME: "/tmp/synara-claude-import" });
+    assert.deepEqual(environment, { HOME: "/tmp/ramspace-claude-import" });
     assert.equal((environment as NodeJS.ProcessEnv)["ANTHROPIC_API_KEY"], undefined);
   } finally {
     vi.unstubAllEnvs();
@@ -110,12 +110,12 @@ it("does not remerge ambient credentials into Claude import child environments",
 it("restores Electron Node mode only for the trusted Claude metadata helper", () => {
   vi.stubEnv("ELECTRON_RUN_AS_NODE", "1");
   vi.stubEnv("ANTHROPIC_API_KEY", "ambient-key");
-  vi.stubEnv("SYNARA_AUTH_TOKEN", "ambient-owner-token");
+  vi.stubEnv("RAMSPACE_AUTH_TOKEN", "ambient-owner-token");
   vi.stubEnv("NODE_OPTIONS", "--require=/untrusted/ambient.cjs");
   try {
     const accountEnvironment = claudeHistoricalSessionEnvironment({
       claudeAgent: {
-        homePath: "/synara/claude-import-account",
+        homePath: "/ramspace/claude-import-account",
         environment: { ANTHROPIC_AUTH_TOKEN: "selected-account-token" },
       },
     });
@@ -128,7 +128,7 @@ it("restores Electron Node mode only for the trusted Claude metadata helper", ()
     assert.equal(childEnvironment.ELECTRON_RUN_AS_NODE, "1");
     assert.equal(childEnvironment.ANTHROPIC_AUTH_TOKEN, "selected-account-token");
     assert.equal(childEnvironment.ANTHROPIC_API_KEY, undefined);
-    assert.equal(childEnvironment.SYNARA_AUTH_TOKEN, undefined);
+    assert.equal(childEnvironment.RAMSPACE_AUTH_TOKEN, undefined);
     assert.equal(childEnvironment.NODE_OPTIONS, undefined);
     assert.equal(childEnvironment.HOME, accountEnvironment.HOME);
     assert.deepEqual(accountEnvironment, before);
@@ -208,7 +208,7 @@ it.effect("imports Codex history through a provider-owned fork", () =>
       fileSystem,
       path,
       platform: process.platform,
-      serverConfig: { homeDir: "/tmp/synara-home", stateDir: "/tmp/synara-state" },
+      serverConfig: { homeDir: "/tmp/ramspace-home", stateDir: "/tmp/ramspace-state" },
       orchestrationEngine: {
         dispatch: (command: OrchestrationCommand) =>
           Effect.sync(() => {
@@ -268,7 +268,7 @@ it.effect("rejects imports before inspecting a disabled provider adapter", () =>
       fileSystem,
       path,
       platform: process.platform,
-      serverConfig: { homeDir: "/tmp/synara-home", stateDir: "/tmp/synara-state" },
+      serverConfig: { homeDir: "/tmp/ramspace-home", stateDir: "/tmp/ramspace-state" },
       orchestrationEngine: {
         dispatch: () => Effect.die("disabled import must not dispatch"),
       } as unknown as OrchestrationEngineShape,
@@ -403,7 +403,7 @@ it("passes the resolved OpenCode instance into external-thread preflight", async
           updatedAt: now,
         }),
     } as never,
-    serverConfig: { homeDir: "/home/tester", stateDir: "/synara/state" },
+    serverConfig: { homeDir: "/home/tester", stateDir: "/ramspace/state" },
     serverSettings: {
       getSettings: Effect.succeed({
         ...DEFAULT_SERVER_SETTINGS,

@@ -1,5 +1,5 @@
 // FILE: usagePricing.ts
-// Purpose: API list prices per model, to estimate what Synara usage would cost
+// Purpose: API list prices per model, to estimate what Ramspace usage would cost
 // for providers that report no cost of their own (Codex). Rates come from
 // LiteLLM's public model price table; it is downloaded
 // at most once a day and kept in the state folder so prices still load offline.
@@ -8,7 +8,7 @@
 import fs from "node:fs/promises";
 import nodePath from "node:path";
 
-import type { StatsUsageAnalyticsPricingStatus } from "@synara/contracts";
+import type { StatsUsageAnalyticsPricingStatus } from "@ramspace/contracts";
 import { Effect } from "effect";
 
 import { writeFileStringAtomically } from "./atomicWrite";

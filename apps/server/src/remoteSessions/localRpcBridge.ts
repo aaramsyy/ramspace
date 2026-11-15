@@ -6,7 +6,7 @@ import {
   WS_COMPATIBILITY_QUERY,
   type WsBootstrapNegotiateInput,
   type WsBootstrapNegotiateResult,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { Duration, Effect } from "effect";
 import WebSocket, { type RawData } from "ws";
 
@@ -119,7 +119,7 @@ export async function bridgeRemoteSocketToLocalRpc(
         method: "bearer-session-token",
         role: "client",
         accessOrigin: "remote",
-        client: { label: "Synara remote device", deviceType: "unknown" },
+        client: { label: "Ramspace remote device", deviceType: "unknown" },
       }),
     );
     issuedSessionId = issued.sessionId;

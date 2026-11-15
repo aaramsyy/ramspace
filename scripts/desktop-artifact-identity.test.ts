@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
 
 import {
-  resolveSynaraDesktopRuntimeFlavor,
-  synaraDesktopIdentity,
-} from "@synara/shared/desktopIdentity";
+  resolveRamspaceDesktopRuntimeFlavor,
+  ramspaceDesktopIdentity,
+} from "@ramspace/shared/desktopIdentity";
 import { createDesktopArtifactIdentity } from "./lib/desktop-artifact-identity.ts";
 
 describe("desktop artifact identity", () => {
@@ -12,14 +12,14 @@ describe("desktop artifact identity", () => {
     (platform) => {
       const result = createDesktopArtifactIdentity({ platform, flavor: "production" });
       expect(result.packageMetadata).toEqual({
-        name: "synara-desktop",
-        productName: "Synara",
-        synaraDesktopFlavor: "production",
+        name: "ramspace-desktop",
+        productName: "Ramspace",
+        ramspaceDesktopFlavor: "production",
       });
       expect(result.buildConfig).toEqual({
-        appId: "com.emanueledipietro.synara",
-        productName: "Synara",
-        artifactName: "Synara-${version}-${arch}.${ext}",
+        appId: "com.aaramsyy.ramspace",
+        productName: "Ramspace",
+        artifactName: "Ramspace-${version}-${arch}.${ext}",
       });
       expect(result.releaseDirectoryName).toBe("release");
       expect(result.identity.usesScriptedUpdates).toBe(false);
@@ -31,25 +31,25 @@ describe("desktop artifact identity", () => {
     (flavor) => {
       const result = createDesktopArtifactIdentity({ platform: "mac", flavor });
       const packagedJson = JSON.parse(JSON.stringify(result.packageMetadata));
-      const runtimeFlavor = resolveSynaraDesktopRuntimeFlavor({
+      const runtimeFlavor = resolveRamspaceDesktopRuntimeFlavor({
         isPackaged: true,
         isDevelopment: false,
-        packagedFlavor: packagedJson.synaraDesktopFlavor,
+        packagedFlavor: packagedJson.ramspaceDesktopFlavor,
         requestedFlavor: "production",
       });
-      const runtimeIdentity = synaraDesktopIdentity(runtimeFlavor);
+      const runtimeIdentity = ramspaceDesktopIdentity(runtimeFlavor);
       expect(runtimeIdentity).toEqual(result.identity);
       expect(result.buildConfig.appId).toBe(runtimeIdentity.bundleId);
       expect(result.packageMetadata.productName).toBe(result.buildConfig.productName);
-      expect(result.packageMetadata.name).toBe(`synara-desktop-${flavor}`);
+      expect(result.packageMetadata.name).toBe(`ramspace-desktop-${flavor}`);
       expect(result.buildConfig.protocols).toEqual([
         { name: runtimeIdentity.displayName, schemes: [runtimeIdentity.scheme] },
       ]);
-      expect(runtimeIdentity.userDataDirectoryName).toBe(`synara-${flavor}`);
-      expect(runtimeIdentity.defaultHomeDirectoryName).toBe(`.synara-${flavor}`);
+      expect(runtimeIdentity.userDataDirectoryName).toBe(`ramspace-${flavor}`);
+      expect(runtimeIdentity.defaultHomeDirectoryName).toBe(`.ramspace-${flavor}`);
       expect(runtimeIdentity.usesScriptedUpdates).toBe(true);
       expect(result.releaseDirectoryName).toBe(`release-${flavor}`);
-      expect(result.buildConfig.artifactName).not.toBe("Synara-${version}-${arch}.${ext}");
+      expect(result.buildConfig.artifactName).not.toBe("Ramspace-${version}-${arch}.${ext}");
     },
   );
 
@@ -57,18 +57,18 @@ describe("desktop artifact identity", () => {
     "carries Remote identity from the %s package into runtime",
     (platform) => {
       const result = createDesktopArtifactIdentity({ platform, flavor: "remote" });
-      const runtimeFlavor = resolveSynaraDesktopRuntimeFlavor({
+      const runtimeFlavor = resolveRamspaceDesktopRuntimeFlavor({
         isPackaged: true,
         isDevelopment: false,
-        packagedFlavor: result.packageMetadata.synaraDesktopFlavor,
+        packagedFlavor: result.packageMetadata.ramspaceDesktopFlavor,
         requestedFlavor: "production",
       });
-      expect(synaraDesktopIdentity(runtimeFlavor)).toEqual(result.identity);
+      expect(ramspaceDesktopIdentity(runtimeFlavor)).toEqual(result.identity);
       expect(result.buildConfig).toMatchObject({
-        appId: "com.emanueledipietro.synara.remote",
-        productName: "Synara Remote",
-        artifactName: "Synara-Remote-${version}-${arch}.${ext}",
-        protocols: [{ name: "Synara Remote", schemes: ["synara-remote"] }],
+        appId: "com.aaramsyy.ramspace.remote",
+        productName: "Ramspace Remote",
+        artifactName: "Ramspace-Remote-${version}-${arch}.${ext}",
+        protocols: [{ name: "Ramspace Remote", schemes: ["ramspace-remote"] }],
       });
       expect(result.releaseDirectoryName).toBe("release-remote");
       expect(result.identity.usesScriptedUpdates).toBe(false);

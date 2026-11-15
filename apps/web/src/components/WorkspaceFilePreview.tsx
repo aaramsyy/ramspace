@@ -6,18 +6,18 @@ import { useTranslation } from "~/i18n";
 // Layer: Web chat presentation component
 // Exports: WorkspaceFilePreview, isMarkdownPreviewablePath
 
-import type { ProjectFileChangeEvent, ProjectReadFileResult } from "@synara/contracts";
+import type { ProjectFileChangeEvent, ProjectReadFileResult } from "@ramspace/contracts";
 import {
   isSupportedLocalImagePath,
   isSupportedLocalPdfPath,
   lowerCaseExtensionOf,
-} from "@synara/shared/localPreviewFiles";
+} from "@ramspace/shared/localPreviewFiles";
 import {
   isLocalAbsolutePath,
   isWorkspaceRelativePathSafe,
   joinWorkspaceRelativePath,
-} from "@synara/shared/path";
-import { isScratchWorkspacePath } from "@synara/shared/threadWorkspace";
+} from "@ramspace/shared/path";
+import { isScratchWorkspacePath } from "@ramspace/shared/threadWorkspace";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   Component,

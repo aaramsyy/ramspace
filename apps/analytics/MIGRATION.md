@@ -1,6 +1,6 @@
 > Historical account migration notes, imported from the former standalone repo.
 > Current source and commands: [README.md](README.md). Do not repeat this migration
-> to move code into the monorepo. The redactor now imports from `@synara/shared`.
+> to move code into the monorepo. The redactor now imports from `@ramspace/shared`.
 
 # Handoff: moving Beta diagnostics to Emanuele
 
@@ -10,38 +10,38 @@ anything. Every step can be done by an agent except the ones marked
 
 ## What this is
 
-This repo is the Cloudflare Worker behind Synara Beta diagnostics. Beta builds
+This repo is the Cloudflare Worker behind Ramspace Beta diagnostics. Beta builds
 send crash and error reports to it; it stores them and serves a private
 dashboard.
 
 - **Worker:** `worker.ts` (ingest `/v1/events`, `/v1/crash`, dashboard `/api/*`, SPA).
-- **D1 database** `synara-beta-diagnostics`: events, usage rows, dump index, triage state.
-- **R2 bucket** `synara-beta-crash-dumps`: raw minidumps.
+- **D1 database** `ramspace-beta-diagnostics`: events, usage rows, dump index, triage state.
+- **R2 bucket** `ramspace-beta-crash-dumps`: raw minidumps.
 - **Secrets:** `DASHBOARD_PASSWORD`, optional `DASHBOARD_PASSWORD_2`,
   `DASHBOARD_SESSION_KEY`. Write-only in Cloudflare; they cannot be copied, only
   set again.
-- **Client side** lives in the Synara repo: `apps/desktop/src/betaDiagnostics.ts`
+- **Client side** lives in the Ramspace repo: `apps/desktop/src/betaDiagnostics.ts`
   (hardcoded endpoint) and `docs/diagnostics.md` (privacy notice).
 
 ## State as of 2026-09-28 (verified)
 
-- Everything runs in Cloudflare account **Synara**
+- Everything runs in Cloudflare account **Ramspace**
   (`9f9caeb268766deda99bc580c775d50c`), owned by Kartik. Emanuele is a Super
   Administrator there as `manu.development.app@gmail.com`.
 - **Kartik may rename that account to "Vex" at any time** and reuse it for his
   own projects. Same account ID, same data, same URL: renaming changes only
-  the display name. If you see "Vex" instead of "Synara" in `wrangler whoami`,
+  the display name. If you see "Vex" instead of "Ramspace" in `wrangler whoami`,
   it is the same OLD account. Until Part B is done, Kartik keeps the worker,
-  D1 database, and R2 bucket named `synara-beta-diagnostics` /
-  `synara-beta-crash-dumps` untouched and keeps you as a member.
-- Live URL: `https://synara-beta-diagnostics.kartik-9f9.workers.dev`. Every
+  D1 database, and R2 bucket named `ramspace-beta-diagnostics` /
+  `ramspace-beta-crash-dumps` untouched and keeps you as a member.
+- Live URL: `https://ramspace-beta-diagnostics.kartik-9f9.workers.dev`. Every
   shipped Beta has this URL baked in.
 - Data: about 1,300 events, 30 usage rows, 1 R2 object (a 2 KB smoke-test dump).
   DB size under 1 MB.
 - **Retention: nothing is deleted.** No cron, no R2 expiry rule. This was a
-  deliberate decision; keep it that way. The privacy notice in the Synara repo
-  says so (Emanuele-web04/synara#1373).
-- The Synara account also holds Kartik's own experiments (`synara-cloud-agent`,
+  deliberate decision; keep it that way. The privacy notice in the Ramspace repo
+  says so (aaramsyy/ramspace#1373).
+- The Ramspace account also holds Kartik's own experiments (`ramspace-cloud-agent`,
   `trace`, their D1 and R2). They are **not** part of the handoff. Do not touch them.
 - Zero Trust is enabled on that account but no Access apps exist. The worker
   can verify Cloudflare Access JWTs (`TEAM_DOMAIN`, `POLICY_AUD`,
@@ -57,13 +57,13 @@ dashboard.
   covers the whole Cloudflare API, so an agent can use it for the steps marked
   (human) in Part A: adding the zone and creating DNS records. Use
   `cf cli search "<what you want>"` to find a command. Not needed for Part B.
-- **Vercel CLI** (`vercel dns ls trysynara.com`) lists the current DNS
+- **Vercel CLI** (`vercel dns ls tryramspace.com`) lists the current DNS
   records, if the agent has a Vercel login for the team that owns the domain.
 
 ## Where it goes
 
 - A Cloudflare account owned by Emanuele (called NEW below).
-- Permanent URL: `https://diagnostics.trysynara.com`. After this the URL never
+- Permanent URL: `https://diagnostics.tryramspace.com`. After this the URL never
   depends on which account hosts it.
 - The old URL stays alive on Kartik's account as a small forwarder
   (`forwarder/`) so older Betas keep reporting. Kartik keeps that account
@@ -73,32 +73,32 @@ dashboard.
 
 1. Domain moves to Cloudflare (Part A).
 2. Data and worker move (Part B).
-3. Synara app points at the new URL and a Beta ships (Part C).
+3. Ramspace app points at the new URL and a Beta ships (Part C).
 4. Kartik cleans up his side (Part D).
 
 Do not skip ahead. Part B step 5 needs the domain live, and Part D needs Part C.
 
-## Part A: move trysynara.com DNS to Cloudflare
+## Part A: move tryramspace.com DNS to Cloudflare
 
-Today `trysynara.com` is registered at **Namecheap** with DNS on **Vercel**
+Today `tryramspace.com` is registered at **Namecheap** with DNS on **Vercel**
 (the website is hosted on Vercel). A Worker custom domain needs the zone on
 Cloudflare. The website and email must keep working through this.
 
 Records visible from outside today:
 
-| Name            | Type    | Value                                        |
-| --------------- | ------- | -------------------------------------------- |
-| `trysynara.com` | A       | `216.150.16.65`, `216.150.1.129` (Vercel)    |
-| `www`           | A/CNAME | Vercel (apex redirects to `www`)             |
-| `trysynara.com` | MX      | `10 inbound-smtp.eu-west-1.amazonaws.com`    |
-| `trysynara.com` | TXT     | `google-site-verification=...`               |
-| `trysynara.com` | CAA     | `pki.goog`, `sectigo.com`, `letsencrypt.org` |
+| Name              | Type    | Value                                        |
+| ----------------- | ------- | -------------------------------------------- |
+| `tryramspace.com` | A       | `216.150.16.65`, `216.150.1.129` (Vercel)    |
+| `www`             | A/CNAME | Vercel (apex redirects to `www`)             |
+| `tryramspace.com` | MX      | `10 inbound-smtp.eu-west-1.amazonaws.com`    |
+| `tryramspace.com` | TXT     | `google-site-verification=...`               |
+| `tryramspace.com` | CAA     | `pki.goog`, `sectigo.com`, `letsencrypt.org` |
 
 Vercel answers for every name (wildcard), so this list and Cloudflare's
 auto-scan can both miss records. **The Vercel DNS dashboard is the source of
 truth.** Look for DKIM `_domainkey` CNAMEs, `_vercel` TXT, and anything else.
 
-1. **(human, or agent with `cf`)** In NEW, add site `trysynara.com`, Free plan.
+1. **(human, or agent with `cf`)** In NEW, add site `tryramspace.com`, Free plan.
 2. **(human, or agent with Vercel and `cf` access)** Export every record from Vercel
    DNS and recreate each one in Cloudflare. Set Vercel website records to
    **DNS only** (grey cloud); Vercel handles its own TLS. Keep the CAA
@@ -108,9 +108,9 @@ truth.** Look for DKIM `_domainkey` CNAMEs, `_vercel` TXT, and anything else.
 4. Verify before moving on:
 
    ```bash
-   dig +short NS trysynara.com          # Cloudflare nameservers
-   curl -sI https://www.trysynara.com   # website still 200
-   dig +short MX trysynara.com          # still the Amazon MX
+   dig +short NS tryramspace.com          # Cloudflare nameservers
+   curl -sI https://www.tryramspace.com   # website still 200
+   dig +short MX tryramspace.com          # still the Amazon MX
    ```
 
    Also send a test email to an address on the domain if one is in use.
@@ -149,9 +149,9 @@ past 1 MiB.
    and the applied-migrations table.
 
    ```bash
-   CLOUDFLARE_ACCOUNT_ID=$NEW npx wrangler d1 create synara-beta-diagnostics
+   CLOUDFLARE_ACCOUNT_ID=$NEW npx wrangler d1 create ramspace-beta-diagnostics
    # note the printed database_id; do not edit wrangler.toml yet
-   CLOUDFLARE_ACCOUNT_ID=$NEW npx wrangler r2 bucket create synara-beta-crash-dumps
+   CLOUDFLARE_ACCOUNT_ID=$NEW npx wrangler r2 bucket create ramspace-beta-crash-dumps
    ```
 
    Do not add an R2 lifecycle rule. Nothing expires.
@@ -161,7 +161,7 @@ past 1 MiB.
    ```bash
    CLOUDFLARE_ACCOUNT_ID=$OLD npx wrangler deploy -c forwarder/wrangler.toml
    curl -s -o /dev/null -w "%{http_code}\n" -X POST --data '' \
-     https://synara-beta-diagnostics.kartik-9f9.workers.dev/v1/events   # 503
+     https://ramspace-beta-diagnostics.kartik-9f9.workers.dev/v1/events   # 503
    ```
 
 3. Export from OLD, switch `wrangler.toml` to the new database, import.
@@ -182,7 +182,7 @@ past 1 MiB.
    `wrangler.toml`, above the first `[section]`:
 
    ```toml
-   routes = [{ pattern = "diagnostics.trysynara.com", custom_domain = true }]
+   routes = [{ pattern = "diagnostics.tryramspace.com", custom_domain = true }]
    ```
 
    ```bash
@@ -197,16 +197,16 @@ past 1 MiB.
    keep dashboard access, set `DASHBOARD_PASSWORD_2` for him and send it
    privately. Never commit or paste passwords.
 
-   Verify: log in at `https://diagnostics.trysynara.com`, set the range to
+   Verify: log in at `https://diagnostics.tryramspace.com`, set the range to
    "All", and check the overview and Issues show the old data.
 
 5. Unfreeze: point the old URL at the new worker.
 
    ```bash
    CLOUDFLARE_ACCOUNT_ID=$OLD npx wrangler deploy -c forwarder/wrangler.toml \
-     --var TARGET:https://diagnostics.trysynara.com
+     --var TARGET:https://diagnostics.tryramspace.com
    # must print {"accepted":0,"received":0}, not a Cloudflare 404 page
-   curl -s -X POST --data '' https://synara-beta-diagnostics.kartik-9f9.workers.dev/v1/events
+   curl -s -X POST --data '' https://ramspace-beta-diagnostics.kartik-9f9.workers.dev/v1/events
    ```
 
    A worker cannot fetch another worker on the same `*.workers.dev`
@@ -232,16 +232,16 @@ CLOUDFLARE_ACCOUNT_ID=$OLD npx wrangler rollback <version-id>
 After step 5, fix forward on NEW; the old D1 still has everything up to the
 freeze.
 
-## Part C: point Synara at the new URL
+## Part C: point Ramspace at the new URL
 
-In `Emanuele-web04/synara`:
+In `aaramsyy/ramspace`:
 
 1. Change `BETA_DIAGNOSTICS_ENDPOINT` in `apps/desktop/src/betaDiagnostics.ts`
-   to `https://diagnostics.trysynara.com`.
+   to `https://diagnostics.tryramspace.com`.
 2. Change the URL in `docs/diagnostics.md`, and the "maintainers' Cloudflare
    account" wording if you want.
 3. Nothing else references the old host (checked with a code search).
-4. Ship a Beta. Automatic Betas are off until Emanuele-web04/synara#1328 merges,
+4. Ship a Beta. Automatic Betas are off until aaramsyy/ramspace#1328 merges,
    so cut one by hand. Only Betas built after this change use the new URL.
 
 ## Part D: cleanup (Kartik)
@@ -250,7 +250,7 @@ Only after Part C has shipped:
 
 - Keep the forwarder running on the old account until the dashboard shows no
   events from versions older than the Part C Beta. It costs nothing on the
-  Free plan. Do not delete the worker named `synara-beta-diagnostics` there.
+  Free plan. Do not delete the worker named `ramspace-beta-diagnostics` there.
 - Remove Emanuele's membership (and rename the account to Vex, if not done
   already). Renaming does not change the old URL.
 - The old D1 and R2 stay as a backup. Delete them only when Emanuele confirms
@@ -278,14 +278,14 @@ verified: whether the rate-limit bindings (`[[ratelimits]]`) deploy on Free. If
   old-URL clients may share one per-IP rate limit (120 requests a minute). Fine
   at current volume; it goes away as clients move to the new URL.
 - The historical standalone redactor copy has been replaced by the canonical
-  `@synara/shared/diagnosticsRedaction` import (see `README.md`).
+  `@ramspace/shared/diagnosticsRedaction` import (see `README.md`).
 
 ## Done means
 
-- [ ] `dig NS trysynara.com` shows Cloudflare; website and email still work
-- [ ] New dashboard at `diagnostics.trysynara.com` shows all old data
+- [ ] `dig NS tryramspace.com` shows Cloudflare; website and email still work
+- [ ] New dashboard at `diagnostics.tryramspace.com` shows all old data
 - [ ] Old URL returns `{"accepted":0,"received":0}` for an empty POST
 - [ ] Fresh events arrive on the new dashboard
 - [ ] `wrangler.toml` and `README.md` committed; local `export/` deleted
-- [ ] Synara endpoint changed and a Beta shipped
+- [ ] Ramspace endpoint changed and a Beta shipped
 - [ ] Kartik: account renamed, membership removed, repo transferred

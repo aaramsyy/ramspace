@@ -6,7 +6,7 @@ import {
   resolveCodexHomeOverlayAccountSegment,
   resolveBaseCodexHomePath,
   resolveCodexHomeAllowlistCandidates,
-  resolveSynaraCodexHomeOverlayPath,
+  resolveRamspaceCodexHomeOverlayPath,
   resolveActiveCodexHomeWritePath,
 } from "./codexHomePaths.ts";
 
@@ -34,17 +34,20 @@ describe("Codex home paths", () => {
     assert.ok(!result.startsWith("~"));
   });
 
-  it("anchors the overlay under SYNARA_HOME when set", () => {
+  it("anchors the overlay under RAMSPACE_HOME when set", () => {
     assert.equal(
-      resolveSynaraCodexHomeOverlayPath({ SYNARA_HOME: "/synara/runtime" }, "/users/me/.codex"),
-      path.join("/synara/runtime", "codex-home-overlay"),
+      resolveRamspaceCodexHomeOverlayPath(
+        { RAMSPACE_HOME: "/ramspace/runtime" },
+        "/users/me/.codex",
+      ),
+      path.join("/ramspace/runtime", "codex-home-overlay"),
     );
   });
 
   it("derives a default overlay beside the source home", () => {
     assert.equal(
-      resolveSynaraCodexHomeOverlayPath({}, "/users/me/.codex"),
-      path.join("/users/me", ".synara", "runtime", "codex-home-overlay"),
+      resolveRamspaceCodexHomeOverlayPath({}, "/users/me/.codex"),
+      path.join("/users/me", ".ramspace", "runtime", "codex-home-overlay"),
     );
   });
   it("derives nested account overlays when given an account segment", () => {
@@ -56,12 +59,12 @@ describe("Codex home paths", () => {
 
     assert.ok(segment?.startsWith("work-"));
     assert.equal(
-      resolveSynaraCodexHomeOverlayPath(
-        { SYNARA_HOME: "/synara/runtime" },
+      resolveRamspaceCodexHomeOverlayPath(
+        { RAMSPACE_HOME: "/ramspace/runtime" },
         "/users/me/.codex",
         segment,
       ),
-      path.join("/synara/runtime", "codex-home-overlay", "accounts", segment ?? ""),
+      path.join("/ramspace/runtime", "codex-home-overlay", "accounts", segment ?? ""),
     );
   });
 
@@ -78,10 +81,10 @@ describe("Codex home paths", () => {
   it("allowlists source and overlay homes when distinct", () => {
     assert.deepEqual(
       resolveCodexHomeAllowlistCandidates({
-        env: { SYNARA_HOME: "/synara/runtime" },
+        env: { RAMSPACE_HOME: "/ramspace/runtime" },
         homePath: "/users/me/.codex",
       }),
-      ["/users/me/.codex", path.join("/synara/runtime", "codex-home-overlay")],
+      ["/users/me/.codex", path.join("/ramspace/runtime", "codex-home-overlay")],
     );
   });
 
@@ -93,13 +96,13 @@ describe("Codex home paths", () => {
     };
     const segment = resolveCodexHomeOverlayAccountSegment(accountInput);
     const candidates = resolveCodexHomeAllowlistCandidates({
-      env: { SYNARA_HOME: "/synara/runtime" },
+      env: { RAMSPACE_HOME: "/ramspace/runtime" },
       ...accountInput,
     });
     assert.deepEqual(candidates, [
       "/users/me/.codex",
-      path.join("/synara/runtime", "codex-home-overlay", "accounts", segment ?? ""),
-      path.join("/synara/runtime", "codex-home-overlay"),
+      path.join("/ramspace/runtime", "codex-home-overlay", "accounts", segment ?? ""),
+      path.join("/ramspace/runtime", "codex-home-overlay"),
       "/users/me/.codex_work",
     ]);
   });
@@ -110,21 +113,21 @@ describe("Codex home paths", () => {
       homePath: "/users/me/.codex",
     });
     const candidates = resolveCodexHomeAllowlistCandidates({
-      env: { SYNARA_HOME: "/synara/runtime" },
+      env: { RAMSPACE_HOME: "/ramspace/runtime" },
       homePath: "/users/me/.codex",
       accountId: "work",
     });
     assert.deepEqual(candidates, [
       "/users/me/.codex",
-      path.join("/synara/runtime", "codex-home-overlay", "accounts", segment ?? ""),
-      path.join("/synara/runtime", "codex-home-overlay"),
+      path.join("/ramspace/runtime", "codex-home-overlay", "accounts", segment ?? ""),
+      path.join("/ramspace/runtime", "codex-home-overlay"),
     ]);
   });
 
   it("keeps explicit shared homes isolated", () => {
     const env = {
       CODEX_HOME: "/users/me/.codex",
-      SYNARA_HOME: "/synara/runtime",
+      RAMSPACE_HOME: "/ramspace/runtime",
     };
     const segment = resolveCodexHomeOverlayAccountSegment({
       accountId: "codex_2",
@@ -137,7 +140,7 @@ describe("Codex home paths", () => {
         homePath: "/users/me/.codex",
         accountId: "codex_2",
       }),
-      path.join("/synara/runtime", "codex-home-overlay", "accounts", segment ?? ""),
+      path.join("/ramspace/runtime", "codex-home-overlay", "accounts", segment ?? ""),
     );
   });
 
@@ -152,12 +155,12 @@ describe("Codex home paths", () => {
       resolveActiveCodexHomeWritePath({
         env: {
           CODEX_HOME: "/users/me/.codex",
-          SYNARA_HOME: "/synara/runtime",
+          RAMSPACE_HOME: "/ramspace/runtime",
         },
         homePath,
         accountId: "codex_2",
       }),
-      path.join("/synara/runtime", "codex-home-overlay", "accounts", segment ?? ""),
+      path.join("/ramspace/runtime", "codex-home-overlay", "accounts", segment ?? ""),
     );
   });
 });

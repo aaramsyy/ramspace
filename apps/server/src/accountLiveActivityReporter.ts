@@ -1,6 +1,6 @@
 import { Effect, Schema } from "effect";
 import type * as SqlClient from "effect/unstable/sql/SqlClient";
-import { LiveActivityHostSnapshot } from "@synara/contracts";
+import { LiveActivityHostSnapshot } from "@ramspace/contracts";
 import {
   accountApiIssuer,
   accountStateDirectory,

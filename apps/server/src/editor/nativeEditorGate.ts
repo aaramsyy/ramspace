@@ -5,9 +5,9 @@
 // Exports: NATIVE_EDITOR_UNAVAILABLE_CODE, nativeEditorUnavailableError, requireNativeEditor
 
 import { Effect } from "effect";
-import { WsRpcError } from "@synara/contracts";
-import { isBetaFeatureEnabled, NATIVE_EDITOR_BETA_FEATURE } from "@synara/shared/betaFeatures";
-import type { SynaraDesktopFlavor } from "@synara/shared/desktopIdentity";
+import { WsRpcError } from "@ramspace/contracts";
+import { isBetaFeatureEnabled, NATIVE_EDITOR_BETA_FEATURE } from "@ramspace/shared/betaFeatures";
+import type { RamspaceDesktopFlavor } from "@ramspace/shared/desktopIdentity";
 
 import { SERVER_DESKTOP_FLAVOR } from "../betaFeatureGate";
 
@@ -15,11 +15,11 @@ export const NATIVE_EDITOR_UNAVAILABLE_CODE = "NATIVE_EDITOR_UNAVAILABLE";
 
 /** The refusal for a host flavor that does not ship the native editor, or null when it does. */
 export function nativeEditorUnavailableError(
-  flavor: SynaraDesktopFlavor | "unknown",
+  flavor: RamspaceDesktopFlavor | "unknown",
 ): WsRpcError | null {
   if (isBetaFeatureEnabled(NATIVE_EDITOR_BETA_FEATURE, flavor)) return null;
   return new WsRpcError({
-    message: "The native editor is unavailable in this build of Synara.",
+    message: "The native editor is unavailable in this build of Ramspace.",
     code: NATIVE_EDITOR_UNAVAILABLE_CODE,
     retryable: false,
   });

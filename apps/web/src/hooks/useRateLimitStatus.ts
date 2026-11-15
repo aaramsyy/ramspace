@@ -1,7 +1,7 @@
 // FILE: useRateLimitStatus.ts
 // Purpose: Recompute scoped quota state on updates and when its reset time passes.
 
-import type { OrchestrationThreadActivity, ProviderKind } from "@synara/contracts";
+import type { OrchestrationThreadActivity, ProviderKind } from "@ramspace/contracts";
 import { useEffect, useMemo, useState } from "react";
 import { deriveLatestRateLimitStatus } from "~/lib/rateLimitStatus";
 

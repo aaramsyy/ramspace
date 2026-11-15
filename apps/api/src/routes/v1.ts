@@ -1,4 +1,4 @@
-import { AccountBillingCheckoutRequest, AccountWebCheckoutRequest } from "@synara/contracts";
+import { AccountBillingCheckoutRequest, AccountWebCheckoutRequest } from "@ramspace/contracts";
 import { decideRemoteBillingAccess, isProfileBillingEntitled } from "../billing/accessPolicy";
 import { BILLING_UNAVAILABLE, BillingError, type BillingService } from "../billing/service";
 import {
@@ -6,18 +6,18 @@ import {
   RegisterTurnNotification,
   RemoveTurnNotifications,
   LiveActivityHostSnapshot,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import type { LiveActivityService } from "../liveActivities/service";
 import { createAccountDeletionService, type AccountDeletionService } from "../accountDeletion";
-import { DeleteAccountRequest } from "@synara/contracts";
+import { DeleteAccountRequest } from "@ramspace/contracts";
 import {
   SOCIAL_LINK_PLATFORMS,
   normalizeSocialUsername,
   sanitizeSocialLinks,
   type SocialLinks,
-} from "@synara/shared/socialLinks";
+} from "@ramspace/shared/socialLinks";
 import { createPairingRendezvous } from "../remote/pairing";
-import { RemotePairingBundle, RedeemRemotePairingCode } from "@synara/contracts";
+import { RemotePairingBundle, RedeemRemotePairingCode } from "@ramspace/contracts";
 import type { TunnelCoordinator } from "../remote/tunnels";
 import { CloudflareError } from "../remote/cloudflare";
 import {
@@ -77,7 +77,7 @@ import {
   SaveInboxRecapRequest,
   type SavedInboxRecap,
   type ListSavedInboxRecapsResponse,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { and, desc, eq, gte, inArray, isNotNull, isNull, lt, or, sql } from "drizzle-orm";
 import type { NodePgDatabase } from "drizzle-orm/node-postgres";
 import { unionAll } from "drizzle-orm/pg-core";
@@ -208,7 +208,7 @@ export const HOST_SECRET_WRITE_RATE_LIMIT_PER_MINUTE = 30;
 
 /**
  * Byte cap on an uploaded avatar. Avatars render at most ~128px in every
- * surface Synara has, and a well-encoded 512×512 WebP — already 4× the
+ * surface Ramspace has, and a well-encoded 512×512 WebP — already 4× the
  * largest display size — lands well under 100KB; 300KB is triple that
  * headroom while keeping the write amplification of a hostile client's
  * repeated uploads bounded.
@@ -421,7 +421,7 @@ export function createV1Routes(deps: {
   /**
    * Shared secret authenticating the profiles SSR deployment, from
    * PROFILE_PROXY_SECRET. When set, a public-profile read carrying a
-   * matching `x-synara-proxy-secret` header has its rate limit keyed on the
+   * matching `x-ramspace-proxy-secret` header has its rate limit keyed on the
    * viewer IP it forwards. Undefined disables the channel entirely.
    */
   profileProxySecret?: string;
@@ -488,7 +488,7 @@ export function createV1Routes(deps: {
   async function requireRemoteAccess(c: Context, userId: string): Promise<Response | null> {
     if (deps.remoteBillingEnforced === true) {
       return requireFreshAltoAccess(c, userId, {
-        subscriptionRequired: "Remote access requires an active Synara Alto subscription",
+        subscriptionRequired: "Remote access requires an active Ramspace Alto subscription",
         unavailable: "Remote access verification is temporarily unavailable",
       });
     }
@@ -519,7 +519,7 @@ export function createV1Routes(deps: {
   async function requireProfilePublishAccess(c: Context, userId: string): Promise<Response | null> {
     if (deps.profileBillingEnforced !== true) return null;
     return requireFreshAltoAccess(c, userId, {
-      subscriptionRequired: "Public profiles require an active Synara Alto subscription",
+      subscriptionRequired: "Public profiles require an active Ramspace Alto subscription",
       unavailable: "Subscription verification is temporarily unavailable",
     });
   }
@@ -711,7 +711,7 @@ export function createV1Routes(deps: {
    *
    * A device-grant token has no organization claim at all — the provider only
    * mints one when the client authenticates *into* an organization — so the
-   * first call after `synara auth` always lands here, provisions the user's
+   * first call after `ramspace auth` always lands here, provisions the user's
    * personal workspace if they have none, and answers 403 with the list to
    * pick from. The client re-runs the refresh grant with `organization_id`
    * and retries. A token naming an organization the caller has since left
@@ -1792,7 +1792,7 @@ export function createV1Routes(deps: {
     return c.body(null, 204);
   });
 
-  // Explicitly separate from revoking the Synara device key. A failed provider
+  // Explicitly separate from revoking the Ramspace device key. A failed provider
   // delivery stays durable and can be retried by another signed-in device.
   v1.delete("/devices/:id/account-sessions", async (c) => {
     const session = await requireUserSession(c);
@@ -2209,7 +2209,7 @@ export function createV1Routes(deps: {
       c,
       410,
       "validation_failed",
-      "The relay transport has been retired; update Synara",
+      "The relay transport has been retired; update Ramspace",
     ),
   );
 
@@ -3044,7 +3044,7 @@ export function createV1Routes(deps: {
 
   /**
    * The public profile behind a handle. Unauthenticated by design — it is
-   * the page at trysynara.com/@handle — and served ONLY when the owner made
+   * the page at tryramspace.com/@handle — and served ONLY when the owner made
    * the profile public. An unknown handle and a private profile answer the
    * same 404, so the route reveals nothing the owner did not publish.
    *
@@ -3061,7 +3061,7 @@ export function createV1Routes(deps: {
     // one authenticated exception. The profiles web app fetches server-side,
     // so every visitor arrives from the SSR deployment's one egress IP and
     // would share one budget; it forwards the actual visitor as
-    // x-synara-viewer-ip. That header alone is client-controlled and must
+    // x-ramspace-viewer-ip. That header alone is client-controlled and must
     // not influence keying (rotating forged values would bypass the limit
     // entirely), so it is honoured ONLY when the request also carries the
     // PROFILE_PROXY_SECRET shared secret — which authenticates that the
@@ -3070,9 +3070,9 @@ export function createV1Routes(deps: {
     const rateKey = (() => {
       if (
         profileProxySecret !== undefined &&
-        secretHeaderMatches(profileProxySecret, c.req.header("x-synara-proxy-secret"))
+        secretHeaderMatches(profileProxySecret, c.req.header("x-ramspace-proxy-secret"))
       ) {
-        const viewer = c.req.header("x-synara-viewer-ip");
+        const viewer = c.req.header("x-ramspace-viewer-ip");
         const forwardable = viewer ? sanitizeForwardableIp(viewer) : undefined;
         if (forwardable) return `viewer:${forwardable}`;
       }

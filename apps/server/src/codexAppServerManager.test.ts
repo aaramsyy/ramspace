@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import { Effect, ServiceMap } from "effect";
-import { classifyCodexStderr } from "@synara/shared/codexStderr";
+import { classifyCodexStderr } from "@ramspace/shared/codexStderr";
 import { ServerSettingsService } from "./serverSettings";
 import type { ChildProcessWithoutNullStreams } from "node:child_process";
 import { createHash, randomUUID } from "node:crypto";
@@ -27,11 +27,11 @@ import {
   ThreadId,
   TurnId,
   type RuntimeMode,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 
 import {
   buildCodexProcessEnv,
-  SYNARA_COMPETING_BROWSER_PLUGIN_SECTION_HEADERS,
+  RAMSPACE_COMPETING_BROWSER_PLUGIN_SECTION_HEADERS,
   prepareCodexAuthTracking,
   readCodexPreparedAuthTrackingFingerprint,
   readCodexSharedContinuationGeneration,
@@ -60,8 +60,8 @@ import {
   CodexJsonlWriter,
 } from "./codexAppServerTransport";
 import {
-  SYNARA_GATEWAY_HARNESS_POLICY,
-  SYNARA_HARNESS_POLICY_MARKER,
+  RAMSPACE_GATEWAY_HARNESS_POLICY,
+  RAMSPACE_HARNESS_POLICY_MARKER,
 } from "./agentGateway/harnessPolicy.ts";
 import {
   AGENT_GATEWAY_NO_CAPABILITIES,
@@ -297,7 +297,7 @@ const SYNTHETIC_CONTINUATION_GENERATION = "00000000-0000-4000-8000-000000000001"
 it("reads recent and older Codex summaries through bounded JSONL frames without full-history reads", async () => {
   const fake = createSyntheticCodexAppServer();
   const { manager } = createSyntheticCodexManager(fake);
-  const cwd = mkdtempSync(path.join(os.tmpdir(), "synara-codex-history-pages-"));
+  const cwd = mkdtempSync(path.join(os.tmpdir(), "ramspace-codex-history-pages-"));
   const authTracking = prepareCodexAuthTracking({ env: { ...process.env }, homePath: cwd });
   vi.spyOn(
     manager as unknown as { buildSessionProcessEnv: () => Promise<unknown> },
@@ -400,7 +400,7 @@ it.each(["global", "project"] as const)(
           input ?? AGENT_GATEWAY_NO_CAPABILITIES,
         )!,
     });
-    const cwd = mkdtempSync(path.join(os.tmpdir(), "synara-codex-connector-collision-"));
+    const cwd = mkdtempSync(path.join(os.tmpdir(), "ramspace-codex-connector-collision-"));
     try {
       await manager.startSession({
         threadId: asThreadId("connector-collision"),
@@ -415,7 +415,7 @@ it.each(["global", "project"] as const)(
       expect(config.mcp_servers.linear_connector).toMatchObject({
         url: `${endpoint}/connectors/linear`,
       });
-      expect(config.mcp_servers.synara).toBeDefined();
+      expect(config.mcp_servers.ramspace).toBeDefined();
     } finally {
       await manager.stopAll();
       rmSync(cwd, { recursive: true, force: true });
@@ -458,7 +458,7 @@ it.each([
       },
     });
     const threadId = asThreadId("renew-gateway-thread");
-    const cwd = mkdtempSync(path.join(os.tmpdir(), "synara-codex-renew-"));
+    const cwd = mkdtempSync(path.join(os.tmpdir(), "ramspace-codex-renew-"));
     try {
       await manager.startSession({
         threadId,
@@ -504,7 +504,7 @@ it.each([
           model: "gpt-5.5",
           serviceTier: "fast",
           config: {
-            mcp_servers: { synara: { http_headers: { Authorization: "Bearer lease-2" } } },
+            mcp_servers: { ramspace: { http_headers: { Authorization: "Bearer lease-2" } } },
           },
         });
         expect(revokeSessionToken).not.toHaveBeenCalledWith("lease-2");
@@ -570,21 +570,21 @@ if (args[0] !== "app-server") process.exit(2);
 const lines = readline.createInterface({ input: process.stdin });
 lines.on("line", (line) => {
   const message = JSON.parse(line);
-  if (process.env.SYNARA_FAKE_CODEX_MESSAGES_PATH && message.method) {
-    fs.appendFileSync(process.env.SYNARA_FAKE_CODEX_MESSAGES_PATH, message.method + "\\n", "utf8");
+  if (process.env.RAMSPACE_FAKE_CODEX_MESSAGES_PATH && message.method) {
+    fs.appendFileSync(process.env.RAMSPACE_FAKE_CODEX_MESSAGES_PATH, message.method + "\\n", "utf8");
   }
   if (message.id === undefined) return;
-  if (message.method === "initialize" && process.env.SYNARA_FAKE_CODEX_EXIT_ON_INITIALIZE) {
-    process.exit(Number(process.env.SYNARA_FAKE_CODEX_EXIT_ON_INITIALIZE));
+  if (message.method === "initialize" && process.env.RAMSPACE_FAKE_CODEX_EXIT_ON_INITIALIZE) {
+    process.exit(Number(process.env.RAMSPACE_FAKE_CODEX_EXIT_ON_INITIALIZE));
   }
   if (
     message.method === "initialize" &&
-    process.env.SYNARA_FAKE_CODEX_MUTATE_AUTH_PATH &&
-    process.env.SYNARA_FAKE_CODEX_MUTATE_AUTH_CONTENT
+    process.env.RAMSPACE_FAKE_CODEX_MUTATE_AUTH_PATH &&
+    process.env.RAMSPACE_FAKE_CODEX_MUTATE_AUTH_CONTENT
   ) {
     fs.writeFileSync(
-      process.env.SYNARA_FAKE_CODEX_MUTATE_AUTH_PATH,
-      process.env.SYNARA_FAKE_CODEX_MUTATE_AUTH_CONTENT,
+      process.env.RAMSPACE_FAKE_CODEX_MUTATE_AUTH_PATH,
+      process.env.RAMSPACE_FAKE_CODEX_MUTATE_AUTH_CONTENT,
       "utf8",
     );
   }
@@ -592,9 +592,9 @@ lines.on("line", (line) => {
   if (message.method === "thread/start") result = { thread: { id: "fake-provider-thread" } };
   if (message.method === "thread/fork") result = { thread: { id: "fake-forked-thread" } };
   const respond = () => process.stdout.write(JSON.stringify({ id: message.id, result }) + "\\n");
-  if (message.method === "initialize" && process.env.SYNARA_FAKE_CODEX_HOLD_INITIALIZE_PATH) {
+  if (message.method === "initialize" && process.env.RAMSPACE_FAKE_CODEX_HOLD_INITIALIZE_PATH) {
     const timer = setInterval(() => {
-      if (!fs.existsSync(process.env.SYNARA_FAKE_CODEX_HOLD_INITIALIZE_PATH)) return;
+      if (!fs.existsSync(process.env.RAMSPACE_FAKE_CODEX_HOLD_INITIALIZE_PATH)) return;
       clearInterval(timer);
       respond();
     }, 5);
@@ -623,10 +623,10 @@ function makeAuthMutationFixture(prefix: string, accountId: string, nextAccountI
   const binaryPath = writeAuthMutationFakeCodexExecutable(root);
   const environment = {
     HOME: root,
-    SYNARA_HOME: runtimeHome,
-    SYNARA_FAKE_CODEX_MESSAGES_PATH: messagesPath,
-    SYNARA_FAKE_CODEX_MUTATE_AUTH_PATH: authPath,
-    SYNARA_FAKE_CODEX_MUTATE_AUTH_CONTENT: codexAuth(nextAccountId, "2"),
+    RAMSPACE_HOME: runtimeHome,
+    RAMSPACE_FAKE_CODEX_MESSAGES_PATH: messagesPath,
+    RAMSPACE_FAKE_CODEX_MUTATE_AUTH_PATH: authPath,
+    RAMSPACE_FAKE_CODEX_MUTATE_AUTH_CONTENT: codexAuth(nextAccountId, "2"),
   };
   return {
     root,
@@ -640,9 +640,9 @@ function makeAuthMutationFixture(prefix: string, accountId: string, nextAccountI
   };
 }
 
-describe("Codex Synara harness policy", () => {
+describe("Codex Ramspace harness policy", () => {
   it("keeps Computer desktop guidance out of base and disabled default/plan instructions", () => {
-    const disabledInstructions = [SYNARA_GATEWAY_HARNESS_POLICY];
+    const disabledInstructions = [RAMSPACE_GATEWAY_HARNESS_POLICY];
     for (const interactionMode of ["default", "plan"] as const) {
       const baseline =
         interactionMode === "default"
@@ -658,13 +658,13 @@ describe("Codex Synara harness policy", () => {
         interactionMode,
         enableComputerControl: true,
       })?.settings.developer_instructions;
-      expect(enabled).toContain("## Synara computer use");
+      expect(enabled).toContain("## Ramspace computer use");
       expect(enabled).toContain("The computer_* tools are live on this session");
     }
     for (const instructions of disabledInstructions) {
       expect(instructions).not.toContain("Use `Computer Use`");
       expect(instructions).not.toContain("desktop apps, OS settings");
-      expect(instructions).not.toContain("## Synara computer use");
+      expect(instructions).not.toContain("## Ramspace computer use");
       expect(instructions).not.toContain("computer_");
     }
   });
@@ -674,13 +674,13 @@ describe("Codex Synara harness policy", () => {
       CODEX_DEFAULT_MODE_DEVELOPER_INSTRUCTIONS,
       CODEX_PLAN_MODE_DEVELOPER_INSTRUCTIONS,
     ]) {
-      expect(instructions).toContain(SYNARA_HARNESS_POLICY_MARKER);
-      expect(instructions.split(SYNARA_HARNESS_POLICY_MARKER)).toHaveLength(2);
-      expect(instructions).toContain("Synara is the host and harness");
+      expect(instructions).toContain(RAMSPACE_HARNESS_POLICY_MARKER);
+      expect(instructions.split(RAMSPACE_HARNESS_POLICY_MARKER)).toHaveLength(2);
+      expect(instructions).toContain("Ramspace is the host and harness");
       expect(instructions).toContain("Final responses must restate every needed scope");
       expect(instructions).toContain("include all decision context");
-      expect(instructions).toContain("one exact synara_create_threads plan");
-      expect(instructions).toContain("tools.mcp__synara__browser_open");
+      expect(instructions).toContain("one exact ramspace_create_threads plan");
+      expect(instructions).toContain("tools.mcp__ramspace__browser_open");
       for (const name of BROWSER_TOOL_NAMES) {
         expect(instructions, name).toContain(`\`${name.slice("browser_".length)}\``);
       }
@@ -706,9 +706,9 @@ describe("Codex Synara harness policy", () => {
   });
 
   it("resolves the gateway endpoint when each session environment is built", async () => {
-    const homePath = mkdtempSync(path.join(os.tmpdir(), "synara-codex-gateway-endpoint-"));
-    const previousSynaraHome = process.env.SYNARA_HOME;
-    process.env.SYNARA_HOME = path.join(homePath, "synara-home");
+    const homePath = mkdtempSync(path.join(os.tmpdir(), "ramspace-codex-gateway-endpoint-"));
+    const previousRamspaceHome = process.env.RAMSPACE_HOME;
+    process.env.RAMSPACE_HOME = path.join(homePath, "ramspace-home");
     let endpointUrl = "http://127.0.0.1:0/mcp";
     try {
       const manager = new CodexAppServerManager(undefined, {
@@ -734,12 +734,12 @@ describe("Codex Synara harness policy", () => {
       const configPath = path.join(env.CODEX_HOME ?? homePath, "config.toml");
       expect(readFileSync(configPath, "utf8")).toContain('url = "http://127.0.0.1:48123/mcp"');
       expect(readFileSync(configPath, "utf8")).not.toContain("bearer_token_env_var");
-      expect(env.SYNARA_AGENT_GATEWAY_TOKEN).toBeUndefined();
+      expect(env.RAMSPACE_AGENT_GATEWAY_TOKEN).toBeUndefined();
     } finally {
-      if (previousSynaraHome === undefined) {
-        delete process.env.SYNARA_HOME;
+      if (previousRamspaceHome === undefined) {
+        delete process.env.RAMSPACE_HOME;
       } else {
-        process.env.SYNARA_HOME = previousSynaraHome;
+        process.env.RAMSPACE_HOME = previousRamspaceHome;
       }
       rmSync(homePath, { recursive: true, force: true });
     }
@@ -1390,8 +1390,8 @@ describe("classifyCodexStderrLine", () => {
     }
   });
 
-  it("keeps MCP OAuth failures that concern Synara's own servers", () => {
-    for (const server of ["synara", "supabase_connector"]) {
+  it("keeps MCP OAuth failures that concern Ramspace's own servers", () => {
+    for (const server of ["ramspace", "supabase_connector"]) {
       const line = `2026-10-14T10:40:19.340108Z ERROR codex_rmcp_client::oauth::refresh_transaction: error=failed to refresh OAuth tokens for server ${server}: invalid_grant`;
       expect(classifyCodexStderrLine(line)).toEqual({ message: line });
       const message = `failed to refresh OAuth tokens for server ${server}: invalid_grant`;
@@ -1474,10 +1474,10 @@ describe("classifyCodexStderrLine", () => {
 
 describe("codex CLI version gate", () => {
   it("memoizes the version probe per binary and shares concurrent probes", async () => {
-    const dir = mkdtempSync(path.join(os.tmpdir(), "synara-codex-version-"));
+    const dir = mkdtempSync(path.join(os.tmpdir(), "ramspace-codex-version-"));
     const homePath = path.join(dir, "codex-home");
     mkdirSync(homePath, { recursive: true });
-    vi.stubEnv("SYNARA_HOME", path.join(dir, "runtime"));
+    vi.stubEnv("RAMSPACE_HOME", path.join(dir, "runtime"));
 
     const isWindows = process.platform === "win32";
     const counterPath = path.join(dir, "calls.log");
@@ -1533,10 +1533,10 @@ describe("codex CLI version gate", () => {
   });
 
   it("does not reuse a general-version verdict for the stricter Auto floor", async () => {
-    const dir = mkdtempSync(path.join(os.tmpdir(), "synara-codex-version-auto-floor-"));
+    const dir = mkdtempSync(path.join(os.tmpdir(), "ramspace-codex-version-auto-floor-"));
     const homePath = path.join(dir, "codex-home");
     mkdirSync(homePath, { recursive: true });
-    vi.stubEnv("SYNARA_HOME", path.join(dir, "runtime"));
+    vi.stubEnv("RAMSPACE_HOME", path.join(dir, "runtime"));
 
     const isWindows = process.platform === "win32";
     const counterPath = path.join(dir, "calls.log");
@@ -1577,10 +1577,10 @@ describe("codex CLI version gate", () => {
   });
 
   it("fails closed when the Codex CLI version cannot be parsed", async () => {
-    const dir = mkdtempSync(path.join(os.tmpdir(), "synara-codex-version-auto-unknown-"));
+    const dir = mkdtempSync(path.join(os.tmpdir(), "ramspace-codex-version-auto-unknown-"));
     const homePath = path.join(dir, "codex-home");
     mkdirSync(homePath, { recursive: true });
-    vi.stubEnv("SYNARA_HOME", path.join(dir, "runtime"));
+    vi.stubEnv("RAMSPACE_HOME", path.join(dir, "runtime"));
 
     const isWindows = process.platform === "win32";
     const binaryPath = path.join(dir, isWindows ? "codex.cmd" : "codex.sh");
@@ -1629,10 +1629,10 @@ describe("codex CLI version gate", () => {
     // survives PATH resolution. It is taken from the same env object handed to the spawn a few
     // lines later, which is what keeps it pointed at the binary actually being probed even when
     // that env carries a login-shell PATH the process itself never had.
-    const dir = mkdtempSync(path.join(os.tmpdir(), "synara-codex-version-path-"));
+    const dir = mkdtempSync(path.join(os.tmpdir(), "ramspace-codex-version-path-"));
     const homePath = path.join(dir, "codex-home");
     mkdirSync(homePath, { recursive: true });
-    vi.stubEnv("SYNARA_HOME", path.join(dir, "runtime"));
+    vi.stubEnv("RAMSPACE_HOME", path.join(dir, "runtime"));
 
     const isWindows = process.platform === "win32";
     const binaryPath = path.join(dir, isWindows ? "codex.cmd" : "codex");
@@ -1657,7 +1657,7 @@ describe("codex CLI version gate", () => {
       writeBinary("0.1.0", "replaced-in-place-by-a-downgrade");
       await expect(
         assertSupportedCodexCliVersion({ binaryPath: "codex", cwd: dir, homePath }),
-      ).rejects.toThrow(/too old for Synara/);
+      ).rejects.toThrow(/too old for Ramspace/);
     } finally {
       reset();
       vi.unstubAllEnvs();
@@ -1666,10 +1666,10 @@ describe("codex CLI version gate", () => {
   });
 
   it("rejects an unsupported codex version without caching the failure", async () => {
-    const dir = mkdtempSync(path.join(os.tmpdir(), "synara-codex-version-old-"));
+    const dir = mkdtempSync(path.join(os.tmpdir(), "ramspace-codex-version-old-"));
     const homePath = path.join(dir, "codex-home");
     mkdirSync(homePath, { recursive: true });
-    vi.stubEnv("SYNARA_HOME", path.join(dir, "runtime"));
+    vi.stubEnv("RAMSPACE_HOME", path.join(dir, "runtime"));
 
     const isWindows = process.platform === "win32";
     const counterPath = path.join(dir, "calls.log");
@@ -1694,10 +1694,10 @@ describe("codex CLI version gate", () => {
     try {
       await expect(
         assertSupportedCodexCliVersion({ binaryPath, cwd: dir, homePath }),
-      ).rejects.toThrow(/too old for Synara/);
+      ).rejects.toThrow(/too old for Ramspace/);
       await expect(
         assertSupportedCodexCliVersion({ binaryPath, cwd: dir, homePath }),
-      ).rejects.toThrow(/too old for Synara/);
+      ).rejects.toThrow(/too old for Ramspace/);
       // Failures are re-probed so installing or upgrading Codex takes effect at once.
       expect(probeCount()).toBe(2);
     } finally {
@@ -1710,8 +1710,8 @@ describe("codex CLI version gate", () => {
 
 describe("buildCodexProcessEnv", () => {
   it("hydrates the active custom provider env_key from the effective CODEX_HOME", async () => {
-    const tempDir = mkdtempSync(path.join(os.tmpdir(), "synara-codex-env-"));
-    vi.stubEnv("SYNARA_HOME", path.join(tempDir, "runtime"));
+    const tempDir = mkdtempSync(path.join(os.tmpdir(), "ramspace-codex-env-"));
+    vi.stubEnv("RAMSPACE_HOME", path.join(tempDir, "runtime"));
     try {
       writeFileSync(
         path.join(tempDir, "config.toml"),
@@ -1734,7 +1734,7 @@ describe("buildCodexProcessEnv", () => {
         env: {
           SHELL: "/bin/zsh",
           PATH: "/usr/bin",
-          SYNARA_HOME: process.env.SYNARA_HOME,
+          RAMSPACE_HOME: process.env.RAMSPACE_HOME,
         },
         homePath: tempDir,
         platform: "darwin",
@@ -1756,7 +1756,7 @@ describe("buildCodexProcessEnv", () => {
   });
 
   it("does not read shell env when the provider key is already present", async () => {
-    const tempDir = mkdtempSync(path.join(os.tmpdir(), "synara-codex-existing-key-"));
+    const tempDir = mkdtempSync(path.join(os.tmpdir(), "ramspace-codex-existing-key-"));
     const codexHome = path.join(tempDir, "home");
     mkdirSync(codexHome);
     writeFileSync(
@@ -1770,7 +1770,7 @@ describe("buildCodexProcessEnv", () => {
           SHELL: "/bin/zsh",
           PATH: "/usr/bin",
           CODEX_HOME: codexHome,
-          SYNARA_HOME: path.join(tempDir, "runtime"),
+          RAMSPACE_HOME: path.join(tempDir, "runtime"),
           AZURE_OPENAI_API_KEY: "existing-secret",
         },
         platform: "darwin",
@@ -1785,36 +1785,36 @@ describe("buildCodexProcessEnv", () => {
   });
 
   it("keeps the private desktop browser host out of the Codex process", async () => {
-    const tempDir = mkdtempSync(path.join(os.tmpdir(), "synara-codex-private-host-"));
+    const tempDir = mkdtempSync(path.join(os.tmpdir(), "ramspace-codex-private-host-"));
     const codexHome = path.join(tempDir, "codex-home");
     mkdirSync(codexHome, { recursive: true });
     try {
       const env = await buildCodexProcessEnv({
         env: {
           CODEX_HOME: codexHome,
-          SYNARA_HOME: tempDir,
-          SYNARA_BROWSER_HOST_PIPE_PATH: "/tmp/synara-browser-host.sock",
-          SYNARA_BROWSER_USE_PIPE_PATH: "/tmp/legacy-browser-use.sock",
-          SYNARA_BROWSER_HOST_CAPABILITY: "desktop-capability",
-          SYNARA_BROWSER_HOST_CAPABILITY_FD: "3",
+          RAMSPACE_HOME: tempDir,
+          RAMSPACE_BROWSER_HOST_PIPE_PATH: "/tmp/ramspace-browser-host.sock",
+          RAMSPACE_BROWSER_USE_PIPE_PATH: "/tmp/legacy-browser-use.sock",
+          RAMSPACE_BROWSER_HOST_CAPABILITY: "desktop-capability",
+          RAMSPACE_BROWSER_HOST_CAPABILITY_FD: "3",
           NODE_REPL_SANDBOX_ALLOWED_UNIX_SOCKETS: "/tmp/existing.sock",
         },
         platform: "darwin",
       });
 
-      expect(env.SYNARA_BROWSER_HOST_PIPE_PATH).toBeUndefined();
-      expect(env.SYNARA_BROWSER_USE_PIPE_PATH).toBeUndefined();
-      expect(env.SYNARA_BROWSER_HOST_CAPABILITY).toBeUndefined();
-      expect(env.SYNARA_BROWSER_HOST_CAPABILITY_FD).toBeUndefined();
+      expect(env.RAMSPACE_BROWSER_HOST_PIPE_PATH).toBeUndefined();
+      expect(env.RAMSPACE_BROWSER_USE_PIPE_PATH).toBeUndefined();
+      expect(env.RAMSPACE_BROWSER_HOST_CAPABILITY).toBeUndefined();
+      expect(env.RAMSPACE_BROWSER_HOST_CAPABILITY_FD).toBeUndefined();
       expect(env.NODE_REPL_SANDBOX_ALLOWED_UNIX_SOCKETS).toBeUndefined();
     } finally {
       rmSync(tempDir, { recursive: true, force: true });
     }
   });
 
-  it("applies durable section suppressions inside Synara's Codex overlay", async () => {
-    const tempDir = mkdtempSync(path.join(os.tmpdir(), "synara-codex-env-"));
-    const runtimeHome = mkdtempSync(path.join(os.tmpdir(), "synara-runtime-home-"));
+  it("applies durable section suppressions inside Ramspace's Codex overlay", async () => {
+    const tempDir = mkdtempSync(path.join(os.tmpdir(), "ramspace-codex-env-"));
+    const runtimeHome = mkdtempSync(path.join(os.tmpdir(), "ramspace-runtime-home-"));
     try {
       writeFileSync(
         path.join(tempDir, "config.toml"),
@@ -1822,7 +1822,7 @@ describe("buildCodexProcessEnv", () => {
           '[plugins."github@openai-curated"]',
           "enabled = true",
           "",
-          ...SYNARA_COMPETING_BROWSER_PLUGIN_SECTION_HEADERS.flatMap((header) => [
+          ...RAMSPACE_COMPETING_BROWSER_PLUGIN_SECTION_HEADERS.flatMap((header) => [
             header,
             "enabled = true",
             "",
@@ -1836,7 +1836,7 @@ describe("buildCodexProcessEnv", () => {
       const overlayHome = path.join(runtimeHome, "codex-home-overlay");
       mkdirSync(overlayHome, { recursive: true });
       writeFileSync(
-        path.join(overlayHome, "synara-config-suppressions-v1.json"),
+        path.join(overlayHome, "ramspace-config-suppressions-v1.json"),
         `${JSON.stringify({
           version: 1,
           sectionHeaders: ['[plugins."historical-plugin@local"]'],
@@ -1845,7 +1845,7 @@ describe("buildCodexProcessEnv", () => {
       );
 
       const env = await buildCodexProcessEnv({
-        env: { SYNARA_HOME: runtimeHome },
+        env: { RAMSPACE_HOME: runtimeHome },
         homePath: tempDir,
         platform: "darwin",
       });
@@ -1858,7 +1858,7 @@ describe("buildCodexProcessEnv", () => {
       expect(readFileSync(path.join(codexHome, "config.toml"), "utf8")).toContain(
         '[plugins."historical-plugin@local"]\nenabled = false',
       );
-      for (const header of SYNARA_COMPETING_BROWSER_PLUGIN_SECTION_HEADERS) {
+      for (const header of RAMSPACE_COMPETING_BROWSER_PLUGIN_SECTION_HEADERS) {
         expect(readFileSync(path.join(codexHome, "config.toml"), "utf8")).toContain(
           `${header}\nenabled = false`,
         );
@@ -1876,8 +1876,8 @@ describe("buildCodexProcessEnv", () => {
   });
 
   it("seeds markerless suppressions for conflicting local browser plugins", async () => {
-    const tempDir = mkdtempSync(path.join(os.tmpdir(), "synara-codex-env-"));
-    const runtimeHome = mkdtempSync(path.join(os.tmpdir(), "synara-runtime-home-"));
+    const tempDir = mkdtempSync(path.join(os.tmpdir(), "ramspace-codex-env-"));
+    const runtimeHome = mkdtempSync(path.join(os.tmpdir(), "ramspace-runtime-home-"));
     try {
       const conflictingHeader = '[plugins."bridge-browser@local"]';
       writeFileSync(
@@ -1890,7 +1890,7 @@ describe("buildCodexProcessEnv", () => {
 
       const overlayHome = path.join(runtimeHome, "codex-home-overlay");
       const env = await buildCodexProcessEnv({
-        env: { SYNARA_HOME: runtimeHome },
+        env: { RAMSPACE_HOME: runtimeHome },
         homePath: tempDir,
         platform: "darwin",
       });
@@ -1903,7 +1903,7 @@ describe("buildCodexProcessEnv", () => {
         `${conflictingHeader}\nenabled = true`,
       );
       const suppressionMarker = JSON.parse(
-        readFileSync(path.join(overlayHome, "synara-config-suppressions-v1.json"), "utf8"),
+        readFileSync(path.join(overlayHome, "ramspace-config-suppressions-v1.json"), "utf8"),
       ) as { sectionHeaders?: string[] };
       expect(suppressionMarker.sectionHeaders).toContain(conflictingHeader);
     } finally {
@@ -1913,15 +1913,15 @@ describe("buildCodexProcessEnv", () => {
   });
 
   it("preserves a recorded suppression after its plugin disappears from source config", async () => {
-    const tempDir = mkdtempSync(path.join(os.tmpdir(), "synara-codex-env-"));
-    const runtimeHome = mkdtempSync(path.join(os.tmpdir(), "synara-runtime-home-"));
+    const tempDir = mkdtempSync(path.join(os.tmpdir(), "ramspace-codex-env-"));
+    const runtimeHome = mkdtempSync(path.join(os.tmpdir(), "ramspace-runtime-home-"));
     try {
       writeFileSync(path.join(tempDir, "config.toml"), 'model = "gpt-5.5"', "utf8");
 
       const overlayHome = path.join(runtimeHome, "codex-home-overlay");
       mkdirSync(overlayHome, { recursive: true });
       writeFileSync(
-        path.join(overlayHome, "synara-config-suppressions-v1.json"),
+        path.join(overlayHome, "ramspace-config-suppressions-v1.json"),
         `${JSON.stringify({
           version: 1,
           sectionHeaders: ['[plugins."historical-plugin@local"]'],
@@ -1930,7 +1930,7 @@ describe("buildCodexProcessEnv", () => {
       );
 
       const env = await buildCodexProcessEnv({
-        env: { SYNARA_HOME: runtimeHome },
+        env: { RAMSPACE_HOME: runtimeHome },
         homePath: tempDir,
         platform: "darwin",
       });
@@ -1951,9 +1951,9 @@ describe("buildCodexProcessEnv", () => {
     }
   });
 
-  it("keeps Codex SQLite state out of Synara's Codex home overlay", async () => {
-    const tempDir = mkdtempSync(path.join(os.tmpdir(), "synara-codex-env-"));
-    const runtimeHome = mkdtempSync(path.join(os.tmpdir(), "synara-runtime-home-"));
+  it("keeps Codex SQLite state out of Ramspace's Codex home overlay", async () => {
+    const tempDir = mkdtempSync(path.join(os.tmpdir(), "ramspace-codex-env-"));
+    const runtimeHome = mkdtempSync(path.join(os.tmpdir(), "ramspace-runtime-home-"));
     const lstatOrUndefined = (target: string) => {
       try {
         return lstatSync(target);
@@ -1986,7 +1986,7 @@ describe("buildCodexProcessEnv", () => {
       writeFileSync(staleOverlayDbPath, "stale-overlay-db", "utf8");
 
       const env = await buildCodexProcessEnv({
-        env: { SYNARA_HOME: runtimeHome },
+        env: { RAMSPACE_HOME: runtimeHome },
         homePath: tempDir,
         platform: "darwin",
       });
@@ -1997,7 +1997,7 @@ describe("buildCodexProcessEnv", () => {
         if (entry === "memories_1.sqlite") continue;
         expect(lstatOrUndefined(path.join(overlayHome, entry))).toBeUndefined();
       }
-      // A regular database file in the overlay is not Synara's to destroy.
+      // A regular database file in the overlay is not Ramspace's to destroy.
       expect(lstatSync(staleOverlayDbPath).isSymbolicLink()).toBe(false);
       expect(readFileSync(staleOverlayDbPath, "utf8")).toBe("stale-overlay-db");
       const overlayHistoryPath = path.join(overlayHome, "history.jsonl");
@@ -2009,9 +2009,9 @@ describe("buildCodexProcessEnv", () => {
     }
   });
 
-  it("repairs stale auth.json files in Synara's Codex home overlay", async () => {
-    const tempDir = mkdtempSync(path.join(os.tmpdir(), "synara-codex-env-"));
-    const runtimeHome = mkdtempSync(path.join(os.tmpdir(), "synara-runtime-home-"));
+  it("repairs stale auth.json files in Ramspace's Codex home overlay", async () => {
+    const tempDir = mkdtempSync(path.join(os.tmpdir(), "ramspace-codex-env-"));
+    const runtimeHome = mkdtempSync(path.join(os.tmpdir(), "ramspace-runtime-home-"));
     try {
       const sourceAuthPath = path.join(tempDir, "auth.json");
       writeFileSync(path.join(tempDir, "config.toml"), 'model = "gpt-5.5"', "utf8");
@@ -2023,7 +2023,7 @@ describe("buildCodexProcessEnv", () => {
       writeFileSync(overlayAuthPath, '{"tokens":{"access_token":"stale"}}', "utf8");
 
       const env = await buildCodexProcessEnv({
-        env: { SYNARA_HOME: runtimeHome },
+        env: { RAMSPACE_HOME: runtimeHome },
         homePath: tempDir,
         platform: "darwin",
       });
@@ -2039,9 +2039,9 @@ describe("buildCodexProcessEnv", () => {
   });
 
   it("uses an account-scoped overlay with private files from the Codex shadow home", async () => {
-    const sharedHome = mkdtempSync(path.join(os.tmpdir(), "synara-codex-shared-"));
-    const shadowHome = mkdtempSync(path.join(os.tmpdir(), "synara-codex-shadow-"));
-    const runtimeHome = mkdtempSync(path.join(os.tmpdir(), "synara-runtime-home-"));
+    const sharedHome = mkdtempSync(path.join(os.tmpdir(), "ramspace-codex-shared-"));
+    const shadowHome = mkdtempSync(path.join(os.tmpdir(), "ramspace-codex-shadow-"));
+    const runtimeHome = mkdtempSync(path.join(os.tmpdir(), "ramspace-runtime-home-"));
     try {
       const sharedSessionsDir = path.join(sharedHome, "sessions");
       mkdirSync(sharedSessionsDir, { recursive: true });
@@ -2052,7 +2052,7 @@ describe("buildCodexProcessEnv", () => {
       writeFileSync(path.join(shadowHome, "models_cache.json"), '{"models":["shadow"]}', "utf8");
 
       const env = await buildCodexProcessEnv({
-        env: { SYNARA_HOME: runtimeHome },
+        env: { RAMSPACE_HOME: runtimeHome },
         homePath: sharedHome,
         shadowHomePath: shadowHome,
         accountId: "work",
@@ -2085,8 +2085,8 @@ describe("buildCodexProcessEnv", () => {
   });
 
   it("does not link shared private auth files into account overlays without a shadow home", async () => {
-    const accountHome = mkdtempSync(path.join(os.tmpdir(), "synara-codex-account-"));
-    const runtimeHome = mkdtempSync(path.join(os.tmpdir(), "synara-runtime-home-"));
+    const accountHome = mkdtempSync(path.join(os.tmpdir(), "ramspace-codex-account-"));
+    const runtimeHome = mkdtempSync(path.join(os.tmpdir(), "ramspace-runtime-home-"));
     try {
       const accountSessionsDir = path.join(accountHome, "sessions");
       mkdirSync(accountSessionsDir, { recursive: true });
@@ -2095,7 +2095,7 @@ describe("buildCodexProcessEnv", () => {
       writeFileSync(path.join(accountHome, "models_cache.json"), '{"models":["account"]}', "utf8");
 
       const env = await buildCodexProcessEnv({
-        env: { SYNARA_HOME: runtimeHome },
+        env: { RAMSPACE_HOME: runtimeHome },
         homePath: accountHome,
         accountId: "work",
         platform: "darwin",
@@ -2121,9 +2121,9 @@ describe("buildCodexProcessEnv", () => {
     }
   });
 
-  it("preserves real generated image directories in Synara's Codex home overlay", async () => {
-    const tempDir = mkdtempSync(path.join(os.tmpdir(), "synara-codex-env-"));
-    const runtimeHome = mkdtempSync(path.join(os.tmpdir(), "synara-runtime-home-"));
+  it("preserves real generated image directories in Ramspace's Codex home overlay", async () => {
+    const tempDir = mkdtempSync(path.join(os.tmpdir(), "ramspace-codex-env-"));
+    const runtimeHome = mkdtempSync(path.join(os.tmpdir(), "ramspace-runtime-home-"));
     try {
       writeFileSync(path.join(tempDir, "config.toml"), 'model = "gpt-5.5"', "utf8");
       const sourceGeneratedImagesDir = path.join(tempDir, "generated_images");
@@ -2137,7 +2137,7 @@ describe("buildCodexProcessEnv", () => {
       writeFileSync(overlayImagePath, "overlay-image", "utf8");
 
       const env = await buildCodexProcessEnv({
-        env: { SYNARA_HOME: runtimeHome },
+        env: { RAMSPACE_HOME: runtimeHome },
         homePath: tempDir,
         platform: "darwin",
       });
@@ -2161,7 +2161,7 @@ describe("handleStdoutLine", () => {
       }
     ).handleStdoutLine.bind(manager);
 
-    for (const line of ["{", "[", '{"scripts": {', "{}", "[]", '{"name":"synara"}']) {
+    for (const line of ["{", "[", '{"scripts": {', "{}", "[]", '{"name":"ramspace"}']) {
       handleStdoutLine(context, line);
     }
 
@@ -2357,7 +2357,7 @@ describe("resolveCodexModelForAccount", () => {
 
   it("rejects native resume and fork calls without a pinned continuation generation", async () => {
     const manager = new CodexAppServerManager();
-    const root = mkdtempSync(path.join(os.tmpdir(), "synara-codex-unpinned-resume-"));
+    const root = mkdtempSync(path.join(os.tmpdir(), "ramspace-codex-unpinned-resume-"));
     try {
       await expect(
         manager.startSession({
@@ -2387,7 +2387,7 @@ describe("resolveCodexModelForAccount", () => {
 
 describe("startSession", () => {
   it("keeps mirrored user-config notices out of stderr warnings while retaining real project warnings", async () => {
-    const root = mkdtempSync(path.join(os.tmpdir(), "synara-codex-config-notice-"));
+    const root = mkdtempSync(path.join(os.tmpdir(), "ramspace-codex-config-notice-"));
     const configPath = path.join(root, "config.toml");
     writeFileSync(configPath, 'notify = ["echo"]\n');
     const authTracking = prepareCodexAuthTracking({ env: { ...process.env }, homePath: root });
@@ -2444,7 +2444,7 @@ describe("startSession", () => {
 
   it("resumes a synthetic large-history thread across restart without replay or payload exposure", async () => {
     const fake = createSyntheticCodexAppServer();
-    const cwd = mkdtempSync(path.join(os.tmpdir(), "synara-codex-large-resume-"));
+    const cwd = mkdtempSync(path.join(os.tmpdir(), "ramspace-codex-large-resume-"));
     const beforeFingerprint = fake.historyFingerprint();
     const beforeTranscript = fake.transcriptSnapshot();
     const first = createSyntheticCodexManager(fake);
@@ -2546,7 +2546,7 @@ describe("startSession", () => {
 
   it("forks a synthetic large-history thread with a metadata-only response", async () => {
     const fake = createSyntheticCodexAppServer();
-    const cwd = mkdtempSync(path.join(os.tmpdir(), "synara-codex-large-fork-"));
+    const cwd = mkdtempSync(path.join(os.tmpdir(), "ramspace-codex-large-fork-"));
     const { manager } = createSyntheticCodexManager(fake);
 
     try {
@@ -2580,7 +2580,7 @@ describe("startSession", () => {
 
   it("keeps the oversized resume error primary through start failure, exit, and repeated stop", async () => {
     const fake = createSyntheticCodexAppServer({ forceFullHistoryResponse: true });
-    const cwd = mkdtempSync(path.join(os.tmpdir(), "synara-codex-root-cause-"));
+    const cwd = mkdtempSync(path.join(os.tmpdir(), "ramspace-codex-root-cause-"));
     const { manager, teardownProcessTree } = createSyntheticCodexManager(fake);
     const events: Array<{ kind: string; method: string; message?: string }> = [];
     manager.on("event", (event) => {
@@ -2648,7 +2648,7 @@ describe("startSession", () => {
 
   it("keeps failed fork cleanup visible after an oversized historical response", async () => {
     const fake = createSyntheticCodexAppServer({ forceFullHistoryResponse: true });
-    const cwd = mkdtempSync(path.join(os.tmpdir(), "synara-codex-fork-cleanup-"));
+    const cwd = mkdtempSync(path.join(os.tmpdir(), "ramspace-codex-fork-cleanup-"));
     const { manager, teardownProcessTree } = createSyntheticCodexManager(fake);
     const threadId = asThreadId("thread-synthetic-fork-cleanup");
     teardownProcessTree
@@ -2759,7 +2759,7 @@ describe("startSession", () => {
   });
 
   it("omits stale-auth session homes from read-only inspection", () => {
-    const authHome = mkdtempSync(path.join(os.tmpdir(), "synara-codex-auth-inspection-"));
+    const authHome = mkdtempSync(path.join(os.tmpdir(), "ramspace-codex-auth-inspection-"));
     const authPath = path.join(authHome, "auth.json");
     writeFileSync(
       authPath,
@@ -2803,7 +2803,7 @@ describe("startSession", () => {
   });
 
   it("retains inspected session homes across same-account token rotation", () => {
-    const authHome = mkdtempSync(path.join(os.tmpdir(), "synara-codex-auth-rotation-"));
+    const authHome = mkdtempSync(path.join(os.tmpdir(), "ramspace-codex-auth-rotation-"));
     const authPath = path.join(authHome, "auth.json");
     const auth = (accessToken: string) =>
       JSON.stringify({
@@ -2854,7 +2854,7 @@ describe("startSession", () => {
     });
     const missingCwd = path.join(
       os.tmpdir(),
-      `synara-missing-session-cwd-${randomUUID()}`,
+      `ramspace-missing-session-cwd-${randomUUID()}`,
       "old-project",
     );
 
@@ -3352,7 +3352,7 @@ describe("CodexAppServerManager discovery", () => {
     const fake = createSyntheticCodexAppServer();
     const spawn = vi.spyOn(fake, "spawnAppServer");
     const { manager } = createSyntheticCodexManager(fake);
-    const cwd = mkdtempSync(path.join(os.tmpdir(), "synara-codex-discovery-priority-"));
+    const cwd = mkdtempSync(path.join(os.tmpdir(), "ramspace-codex-discovery-priority-"));
     const authTracking = prepareCodexAuthTracking({ env: { ...process.env }, homePath: cwd });
     vi.spyOn(
       manager as unknown as { buildSessionProcessEnv: () => Promise<unknown> },
@@ -3374,11 +3374,11 @@ describe("CodexAppServerManager discovery", () => {
     "does not launch discovery under auth superseded during version check",
     async () => {
       const fixture = makeAuthMutationFixture(
-        "synara-codex-discovery-key-race-",
+        "ramspace-codex-discovery-key-race-",
         "workspace-first",
         "workspace-first",
       );
-      const environment = { HOME: fixture.root, SYNARA_HOME: fixture.runtimeHome };
+      const environment = { HOME: fixture.root, RAMSPACE_HOME: fixture.runtimeHome };
       const authTracking = prepareCodexAuthTracking({
         env: { ...process.env, ...environment },
         homePath: fixture.sourceHome,
@@ -3403,7 +3403,7 @@ describe("CodexAppServerManager discovery", () => {
           homePath: fixture.sourceHome,
           environment: {
             ...environment,
-            SYNARA_FAKE_CODEX_MESSAGES_PATH: fixture.messagesPath,
+            RAMSPACE_FAKE_CODEX_MESSAGES_PATH: fixture.messagesPath,
           },
         },
       } as const;
@@ -3517,7 +3517,7 @@ describe("CodexAppServerManager discovery", () => {
     "fails closed when the selected account changes while discovery initializes",
     async () => {
       const fixture = makeAuthMutationFixture(
-        "synara-codex-discovery-auth-swap-",
+        "ramspace-codex-discovery-auth-swap-",
         "workspace-first",
         "workspace-second",
       );
@@ -4245,7 +4245,7 @@ describe("CodexAppServerManager discovery", () => {
       const fake = createSyntheticCodexAppServer({ pluginListFrameBytes: frameBytes });
       const spawnAppServer = vi.spyOn(fake, "spawnAppServer");
       const { manager, teardownProcessTree } = createSyntheticCodexManager(fake);
-      const cwd = mkdtempSync(path.join(os.tmpdir(), "synara-codex-plugin-catalog-"));
+      const cwd = mkdtempSync(path.join(os.tmpdir(), "ramspace-codex-plugin-catalog-"));
       const codexOptions = { homePath: cwd, binaryPath: "/synthetic/codex" };
       const authTracking = prepareCodexAuthTracking({ env: { ...process.env }, homePath: cwd });
       vi.spyOn(
@@ -4349,7 +4349,7 @@ describe("thread checkpoint control", () => {
     });
     const { manager } = createSyntheticCodexManager(fake, services);
     const controller = new AbortController();
-    const cwd = mkdtempSync(path.join(os.tmpdir(), "synara-codex-cancel-priority-"));
+    const cwd = mkdtempSync(path.join(os.tmpdir(), "ramspace-codex-cancel-priority-"));
     try {
       const fork = manager.forkThread(
         {
@@ -4549,10 +4549,10 @@ describe("thread checkpoint control", () => {
     "forks a provider thread with an explicitly selected Standard tier (%s)",
     async (sourceStatus) => {
       const requireCompletedSource = sourceStatus !== "ordinary";
-      const homePath = mkdtempSync(path.join(os.tmpdir(), "synara-codex-fork-tier-"));
+      const homePath = mkdtempSync(path.join(os.tmpdir(), "ramspace-codex-fork-tier-"));
       writeFileSync(path.join(homePath, "app-server"), "process.stdin.resume();\n");
-      const previousSynaraHome = process.env.SYNARA_HOME;
-      process.env.SYNARA_HOME = path.join(homePath, "synara-home");
+      const previousRamspaceHome = process.env.RAMSPACE_HOME;
+      process.env.RAMSPACE_HOME = path.join(homePath, "ramspace-home");
       const { manager, sendRequest } = createThreadControlHarness();
       vi.spyOn(
         manager as unknown as { assertSupportedCodexCliVersion: () => Promise<void> },
@@ -4579,9 +4579,9 @@ describe("thread checkpoint control", () => {
       });
 
       try {
-        await buildCodexProcessEnv({ env: { SYNARA_HOME: process.env.SYNARA_HOME }, homePath });
+        await buildCodexProcessEnv({ env: { RAMSPACE_HOME: process.env.RAMSPACE_HOME }, homePath });
         const generation = readCodexSharedContinuationGeneration({
-          env: { SYNARA_HOME: process.env.SYNARA_HOME },
+          env: { RAMSPACE_HOME: process.env.RAMSPACE_HOME },
           homePath,
         });
         expect(generation).toMatch(/^[0-9a-f-]{36}$/);
@@ -4640,10 +4640,10 @@ describe("thread checkpoint control", () => {
         });
       } finally {
         await manager.stopAll();
-        if (previousSynaraHome === undefined) {
-          delete process.env.SYNARA_HOME;
+        if (previousRamspaceHome === undefined) {
+          delete process.env.RAMSPACE_HOME;
         } else {
-          process.env.SYNARA_HOME = previousSynaraHome;
+          process.env.RAMSPACE_HOME = previousRamspaceHome;
         }
         rmSync(homePath, { recursive: true, force: true });
       }
@@ -5337,9 +5337,9 @@ describe("MCP tool call elicitation approvals", () => {
   const approvalParams = (persist: ReadonlyArray<string> | string = ["session"]) => ({
     threadId: "provider_parent",
     turnId: "turn_mcp",
-    serverName: "synara",
+    serverName: "ramspace",
     mode: "form",
-    message: "Allow Synara to launch the calculator?",
+    message: "Allow Ramspace to launch the calculator?",
     requestedSchema: { type: "object", properties: {} },
     _meta: {
       codex_approval_kind: "mcp_tool_call",
@@ -5368,17 +5368,17 @@ describe("MCP tool call elicitation approvals", () => {
     ["auto", true],
   ] as const)(
     "accepts Hub tool approval in %s with coordinator grant=%s",
-    async (runtimeMode, autoApproveSynaraTools) => {
+    async (runtimeMode, autoApproveRamspaceTools) => {
       const { manager, context, emitEvent, writeMessage } = computerApprovalHarness();
       context.session.runtimeMode = runtimeMode;
-      Object.assign(context, { autoApproveSynaraTools });
+      Object.assign(context, { autoApproveRamspaceTools });
       const { tool_name: _toolName, ...meta } = approvalParams()._meta;
       await handleServerRequestForTest(manager, context, {
         id: 76,
         method: "mcpServer/elicitation/request",
         params: {
           ...approvalParams(),
-          message: 'Allow the synara MCP server to run tool "synara_set_thread_pull_request"?',
+          message: 'Allow the ramspace MCP server to run tool "ramspace_set_thread_pull_request"?',
           _meta: meta,
         },
       });
@@ -5407,7 +5407,7 @@ describe("MCP tool call elicitation approvals", () => {
     const { manager, context, writeMessage } = computerApprovalHarness();
     context.session.runtimeMode = "full-access";
     const params = approvalParams();
-    params._meta.tool_name = "synara_set_thread_pull_request";
+    params._meta.tool_name = "ramspace_set_thread_pull_request";
     switch (condition) {
       case "approval-required":
         context.session.runtimeMode = "approval-required";
@@ -5452,7 +5452,7 @@ describe("MCP tool call elicitation approvals", () => {
     expect(writeMessage).not.toHaveBeenCalled();
   });
 
-  it("delegates exact active Synara Computer calls to gateway consent without persistent permission", async () => {
+  it("delegates exact active Ramspace Computer calls to gateway consent without persistent permission", async () => {
     const { manager, context, emitEvent, writeMessage } = computerApprovalHarness();
     for (const toolName of ["computer_click", "computer_type_text", "computer_read_clipboard"]) {
       const params = approvalParams();
@@ -5472,11 +5472,11 @@ describe("MCP tool call elicitation approvals", () => {
   });
 
   it.each([
-    ['Allow the synara MCP server to run tool "computer_click"?', true],
-    ['Allow the synara MCP server to run tool "shell"?', false],
+    ['Allow the ramspace MCP server to run tool "computer_click"?', true],
+    ['Allow the ramspace MCP server to run tool "shell"?', false],
     ['Allow the other MCP server to run tool "computer_click"?', false],
     ["Please approve computer_click", false],
-    ['Allow the synara MCP server to run tool "computer_click"? Extra text', false],
+    ['Allow the ramspace MCP server to run tool "computer_click"? Extra text', false],
   ])(
     "handles the installed Codex approval envelope without tool_name: %s",
     async (message, accepted) => {
@@ -5688,7 +5688,7 @@ describe("MCP tool call elicitation approvals", () => {
       expect.objectContaining({
         kind: "error",
         method: "mcpServer/elicitation/request/unrenderable",
-        message: "Synara declined an MCP elicitation it cannot render yet.",
+        message: "Ramspace declined an MCP elicitation it cannot render yet.",
       }),
     );
   });

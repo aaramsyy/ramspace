@@ -1,6 +1,6 @@
 import { useEffect, useId, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
-import type { FilesystemBrowseInput, FilesystemBrowseResult } from "@synara/contracts";
+import type { FilesystemBrowseInput, FilesystemBrowseResult } from "@ramspace/contracts";
 import {
   Dialog,
   DialogPopup,

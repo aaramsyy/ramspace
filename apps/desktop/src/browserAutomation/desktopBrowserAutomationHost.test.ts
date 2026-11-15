@@ -1,4 +1,4 @@
-import { ThreadId } from "@synara/contracts";
+import { ThreadId } from "@ramspace/contracts";
 import type { WebContents } from "electron";
 import { EventEmitter } from "node:events";
 import { mkdtemp, rm } from "node:fs/promises";
@@ -15,7 +15,7 @@ import { BrowserVault } from "./browserVault";
 vi.mock("./betterwrightRuntime", () => ({ runBetterwright: vi.fn() }));
 
 vi.mock("electron", () => ({
-  app: { getPath: () => "/isolated/synara/userdata" },
+  app: { getPath: () => "/isolated/ramspace/userdata" },
   webContents: { getFocusedWebContents: () => null },
 }));
 
@@ -187,7 +187,7 @@ const createManager = () => {
 
 describe("DesktopBrowserAutomationHost", () => {
   it("preserves native screenshot bytes while redacting metadata and untrusted image-shaped data", async () => {
-    const home = await mkdtemp(join(tmpdir(), "synara-screenshot-redaction-"));
+    const home = await mkdtemp(join(tmpdir(), "ramspace-screenshot-redaction-"));
     const vault = new BrowserVault(home);
     const { manager, webContents } = createManager();
     const host = new DesktopBrowserAutomationHost(manager, { vault });
@@ -304,7 +304,7 @@ describe("DesktopBrowserAutomationHost", () => {
     expect(runBetterwright).toHaveBeenCalledWith(
       expect.objectContaining({
         contents: webContents,
-        home: "/isolated/synara/userdata/browser-engine",
+        home: "/isolated/ramspace/userdata/browser-engine",
         code: "return {answer: 42}",
       }),
     );

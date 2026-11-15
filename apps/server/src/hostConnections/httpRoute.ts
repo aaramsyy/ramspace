@@ -2,7 +2,7 @@ import * as NodeHttpServerRequest from "@effect/platform-node/NodeHttpServerRequ
 import {
   decodeRemoteResourceReference,
   REMOTE_RESOURCE_LOCAL_PREFIX,
-} from "@synara/shared/remoteResources";
+} from "@ramspace/shared/remoteResources";
 // FILE: httpRoute.ts
 // Purpose: The local `/ws/remote/:hostId` upgrade a renderer uses to reach a
 //          host this shell has dialed, plus the negotiate answer the renderer's
@@ -21,7 +21,7 @@ import {
   WS_COMPATIBILITY_QUERY,
   WsCompatibilityError,
   RemoteConnectionUnavailable,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { Effect, Layer, Schema } from "effect";
 import { HttpRouter, HttpServerRequest, HttpServerResponse } from "effect/unstable/http";
 
@@ -79,7 +79,7 @@ export const hostConnectionRouteLayer = Layer.effectDiscard(
         const hasCredential =
           Boolean(request.headers.authorization) ||
           Object.entries(authRequest.cookies).some(
-            ([name, value]) => /^synara_session(?:_\d+)?$/.test(name) && Boolean(value),
+            ([name, value]) => /^ramspace_session(?:_\d+)?$/.test(name) && Boolean(value),
           );
         // Match the controller's auth-optional loopback policy. Explicit credentials
         // always retain their role; public/SSH-forwarded servers still require auth.
@@ -277,7 +277,7 @@ export const hostConnectionRouteLayer = Layer.effectDiscard(
         if (!hostId || !registry.hasConnector(hostId)) {
           return HttpServerResponse.text("No open connection to that host", { status: 404 });
         }
-        // Desktop renderers fetch from synara://app, just as on the local
+        // Desktop renderers fetch from ramspace://app, just as on the local
         // negotiation route. Reflect only origins the bridge already trusts.
         const origin = normalizeCorsOrigin(request.headers.origin);
         const corsHeaders =

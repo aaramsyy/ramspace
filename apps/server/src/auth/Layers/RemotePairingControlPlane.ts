@@ -1,5 +1,5 @@
 import { createHash, randomBytes, randomUUID, timingSafeEqual } from "node:crypto";
-import type { RemotePairingStatus } from "@synara/contracts";
+import type { RemotePairingStatus } from "@ramspace/contracts";
 import { DateTime, Effect } from "effect";
 import type {
   RemotePairingRecord,

@@ -5,7 +5,7 @@
 // Layer: Inbox UI
 // Exports: InboxTaskList, Group
 
-import type { ThreadId } from "@synara/contracts";
+import type { ThreadId } from "@ramspace/contracts";
 import { pluralize } from "~/i18n/pluralize";
 import { useId, type DragEvent, type ReactNode } from "react";
 

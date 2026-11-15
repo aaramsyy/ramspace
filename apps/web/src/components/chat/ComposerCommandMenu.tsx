@@ -7,7 +7,7 @@ import {
   type ProviderKind,
   type ProviderPluginDescriptor,
   type ProviderSkillDescriptor,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { type ReactNode } from "react";
 import { type ComposerTriggerKind } from "../../composer-logic";
 import { type ComposerSlashCommand } from "../../composerSlashCommands";
@@ -77,7 +77,7 @@ function commandMenuTitle(
     case "subagents":
       return t("chat:subagents");
     case "feedback":
-      return t("workspace:feedbackSynara");
+      return t("workspace:feedbackRamspace");
     default:
       return humanizeProviderCommandName(item.command);
   }

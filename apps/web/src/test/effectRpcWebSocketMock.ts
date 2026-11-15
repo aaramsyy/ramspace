@@ -11,7 +11,7 @@ import {
   WS_SERVER_CAPABILITIES,
   type OrchestrationReadModel,
   type OrchestrationShellSnapshot,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 
 export interface EffectRpcWebSocketClient {
   readonly send: (data: string) => void;

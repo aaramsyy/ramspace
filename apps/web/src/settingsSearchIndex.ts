@@ -37,7 +37,7 @@ export interface SettingsSearchEntry {
    * Whether this row exists on the machine the user is actually looking at.
    * Omitted means "always". A search result for a row the panel does not render
    * is a dead end: it scrolls to an anchor that is not there, and it tells the
-   * user Synara has a setting it does not.
+   * user Ramspace has a setting it does not.
    */
   applies?: (context: SettingsSearchContext) => boolean;
   /**
@@ -132,11 +132,11 @@ export const ROW_EXTRA_KEYWORDS: Readonly<Record<string, readonly string[]>> = {
   "setting-pull-request": ["settings:showTheOpenPullRequestCIChecksAndReview"],
   "setting-editor": ["settings:showTheEditorSectionInAppEditorViewAnd"],
   "setting-ascii-background": ["settings:asciiBackgroundSearch"],
-  "setting-app-icon": ["settings:chooseTheIconSynaraUsesInTheDockOr2"],
+  "setting-app-icon": ["settings:chooseTheIconRamspaceUsesInTheDockOr2"],
   "setting-use-custom-title-bar": [
     "settings:framelessWindowSystemTitleBarWindowsLinuxCaptionControls",
   ],
-  "setting-use-system-ui-font": ["settings:useTheOperatingSystemInterfaceFontThroughoutSynara"],
+  "setting-use-system-ui-font": ["settings:useTheOperatingSystemInterfaceFontThroughoutRamspace"],
   "setting-ui-density": ["settings:controlSpacingInTheSidebarComposerChatGuttersAnd2"],
   "setting-chat-width": ["settings:controlHowWideTheChatColumnGrowsSoTables"],
   "setting-base-font-size": ["settings:adjustTheAppTextBaseInPixelsChatAnd"],
@@ -173,11 +173,11 @@ export const ROW_EXTRA_KEYWORDS: Readonly<Record<string, readonly string[]>> = {
     "settings:repositoryConventionsConventionalCommitsCustomInstructionsCommitMessagesPR",
   ],
   "setting-saved-model-slugs": ["settings:addCustomModelSlugsForSupportedProvidersCustomModel"],
-  "setting-keep-synara-responsive": [
+  "setting-keep-ramspace-responsive": [
     "settings:lowerAgentCPUSchedulingPriorityPerformanceLoadNiceResponsiveness",
   ],
   "setting-automatic-cli-update-checks": ["settings:checkCodexClaudeAndOtherProviderCLIsForNewer2"],
-  "setting-provider-updates": ["settings:updateInstalledProviderToolsThatSynaraCanSafelyUpdate"],
+  "setting-provider-updates": ["settings:updateInstalledProviderToolsThatRamspaceCanSafelyUpdate"],
   "setting-version": ["settings:currentApplicationVersionAbout"],
   "setting-app-tour": ["settings:appTourKeywords"],
   "setting-release-history": ["settings:aRunningLogOfEveryUpdateNewestFirstChangelog"],
@@ -270,7 +270,7 @@ export const SETTINGS_SEARCH_ENTRIES: readonly SettingsSearchEntry[] = [
     id: "appearance:theme",
     section: "appearance",
     title: "onboarding:changed_theme",
-    keywords: ["settings:chooseHowSynaraLooksAcrossTheAppDarkLight"],
+    keywords: ["settings:chooseHowRamspaceLooksAcrossTheAppDarkLight"],
   },
   {
     id: "appsnap:permissions",
@@ -308,7 +308,7 @@ export const SETTINGS_SEARCH_ENTRIES: readonly SettingsSearchEntry[] = [
     id: "worktrees:managed-worktrees",
     section: "worktrees",
     title: "onboarding:managedWorktrees",
-    keywords: ["settings:reviewAndCleanUpTheWorktreesCreatedBySynara"],
+    keywords: ["settings:reviewAndCleanUpTheWorktreesCreatedByRamspace"],
     target: null,
   },
   {

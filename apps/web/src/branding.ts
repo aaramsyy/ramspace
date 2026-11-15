@@ -1,20 +1,22 @@
 // Renderer branding follows the packaged protocol defined by desktopIdentity.
-import { SYNARA_REMOTE_DESKTOP_SCHEME } from "@synara/shared/desktopIdentity";
+import { RAMSPACE_REMOTE_DESKTOP_SCHEME } from "@ramspace/shared/desktopIdentity";
 
-export const APP_BASE_NAME = "Synara";
+export const APP_BASE_NAME = "Ramspace";
 const isCanaryDesktop =
-  typeof window !== "undefined" && window.location?.protocol === "synara-canary:";
-const isBetaDesktop = typeof window !== "undefined" && window.location?.protocol === "synara-beta:";
+  typeof window !== "undefined" && window.location?.protocol === "ramspace-canary:";
+const isBetaDesktop =
+  typeof window !== "undefined" && window.location?.protocol === "ramspace-beta:";
 const isRemoteDesktop =
-  typeof window !== "undefined" && window.location?.protocol === `${SYNARA_REMOTE_DESKTOP_SCHEME}:`;
-/** Synara Remote shares usage and diagnostics by default. */
+  typeof window !== "undefined" &&
+  window.location?.protocol === `${RAMSPACE_REMOTE_DESKTOP_SCHEME}:`;
+/** Ramspace Remote shares usage and diagnostics by default. */
 export const IS_REMOTE_DESKTOP = isRemoteDesktop;
 export const APP_DISPLAY_NAME = isRemoteDesktop
-  ? "Synara Remote"
+  ? "Ramspace Remote"
   : isCanaryDesktop
-    ? "Synara Canary"
+    ? "Ramspace Canary"
     : isBetaDesktop
-      ? "Synara Beta"
+      ? "Ramspace Beta"
       : import.meta.env.DEV
         ? `${APP_BASE_NAME} (Dev)`
         : APP_BASE_NAME;

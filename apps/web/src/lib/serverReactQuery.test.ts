@@ -2,7 +2,7 @@
 // Purpose: Locks down server React Query polling profiles and cache options.
 // Layer: Web data-fetching unit tests
 
-import { type ServerConfig, type ServerProviderStatus } from "@synara/contracts";
+import { type ServerConfig, type ServerProviderStatus } from "@ramspace/contracts";
 import { QueryClient, QueryObserver } from "@tanstack/react-query";
 import { describe, expect, it, vi } from "vitest";
 
@@ -41,13 +41,13 @@ const READY_CODEX_STATUS = {
 
 function makeServerConfig(providers: readonly ServerProviderStatus[]): ServerConfig {
   return {
-    cwd: "G:\\synara",
+    cwd: "G:\\ramspace",
     homeDir: "C:\\Users\\tester",
-    chatWorkspaceRoot: "C:\\Users\\tester\\Documents\\Synara",
-    studioWorkspaceRoot: "C:\\Users\\tester\\Documents\\Synara\\Studio",
-    groupsWorkspaceRoot: "C:\\Users\\tester\\Documents\\Synara\\Groups",
-    worktreesDir: "C:\\SynaraDev\\worktrees",
-    keybindingsConfigPath: "C:\\SynaraDev\\keybindings.json",
+    chatWorkspaceRoot: "C:\\Users\\tester\\Documents\\Ramspace",
+    studioWorkspaceRoot: "C:\\Users\\tester\\Documents\\Ramspace\\Studio",
+    groupsWorkspaceRoot: "C:\\Users\\tester\\Documents\\Ramspace\\Groups",
+    worktreesDir: "C:\\RamspaceDev\\worktrees",
+    keybindingsConfigPath: "C:\\RamspaceDev\\keybindings.json",
     keybindings: [],
     issues: [],
     providers,
@@ -532,7 +532,7 @@ describe("sidebarLocalServersQueryOptions", () => {
     expect(options.refetchOnWindowFocus).toBe(true);
   });
 
-  it("uses visible polling while a Synara-owned project run is active", () => {
+  it("uses visible polling while a Ramspace-owned project run is active", () => {
     const options = sidebarLocalServersQueryOptions({
       hasActiveProjectRun: true,
       hasProjects: true,

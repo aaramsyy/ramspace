@@ -1,5 +1,5 @@
-import type { McpConnectorProposal } from "@synara/contracts";
-import { MCP_CONNECTOR_PROVIDER_IDS } from "@synara/shared/mcpConnectors";
+import type { McpConnectorProposal } from "@ramspace/contracts";
+import { MCP_CONNECTOR_PROVIDER_IDS } from "@ramspace/shared/mcpConnectors";
 import { Effect } from "effect";
 import {
   McpConnectorError,
@@ -22,7 +22,7 @@ const proposalResult = (proposal: McpConnectorProposal) => ({
   transport: proposal.connector.transport,
   action: proposal.action,
   state: proposal.state,
-  message: `Review the approval card in Synara. ${availability}`,
+  message: `Review the approval card in Ramspace. ${availability}`,
 });
 
 export function makeConnectorTools(deps: {
@@ -61,7 +61,7 @@ export function makeConnectorTools(deps: {
     {
       requiredCapability: "thread:read",
       definition: {
-        name: "synara_list_mcp_connectors",
+        name: "ramspace_list_mcp_connectors",
         description:
           "List saved connectors, status, transport and supported providers. URL credentials and process environment values are never returned. " +
           availability,
@@ -90,7 +90,7 @@ export function makeConnectorTools(deps: {
       requiredCapability: "thread:write",
       requiresActiveTurn: true,
       definition: {
-        name: "synara_add_mcp_connector",
+        name: "ramspace_add_mcp_connector",
         description:
           "Propose adding an MCP connector. Always requires the user's approval card, including HTTP and presets. Never executes a command or connects before approval. Pass command and args separately, not a shell string. Never include secrets in chat; the user can enter environment values in Settings. OAuth opens only after approval. " +
           availability,
@@ -125,7 +125,7 @@ export function makeConnectorTools(deps: {
       requiredCapability: "thread:write",
       requiresActiveTurn: true,
       definition: {
-        name: "synara_remove_mcp_connector",
+        name: "ramspace_remove_mcp_connector",
         description:
           "Propose removing a connector. Removal happens only when the user accepts the confirmation card.",
         inputSchema: {
@@ -149,7 +149,7 @@ export function makeConnectorTools(deps: {
       requiredCapability: "thread:write",
       requiresActiveTurn: true,
       definition: {
-        name: "synara_import_mcp_servers",
+        name: "ramspace_import_mcp_servers",
         description:
           "Discover MCP servers in Claude Code user/current project config, Codex, workspace .mcp.json and Claude Desktop. Shows a separate approval card for each candidate. Only entries the user accepts are added. Never returns environment values or runs discovered commands.",
         inputSchema: { type: "object", properties: {}, additionalProperties: false },

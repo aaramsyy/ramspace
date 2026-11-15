@@ -2,8 +2,11 @@
 // Purpose: Resolve thread:// composer references into bounded transcript prompt context.
 // Layer: Provider prompt compatibility
 
-import { ThreadId, type ProviderMentionReference } from "@synara/contracts";
-import { isThreadMentionPath, threadIdFromThreadMentionPath } from "@synara/shared/threadMentions";
+import { ThreadId, type ProviderMentionReference } from "@ramspace/contracts";
+import {
+  isThreadMentionPath,
+  threadIdFromThreadMentionPath,
+} from "@ramspace/shared/threadMentions";
 import { Effect, Option } from "effect";
 
 import { paginateThreadMessages } from "../agentGateway/threadSummary.ts";

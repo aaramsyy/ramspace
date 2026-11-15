@@ -3,7 +3,7 @@
 // that each mutation settles the status cache without a refetch round trip.
 // Layer: Web account feature tests.
 
-import type { AccountMe, AccountStatus, NativeApi } from "@synara/contracts";
+import type { AccountMe, AccountStatus, NativeApi } from "@ramspace/contracts";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { type ReactNode, useState } from "react";
 import { renderToStaticMarkup } from "react-dom/server";

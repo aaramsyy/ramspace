@@ -5,7 +5,7 @@ export const CUA_DRIVER_VERSION = release.version;
 export const CUA_NATIVE_REVISION = release.nativeRevision;
 export const CUA_DRIVER_SOURCE = release.source;
 export const CUA_DRIVER_ARCHIVE_SHA256 = release.sha256;
-export const CUA_HOST_SOCKET_ENV = "SYNARA_CUA_HOST_SOCKET";
+export const CUA_HOST_SOCKET_ENV = "RAMSPACE_CUA_HOST_SOCKET";
 // Setup includes native input retirement and a bounded, user-facing permission request.
 export const CUA_SETUP_TIMEOUT_MS = 120_000;
 export const CUA_MAX_RESPONSE_BYTES = 96 * 1024 * 1024;
@@ -74,7 +74,7 @@ export const CUA_MAX_RESPONSE_BYTES = 96 * 1024 * 1024;
  * {@link parseCuaShieldArgs}:
  *
  * - `{action:"engage", shield_id, frame, window_id, pid, label?}` shows the
- *   Synara-owned shield panel over `frame` (screen coordinates, top-left
+ *   Ramspace-owned shield panel over `frame` (screen coordinates, top-left
  *   origin, points) and confirms once it is on screen. The host refuses
  *   while closed, suspended, or desktop-paused so a shield never arms under
  *   an interrupted desktop. `shield_id` is minted by the caller — a lost

@@ -42,17 +42,17 @@ The shared setup action defaults to `full`. Typecheck, Linux unit/browser and
 desktop build jobs keep the entire workspace. Only verified consumers opt into
 smaller installs:
 
-- `static`: root and `@synara/scripts`, including its workspace dependencies.
+- `static`: root and `@ramspace/scripts`, including its workspace dependencies.
   Identity, Windows boundary, formatting, lint, release smoke and CI contract
   tests all run. Root-only or root + shared installs cannot own release smoke.
 - `runtime`: all workspaces except marketing. Windows runs every existing native
   PTY/process/filesystem/shutdown/recovery test with lifecycle scripts enabled.
 - Native release artifact builders exclude marketing with `--ignore-scripts`
-  exactly as before. macOS device jobs select `@synara/scripts`, retaining their
+  exactly as before. macOS device jobs select `@ramspace/scripts`, retaining their
   existing `--ignore-scripts`, Xcode pairs, probe, simulator smoke and diagnostics.
-- Intel startup qualification (`qualify_intel`) selects `@synara/scripts` and
-  `@synara/cli` with `--ignore-scripts`. The smoke also imports the server's
-  supervised process teardown, so `@synara/scripts` alone cannot resolve `effect`.
+- Intel startup qualification (`qualify_intel`) selects `@ramspace/scripts` and
+  `@ramspace/cli` with `--ignore-scripts`. The smoke also imports the server's
+  supervised process teardown, so `@ramspace/scripts` alone cannot resolve `effect`.
 
 Filtered scopes never restore/save a full `node_modules` archive. Windows
 installs cold rather than extracting the pathological Bun package cache. Its
@@ -88,12 +88,12 @@ provenance, publication and production dependency staging are unchanged.
 ## Cross-platform setup measurements: September 14, 2026
 
 Application baseline: `70f5ed0e4757c0f69891b258171da80d324f0e18`. The successful
-[baseline main CI](https://github.com/Emanuele-web04/synara/actions/runs/34792874548)
+[baseline main CI](https://github.com/aaramsyy/ramspace/actions/runs/34792874548)
 took 323 seconds and 2,158 raw runner-seconds across 16 jobs. These are observed
 samples, not a promise for every hosted runner. No percentage below describes an
 entire signed release.
 
-The [cross-platform install experiment](https://github.com/Emanuele-web04/synara/actions/runs/34822416944)
+The [cross-platform install experiment](https://github.com/aaramsyy/ramspace/actions/runs/34822416944)
 used three observations per variant on each runner, fresh worktrees and dedicated
 empty `BUN_INSTALL_CACHE_DIR` directories. Variant order reversed on the middle
 repetition. Linux/Windows included lifecycle scripts; both macOS variants used
@@ -110,13 +110,13 @@ macOS Intel device dependencies               61.12 s       7.02 s        88.5%
 ```
 
 The corrected static scope was measured in a
-[separate same-source Ubuntu job](https://github.com/Emanuele-web04/synara/actions/runs/34823971221):
+[separate same-source Ubuntu job](https://github.com/aaramsyy/ramspace/actions/runs/34823971221):
 7.55 / 7.47 / 7.68 seconds. Intel release measurements were noisy: full
 61.12 / 269.19 / 54.96 seconds, scoped 29.68 / 42.69 / 106.97 seconds. Its median
 improved but not every pair did. Linux runtime filtering measured 27.85 to 24.08
 seconds, but full Linux jobs retain their healthy warm modules cache.
 
-[Native artifact validation](https://github.com/Emanuele-web04/synara/actions/runs/34822950006)
+[Native artifact validation](https://github.com/aaramsyy/ramspace/actions/runs/34822950006)
 passed Linux AppImage, Windows NSIS, macOS ARM64 DMG and Intel DMG builds plus
 packaged-startup smoke with filtered installs. Both macOS native device probes
 also passed. These were **unsigned build-only checks**, not signed publication or
@@ -125,7 +125,7 @@ all Xcode/simulator combinations.
 ## Critical-path attack
 
 The previous warm confirmation
-[run 34829293225](https://github.com/Emanuele-web04/synara/actions/runs/34829293225)
+[run 34829293225](https://github.com/aaramsyy/ramspace/actions/runs/34829293225)
 completed in 308 seconds and 1,943 raw runner-seconds (32.38 minutes). The browser
 `chat-workflows` job was the critical lane, followed by server and component
 partitions. The experiments below target those measured paths rather than adding
@@ -133,7 +133,7 @@ generic concurrency.
 
 ### Stable browser runtime preparation
 
-The [runtime benchmark](https://github.com/Emanuele-web04/synara/actions/runs/34832610297)
+The [runtime benchmark](https://github.com/aaramsyy/ramspace/actions/runs/34832610297)
 ran three repetitions of Playwright `install --with-deps chromium` and `install
 chromium` after the same browser-cache restore. Every browser-only repetition then
 launched Chromium, created a page and verified DOM content.
@@ -172,7 +172,7 @@ used, while test bodies, assertions, timeouts and quarantine semantics stay inta
 
 ### Server native three-way sharding
 
-The [server benchmark](https://github.com/Emanuele-web04/synara/actions/runs/34833458963)
+The [server benchmark](https://github.com/aaramsyy/ramspace/actions/runs/34833458963)
 compared Vitest's existing native two-way shard assignment with native three-way
 assignment. Each repetition ran both variants on the same runner and reversed
 order in the middle repetition. Exact JSON inventories matched at 5,030 assertion
@@ -192,7 +192,7 @@ custom timing-aware sequencer below.
 
 ### Component native three-way sharding
 
-The [component benchmark](https://github.com/Emanuele-web04/synara/actions/runs/34833550200)
+The [component benchmark](https://github.com/aaramsyy/ramspace/actions/runs/34833550200)
 compared the existing two native file shards with three native file shards. All
 three repetitions preserved exactly 411 assertion results (408 distinct inventory
 keys), including repeated-title multiplicities, with no overlap or omission and
@@ -220,7 +220,7 @@ runner count and serial execution inside each lane unchanged.
 Vitest's native `--shard` hashes file paths into equal file counts, not equal
 time. Native assignment put the three heaviest server files on shard 3, and the
 shard medians were 400 / 207 / 559 s. The per-file table of
-[run 43021234651](https://github.com/Emanuele-web04/synara/actions/runs/43021234651)
+[run 43021234651](https://github.com/aaramsyy/ramspace/actions/runs/43021234651)
 (test plus import time, temporary reporter since reverted) showed:
 
 ```text
@@ -245,7 +245,7 @@ matches native assignment. Native assignment in run 43021234651 executed 677
 files and 10,075 tests (10,038 passed, 37 skipped) across the three shards.
 
 The isolated baseline variant of the
-[paired benchmark](https://github.com/Emanuele-web04/synara/actions/runs/43023542738)
+[paired benchmark](https://github.com/aaramsyy/ramspace/actions/runs/43023542738)
 ran the pinned layout three times per shard on hosted runners. All repetitions
 passed and still collected all 677 files (226 / 228 / 223):
 
@@ -263,7 +263,7 @@ slowest; it is unchanged by this commit.
 
 Every executed ChatView test is listed in the stable lane logs (all exceed the
 300 ms slow-test threshold). In main's
-[run 42920466967](https://github.com/Emanuele-web04/synara/actions/runs/42920466967)
+[run 42920466967](https://github.com/aaramsyy/ramspace/actions/runs/42920466967)
 each lane paid about 90–110 s of fixed import, then:
 
 ```text
@@ -282,7 +282,7 @@ and owns unknown future cases. The `[geometry:linux]` quarantine and serial
 execution are unchanged. `scripts/browser-ci-partitions.test.ts` now names the
 lane that each sample title must land in, not only that it lands in exactly one.
 
-[Run 43023542613](https://github.com/Emanuele-web04/synara/actions/runs/43023542613)
+[Run 43023542613](https://github.com/aaramsyy/ramspace/actions/runs/43023542613)
 measured the result. Every ChatView lane passed, with the same 268 executed tests
 (31 + 91 + 146):
 
@@ -300,7 +300,7 @@ became the slowest browser lane; its native file sharding is unchanged.
 
 ### Cache ownership
 
-In [run 43021234651](https://github.com/Emanuele-web04/synara/actions/runs/43021234651),
+In [run 43021234651](https://github.com/aaramsyy/ramspace/actions/runs/43021234651),
 the logs of typecheck, Desktop Build and chat-projects show exact-key
 `node_modules` hits (994 MB, 20–31 s restore steps, `bun install` 1–2 s
 afterwards). The designated savers skipped `Save node_modules` because nothing
@@ -327,11 +327,11 @@ packaging leg.
 Signing, notarization, stapling, provenance and the quality and publication
 gates are unchanged. Three build-only release runs of version 1.5.2
 (`publish_release=false`, signed and notarized, every platform successful),
-[A1](https://github.com/Emanuele-web04/synara/actions/runs/43120433988),
-[A2](https://github.com/Emanuele-web04/synara/actions/runs/43123721500) and
-[A3](https://github.com/Emanuele-web04/synara/actions/runs/43127538378), measured
+[A1](https://github.com/aaramsyy/ramspace/actions/runs/43120433988),
+[A2](https://github.com/aaramsyy/ramspace/actions/runs/43123721500) and
+[A3](https://github.com/aaramsyy/ramspace/actions/runs/43127538378), measured
 the changes against the
-[v1.5.2 tag run](https://github.com/Emanuele-web04/synara/actions/runs/43100375555).
+[v1.5.2 tag run](https://github.com/aaramsyy/ramspace/actions/runs/43100375555).
 A3 is the only run of the final code (`ee6e48eaf`). A1 and A2 also ran the
 native-helper overlap that was then reverted (see the rejected experiments), so
 their macOS build steps include it; A3 does not. Seconds:
@@ -381,7 +381,7 @@ key.
 
 ### macOS icon catalog
 
-The release compiled `assets/{prod,beta}/Synara.icon` on a `macos-26` runner for
+The release compiled `assets/{prod,beta}/Ramspace.icon` on a `macos-26` runner for
 every tag. The default-branch producer now compiles both sources (Stable and
 Remote share production) on `macos-26` with Xcode 26.3, saves the exact key to
 the Actions cache and retains the catalog for 30 days as an artifact.
@@ -488,16 +488,16 @@ more than the overlap saves, so the leg totals above did not reliably fall.
 ### Intel qualification install
 
 `qualify_intel` installed every workspace except marketing (75 s in the audit).
-The startup smoke imports `@synara/scripts` code and
+The startup smoke imports `@ramspace/scripts` code and
 `apps/server/src/platform/supervisedProcessTeardown.ts`. In local throwaway
-exports, a `@synara/scripts`-only install failed to resolve `effect` from that
-server file. Adding `@synara/cli` resolved the whole import graph:
+exports, a `@ramspace/scripts`-only install failed to resolve `effect` from that
+server file. Adding `@ramspace/cli` resolved the whole import graph:
 
 ```text
 Install scope (local, warm Bun cache)        Packages  node_modules  Smoke imports
 all but marketing (previous)                     1404     2.7 GB      resolve
-@synara/scripts + @synara/cli (now)              1129     1.5 GB      resolve
-@synara/scripts only                              445     329 MB      fail (effect)
+@ramspace/scripts + @ramspace/cli (now)              1129     1.5 GB      resolve
+@ramspace/scripts only                              445     329 MB      fail (effect)
 ```
 
 The smoke command is unchanged. `release-smoke.ts` rejects a filtered
@@ -530,14 +530,14 @@ Linux arm64        35    5    3    6
 ## Rejected experiments and external-service limits
 
 Intra-runner component `fileParallelism` with four workers failed in all three
-repetitions of [run 34832610297](https://github.com/Emanuele-web04/synara/actions/runs/34832610297).
+repetitions of [run 34832610297](https://github.com/aaramsyy/ramspace/actions/runs/34832610297).
 The candidate was also slower than the individual baseline shards in the completed
 sample. It is not enabled. Native file sharding above keeps each browser process
 serial instead.
 
 Disabling server Vitest isolation (`isolate: false`, one serial worker reusing
 its module graph across files) was rejected in November 2026. The
-[paired benchmark](https://github.com/Emanuele-web04/synara/actions/runs/43023542738)
+[paired benchmark](https://github.com/aaramsyy/ramspace/actions/runs/43023542738)
 ran each server shard three times, each against `--isolate` on the same runner.
 Import time fell from 64–107 s to 9–12 s per shard, but every candidate repetition
 that finished failed. Shard 1/3 failed 8–9 files (`GitHubCli`, `processLiveness`,
@@ -551,15 +551,15 @@ finished after 14 minutes. The isolated baseline passed every repetition.
 Server tests rely on per-file module state, mocks and process stubs, so isolation
 stays on. It was never applied to the browser configuration.
 
-An earlier [timing-aware server sequencer](https://github.com/Emanuele-web04/synara/actions/runs/34825744944)
+An earlier [timing-aware server sequencer](https://github.com/aaramsyy/ramspace/actions/runs/34825744944)
 was also rejected. It preserved the then-collected suite but worsened slower-shard
 time 9.9% and combined time 2.1%. The prototype/timing hints remain removed. The
 accepted server change uses Vitest's native shard assignment instead.
 
 Running the macOS AppSnap helper and window-material builds concurrently with the
 staged production install was measured in release runs
-[A1](https://github.com/Emanuele-web04/synara/actions/runs/43120433988) and
-[A2](https://github.com/Emanuele-web04/synara/actions/runs/43123721500) and
+[A1](https://github.com/aaramsyy/ramspace/actions/runs/43120433988) and
+[A2](https://github.com/aaramsyy/ramspace/actions/runs/43123721500) and
 reverted in November 2026. The stages share no files, but they contend for CPU
 on the hosted runners. Seconds, serial sum of `appsnap-helper`,
 `window-material-addon` and `production-dependencies` before, concurrent wall
@@ -574,7 +574,7 @@ x64     - / - / 31                                 38 (36+2+20) / 58 (55+3+31)
 It gained about 10 s on arm64 and lost 7–27 s on x64, the leg that, with Intel
 qualification, is Stable's critical path. The three stages run serially again,
 in their original order. In
-[A3](https://github.com/Emanuele-web04/synara/actions/runs/43127538378), after the
+[A3](https://github.com/aaramsyy/ramspace/actions/runs/43127538378), after the
 revert, `appsnap-helper` took 33 s and `production-dependencies` 22 s on arm64,
 and 20 s and 16 s on x64. These stage times also vary from run to run.
 
@@ -620,10 +620,10 @@ check identity, signing policy or publication. Removing the sequencer line from
 ### Earlier cross-platform candidate evidence
 
 The first complete PR run
-[34828358809](https://github.com/Emanuele-web04/synara/actions/runs/34828358809)
+[34828358809](https://github.com/aaramsyy/ramspace/actions/runs/34828358809)
 passed all 15 then-current jobs but initialized new caches: 325 seconds and 2,422
 runner-seconds. The warm confirmation
-[34829293225](https://github.com/Emanuele-web04/synara/actions/runs/34829293225)
+[34829293225](https://github.com/aaramsyy/ramspace/actions/runs/34829293225)
 passed all 15 jobs in 308 seconds and 1,943 runner-seconds, versus main's 323
 seconds / 2,158 runner-seconds. The final critical-path graph is measured again
 from scratch in the PR verification record; those earlier numbers are retained so
@@ -634,11 +634,11 @@ cache initialization is not hidden.
 The final optimization commit `1d27eb0d9` ran twice, first in #1197 and again when
 the same branch reopened as #1202. Both completed successfully:
 
-| Run                                                                                              | Workflow elapsed | Raw runner minutes |
-| ------------------------------------------------------------------------------------------------ | ---------------: | -----------------: |
-| [Reference main](https://github.com/Emanuele-web04/synara/actions/runs/34792874548)              |            5m23s |              35.97 |
-| [First final-candidate run](https://github.com/Emanuele-web04/synara/actions/runs/34836521794)   |            4m17s |              33.40 |
-| [Reopened PR, same candidate](https://github.com/Emanuele-web04/synara/actions/runs/34851349076) |            6m45s |              38.67 |
+| Run                                                                                          | Workflow elapsed | Raw runner minutes |
+| -------------------------------------------------------------------------------------------- | ---------------: | -----------------: |
+| [Reference main](https://github.com/aaramsyy/ramspace/actions/runs/34792874548)              |            5m23s |              35.97 |
+| [First final-candidate run](https://github.com/aaramsyy/ramspace/actions/runs/34836521794)   |            4m17s |              33.40 |
+| [Reopened PR, same candidate](https://github.com/aaramsyy/ramspace/actions/runs/34851349076) |            6m45s |              38.67 |
 
 The first candidate run was 20.4% faster than the reference and used 7.1% fewer
 raw runner minutes. The second was 25.4% slower and used 7.5% more. Raw runner
@@ -660,7 +660,7 @@ with Bun installed under the runner's `C:` home, without overriding its default
 cache location. That topology differed from the benchmark. Bun normally hardlinks
 packages from its cache on Windows, and its isolated installer falls back to
 copying when the cache and destination are on different volumes. See the
-[benchmark setup](https://github.com/Emanuele-web04/synara/blob/c1fb6bca967f9cdc9fbb8226d95d1ef52574a22e/.github/scripts/ci-benchmark.mjs#L48-L55)
+[benchmark setup](https://github.com/aaramsyy/ramspace/blob/c1fb6bca967f9cdc9fbb8226d95d1ef52574a22e/.github/scripts/ci-benchmark.mjs#L48-L55)
 and [Bun installer](https://github.com/oven-sh/bun/blob/744846f844374847c902b5e7fd59b4342a51ef99/src/install/isolated_install/Installer.rs#L1339-L1410).
 
 Windows installation now selects and logs `RUNNER_TEMP/bun-install-cache`, matching

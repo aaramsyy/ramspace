@@ -10,7 +10,7 @@ import { IsoDateTime, TrimmedNonEmptyString } from "./baseSchemas";
 
 /**
  * The transport the outbound session actually won (ADR 0007 preference
- * order). Mirrors `TransportKind` in @synara/shared/transportRace, which is
+ * order). Mirrors `TransportKind` in @ramspace/shared/transportRace, which is
  * runtime code and cannot be imported here.
  */
 export const HostConnectionTransport = Schema.Literals([
@@ -29,7 +29,7 @@ export type HostConnectionTransport = typeof HostConnectionTransport.Type;
  * `wsPath` is the local upgrade path a renderer connects to in order to be
  * bridged onto that session: the shell owns the device key and the minted
  * credential, so the renderer never handles either. Everything past the
- * handshake is the ordinary Synara WebSocket protocol, spoken to the remote
+ * handshake is the ordinary Ramspace WebSocket protocol, spoken to the remote
  * host as if it were local.
  */
 export const HostConnectionState = Schema.Literals([

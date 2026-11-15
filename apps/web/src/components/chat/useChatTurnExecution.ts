@@ -10,7 +10,7 @@ import type {
   ProjectScript,
   ProviderMentionReference,
   ProviderSkillReference,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import {
   DEFAULT_MODEL_BY_PROVIDER,
   MessageId,
@@ -19,10 +19,10 @@ import {
   ThreadId,
   type ModelSelection,
   type ProviderStartOptions,
-} from "@synara/contracts";
-import { buildTemporaryWorktreeBranchName } from "@synara/shared/git";
-import { getDefaultModel } from "@synara/shared/model";
-import { providerSupportsNativeTurnSteering } from "@synara/shared/providerMetadata";
+} from "@ramspace/contracts";
+import { buildTemporaryWorktreeBranchName } from "@ramspace/shared/git";
+import { getDefaultModel } from "@ramspace/shared/model";
+import { providerSupportsNativeTurnSteering } from "@ramspace/shared/providerMetadata";
 import { useCallback } from "react";
 import { promoteThreadCreate } from "~/lib/threadCreatePromotion";
 import { waitForDraftThreadDispatchToSettle } from "~/lib/draftThreadDispatch";

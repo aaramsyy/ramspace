@@ -1,7 +1,7 @@
 // FILE: IphoneMock.tsx
-// Purpose: An iPhone showing Synara for iOS as it really looks: the Inbox (agent cards,
+// Purpose: An iPhone showing Ramspace for iOS as it really looks: the Inbox (agent cards,
 //          today's recap, projects, the floating composer) and the pairing scanner. Values
-//          follow SynaraIOS (InboxView, InboxAgentCards, QRScannerView) at device points,
+//          follow RamspaceIOS (InboxView, InboxAgentCards, QRScannerView) at device points,
 //          with sample data in place of a real account.
 // Layer: Web UI illustration (aria-hidden; always dark, like the iOS app's screens here)
 
@@ -144,16 +144,16 @@ function InProgressIcon() {
 }
 
 const SAMPLE_AVATAR_INITIAL = "S";
-const SAMPLE_RECAP_PROJECT = "synara-web";
+const SAMPLE_RECAP_PROJECT = "ramspace-web";
 const SAMPLE_RECAP_AGENT = "Claude Code";
 
 const SAMPLE_PROJECTS = [
-  { name: "synara-web", count: 5 },
+  { name: "ramspace-web", count: 5 },
   { name: "api-gateway", count: 2 },
   { name: "design-system", count: 1 },
 ] as const;
 
-/** Synara for iOS: Inbox. `needsYou` lights the card an approval is waiting in. */
+/** Ramspace for iOS: Inbox. `needsYou` lights the card an approval is waiting in. */
 export function IosInboxScreen(props: {
   readonly host: string;
   readonly needsYou?: number;
@@ -274,7 +274,7 @@ export function IosInboxScreen(props: {
   );
 }
 
-/** An iOS notification banner from Synara, as it lands over the Inbox. */
+/** An iOS notification banner from Ramspace, as it lands over the Inbox. */
 export function IosNotificationBanner(props: { readonly title: string; readonly body: string }) {
   const { t } = useTranslation();
   return (
@@ -291,7 +291,7 @@ export function IosNotificationBanner(props: { readonly title: string; readonly 
   );
 }
 
-/** Synara for iOS: the pairing scanner (QRScannerView) looking at this computer's code. */
+/** Ramspace for iOS: the pairing scanner (QRScannerView) looking at this computer's code. */
 export function IosScannerScreen(props: { readonly viewfinder: ReactNode }) {
   const { t } = useTranslation();
   return (

@@ -12,7 +12,7 @@ import type {
   AccountStatus,
   AccountUpdateProfileInput,
   AccountUploadAvatarInput,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { useMutation, useQuery, useQueryClient, type QueryClient } from "@tanstack/react-query";
 import { useCallback } from "react";
 import { readProfileThemeAccent } from "./useTheme";

@@ -14,11 +14,11 @@ import {
   ProviderReadPluginInput,
   type ProviderStartOptions,
   type ProviderSkillDescriptor,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import {
   providerStartOptionsFromInstance,
   resolveProviderInstance,
-} from "@synara/shared/providerInstances";
+} from "@ramspace/shared/providerInstances";
 import { Effect, Exit, Layer, Option, Queue, Schema, SchemaIssue } from "effect";
 
 import { ServerConfig } from "../../config.ts";
@@ -270,7 +270,7 @@ const make = Effect.gen(function* () {
       const capabilities = adapter.getComposerCapabilities
         ? yield* adapter.getComposerCapabilities()
         : disabledCapabilitiesForProvider(resolved.provider);
-      // The unified Synara skills catalog backs skill discovery for every
+      // The unified Ramspace skills catalog backs skill discovery for every
       // provider, including ones without native skill support.
       return {
         ...capabilities,
@@ -301,7 +301,7 @@ const make = Effect.gen(function* () {
             .pipe(
               Effect.catch((error) =>
                 Effect.logWarning(
-                  "provider-native skill discovery failed; serving the Synara skills catalog only",
+                  "provider-native skill discovery failed; serving the Ramspace skills catalog only",
                   { provider: resolved.provider, error },
                 ).pipe(Effect.as(null)),
               ),
@@ -311,14 +311,14 @@ const make = Effect.gen(function* () {
         discoverSkillsCatalog({
           cwd: parsed.cwd,
           homeDir: serverConfig.homeDir,
-          synaraBaseDir: serverConfig.baseDir,
+          ramspaceBaseDir: serverConfig.baseDir,
           provider: resolved.provider,
           ...(parsed.forceReload !== undefined ? { forceReload: parsed.forceReload } : {}),
           ...(parsed.agentDir !== undefined ? { agentDir: parsed.agentDir } : undefined),
         }),
       ).pipe(
         Effect.catchCause((cause) =>
-          Effect.logWarning("synara skills catalog discovery failed", {
+          Effect.logWarning("ramspace skills catalog discovery failed", {
             provider: resolved.provider,
             cause,
           }).pipe(Effect.as([] as ProviderSkillDescriptor[])),
@@ -333,7 +333,9 @@ const make = Effect.gen(function* () {
       );
       return {
         skills: filterDisabledSkills(merged, settings.skills.disabled),
-        source: nativeResult?.source ? `${nativeResult.source}+synara.catalog` : "synara.catalog",
+        source: nativeResult?.source
+          ? `${nativeResult.source}+ramspace.catalog`
+          : "ramspace.catalog",
         cached: nativeResult?.cached ?? false,
       } satisfies ProviderListSkillsResult;
     });
@@ -418,7 +420,7 @@ const make = Effect.gen(function* () {
       if (!resolved.enabled) {
         return yield* new ProviderValidationError({
           operation: "ProviderDiscoveryService.readPlugin",
-          issue: `Provider instance '${resolved.instanceId}' is disabled in Synara settings.`,
+          issue: `Provider instance '${resolved.instanceId}' is disabled in Ramspace settings.`,
         });
       }
       const adapter = yield* registry.getByProvider(resolved.provider);

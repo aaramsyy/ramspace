@@ -29,13 +29,13 @@ describe("project bot playbook", () => {
   });
 
   it("teaches the hub tools and routing rules", () => {
-    expect(PROJECT_BOT_PLAYBOOK).toContain("synara_project_remember");
-    expect(PROJECT_BOT_PLAYBOOK).toContain("synara_project_forget");
-    expect(PROJECT_BOT_PLAYBOOK).toContain("synara_project_library_add");
-    expect(PROJECT_BOT_PLAYBOOK).toContain("synara_project_list_threads");
-    expect(PROJECT_BOT_PLAYBOOK).toContain("synara_send_message");
-    expect(PROJECT_BOT_PLAYBOOK).toContain("synara_create_thread");
-    expect(PROJECT_BOT_PLAYBOOK).toContain("synara_create_threads");
+    expect(PROJECT_BOT_PLAYBOOK).toContain("ramspace_project_remember");
+    expect(PROJECT_BOT_PLAYBOOK).toContain("ramspace_project_forget");
+    expect(PROJECT_BOT_PLAYBOOK).toContain("ramspace_project_library_add");
+    expect(PROJECT_BOT_PLAYBOOK).toContain("ramspace_project_list_threads");
+    expect(PROJECT_BOT_PLAYBOOK).toContain("ramspace_send_message");
+    expect(PROJECT_BOT_PLAYBOOK).toContain("ramspace_create_thread");
+    expect(PROJECT_BOT_PLAYBOOK).toContain("ramspace_create_threads");
     expect(PROJECT_BOT_PLAYBOOK).toContain("linked repository");
     expect(PROJECT_BOT_PLAYBOOK).toContain("Suggested threads");
   });

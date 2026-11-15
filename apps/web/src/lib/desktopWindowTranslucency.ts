@@ -3,7 +3,7 @@
 // Layer: Web desktop-capability helper
 // Exports: readDesktopWindowTranslucency
 
-import type { DesktopWindowTranslucency } from "@synara/contracts";
+import type { DesktopWindowTranslucency } from "@ramspace/contracts";
 import { readWorkspaceFrame } from "./hosts/workspaceFrame";
 import { isMacNavigatorPlatform } from "./utils";
 

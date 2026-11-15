@@ -6,7 +6,7 @@ import {
   ThreadId,
   TurnId,
   type ProviderRuntimeEvent,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { describe, expect, it } from "vitest";
 
 import {

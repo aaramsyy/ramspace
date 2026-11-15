@@ -16,8 +16,8 @@
 import { spawn, spawnSync } from "node:child_process";
 import os from "node:os";
 
-const DEFAULT_BASE = "https://synara-account-api-trial.synara-orgs.workers.dev";
-const DEFAULT_WORKER = "synara-account-api-trial";
+const DEFAULT_BASE = "https://ramspace-account-api-trial.ramspace-orgs.workers.dev";
+const DEFAULT_WORKER = "ramspace-account-api-trial";
 
 function option(name: string, fallback: string): string {
   const index = process.argv.indexOf(`--${name}`);

@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
-import { PROVIDER_DESCRIPTORS } from "@synara/shared/providerMetadata";
-import { isBetaFeatureEnabled } from "@synara/shared/betaFeatures";
+import { PROVIDER_DESCRIPTORS } from "@ramspace/shared/providerMetadata";
+import { isBetaFeatureEnabled } from "@ramspace/shared/betaFeatures";
 
 import { codeEditorEngine, visibleProviderDescriptors } from "./betaFeatures";
 

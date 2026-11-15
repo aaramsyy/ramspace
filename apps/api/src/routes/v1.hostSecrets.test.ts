@@ -3,7 +3,7 @@ import {
   HOST_SECRET_HISTORY_LIMIT,
   type HostPublicKeyJwk,
   type SyncKeyWrap,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { eq } from "drizzle-orm";
 import { Hono } from "hono";
 import { exportJWK, generateKeyPair, SignJWT, type GenerateKeyPairResult } from "jose";
@@ -137,8 +137,8 @@ describe.skipIf(!TEST_DATABASE_URL)("Slice E host secrets API", () => {
       name: "Secrets host",
       platform: "darwin",
     })
-      .setProtectedHeader({ alg: "EdDSA", typ: "synara-host-link+jwt" })
-      .setIssuer(`synara-host:${environmentId}`)
+      .setProtectedHeader({ alg: "EdDSA", typ: "ramspace-host-link+jwt" })
+      .setIssuer(`ramspace-host:${environmentId}`)
       .setSubject(environmentId)
       .setAudience(config.apiPublicUrl)
       .setIssuedAt(now)
@@ -164,8 +164,8 @@ describe.skipIf(!TEST_DATABASE_URL)("Slice E host secrets API", () => {
       displayName: "Pairing device",
       platform: "ios",
     })
-      .setProtectedHeader({ alg: "ES256", typ: "synara-device-register+jwt" })
-      .setIssuer("synara-device")
+      .setProtectedHeader({ alg: "ES256", typ: "ramspace-device-register+jwt" })
+      .setIssuer("ramspace-device")
       .setSubject(session.userId)
       .setAudience(config.apiPublicUrl)
       .setIssuedAt(now)

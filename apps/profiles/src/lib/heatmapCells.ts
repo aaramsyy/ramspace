@@ -1,7 +1,7 @@
 // Builds the profile-ui `HeatmapCell` grid from the API's sparse day buckets.
 // Pure date/rank math (no I/O) so the page can stay fully SSR.
 
-import type { HeatmapCell } from "@synara/profile-ui/heatmap";
+import type { HeatmapCell } from "@ramspace/profile-ui/heatmap";
 import type { PublicProfileHeatmapDay } from "./publicProfile";
 
 const DAY_MS = 86_400_000;

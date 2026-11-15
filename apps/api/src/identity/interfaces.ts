@@ -1,11 +1,11 @@
 // FILE: identity/interfaces.ts
-// Purpose: The identity adapter seam. Synara's domain — the routes and
+// Purpose: The identity adapter seam. Ramspace's domain — the routes and
 // everything downstream — depends on these interfaces and their classified
 // failure vocabulary only, never on a concrete identity provider. Provider
 // SDK-isms, error spellings, and wire shapes stop at the sibling
 // implementation modules; nothing provider-specific may appear here.
 // Layer: API identity (contract)
-// Depends on: @synara/contracts (shared wire types) only.
+// Depends on: @ramspace/contracts (shared wire types) only.
 
 import type {
   AccountDevice,
@@ -25,7 +25,7 @@ import type {
   LinkStartResponse,
   StoredHostSecret,
   SyncKeyWrap,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import type { ApiSigningService } from "./signing";
 
 /** The subset of a user this service surfaces (see /me). */
@@ -163,7 +163,7 @@ export type OtpChallenge = {
 /**
  * What `/instance` publishes about this deployment's identity wiring. The
  * client id and provider origin are deprecated-but-present: every provider
- * call is proxied now, so Synara's own clients ignore them, but clients from
+ * call is proxied now, so Ramspace's own clients ignore them, but clients from
  * before the proxy cutover still poll the provider directly with them. The
  * field names are wire contract and must stay stable; `authMode` may grow
  * into a literal union as more provider families ship, but existing values
@@ -173,7 +173,7 @@ export type InstanceAuthInfo = Omit<InstanceInfo, "version">;
 
 /**
  * Verifies who a caller is and performs the authentication grants — the seam
- * between Synara's account routes and whichever identity provider backs them.
+ * between Ramspace's account routes and whichever identity provider backs them.
  * Every leg of every flow goes through here: the identity vendor is invisible
  * on the client wire, which is what makes a self-hosted or generic-OIDC
  * implementation a drop-in rather than a client change.

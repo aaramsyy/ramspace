@@ -6,9 +6,9 @@ import {
   installerDownloadCount,
   installerPlatform,
   type InstallerPlatform,
-} from "@synara/shared/installerDownloads";
+} from "@ramspace/shared/installerDownloads";
 
-const RELEASES_URL = "https://api.github.com/repos/Emanuele-web04/synara/releases";
+const RELEASES_URL = "https://api.github.com/repos/aaramsyy/ramspace/releases";
 const CHANNELS = ["stable", "beta", "remote", "other"] as const;
 const PLATFORMS = ["darwin", "win32", "linux"] as const;
 const MAX_PAGES = 10;
@@ -89,7 +89,7 @@ async function fetchAssets(): Promise<SourceAsset[]> {
       headers: {
         Accept: "application/vnd.github+json",
         "X-GitHub-Api-Version": "2026-03-10",
-        "User-Agent": "Synara-public-installer-counts",
+        "User-Agent": "Ramspace-public-installer-counts",
       },
       redirect: "error",
       signal,

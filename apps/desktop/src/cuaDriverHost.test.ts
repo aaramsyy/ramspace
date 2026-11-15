@@ -11,7 +11,7 @@ import {
   CUA_DRIVER_VERSION,
   CUA_NATIVE_REVISION,
   type CuaReply,
-} from "@synara/shared/cuaDriverProtocol";
+} from "@ramspace/shared/cuaDriverProtocol";
 const capability = "isolated-fixture-authority-00000000000000";
 const cuaRequest: typeof rawCuaRequest = (path, request, options) =>
   rawCuaRequest(path, { ...(request as object), capability }, options);
@@ -123,7 +123,7 @@ async function fixture(
   cleanups.push(async () => {
     Object.defineProperty(process, "platform", platformDescriptor);
   });
-  const directory = await mkdtemp(join(tmpdir(), "synara-cua-host-test-"));
+  const directory = await mkdtemp(join(tmpdir(), "ramspace-cua-host-test-"));
   cleanups.push(() => rm(directory, { recursive: true, force: true }));
   const log = join(directory, "events.jsonl");
   const binary = join(directory, "driver");
@@ -139,7 +139,7 @@ if(!options.unpatched){
   if(!process.argv.includes('--compact-cursor')) throw new Error('Missing compact cursor profile');
   if(process.argv[process.argv.indexOf('--idle-hide-ms')+1]!=='60000') throw new Error('Missing cursor idle deadline');
 }
-if(options.unpatched&&(process.argv.includes('--compact-cursor')||process.argv.includes('--idle-hide-ms'))) throw new Error('Upstream driver cannot parse Synara cursor flags');
+if(options.unpatched&&(process.argv.includes('--compact-cursor')||process.argv.includes('--idle-hide-ms'))) throw new Error('Upstream driver cannot parse Ramspace cursor flags');
 const socket=process.argv[process.argv.indexOf('--socket')+1];
 let action, timer, inputEpoch=0, interruptions=0, browserCleanupPending=false, cursorEnables=0, cursorHides=0, clipboardRestores=0;
 net.createServer(s=>{
@@ -1109,7 +1109,7 @@ describe("Cua macOS host retirement", () => {
   it("rejects an upstream binary before native input is admitted", async () => {
     const f = await fixture(capability, { unpatched: true });
     // The default host still expects the patched build, so it passes the
-    // Synara cursor flags — a faithful upstream binary exits on arguments it
+    // Ramspace cursor flags — a faithful upstream binary exits on arguments it
     // cannot parse, which refuses the call before any input is dispatched.
     // Even a binary that tolerated them would fail the revision handshake.
     await expect(
@@ -1126,7 +1126,7 @@ describe("Cua macOS host retirement", () => {
       unpatched: true,
       nativeRevision: null,
     });
-    // The upstream spawn omits the Synara cursor flags (the fake would exit
+    // The upstream spawn omits the Ramspace cursor flags (the fake would exit
     // on them), the handshake accepts the absent revision field, and replies
     // report the observed driver as unpatched — the backend's cue to narrow
     // advertised capabilities.
@@ -1198,7 +1198,7 @@ describe("agent cursor style", () => {
     const payloads = stylePayloads(events);
     expect(payloads).toHaveLength(1);
     expect(Object.keys(payloads[0]!).toSorted()).toEqual(["fill", "rim", "session", "shadow"]);
-    expect(payloads[0]!.session).toMatch(/^synara-/);
+    expect(payloads[0]!.session).toMatch(/^ramspace-/);
     // Colors are normalized to lowercase before they reach the driver.
     expect(payloads[0]!.fill).toBe("#101010");
     expect(payloads[0]!.rim).toBe("#f0f0f0");
@@ -1959,7 +1959,7 @@ describe("frame tap browser targeting", () => {
 });
 
 describe("driver warm-up on first touch", () => {
-  const FLAG = "SYNARA_CUA_WARM_ON_FIRST_TOUCH";
+  const FLAG = "RAMSPACE_CUA_WARM_ON_FIRST_TOUCH";
   let savedFlag: string | undefined;
   let captured = false;
 
@@ -2294,12 +2294,12 @@ describe("per-agent cursor identity", () => {
     expect(names).toContain("session:agent·Docs pass·t-2:press_key");
     // The shared generation session still backs unattributed calls.
     expect(
-      names.some((event) => event.startsWith("session:synara-") && event.endsWith(":press_key")),
+      names.some((event) => event.startsWith("session:ramspace-") && event.endsWith(":press_key")),
     ).toBe(true);
     // Task sessions mint lazily on dispatch: the only explicit start_session
     // is the generation's own bootstrap one — no extra round trip per label.
     expect(names.filter((event) => event.startsWith("open_session:start_session:"))).toEqual([
-      expect.stringMatching(/^open_session:start_session:synara-[0-9a-f-]+$/),
+      expect.stringMatching(/^open_session:start_session:ramspace-[0-9a-f-]+$/),
     ]);
   });
 
@@ -2387,10 +2387,12 @@ describe("browser surface", () => {
     const events = (await f.events()).map((row) => row.event);
     // The first browser call opened the persistent control connection; the
     // dispatch then rode the thread's lifecycle label under that transport id.
-    expect(events.some((event) => event.startsWith("session-begin:synara-transport-"))).toBe(true);
+    expect(events.some((event) => event.startsWith("session-begin:ramspace-transport-"))).toBe(
+      true,
+    );
     expect(
       events.some((event) =>
-        event.startsWith("browser:browser_navigate:synara-browser-thread:synara-transport-"),
+        event.startsWith("browser:browser_navigate:ramspace-browser-thread:ramspace-transport-"),
       ),
     ).toBe(true);
     // A caller-supplied session can never override the minted label.
@@ -2409,7 +2411,7 @@ describe("browser surface", () => {
     expect(
       (await f.events()).some((row) =>
         String(row.event).startsWith(
-          "browser:browser_click:synara-browser-thread:synara-transport-",
+          "browser:browser_click:ramspace-browser-thread:ramspace-transport-",
         ),
       ),
     ).toBe(true);
@@ -2448,10 +2450,10 @@ describe("browser surface", () => {
           event.startsWith("end_session:"),
       );
     expect(lifecycle).toEqual([
-      expect.stringMatching(/^browser:browser_click:synara-browser-thread:/),
-      expect.stringMatching(/^end_session:synara-browser-thread:synara-transport-/),
-      expect.stringMatching(/^start_session:synara-browser-thread:synara-transport-/),
-      expect.stringMatching(/^browser:browser_click:synara-browser-thread:/),
+      expect.stringMatching(/^browser:browser_click:ramspace-browser-thread:/),
+      expect.stringMatching(/^end_session:ramspace-browser-thread:ramspace-transport-/),
+      expect.stringMatching(/^start_session:ramspace-browser-thread:ramspace-transport-/),
+      expect.stringMatching(/^browser:browser_click:ramspace-browser-thread:/),
     ]);
   });
   it("keeps end_browser_thread a no-op for a thread that never used the browser", async () => {
@@ -3652,7 +3654,7 @@ describe("activation shield host method", () => {
     frame: { x: 100, y: 50, width: 400, height: 300 },
     window_id: 4242,
     pid: 777,
-    label: "Synara activating Calculator",
+    label: "Ramspace activating Calculator",
   };
   const recordingShield = () => {
     const calls: Array<{ method: string; args: unknown[] }> = [];
@@ -3701,7 +3703,7 @@ describe("activation shield host method", () => {
       frame: { x: 100, y: 50, width: 400, height: 300 },
       windowId: 4242,
       pid: 777,
-      label: "Synara activating Calculator",
+      label: "Ramspace activating Calculator",
     });
     expect(call.args[1]).toEqual(task);
     // A shield engage is host-local: no driver generation was ever started.

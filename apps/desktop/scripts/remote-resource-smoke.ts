@@ -7,7 +7,7 @@ import assert from "node:assert/strict";
 import { registerRemoteResourceBroker, REMOTE_RESOURCE_SCHEME } from "../src/remoteResourceBroker";
 
 // Real Electron, isolated profile and loopback fixtures; no personal account.
-const directory = fs.mkdtempSync(path.join(os.tmpdir(), "synara-resource-broker-"));
+const directory = fs.mkdtempSync(path.join(os.tmpdir(), "ramspace-resource-broker-"));
 const preload = path.join(directory, "preload.cjs");
 fs.writeFileSync(
   preload,
@@ -17,7 +17,7 @@ contextBridge.exposeInMainWorld('fixtureResource', { url: (hostId, ref) => ipcRe
 app.setPath("userData", path.join(directory, "electron"));
 protocol.registerSchemesAsPrivileged([
   {
-    scheme: "synara-fixture-app",
+    scheme: "ramspace-fixture-app",
     privileges: { standard: true, secure: true, supportFetchAPI: true, corsEnabled: true },
   },
   {
@@ -70,13 +70,13 @@ app
     });
     await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
     protocol.handle(
-      "synara-fixture-app",
+      "ramspace-fixture-app",
       () => new Response("<title>Remote resource boundary fixture</title>"),
     );
     let trusted;
     const dispose = registerRemoteResourceBroker({
       trustedRenderer: () => trusted?.webContents ?? null,
-      trustedOrigin: () => "synara-fixture-app://app/",
+      trustedOrigin: () => "ramspace-fixture-app://app/",
       backendWsUrl: () => `ws://127.0.0.1:${server.address().port}/ws?token=fixture-local-secret`,
     });
     const options = {
@@ -85,14 +85,14 @@ app
     };
     trusted = new BrowserWindow(options);
     const untrusted = new BrowserWindow(options);
-    for (const window of [trusted, untrusted]) await window.loadURL("synara-fixture-app://app/");
+    for (const window of [trusted, untrusted]) await window.loadURL("ramspace-fixture-app://app/");
     const ref = {
       environmentId: "fixture-environment",
       resource: { kind: "attachment", attachmentId: "att_v2_fixture" },
     };
     const issue = `window.fixtureResource.url('fixture-host',${JSON.stringify(ref)})`;
     const handle = await trusted.webContents.executeJavaScript(issue);
-    assert.match(handle, /^synara-resource:\/\/broker\/[a-f0-9-]+$/);
+    assert.match(handle, /^ramspace-resource:\/\/broker\/[a-f0-9-]+$/);
     assert.equal(await untrusted.webContents.executeJavaScript(issue), null);
     const get = `fetch(${JSON.stringify(handle)}).then(r=>r.text(),e=>'refused')`;
     assert.equal(await trusted.webContents.executeJavaScript(get), "remote-resource-bytes");
@@ -117,7 +117,7 @@ app
     assert.equal(uploaded, "524288");
     // Same-origin subframes cannot use a handle bound to the application's main frame.
     const iframeResult = await trusted.webContents.executeJavaScript(
-      `new Promise(resolve=>{ const f=document.createElement('iframe'); f.src='synara-fixture-app://app/frame'; f.onload=async()=>{resolve(await f.contentWindow.fetch(${JSON.stringify(handle)}).then(r=>r.text(),e=>'refused')); f.remove();};document.body.appendChild(f);})`,
+      `new Promise(resolve=>{ const f=document.createElement('iframe'); f.src='ramspace-fixture-app://app/frame'; f.onload=async()=>{resolve(await f.contentWindow.fetch(${JSON.stringify(handle)}).then(r=>r.text(),e=>'refused')); f.remove();};document.body.appendChild(f);})`,
     );
     assert.equal(iframeResult, "refused");
     const reload = new Promise((resolve) => trusted.webContents.once("did-finish-load", resolve));

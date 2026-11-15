@@ -10,7 +10,7 @@
 // the implementation and, worse, let the two forks disagree about a byte
 // layout that ciphertext already in the database depends on.
 
-import { DEVICE_USER_CODE_ALPHABET } from "@synara/contracts";
+import { DEVICE_USER_CODE_ALPHABET } from "@ramspace/contracts";
 
 /**
  * Why an envelope carries a version at all: the account service does
@@ -35,9 +35,9 @@ const P256_COORDINATE_BYTES = 32;
  * with one, so a digest computed for pairing can never be mistaken for — or
  * substituted into — the key-derivation transcript, and vice versa.
  */
-const SEAL_AAD_DOMAIN = "synara.hostSecret.aad.v1";
-const PAIRING_KDF_DOMAIN = "synara.hostSecrets.pairing.kdf.v1";
-const PAIRING_CODE_DOMAIN = "synara.hostSecrets.pairing.code.v1";
+const SEAL_AAD_DOMAIN = "ramspace.hostSecret.aad.v1";
+const PAIRING_KDF_DOMAIN = "ramspace.hostSecrets.pairing.kdf.v1";
+const PAIRING_CODE_DOMAIN = "ramspace.hostSecrets.pairing.code.v1";
 
 const TEXT_ENCODER = new TextEncoder();
 const TEXT_DECODER = new TextDecoder();
@@ -85,7 +85,7 @@ export interface HostSecretEntry {
 
 /**
  * A P-256 public point in JWK form. Matches `Es256PublicKeyJwk` in
- * `@synara/contracts` structurally on purpose: a device already publishes a
+ * `@ramspace/contracts` structurally on purpose: a device already publishes a
  * P-256 key, and pairing should not introduce a second key shape for the UI
  * and the account service to keep straight.
  */
@@ -233,7 +233,7 @@ export async function generateSyncKey(): Promise<CryptoKey> {
  * Encrypts one host's secrets under the Sync Key.
  *
  * `secret` must be JSON-serializable. It is typed `unknown` on the way in and
- * out on purpose: the shape of a host's config belongs to `@synara/contracts`,
+ * out on purpose: the shape of a host's config belongs to `@ramspace/contracts`,
  * and a module that claimed to return a typed value would be vouching for
  * bytes it merely decrypted. Callers decode the result with a Schema.
  */

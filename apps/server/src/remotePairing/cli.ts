@@ -8,7 +8,7 @@ import {
   WS_NEGOTIATE_QUERY,
   WS_COMPATIBILITY_QUERY,
   type RemoteAccessRequest,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { controllerProtocol } from "../hostConnections/dialer";
 import { Schema } from "effect";
 import { discoverServerRuntime, verifyServerRuntime } from "../externalMcp/bridge";
@@ -48,7 +48,7 @@ export async function requestLocalRemoteAccess(
     [WS_COMPATIBILITY_QUERY.protocolRevision]: String(compatibility.negotiatedRevision),
     [WS_COMPATIBILITY_QUERY.serverInstanceId]: compatibility.serverInstanceId,
   });
-  const token = process.env.SYNARA_AUTH_TOKEN;
+  const token = process.env.RAMSPACE_AUTH_TOKEN;
   if (token) search.set("token", token);
   url.search = search.toString();
   return new Promise((resolve, reject) => {

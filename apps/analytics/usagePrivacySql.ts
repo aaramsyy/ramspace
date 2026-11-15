@@ -1,7 +1,7 @@
 // Closed-category SQL expressions for analytics reads during receiver-first rollout.
 // Categorize before aggregation so legacy strings cannot escape or inflate distinct installs.
-import { PRODUCT_ANALYTICS_COMMANDS } from "@synara/contracts/productAnalytics";
-import { USAGE_ANALYTICS_VOCABULARY as vocabulary } from "@synara/shared/usageAnalytics";
+import { PRODUCT_ANALYTICS_COMMANDS } from "@ramspace/contracts/productAnalytics";
+import { USAGE_ANALYTICS_VOCABULARY as vocabulary } from "@ramspace/shared/usageAnalytics";
 
 // Only bundled vocabulary enters these expressions; values still use SQL literal escaping.
 const literal = (value: string) => `'${value.replaceAll("'", "''")}'`;

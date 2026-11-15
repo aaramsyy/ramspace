@@ -1,5 +1,5 @@
 import type { MouseEvent } from "react";
-import type { ThreadId } from "@synara/contracts";
+import type { ThreadId } from "@ramspace/contracts";
 
 import { CircleCheckIcon, Undo2Icon } from "~/lib/icons";
 import { cn } from "~/lib/utils";

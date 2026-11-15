@@ -4,7 +4,7 @@ import {
   ThreadId,
   type NativeApi,
   type ThreadHandoffImportedMessage,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { describe, expect, it, vi } from "vitest";
 
 import type { Thread } from "../types";

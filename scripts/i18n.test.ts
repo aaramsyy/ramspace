@@ -98,7 +98,7 @@ describe("localization catalog validation", () => {
   });
 
   it("rejects malformed JSON, duplicate keys, nested objects, and non-string values without rewriting files", () => {
-    const directory = mkdtempSync(path.join(os.tmpdir(), "synara-i18n-"));
+    const directory = mkdtempSync(path.join(os.tmpdir(), "ramspace-i18n-"));
     temporaryDirectories.push(directory);
     mkdirSync(path.join(directory, "en"));
     const files = {
@@ -124,12 +124,12 @@ describe("localization catalog validation", () => {
   });
 
   it("protects executable examples and environment identifiers inside translated prose", () => {
-    const en = { command: "Run `codex login` with SYNARA_HOME." };
+    const en = { command: "Run `codex login` with RAMSPACE_HOME." };
     expect(
       validateCatalogs(
         {
           en: { common: en },
-          "zh-CN": { common: { command: "在 SYNARA_HOME 中运行 `codex login`。" } },
+          "zh-CN": { common: { command: "在 RAMSPACE_HOME 中运行 `codex login`。" } },
         },
         ["en", "zh-CN"],
       ),
@@ -216,7 +216,7 @@ describe("localization source inspection", () => {
     {
       file: "apps/web/src/lib/runningChatsQuitConfirmation.ts",
       source: `
-        function runningChatsQuitCopy(chats, appName = "Synara") {
+        function runningChatsQuitCopy(chats, appName = "Ramspace") {
           return {
             title: chats.length ? "Chats are still running" : \`Quit \${appName}?\`,
             description: \`Work will stop when \${appName} closes.\`,
@@ -225,7 +225,7 @@ describe("localization source inspection", () => {
             quitLabel: "Quit",
           };
         }
-        function quitResumeContinuationPrompt(appName = "Synara") {
+        function quitResumeContinuationPrompt(appName = "Ramspace") {
           return \`\${appName} was closed. Continue where you left off.\`;
         }
       `,

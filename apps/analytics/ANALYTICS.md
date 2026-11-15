@@ -33,9 +33,9 @@ The desktop surface is the sole reporter.
 Install the migration and receiver before distributing a desktop build that
 sends the new events. Existing clients cannot backfill these totals.
 
-## Current ownership: Synara monorepo
+## Current ownership: Ramspace monorepo
 
-As of 5 October 2026, this service is maintained in `apps/analytics` on Synara's
+As of 5 October 2026, this service is maintained in `apps/analytics` on Ramspace's
 `codex/cloudflare-remote-mvp` branch (PR #1412). Source imported from the former
 standalone repository at `c2fe29c`; its PR #3 no longer needs a merge to ship this
 work. The account, Worker name, bindings and endpoint are unchanged.
@@ -118,7 +118,7 @@ a successful use. There are no account-level counts or individual drill-downs.
 ## Production checkpoint — 5 October 2026
 
 Migration `0005_product_events.sql` and source commit `7f14dd0` were deployed to
-Synara Orgs. Initial Worker version: `bd556f7d-088e-4d4c-adbf-b0d02d4ad4e3`
+Ramspace Orgs. Initial Worker version: `bd556f7d-088e-4d4c-adbf-b0d02d4ad4e3`
 (created 4 October at 23:48 UTC). Existing secrets, D1/R2 bindings and rate limits
 were preserved. The daily retention schedule is installed; its first scheduled
 execution has not been observed.
@@ -183,7 +183,7 @@ no growth percentage; a zero Codex denominator produces no ratio. These remain
 client observations, not unique users or globally deduplicated turns.
 
 Reused EChart, chartChrome, Stat, TableWrap and deltaDetail. Provider logos reuse
-the SVG assets already shipped in Synara and are bundled as same-origin assets;
+the SVG assets already shipped in Ramspace and are bundled as same-origin assets;
 no external requests or broader CSP permissions. No new events or migrations.
 
 Verification: 120 tests, typecheck and build pass. Browser checks covered populated
@@ -217,10 +217,10 @@ Providers page and navigation, `/health` 200 and unauthenticated `/api/product` 
 
 ## Monorepo deployment checkpoint
 
-Synara source `67f9dec` was deployed as Worker version
+Ramspace source `67f9dec` was deployed as Worker version
 `29cd18af-d988-4d93-9a71-d31b91d0f0e6`. Verified `/healthz` 200 (`ok`),
 unauthenticated `/api/product` 401 and authenticated live Product navigation.
-The old standalone PR #3 is closed as superseded by Synara PR #1412.
+The old standalone PR #3 is closed as superseded by Ramspace PR #1412.
 
 Checks passed: 78 analytics tests, 3 native analytics tests, the actual iOS and
 iPadOS Swift senders against isolated local Worker/D1 (5 events each), build,

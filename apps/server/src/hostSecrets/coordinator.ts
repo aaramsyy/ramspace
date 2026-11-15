@@ -9,7 +9,7 @@ import type {
   PutSyncKeyWrapResponse,
   SyncKeyPairingCode,
   SyncKeyPairingRequest,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import {
   generatePairingKeyPair,
   generateSyncKey,
@@ -22,7 +22,7 @@ import {
   type HostSecretEntry,
   type PairingKeyPair,
   type WrappedSyncKey,
-} from "@synara/shared/hostSecrets";
+} from "@ramspace/shared/hostSecrets";
 
 import {
   readHostSecretsPendingRotation,

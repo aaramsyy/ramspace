@@ -3,7 +3,7 @@
 // Layer: Web UI metadata
 // Exports: editor option builders used by the chat header and open-in picker.
 
-import { EDITORS, type EditorId } from "@synara/contracts";
+import { EDITORS, type EditorId } from "@ramspace/contracts";
 import { createElement, useState } from "react";
 import type { Icon } from "./components/Icons";
 import {

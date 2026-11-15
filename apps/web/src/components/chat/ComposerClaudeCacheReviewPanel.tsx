@@ -1,5 +1,5 @@
-import type { PendingClaudeCacheReview } from "@synara/contracts";
-import { assessClaudeCache } from "@synara/shared/claudeCache";
+import type { PendingClaudeCacheReview } from "@ramspace/contracts";
+import { assessClaudeCache } from "@ramspace/shared/claudeCache";
 import { useEffect, useRef, useState } from "react";
 import { DiagnosticReportAction } from "../DiagnosticReportAction";
 import { diagnosticIssueReason, reportHandledIssue } from "~/lib/rendererErrorDiagnostics";

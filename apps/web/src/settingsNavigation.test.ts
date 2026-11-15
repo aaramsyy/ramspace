@@ -1,4 +1,4 @@
-import { isBetaFeatureEnabled, MCP_CONNECTORS_BETA_FEATURE } from "@synara/shared/betaFeatures";
+import { isBetaFeatureEnabled, MCP_CONNECTORS_BETA_FEATURE } from "@ramspace/shared/betaFeatures";
 import { describe, expect, it } from "vitest";
 
 import {

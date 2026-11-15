@@ -8,9 +8,9 @@ import {
   SessionCredentialClaims,
   SESSION_CREDENTIAL_JWT_TYP,
   SESSION_CREDENTIAL_MAX_AGE_SECONDS,
-  SYNARA_SESSION_AUDIENCE,
+  RAMSPACE_SESSION_AUDIENCE,
   type DevicePublicKeyJwk,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { Schema } from "effect";
 import { calculateJwkThumbprint, importJWK, importSPKI, jwtVerify, type JWK } from "jose";
 
@@ -40,8 +40,8 @@ export async function verifySessionCredential(input: {
     await importSPKI(input.identity.publicKeyPem, "EdDSA"),
     {
       algorithms: ["EdDSA"],
-      audience: SYNARA_SESSION_AUDIENCE,
-      issuer: `synara-host:${input.environmentId}`,
+      audience: RAMSPACE_SESSION_AUDIENCE,
+      issuer: `ramspace-host:${input.environmentId}`,
       typ: SESSION_CREDENTIAL_JWT_TYP,
       clockTolerance: JWT_CLOCK_TOLERANCE_SECONDS,
     },

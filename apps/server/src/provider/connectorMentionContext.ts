@@ -5,11 +5,11 @@
  *
  * @module provider/connectorMentionContext
  */
-import type { ProviderMentionReference } from "@synara/contracts";
+import type { ProviderMentionReference } from "@ramspace/contracts";
 import {
   isMcpConnectorMentionPath,
   serverNameFromMcpConnectorMentionPath,
-} from "@synara/shared/mcpConnectors";
+} from "@ramspace/shared/mcpConnectors";
 
 const MAX_CONNECTOR_MENTIONS = 20;
 const MAX_CONNECTOR_NAME_CHARS = 60;

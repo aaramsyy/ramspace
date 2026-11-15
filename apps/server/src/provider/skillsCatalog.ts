@@ -1,17 +1,17 @@
 // FILE: skillsCatalog.ts
 // Purpose: Generic Agent Skill discovery primitives (frontmatter parsing, SKILL.md
-//          walking) plus the unified cross-provider skills catalog backing Synara
-//          portable skills. Aggregates `~/.synara/skills` with every provider-native
+//          walking) plus the unified cross-provider skills catalog backing Ramspace
+//          portable skills. Aggregates `~/.ramspace/skills` with every provider-native
 //          skills folder, deduping by name with provider-native copies winning for
 //          the active provider.
 // Layer: Server provider discovery helper
 // Exports: parseSkillFrontmatter, collectSkillsFromRoots, discoverSkillsCatalog,
-//          mergeSkillsIntoCatalog, filterDisabledSkills, ensureSynaraSkillsDir
+//          mergeSkillsIntoCatalog, filterDisabledSkills, ensureRamspaceSkillsDir
 
 import * as fs from "node:fs/promises";
 import * as nodePath from "node:path";
 
-import type { ProviderKind, ProviderSkillDescriptor } from "@synara/contracts";
+import type { ProviderKind, ProviderSkillDescriptor } from "@ramspace/contracts";
 import YAML from "yaml";
 import { discoverClaudePluginSkillRoots } from "./claudePluginSkills.ts";
 
@@ -370,8 +370,8 @@ export interface SkillsCatalogDiscoveryInput {
   /** Optional workspace cwd; when present, project-level skill folders are included. */
   readonly cwd?: string | null;
   readonly homeDir: string;
-  /** Synara base dir (usually `~/.synara`); skills live in `{base}/skills`. */
-  readonly synaraBaseDir: string;
+  /** Ramspace base dir (usually `~/.ramspace`); skills live in `{base}/skills`. */
+  readonly ramspaceBaseDir: string;
   /** Provider whose native copies should win when the same skill exists in several roots. */
   readonly provider?: ProviderKind | null;
   /** Settings needs every origin; composer/provider pickers keep one winner by name. */
@@ -383,12 +383,12 @@ export interface SkillsCatalogDiscoveryInput {
 }
 
 export interface SkillsCatalogRootInput extends SkillsCatalogDiscoveryInput {
-  /** Native provider scans can opt out; the catalog itself always includes Synara. */
-  readonly includeSynaraRoot?: boolean;
+  /** Native provider scans can opt out; the catalog itself always includes Ramspace. */
+  readonly includeRamspaceRoot?: boolean;
 }
 
 const HOME_ORIGIN_ORDER = [
-  "synara",
+  "ramspace",
   "codex",
   "claude",
   "cursor",
@@ -414,27 +414,27 @@ interface SkillsCatalogCacheEntry {
 
 const skillsCatalogCache = new Map<string, SkillsCatalogCacheEntry>();
 const skillsCatalogInflight = new Map<string, Promise<ReadonlyArray<ProviderSkillDescriptor>>>();
-const ensuredSynaraSkillsDirs = new Set<string>();
+const ensuredRamspaceSkillsDirs = new Set<string>();
 
 export function clearSkillsCatalogCacheForTests(): void {
   skillsCatalogCache.clear();
   skillsCatalogInflight.clear();
-  ensuredSynaraSkillsDirs.clear();
+  ensuredRamspaceSkillsDirs.clear();
 }
 
-export function synaraSkillsDir(synaraBaseDir: string): string {
-  return nodePath.join(synaraBaseDir, "skills");
+export function ramspaceSkillsDir(ramspaceBaseDir: string): string {
+  return nodePath.join(ramspaceBaseDir, "skills");
 }
 
 // Creates the portable skills folder on first use so users have a drop-in target.
-export async function ensureSynaraSkillsDir(synaraBaseDir: string): Promise<string> {
-  const dir = synaraSkillsDir(synaraBaseDir);
-  if (ensuredSynaraSkillsDirs.has(dir)) {
+export async function ensureRamspaceSkillsDir(ramspaceBaseDir: string): Promise<string> {
+  const dir = ramspaceSkillsDir(ramspaceBaseDir);
+  if (ensuredRamspaceSkillsDirs.has(dir)) {
     return dir;
   }
   try {
     await fs.mkdir(dir, { recursive: true });
-    ensuredSynaraSkillsDirs.add(dir);
+    ensuredRamspaceSkillsDirs.add(dir);
   } catch {
     // Discovery still works without the folder; reads simply return nothing.
   }
@@ -449,12 +449,12 @@ interface SkillOriginRootSpec {
 }
 
 const SKILL_ORIGIN_ROOTS = {
-  synara: {
-    homeRoots: (input) => [synaraSkillsDir(input.synaraBaseDir)],
-    projectRootNames: [".synara"],
+  ramspace: {
+    homeRoots: (input) => [ramspaceSkillsDir(input.ramspaceBaseDir)],
+    projectRootNames: [".ramspace"],
   },
   codex: {
-    // Keep Synara's existing Codex-local root. Official Codex discovery uses
+    // Keep Ramspace's existing Codex-local root. Official Codex discovery uses
     // `.agents/skills`, which is represented separately by the shared origin.
     homeRoots: (input) => [nodePath.join(input.homeDir, ".codex", "skills")],
     projectRootNames: [".codex"],
@@ -542,7 +542,7 @@ function projectRootNamesForOrigin(origin: SkillsHomeOrigin): readonly string[] 
   return SKILL_ORIGIN_ROOTS[origin].projectRootNames;
 }
 
-// Native copies first so an agent keeps using its own skill, then Synara as the
+// Native copies first so an agent keeps using its own skill, then Ramspace as the
 // portable fallback, then the remaining provider homes for cross-provider reuse.
 function preferredOriginsForProvider(
   provider: ProviderKind | null | undefined,
@@ -552,19 +552,19 @@ function preferredOriginsForProvider(
 
 function orderedOriginsForProvider(
   provider: ProviderKind | null | undefined,
-  includeSynaraRoot = true,
+  includeRamspaceRoot = true,
   includeRemainingOrigins = true,
 ): SkillsHomeOrigin[] {
   const preferred = preferredOriginsForProvider(provider);
   const ordered = [...preferred];
-  if (includeSynaraRoot && !ordered.includes("synara")) {
-    ordered.push("synara");
+  if (includeRamspaceRoot && !ordered.includes("ramspace")) {
+    ordered.push("ramspace");
   }
   if (!includeRemainingOrigins) {
-    return ordered.filter((origin) => includeSynaraRoot || origin !== "synara");
+    return ordered.filter((origin) => includeRamspaceRoot || origin !== "ramspace");
   }
   for (const origin of HOME_ORIGIN_ORDER) {
-    if (!includeSynaraRoot && origin === "synara") {
+    if (!includeRamspaceRoot && origin === "ramspace") {
       continue;
     }
     if (!ordered.includes(origin)) {
@@ -622,7 +622,7 @@ function rootsForOrderedOrigins(
 export function skillsCatalogRoots(input: SkillsCatalogRootInput): SkillRoot[] {
   return rootsForOrderedOrigins(
     input,
-    orderedOriginsForProvider(input.provider, input.includeSynaraRoot !== false),
+    orderedOriginsForProvider(input.provider, input.includeRamspaceRoot !== false),
   );
 }
 
@@ -637,7 +637,7 @@ export async function discoverSkillsCatalog(
     input.cwd?.trim() ?? "",
     input.provider ?? "",
     input.homeDir,
-    input.synaraBaseDir,
+    input.ramspaceBaseDir,
     input.agentDir?.trim() ?? "",
     input.includeDuplicateOrigins ? "all-origins" : "deduped",
   ].join("\u0000");
@@ -655,7 +655,7 @@ export async function discoverSkillsCatalog(
   }
 
   const scan = (async () => {
-    await ensureSynaraSkillsDir(input.synaraBaseDir);
+    await ensureRamspaceSkillsDir(input.ramspaceBaseDir);
     const roots = [
       ...skillsCatalogRoots(input),
       ...(await discoverClaudePluginSkillRoots({

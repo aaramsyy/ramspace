@@ -11,11 +11,11 @@ import {
   HOST_CONNECT_SCOPE,
   MINT_REQUEST_JWT_TYP,
   SESSION_CREDENTIAL_JWT_TYP,
-  SYNARA_DEVICE_ISSUER,
-  SYNARA_RELAY_AUDIENCE,
-  SYNARA_SESSION_AUDIENCE,
+  RAMSPACE_DEVICE_ISSUER,
+  RAMSPACE_RELAY_AUDIENCE,
+  RAMSPACE_SESSION_AUDIENCE,
   type ApiJwks,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import {
   calculateJwkThumbprint,
   exportJWK,
@@ -33,7 +33,7 @@ import type { RelaySocket } from "../relaySocket";
 import { RemoteConnectionGateway } from "./gateway";
 import { RemoteSessionRegistry } from "./sessionRegistry";
 
-const HTU = "synara://remote/session";
+const HTU = "ramspace://remote/session";
 const API_ISSUER = "https://accounts.example.test";
 const HOST_ID = "2f1f9dd7-56a5-45cf-b847-12e6658f3720";
 
@@ -76,7 +76,7 @@ afterEach(async () => {
 });
 
 async function hostIdentity(label: string): Promise<HostIdentity> {
-  const directory = await fs.mkdtemp(path.join(os.tmpdir(), `synara-gateway-${label}-`));
+  const directory = await fs.mkdtemp(path.join(os.tmpdir(), `ramspace-gateway-${label}-`));
   temporaryDirectories.push(directory);
   return generateAndPersistHostIdentity(path.join(directory, "host.json"));
 }
@@ -94,9 +94,9 @@ async function devicePeer(identity: HostIdentity, environmentId: string, userId:
     scope: [HOST_CONNECT_SCOPE],
   })
     .setProtectedHeader({ alg: "EdDSA", typ: SESSION_CREDENTIAL_JWT_TYP })
-    .setIssuer(`synara-host:${environmentId}`)
+    .setIssuer(`ramspace-host:${environmentId}`)
     .setSubject(userId)
-    .setAudience(SYNARA_SESSION_AUDIENCE)
+    .setAudience(RAMSPACE_SESSION_AUDIENCE)
     .setIssuedAt(now)
     .setExpirationTime(now + 3_600)
     .setJti(randomUUID())
@@ -158,16 +158,16 @@ async function mintFixture(
       .setProtectedHeader({ alg: "EdDSA", typ: GRANT_JWT_TYP, kid: "api-1" })
       .setIssuer(API_ISSUER)
       .setSubject(userId)
-      .setAudience(SYNARA_RELAY_AUDIENCE)
+      .setAudience(RAMSPACE_RELAY_AUDIENCE)
       .setIssuedAt(now)
       .setExpirationTime(now + 60)
       .setJti(randomUUID())
       .sign(api.privateKey);
     return new SignJWT({ publicKeyJwk: publicKeyJwk as JWK, grant })
       .setProtectedHeader({ alg: "EdDSA", typ: MINT_REQUEST_JWT_TYP })
-      .setIssuer(SYNARA_DEVICE_ISSUER)
+      .setIssuer(RAMSPACE_DEVICE_ISSUER)
       .setSubject(userId)
-      .setAudience(`synara-host:${environmentId}`)
+      .setAudience(`ramspace-host:${environmentId}`)
       .setIssuedAt(now)
       .setExpirationTime(now + 120)
       .setJti(randomUUID())

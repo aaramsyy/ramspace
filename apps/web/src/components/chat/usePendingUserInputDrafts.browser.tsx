@@ -2,11 +2,11 @@ import {
   ApprovalRequestId,
   ThreadId,
   type OrchestrationPendingInteraction,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import {
   buildStalePendingRequestFailureDetail,
   pendingRequestInstanceKey,
-} from "@synara/shared/threadSummary";
+} from "@ramspace/shared/threadSummary";
 import { afterEach, expect, it } from "vitest";
 import { renderHook } from "vitest-browser-react";
 

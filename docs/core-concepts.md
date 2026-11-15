@@ -1,13 +1,13 @@
 # Core concepts
 
-Synara becomes much easier to use once its ownership model is clear: **each task owns one body of
+Ramspace becomes much easier to use once its ownership model is clear: **each task owns one body of
 work** — its conversation, provider session, working environment, tool activity, and Git changes.
 
 ## The hierarchy
 
 | Concept          | Meaning                                                             |
 | ---------------- | ------------------------------------------------------------------- |
-| Workspace        | The complete Synara application and the projects available in it    |
+| Workspace        | The complete Ramspace application and the projects available in it  |
 | Project          | A folder on its execution computer, preferably a Git repository     |
 | Task             | One durable unit of work inside a project                           |
 | Goal             | An explicit persistent objective attached to one task               |
@@ -68,8 +68,8 @@ decoration pauses while its chat is hidden.
   without opening the chat, and show the agent's latest reply for review before you mark it done. A
   List / Kanban switch in the header opens the Kanban board instead, and the Tasks entry remembers
   the view you picked. An agent can also keep the list from a chat: ask it to note something for
-  later and it adds a to-do with `synara_create_todo`, filed under the chat's project unless the
-  to-do is unrelated to it. `synara_list_todos` reads the list and `synara_update_todo` edits a
+  later and it adds a to-do with `ramspace_create_todo`, filed under the chat's project unless the
+  to-do is unrelated to it. `ramspace_list_todos` reads the list and `ramspace_update_todo` edits a
   to-do or marks it done. Adding a to-do starts no agent work; handing a to-do to a chat and
   deleting it stay in the Tasks view.
 - **Kanban** — the Attention view groups chat cards into Draft, In Progress, Awaiting you,
@@ -77,10 +77,10 @@ decoration pauses while its chat is hidden.
   stalled work surface in Awaiting you. Needs review requires a live-confirmed open PR in a
   dedicated worktree. Drafts can be sent as persistent goals. Kanban and Tasks reuse the
   same draft dispatcher, preserving provider-instance selection and edits made while sending.
-  The `synara_*_kanban_*` gateway tools read and drive durable cards within the caller's
+  The `ramspace_*_kanban_*` gateway tools read and drive durable cards within the caller's
   ordinary project; local composer drafts remain client-only. Gateway draft creation uses
   the local checkout; isolated worktree callers can create a task instead. These tools do
-  not change the Tasks to-do records; the `synara_*_todo` tools do.
+  not change the Tasks to-do records; the `ramspace_*_todo` tools do.
 - **Inbox** (Stable and Beta) — chats needing attention, running and finished work, review
   requests, and the day’s agent recap, starting at 4am. Inbox also shows today’s due and overdue
   to-dos: add one due today, or select it to edit and delegate through the same card as Tasks.
@@ -118,7 +118,7 @@ will stop and offers to resume it automatically on the next launch. On macOS and
 or SIGTERM from a terminal or a script, such as `bun run canary:stop`, shuts the app down without
 asking.
 
-After an unexpected server shutdown, Synara automatically continues ordinary chats that
+After an unexpected server shutdown, Ramspace automatically continues ordinary chats that
 were actively running, using their saved conversation and provider selection. The continuation
 asks the agent to verify existing operations before repeating them. Chats waiting for approval
 or an answer, chats still starting, archived chats, native subagents, delegated tasks, goals,
@@ -132,7 +132,7 @@ thread's model picker cannot change its account in place.
 
 ## Projects
 
-A project is the folder Synara works with. When remote connections are available, **Create project**
+A project is the folder Ramspace works with. When remote connections are available, **Create project**
 lets you name it, choose a computer, and browse a source folder on that computer. A new chat's
 **Run on** picker chooses its computer; the project picker then shows that computer's folders.
 Existing chats and drafts keep their original computer when you open work elsewhere.
@@ -179,7 +179,7 @@ agent can read and edit the other folders too.
 Multi-folder projects have two limits for now:
 
 - Chats run in Local mode. Worktree mode would isolate only the primary folder while the others
-  are edited live, so Synara refuses it.
+  are edited live, so Ramspace refuses it.
 - Only Codex and Claude can be granted the extra folders. Other providers refuse the chat instead
   of silently working without them.
 
@@ -225,14 +225,14 @@ using the same highlighting limit as file previews. Find, Copy code, and soft wr
 
 ### Inline visuals
 
-In Synara and Synara Beta, an agent can answer with a visual inside its reply: headline numbers, a bar or
+In Ramspace and Ramspace Beta, an agent can answer with a visual inside its reply: headline numbers, a bar or
 line chart, a table, a side-by-side comparison, a checklist or step list, a note, a small
 calculator, follow-up choices, or tabs that combine them. Ask for one ("show this as a chart") and
-the agent calls the `synara_show_visual` tool, then places the visual in its answer like a
-paragraph, with text before and after it. This works with every provider that has Synara's thread
+the agent calls the `ramspace_show_visual` tool, then places the visual in its answer like a
+paragraph, with text before and after it. This works with every provider that has Ramspace's thread
 tools (see [Providers](providers.md)).
 
-Most visuals are component specs: the agent sends data, and Synara draws it with its own
+Most visuals are component specs: the agent sends data, and Ramspace draws it with its own
 components, so a visual matches the app, the current light or dark theme, custom theme colors, and
 the chat font size. Bar charts can compare before and after on each row, with the change in
 percent. Tables sort when you click a column header and fold after ten rows.
@@ -248,13 +248,13 @@ reloads a visual.
 
 An HTML page has no border, caption, or card of its own. It sits on the chat background, spans the
 reply column, and lines up with the reply text; its title is the name screen readers announce.
-Plain headings, tables, buttons, inputs, and selects inside a page already look like Synara,
+Plain headings, tables, buttons, inputs, and selects inside a page already look like Ramspace,
 with a visible keyboard focus ring. The tool also tells agents to draw at natural size: text that
 never scales with the column, SVG at its own size, and charts sized to their data. That guidance
-shapes the page; Synara does not rewrite it. Pages follow theme and font size changes without
+shapes the page; Ramspace does not rewrite it. Pages follow theme and font size changes without
 reloading.
 
-Scripts in a visual run in a sandboxed frame with its own origin. They cannot read Synara's
+Scripts in a visual run in a sandboxed frame with its own origin. They cannot read Ramspace's
 pages, your session, or your files, or open windows or dialogs, and the page's fetches and remote
 scripts, fonts, and images are blocked. WebRTC entry points are removed before page scripts.
 A visual that tries to navigate
@@ -269,16 +269,16 @@ The transcript keeps following the end while a visual grows if you were at the e
 up, including over a visual, leaves you where you are. A visual that is no longer available
 (for example after its thread was deleted) shows **Visual unavailable.** Deleting a thread
 deletes its visuals, and undoing a turn removes that turn's visuals from the conversation.
-Visuals are not included in thread exports; an exported answer shows the `synara-visual` block
+Visuals are not included in thread exports; an exported answer shows the `ramspace-visual` block
 that placed one. Far-off HTML pages are unloaded as you scroll, so an interactive page restarts
 when you come back to it.
 
-If a connection drops while sending, Synara shows **Checking message delivery…** while it checks the original
+If a connection drops while sending, Ramspace shows **Checking message delivery…** while it checks the original
 command's durable receipt. An accepted message is retained without resending it to the provider.
-If it was not accepted, Synara records a rejection that also blocks a delayed copy, then restores
+If it was not accepted, Ramspace records a rejection that also blocks a delayed copy, then restores
 the draft for retry. This recovery requires a server advertising `orchestration.turn-dispatch-settlement`;
 older servers retain their existing error handling. If recovery reaches a server without that capability,
-Synara reports that delivery is still unknown; reconnect to an updated server and check the conversation
+Ramspace reports that delivery is still unknown; reconnect to an updated server and check the conversation
 before sending again. Socket recovery restores active subscriptions
 and reports the connection as open only after the feature socket answers.
 Recovery snapshots include the last projected rollback or revert, so messages removed while a
@@ -313,7 +313,7 @@ of the conversation and follow replies as they stream.
 The continuation checks the saved conversation and workspace before repeating operations. Already accepted user messages take priority. Manual sends, Stop, pause, archive/delete, goal changes, model/account/route changes, or disabling the setting cancel the pending recovery; re-enabling does not restore cancelled waits. Unknown resets, an uncertain delivery, and providers still performing their own retry remain under existing manual or native recovery controls. Unsent composer drafts stay on their client.
 
 For work that should continue across several turns, set a deliberate
-[thread goal](https://www.trysynara.com/docs/features/thread-goals). A goal can continue after a
+[thread goal](https://www.tryramspace.com/docs/features/thread-goals). A goal can continue after a
 clean turn, but queued user work, approvals, questions, interruptions, failures, and pause rules
 remain in control.
 
@@ -323,9 +323,9 @@ idle goal outside Plan mode, so the visible message and first turn request are
 committed together. Older hosts keep the existing goal path; this optional capability does
 not change the required protocol revision or require re-pairing.
 
-Use a [thread fork](https://www.trysynara.com/docs/workflows/forks) when a new task should inherit
+Use a [thread fork](https://www.tryramspace.com/docs/workflows/forks) when a new task should inherit
 the conversation or split from one exact turn. Use a
-[handoff](https://www.trysynara.com/docs/workflows/handoffs) when another provider should continue
+[handoff](https://www.tryramspace.com/docs/workflows/handoffs) when another provider should continue
 the same task and ownership boundary.
 
 Use **Snooze** in a thread's context menu to return to it in 30 minutes, 1 hour,
@@ -334,8 +334,8 @@ and attention badges until the reminder is due. **Return now** cancels the snooz
 choosing another time reschedules it. Snoozing preserves any running agent work.
 Sending a new message also returns the thread to the list.
 
-When due, the thread returns to recent activity and Synara shows a reminder using
-your notification settings. If Synara and its server are closed, the overdue
+When due, the thread returns to recent activity and Ramspace shows a reminder using
+your notification settings. If Ramspace and its server are closed, the overdue
 reminder is recovered when they start again.
 
 In Stable and Beta, **Auto-fix CI** in the Environment panel's pull request menu watches open PRs
@@ -386,7 +386,7 @@ Every item offers three actions:
 
 - **Send to agent** opens a new draft thread in the item's project with the item attached as a
   card. A pull request card passes its URL to the agent, without copying its description or
-  discussion into the prompt. Synara reuses an existing worktree for its branch. Otherwise it
+  discussion into the prompt. Ramspace reuses an existing worktree for its branch. Otherwise it
   checks out the branch using the project's Local/Worktree preference, falling back to
   **Settings → General → New threads**. If that branch name belongs to a known different
   fork's worktree, Local reports the conflict; choose Worktree to keep the two separate.
@@ -411,7 +411,7 @@ A task runs in one of two common environments.
 A worktree is another working directory attached to the same Git repository. It shares repository
 history while keeping files and branch state separate.
 
-Read the [Git worktrees guide](https://www.trysynara.com/docs/workflows/worktrees) before starting
+Read the [Git worktrees guide](https://www.tryramspace.com/docs/workflows/worktrees) before starting
 several tasks in the same repository.
 
 ### Cleaning up worktrees
@@ -422,7 +422,7 @@ period ends. If another task still refers to the checkout, the session has not s
 uncommitted changes, the checkout stays. Automatic archive cleanup preserves its branch so commits
 remain recoverable. Restoring an archived task later restores its conversation, but a removed
 checkout must be recreated from that branch before work resumes. **Settings → Managed worktrees**
-lists managed worktrees for explicit removal. Those removals also delete the temporary `synara/*`
+lists managed worktrees for explicit removal. Those removals also delete the temporary `ramspace/*`
 branch, its empty managed folder, and recovery
 snapshots cached for that path. Automatic retention keeps the 15 most recently archived worktrees
 and snapshots older ones before removing them; those snapshots expire after 30 days.
@@ -431,7 +431,7 @@ and snapshots older ones before removing them; those snapshots expire after 30 d
 
 ## Providers, models, and sessions
 
-A provider is the coding-agent runtime Synara operates, such as Claude Code, Codex, OpenCode, Cursor,
+A provider is the coding-agent runtime Ramspace operates, such as Claude Code, Codex, OpenCode, Cursor,
 or another supported integration.
 
 The provider supplies:
@@ -441,7 +441,7 @@ The provider supplies:
 - Its own tools and permissions
 - Its provider-specific session behavior
 
-Synara supplies the shared workspace around it:
+Ramspace supplies the shared workspace around it:
 
 - Durable tasks
 - Conversation and activity presentation
@@ -450,7 +450,7 @@ Synara supplies the shared workspace around it:
 - Approvals and user input
 - Handoffs and orchestration
 
-Each task owns a provider session. Available models and controls can differ because Synara discovers
+Each task owns a provider session. Available models and controls can differ because Ramspace discovers
 capabilities from the installed runtime and account.
 
 Provider quota warnings live under **Environment → Usage**, on the active account's row. Approaching
@@ -464,8 +464,8 @@ configuration errors remain visible.
 
 ## Handoffs
 
-A [provider handoff](https://www.trysynara.com/docs/workflows/handoffs) lets another supported
-provider continue the same task and working environment using the context Synara passes to it.
+A [provider handoff](https://www.tryramspace.com/docs/workflows/handoffs) lets another supported
+provider continue the same task and working environment using the context Ramspace passes to it.
 
 Use a handoff when:
 
@@ -478,7 +478,7 @@ A handoff does not remove the need to inspect the diff or verify the new provide
 
 ## Git, checkpoints, and review
 
-Synara treats Git as the durable review and recovery layer.
+Ramspace treats Git as the durable review and recovery layer.
 
 The intended loop is:
 
@@ -490,7 +490,7 @@ The intended loop is:
 6. Push and open a pull request when appropriate.
 
 Create PR can include uncommitted changes and create a feature branch from the default branch.
-When you supply a PR title, Synara also uses it as the commit message unless a separate commit
+When you supply a PR title, Ramspace also uses it as the commit message unless a separate commit
 message was supplied. Providing both the title and description skips text generation for this flow.
 
 Failed commit, push, and PR actions show the failed step and a copyable error until dismissed.
@@ -501,16 +501,16 @@ when its grace period extends past the request deadline, and reports termination
 the selected account or provider credentials in Settings before retrying. A failed PR step can
 follow a successful commit or push, so inspect the current branch before retrying.
 
-Synara's checkpoint and revert controls can help recover task work, but committed Git history remains
+Ramspace's checkpoint and revert controls can help recover task work, but committed Git history remains
 the strongest boundary for important changes.
 
-For providers whose live changes Synara captures from Git, an individual **Turn** diff can show
+For providers whose live changes Ramspace captures from Git, an individual **Turn** diff can show
 its latest completed file-tool snapshot before the turn finishes. It updates when the next snapshot
 is published, survives reconnects, preserves Ignore whitespace, and switches to the final checkpoint
 after capture succeeds, including interrupted turns with a captured exact baseline. A failed terminal
 capture retains the last preview; later events cannot recapture work for the settled turn.
 It does not read uncaptured worktree edits on demand. Codex cumulative turn patches can also appear
-before completion: Synara applies the exact journal revision to its captured turn-start baseline in
+before completion: Ramspace applies the exact journal revision to its captured turn-start baseline in
 a private Git index, preserving Ignore whitespace without reading later checkout edits. A missing
 baseline, mismatched patch, compacted payload or older event without integrity metadata remains
 unavailable until a fresh complete update or final checkpoint. **All turns** still uses completed
@@ -521,9 +521,9 @@ pending turn in that same Git checkout. Symlinks and nested folders share this p
 separate Git worktrees remain independent. Stop the active turn before retrying Undo.
 
 Pre-turn checkpoint and Hub output baselines share a five-second preparation budget, including
-queued work. Operators can set `SYNARA_PRE_TURN_BASELINE_TIMEOUT_MS` from 1,000 to 30,000 milliseconds;
+queued work. Operators can set `RAMSPACE_PRE_TURN_BASELINE_TIMEOUT_MS` from 1,000 to 30,000 milliseconds;
 invalid values use the default and positive values are clamped to that range. When preparation fails
-or the combined budget expires, Synara reports unavailable baselines and preserves independently
+or the combined budget expires, Ramspace reports unavailable baselines and preserves independently
 completed results. The Hub output worker reports completed, not-applicable and failed preparation separately;
 failed or inapplicable preparation is never presented as a preserved baseline. The provider starts
 after cancellation cleanup finishes, which can extend beyond the preparation budget; an absolute process-cleanup bound has not been verified. A bounded exact-ref
@@ -535,9 +535,9 @@ Environment's Changes row for the latest turn instead of repeating among tool ca
 and revert failures remain in the transcript. The stored diagnostic and missing-checkpoint state
 are preserved.
 
-Synara never reconstructs the initial state from files the provider may already have changed.
-Native provider turns, including native child turns, may begin without Synara's pre-send preparation;
-Synara never takes a replacement capture. Expected missing-baseline notices for native children are
+Ramspace never reconstructs the initial state from files the provider may already have changed.
+Native provider turns, including native child turns, may begin without Ramspace's pre-send preparation;
+Ramspace never takes a replacement capture. Expected missing-baseline notices for native children are
 suppressed when they have no independent send, while failures of their own sends and actual capture
 errors remain visible. Diff and file undo that require an exact initial checkpoint remain unavailable,
 and Hub output discovery is unavailable for turns without a prepared Hub baseline. File Undo
@@ -574,7 +574,7 @@ Risky parallel tasks:
 - Depend on unstated assumptions from another task
 - All attempt to "finish the feature" without distinct ownership
 
-Read the [parallel agents guide](https://www.trysynara.com/docs/workflows/parallel-agents) before
+Read the [parallel agents guide](https://www.tryramspace.com/docs/workflows/parallel-agents) before
 scaling beyond one task.
 
 ## Useful shortcuts
@@ -598,7 +598,7 @@ returns to its source; a standalone Side in a non-source pane returns to the spl
 source. Split headers keep the diff panel toggle without showing change totals,
 and omit expand and replace controls.
 
-Check the [keyboard reference](https://www.trysynara.com/docs/reference/keyboard-shortcuts) for the
+Check the [keyboard reference](https://www.tryramspace.com/docs/reference/keyboard-shortcuts) for the
 complete current list.
 
 > **The rule that matters most:** a task is complete only after you understand and verify its result

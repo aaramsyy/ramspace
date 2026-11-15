@@ -5,7 +5,7 @@ import {
   ProjectId,
   type ServerProviderStatus,
   ThreadId,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { resetComposerDraftStore } from "../composerDraftStoreTestFixtures";

@@ -4,7 +4,7 @@ import { executionStorage } from "./lib/hosts/executionStorage";
 // Layer: UI state store
 // Exports: useRecentViewsStore
 
-import type { ThreadId } from "@synara/contracts";
+import type { ThreadId } from "@ramspace/contracts";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import {
@@ -23,7 +23,7 @@ interface RecentViewsStoreState {
   pruneRecentViews: (availability: RecentViewAvailability) => void;
 }
 
-const RECENT_VIEWS_STORAGE_KEY = "synara:recent-views:v1";
+const RECENT_VIEWS_STORAGE_KEY = "ramspace:recent-views:v1";
 
 function normalizeOptionalId(value: unknown): string | undefined {
   return typeof value === "string" && value.trim().length > 0 ? value.trim() : undefined;

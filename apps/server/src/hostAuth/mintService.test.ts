@@ -8,10 +8,10 @@ import {
   GRANT_JWT_TYP,
   HOST_CONNECT_SCOPE,
   MINT_REQUEST_JWT_TYP,
-  SYNARA_DEVICE_ISSUER,
-  SYNARA_RELAY_AUDIENCE,
+  RAMSPACE_DEVICE_ISSUER,
+  RAMSPACE_RELAY_AUDIENCE,
   type ApiJwks,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import {
   calculateJwkThumbprint,
   exportJWK,
@@ -50,7 +50,7 @@ describe("HostMintService", () => {
 
   beforeEach(async () => {
     hostIdentity = await generateAndPersistHostIdentity(
-      path.join(await mkdtemp(path.join(tmpdir(), "synara-mint-")), "host.json"),
+      path.join(await mkdtemp(path.join(tmpdir(), "ramspace-mint-")), "host.json"),
     );
     api = await keyPair();
     wrongApi = await keyPair();
@@ -93,7 +93,7 @@ describe("HostMintService", () => {
       .setProtectedHeader({ alg: "EdDSA", typ: GRANT_JWT_TYP, kid: options.kid ?? "api-1" })
       .setIssuer(API_ISSUER)
       .setSubject(options.subject ?? USER_ID)
-      .setAudience(options.audience ?? SYNARA_RELAY_AUDIENCE)
+      .setAudience(options.audience ?? RAMSPACE_RELAY_AUDIENCE)
       .setIssuedAt(options.issuedAt ?? NOW)
       .setExpirationTime(options.expiresAt ?? NOW + 60)
       .setJti(options.jti ?? randomUUID())
@@ -115,9 +115,9 @@ describe("HostMintService", () => {
         alg: device.publicJwk.kty === "EC" ? "ES256" : "EdDSA",
         typ: options.typ ?? MINT_REQUEST_JWT_TYP,
       })
-      .setIssuer(SYNARA_DEVICE_ISSUER)
+      .setIssuer(RAMSPACE_DEVICE_ISSUER)
       .setSubject(options.subject ?? USER_ID)
-      .setAudience(`synara-host:${ENVIRONMENT_ID}`)
+      .setAudience(`ramspace-host:${ENVIRONMENT_ID}`)
       .setIssuedAt(options.issuedAt ?? NOW)
       .setExpirationTime(options.expiresAt ?? NOW + 120)
       .setJti(randomUUID())
@@ -268,7 +268,7 @@ describe("HostMintService", () => {
     device = await keyPair("ES256");
     deviceJkt = await calculateJwkThumbprint(device.publicJwk, "sha256");
     const result = await service().mint(await mintRequest(await grant()));
-    const htu = "synara://remote/session";
+    const htu = "ramspace://remote/session";
     const dpop = await new SignJWT({
       htu,
       htm: "CONNECT",

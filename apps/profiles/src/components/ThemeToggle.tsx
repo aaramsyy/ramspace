@@ -1,12 +1,12 @@
 "use client";
 
-// The light/dark toggle: writes the `synara-theme` localStorage key and
+// The light/dark toggle: writes the `ramspace-theme` localStorage key and
 // flips `.dark` on <html>. The only client component this app has —
 // everything else stays SSR.
 
 import { useEffect, useState } from "react";
 
-const THEME_KEY = "synara-theme";
+const THEME_KEY = "ramspace-theme";
 
 function isDarkNow(): boolean {
   return document.documentElement.classList.contains("dark");

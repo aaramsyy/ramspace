@@ -38,7 +38,7 @@ it("chat creates only an inert proposal, rejects forged approval, and keeps secr
         surface: surfaced,
         resolveWorkspaceRoot: () => Effect.succeed(process.cwd()),
       });
-      const add = tools.find((tool) => tool.definition.name === "synara_add_mcp_connector")!;
+      const add = tools.find((tool) => tool.definition.name === "ramspace_add_mcp_connector")!;
       const input = {
         name: "Local",
         command: "nonexistent-fixture-command",

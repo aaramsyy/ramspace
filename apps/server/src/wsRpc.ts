@@ -7,12 +7,12 @@ import {
 } from "./desktopUpdateRpc";
 import { QueuedTurnPromotionRepository } from "./persistence/Services/QueuedTurnPromotions";
 import { AutomationRepository } from "./persistence/Services/AutomationRepository";
-import { RemoteAgentResult } from "@synara/contracts";
-import { parseComputerInvocation } from "@synara/shared/computerInvocation";
+import { RemoteAgentResult } from "@ramspace/contracts";
+import { parseComputerInvocation } from "@ramspace/shared/computerInvocation";
 import { superviseHostConnections } from "./hostConnections/supervisor";
 import { remoteConnectionsUnavailableReason } from "./remoteFeaturePolicy";
 import { accountStateDirectory } from "./accountAuth";
-import { REMOTE_NATIVE_UNAVAILABLE } from "@synara/shared/remoteCapabilities";
+import { REMOTE_NATIVE_UNAVAILABLE } from "@ramspace/shared/remoteCapabilities";
 import { AuthControlPlane } from "./auth/Services/AuthControlPlane";
 import { RemoteDeviceTrustRepository } from "./persistence/Services/RemoteDeviceTrust";
 import { makeRemoteAccessManagement } from "./remotePairing/management";
@@ -68,7 +68,7 @@ import {
   type ServerDiagnosticsResult,
   type ServerLifecycleStreamEvent,
   type ServerSettings,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { clamp } from "effect/Number";
 import { Effect, FileSystem, Layer, Option, Path, Queue, Schema, Scope, Stream } from "effect";
 import * as Arr from "effect/Array";
@@ -80,7 +80,7 @@ import { AutomationService } from "./automation/Services/AutomationService";
 import { TodoService } from "./todo/Services/TodoService";
 import { isServerBetaFeatureEnabled } from "./betaFeatureGate";
 import { readInlineVisual } from "./inlineVisualStore";
-import { INLINE_VISUALS_BETA_FEATURE } from "@synara/shared/betaFeatures";
+import { INLINE_VISUALS_BETA_FEATURE } from "@ramspace/shared/betaFeatures";
 import { ProjectAgentService } from "./projectAgent/Services/ProjectAgentService";
 import { isGroupCoordinatorHostProject } from "./projectAgent/groupCoordinatorHost";
 import {
@@ -130,20 +130,20 @@ import { CheckpointDiffQuery } from "./checkpointing/Services/CheckpointDiffQuer
 import { resolveThreadWorkspaceCwd } from "./checkpointing/Utils";
 import { ServerConfig, type ServerConfigShape } from "./config";
 import { realpathNearestExisting } from "./realpathNearestExisting";
-import { isGroupContainerKind } from "@synara/shared/projectContainers";
-import { PROJECT_FOLDERS_WORKTREE_ISSUE } from "@synara/shared/projectFolders";
-import { workspaceRootsEqual } from "@synara/shared/threadWorkspace";
-import { WORKSPACE_FILE_WRITE_CONFLICT_CODE } from "@synara/shared/workspaceFileWrite";
+import { isGroupContainerKind } from "@ramspace/shared/projectContainers";
+import { PROJECT_FOLDERS_WORKTREE_ISSUE } from "@ramspace/shared/projectFolders";
+import { workspaceRootsEqual } from "@ramspace/shared/threadWorkspace";
+import { WORKSPACE_FILE_WRITE_CONFLICT_CODE } from "@ramspace/shared/workspaceFileWrite";
 import {
   mergeProviderStartOptions,
   providerStartOptionsFromInstance,
   resolveModelSelectionInstanceId,
   resolveProviderInstance,
-} from "@synara/shared/providerInstances";
+} from "@ramspace/shared/providerInstances";
 import {
   isThreadDetailEventFor,
   THREAD_DETAIL_EVENT_TYPES,
-} from "@synara/shared/threadDetailEvents";
+} from "@ramspace/shared/threadDetailEvents";
 import { listStudioThreadOutputs } from "./studioOutputs";
 import {
   ensureStudioWorkspaceInstructionsFiles,
@@ -207,7 +207,7 @@ import { ProjectionStateIncompleteError } from "./persistence/Errors";
 import { ProjectionSnapshotQuery } from "./orchestration/Services/ProjectionSnapshotQuery";
 import { shouldPublishThreadShellForEvent } from "./orchestration/threadShellEvents";
 import { ProviderDiscoveryService } from "./provider/Services/ProviderDiscoveryService";
-import { discoverSkillsCatalog, synaraSkillsDir } from "./provider/skillsCatalog";
+import { discoverSkillsCatalog, ramspaceSkillsDir } from "./provider/skillsCatalog";
 import { recoverUnregisteredGitHubCheckout } from "./project/githubProjectRegistration";
 import { ProviderAdapterRegistry } from "./provider/Services/ProviderAdapterRegistry";
 import { ProviderHealth } from "./provider/Services/ProviderHealth";
@@ -1500,7 +1500,7 @@ const makeWsRpcHandlersLayer = () =>
       });
       const requireConnectorsOwner = requireConnectorsEnabled.pipe(
         Effect.andThen(
-          requireLoopbackOwner("Connectors can be managed only on the computer running Synara."),
+          requireLoopbackOwner("Connectors can be managed only on the computer running Ramspace."),
         ),
       );
       // Paired devices may read the list to mention a connector; managing one stays
@@ -2173,7 +2173,7 @@ const makeWsRpcHandlersLayer = () =>
                     operationId: input.operationId,
                     kind: "phase",
                     phase: "registering",
-                    message: "Adding project to Synara",
+                    message: "Adding project to Ramspace",
                   });
 
                   const { command: normalizedCommand, prepareWorkspaceRoot } =
@@ -3058,13 +3058,13 @@ const makeWsRpcHandlersLayer = () =>
               discoverSkillsCatalog({
                 cwd: input.cwd ?? null,
                 homeDir: config.homeDir,
-                synaraBaseDir: config.baseDir,
+                ramspaceBaseDir: config.baseDir,
                 includeDuplicateOrigins: true,
               }),
             ).pipe(
               Effect.map((skills) => ({
                 skills,
-                synaraSkillsDir: synaraSkillsDir(config.baseDir),
+                ramspaceSkillsDir: ramspaceSkillsDir(config.baseDir),
               })),
             ),
             "Failed to list the skills catalog",
@@ -3680,7 +3680,7 @@ export function authenticateRpcWebSocketUpgrade(input: {
     input.request.url?.searchParams.has("wsToken") ||
     input.request.headers.authorization ||
     Object.entries(input.request.cookies).some(
-      ([name, value]) => /^synara_session(?:_\d+)?$/.test(name) && Boolean(value),
+      ([name, value]) => /^ramspace_session(?:_\d+)?$/.test(name) && Boolean(value),
     );
   const route = (remoteBillingEnforced: boolean): "local" | "authenticate" => {
     // The local desktop retains its private-token authority even with a stale browser cookie.
@@ -3870,7 +3870,7 @@ function makeWsNegotiateHttpRouteLayer() {
               headers: { "Cache-Control": "no-store", Vary: "Origin" },
             });
           }
-          // The desktop app fetches cross-origin (synara://app); reflect only
+          // The desktop app fetches cross-origin (ramspace://app); reflect only
           // origins the WS upgrade itself would trust.
           const origin = normalizeCorsOrigin(request.headers.origin);
           const corsHeaders =

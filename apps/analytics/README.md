@@ -1,15 +1,15 @@
-# Synara analytics and Beta diagnostics
+# Ramspace analytics and Beta diagnostics
 
 This workspace owns the Cloudflare receiving Worker, private dashboard, D1
 migrations, legacy ingestion forwarder and their tests. It includes Product
 Overview, Providers, Tokens and Reliability, plus Beta release/crash diagnostics.
 
-- Live: https://synara-beta-diagnostics.synara-orgs.workers.dev/#/product
+- Live: https://ramspace-beta-diagnostics.ramspace-orgs.workers.dev/#/product
 - Privacy and client contract: [diagnostics](../../docs/diagnostics.md).
 - Metrics and historical deployments: [ANALYTICS.md](ANALYTICS.md).
 - Previous account migration: [MIGRATION.md](MIGRATION.md) (historical, not a setup requirement).
 
-## From the Synara repository root
+## From the Ramspace repository root
 
 ```bash
 bun install --frozen-lockfile
@@ -20,7 +20,7 @@ bun run --cwd apps/analytics build
 
 Root Turbo tests/typechecks include this workspace. CI also builds the dashboard
 and dry-runs the Worker bundle. The Worker imports the canonical
-`@synara/shared/diagnosticsRedaction`; its regression tests remain in packages/shared.
+`@ramspace/shared/diagnosticsRedaction`; its regression tests remain in packages/shared.
 
 ## Local development
 
@@ -28,8 +28,8 @@ Create `apps/analytics/.dev.vars` (ignored) with local-only
 `DASHBOARD_PASSWORD` and `DASHBOARD_SESSION_KEY`. From `apps/analytics`:
 
 ```bash
-bunx wrangler d1 migrations apply synara-beta-diagnostics --local
-bunx wrangler d1 execute synara-beta-diagnostics --local --file seed/local.sql
+bunx wrangler d1 migrations apply ramspace-beta-diagnostics --local
+bunx wrangler d1 execute ramspace-beta-diagnostics --local --file seed/local.sql
 bun run dev --port 8787
 ```
 
@@ -37,7 +37,7 @@ Choose an unused port; local fixtures never belong in the production database.
 
 ## Deployment
 
-From the root, with an authorized Synara Orgs Wrangler session:
+From the root, with an authorized Ramspace Orgs Wrangler session:
 
 ```bash
 bun run --cwd apps/analytics deploy
@@ -64,8 +64,8 @@ before deploying the receiver that writes it. Some environments intentionally sk
 run those cleanups. Instead:
 
 1. Record a D1 Time Travel bookmark (`bunx wrangler d1 time-travel info
-synara-beta-diagnostics`).
-2. Apply only this file with `bunx wrangler d1 execute synara-beta-diagnostics --remote
+ramspace-beta-diagnostics`).
+2. Apply only this file with `bunx wrangler d1 execute ramspace-beta-diagnostics --remote
 --file migrations/0014_product_turn_failures.sql`, then record it in `d1_migrations`
    using the same procedure as earlier selective migrations.
 3. Check `PRAGMA table_info(product_events)` shows `failure` and `http_status`. If the
@@ -130,7 +130,7 @@ individual arrival times. Only the 14-day deduplication receipts keep arrival ti
 
 The existing daily scheduled sweep also reads the public GitHub Releases API,
 without credentials or installer binaries. It shares the marketing installer
-artifact parser (`@synara/shared/installerDownloads`): only `.dmg`, `.exe` and
+artifact parser (`@ramspace/shared/installerDownloads`): only `.dmg`, `.exe` and
 `.AppImage` asset `download_count` counters qualify. Pagination is capped at ten
 100-release pages, 8 MiB total response bytes, 10,000 installer assets and a
 20-second source deadline. Hitting any limit, malformed data, rate limits or a

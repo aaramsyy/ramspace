@@ -12,7 +12,7 @@
 //          isDefaultAccountIdentityField, providerInstanceConfigKey,
 //          providerInstanceLaunchConfigFor
 
-import type { ProviderKind } from "@synara/contracts";
+import type { ProviderKind } from "@ramspace/contracts";
 import type { ReactNode } from "react";
 
 import type { AppSettings } from "~/appSettings";

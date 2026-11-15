@@ -19,7 +19,7 @@ async function acquire(credentialsPath: string): Promise<DatabaseLifecycleLock> 
     try {
       await fs.lstat(`${credentialsPath}.lock`);
       throw new Error(
-        "Legacy credential lock present. Stop older Synara processes and recover the credential lock before retrying.",
+        "Legacy credential lock present. Stop older Ramspace processes and recover the credential lock before retrying.",
       );
     } catch (cause) {
       if ((cause as NodeJS.ErrnoException).code !== "ENOENT") throw cause;

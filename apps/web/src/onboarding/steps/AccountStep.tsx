@@ -3,7 +3,7 @@
 //          code) in a card, between what the account is for and what stays local.
 // Layer: Web UI component
 
-import type { AccountStatus } from "@synara/contracts";
+import type { AccountStatus } from "@ramspace/contracts";
 
 import { SignInPanel } from "~/components/account/SignInDialog";
 import { useTranslation } from "~/i18n";

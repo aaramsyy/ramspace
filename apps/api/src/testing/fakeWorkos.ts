@@ -387,7 +387,7 @@ export async function startFakeWorkos(options: StartFakeWorkosOptions = {}): Pro
   });
 
   /**
-   * The token endpoint, covering the grants Synara uses: Magic Auth, the
+   * The token endpoint, covering the grants Ramspace uses: Magic Auth, the
    * PKCE code exchange, and refresh. Error bodies use the OAuth
    * `error`/`error_description` shape the client decodes.
    */

@@ -2,7 +2,7 @@ import {
   HOST_SESSION_CLOSE_REVOKED,
   type HostAuthorizationSnapshot,
   type HostSession,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { Layer, ServiceMap } from "effect";
 
 export interface RemoteSession {
@@ -217,7 +217,7 @@ export class RemoteSessionRegistry {
 export class RemoteSessionRegistryService extends ServiceMap.Service<
   RemoteSessionRegistryService,
   RemoteSessionRegistry
->()("synara/RemoteSessionRegistry") {}
+>()("ramspace/RemoteSessionRegistry") {}
 
 export const RemoteSessionRegistryLive = Layer.sync(
   RemoteSessionRegistryService,

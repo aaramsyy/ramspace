@@ -5,7 +5,7 @@
  * keystore. Every proof this module mints — registration, DPoP, mint request —
  * is signed by that key, so the shapes have to match the verifiers in
  * `apps/api` and (Slice C) the host byte for byte. The claim schemas and `typ`
- * strings live in `@synara/contracts`; nothing here redefines them.
+ * strings live in `@ramspace/contracts`; nothing here redefines them.
  *
  * Environment-agnostic on purpose: the browser, the Electron renderer, the
  * desktop main process and Node tests all run this same code, so it touches
@@ -25,11 +25,11 @@ import {
   DPOP_JWT_TYP,
   MINT_REQUEST_JWT_TYP,
   MINT_REQUEST_MAX_AGE_SECONDS,
-  SYNARA_DEVICE_ISSUER,
+  RAMSPACE_DEVICE_ISSUER,
   type AccountDevicePlatform,
   type DevicePublicKeyJwk,
   type Es256PublicKeyJwk,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { base64url, calculateJwkThumbprint, SignJWT, type JWK } from "jose";
 
 /**
@@ -39,9 +39,9 @@ import { base64url, calculateJwkThumbprint, SignJWT, type JWK } from "jose";
 export const DEVICE_KEY_ALGORITHM = { name: "ECDSA", namedCurve: "P-256" } as const;
 export const DEVICE_KEY_JWS_ALGORITHM = "ES256" as const;
 
-/** Audience of everything addressed to one host: `synara-host:<environmentId>`. */
+/** Audience of everything addressed to one host: `ramspace-host:<environmentId>`. */
 export function hostAudience(environmentId: string): string {
-  return `synara-host:${environmentId}`;
+  return `ramspace-host:${environmentId}`;
 }
 
 /**
@@ -174,7 +174,7 @@ export interface DeviceRegistrationInput extends ProofTiming {
 }
 
 /**
- * `synara-device-register+jwt` — proof of possession for `POST /devices`.
+ * `ramspace-device-register+jwt` — proof of possession for `POST /devices`.
  *
  * Trust-on-first-use: the API has never seen this key, so the proof carries
  * the public JWK and is verified against it, then thumbprinted into the `jkt`
@@ -191,7 +191,7 @@ export async function signDeviceRegistration(input: DeviceRegistrationInput): Pr
       alg: jwsAlgorithmFor(input.publicJwk),
       typ: DEVICE_REGISTER_JWT_TYP,
     })
-    .setIssuer(SYNARA_DEVICE_ISSUER)
+    .setIssuer(RAMSPACE_DEVICE_ISSUER)
     .setSubject(input.userId)
     .setAudience(input.audience)
     .setIssuedAt(iat)
@@ -266,13 +266,13 @@ export interface MintRequestInput extends ProofTiming {
   readonly key: DeviceSigningKey;
   readonly publicJwk: DevicePublicKeyJwk;
   readonly userId: string;
-  /** The API-issued `synara-grant+jwt`, echoed whole. */
+  /** The API-issued `ramspace-grant+jwt`, echoed whole. */
   readonly grant: string;
   readonly environmentId: string;
 }
 
 /**
- * `synara-mint-request+jwt` — asks a host to mint a session credential.
+ * `ramspace-mint-request+jwt` — asks a host to mint a session credential.
  *
  * The grant is echoed verbatim rather than summarized: the host verifies the
  * grant's own signature against the API's JWKS, so anything this client says
@@ -286,7 +286,7 @@ export async function signMintRequest(input: MintRequestInput): Promise<string> 
       alg: jwsAlgorithmFor(input.publicJwk),
       typ: MINT_REQUEST_JWT_TYP,
     })
-    .setIssuer(SYNARA_DEVICE_ISSUER)
+    .setIssuer(RAMSPACE_DEVICE_ISSUER)
     .setSubject(input.userId)
     .setAudience(hostAudience(input.environmentId))
     .setIssuedAt(iat)

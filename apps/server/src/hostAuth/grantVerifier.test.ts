@@ -3,9 +3,9 @@ import { randomUUID } from "node:crypto";
 import {
   GRANT_JWT_TYP,
   HOST_CONNECT_SCOPE,
-  SYNARA_RELAY_AUDIENCE,
+  RAMSPACE_RELAY_AUDIENCE,
   type ApiJwks,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { calculateJwkThumbprint, exportJWK, generateKeyPair, SignJWT } from "jose";
 import { beforeAll, describe, expect, it } from "vitest";
 
@@ -49,7 +49,7 @@ describe("HostGrantVerifier", () => {
       .setProtectedHeader({ alg: "EdDSA", typ: GRANT_JWT_TYP, kid: "api-1" })
       .setIssuer(API_ISSUER)
       .setSubject(claims.sub ?? OWNER)
-      .setAudience(SYNARA_RELAY_AUDIENCE)
+      .setAudience(RAMSPACE_RELAY_AUDIENCE)
       .setIssuedAt(expiresAt - 60)
       .setExpirationTime(expiresAt)
       .setJti(jti)

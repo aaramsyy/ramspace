@@ -1,5 +1,5 @@
 import { useTranslation } from "~/i18n";
-import type { ThreadId } from "@synara/contracts";
+import type { ThreadId } from "@ramspace/contracts";
 import { useComposerDraftStore } from "../../composerDraftStore";
 import {
   restoreUserInputDraft,

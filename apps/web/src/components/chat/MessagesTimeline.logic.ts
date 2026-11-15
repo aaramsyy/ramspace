@@ -9,8 +9,8 @@ import {
   type OrchestrationLatestTurn,
   type OrchestrationThreadActivity,
   type TurnId,
-} from "@synara/contracts";
-import { readInlineVisualEmbedIds } from "@synara/shared/inlineVisual";
+} from "@ramspace/contracts";
+import { readInlineVisualEmbedIds } from "@ramspace/shared/inlineVisual";
 import { t } from "~/i18n";
 import { type TimelineEntry, type WorkLogEntry, formatElapsed } from "../../session-logic";
 import { isCodexRuntimeWarningType, type WorkLogUserInputExchangeItem } from "../../workLog";
@@ -697,7 +697,7 @@ export type MessagesTimelineRow =
       entry: WorkLogEntry & { userInputExchange: ReadonlyArray<WorkLogUserInputExchangeItem> };
     }
   | {
-      // A visual the agent published with `synara_show_visual`. Like the plan
+      // A visual the agent published with `ramspace_show_visual`. Like the plan
       // card and answered questions it stays visible when the turn folds.
       kind: "inline-visual";
       id: string;
@@ -1060,7 +1060,7 @@ export function isStandaloneWorkEntry(
   entry: Pick<
     WorkLogEntry,
     | "connectorProposalId"
-    | "synaraWorkerNotice"
+    | "ramspaceWorkerNotice"
     | "providerHandoff"
     | "turnFailure"
     | "subagentRun"
@@ -1071,7 +1071,7 @@ export function isStandaloneWorkEntry(
 ): boolean {
   return Boolean(
     entry.connectorProposalId ||
-    entry.synaraWorkerNotice ||
+    entry.ramspaceWorkerNotice ||
     entry.providerHandoff ||
     entry.turnFailure ||
     entry.subagentRun ||
@@ -2056,9 +2056,9 @@ function workLogAutomationsEqual(a: WorkLogEntry["automation"], b: WorkLogEntry[
   );
 }
 
-function workLogSynaraThreadCreationsEqual(
-  a: WorkLogEntry["synaraThreadCreation"],
-  b: WorkLogEntry["synaraThreadCreation"],
+function workLogRamspaceThreadCreationsEqual(
+  a: WorkLogEntry["ramspaceThreadCreation"],
+  b: WorkLogEntry["ramspaceThreadCreation"],
 ) {
   if (a === b) return true;
   if (!a || !b) return false;
@@ -2175,7 +2175,7 @@ function workLogEntryContentEqual(a: WorkLogEntry, b: WorkLogEntry): boolean {
     workLogSubagentRunsEqual(a.subagentRun, b.subagentRun) &&
     workLogAutomationsEqual(a.automation, b.automation) &&
     a.connectorProposalId === b.connectorProposalId &&
-    workLogSynaraThreadCreationsEqual(a.synaraThreadCreation, b.synaraThreadCreation) &&
+    workLogRamspaceThreadCreationsEqual(a.ramspaceThreadCreation, b.ramspaceThreadCreation) &&
     workLogLiveActivitiesEqual(a.liveActivity, b.liveActivity) &&
     workLogToolDetailsEqual(a.toolDetails, b.toolDetails) &&
     workLogBackgroundTasksEqual(a.backgroundTask, b.backgroundTask) &&

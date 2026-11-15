@@ -5,7 +5,7 @@ import type {
   ProjectId,
   PullRequestActor,
   PullRequestListEntry,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 
 import {
   filterInboxItemsByInvolvement,

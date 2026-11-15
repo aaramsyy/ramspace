@@ -22,7 +22,7 @@ import {
   ThreadSidechatContext,
   UsageLimitRecovery,
   UsageLimitRecoverySource,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 
 const SqliteBoolean = Schema.Number.pipe(
   Schema.decodeTo(Schema.Boolean, {

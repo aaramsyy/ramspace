@@ -1,4 +1,4 @@
-import type { RemotePairingBundle } from "@synara/contracts";
+import type { RemotePairingBundle } from "@ramspace/contracts";
 import { connectRemoteWebSocket } from "../../server/src/remoteTransport/tunnel";
 import type { RemoteTlsAnchor } from "../../server/src/remoteTransport/certificates";
 import { pairRemoteHost } from "../../server/src/remotePairing/client";
@@ -8,7 +8,7 @@ import {
   RegisterDeviceResponse,
   type AccountDevice,
   type AccountDevicePlatform,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import {
   deviceThumbprint,
   exportPublicJwk,
@@ -16,12 +16,12 @@ import {
   signDeviceRegistration,
   signDpopProof,
   signMintRequest,
-} from "@synara/shared/deviceKey";
+} from "@ramspace/shared/deviceKey";
 import {
   raceTransports,
   type TransportCandidate,
   type TransportKind,
-} from "@synara/shared/transportRace";
+} from "@ramspace/shared/transportRace";
 import { Schema } from "effect";
 import WebSocket from "ws";
 
@@ -432,7 +432,7 @@ export class HeadlessClient implements AsyncDisposable {
       key: identity.key,
       publicJwk: identity.publicJwk,
       method: "CONNECT",
-      url: "synara://remote/session",
+      url: "ramspace://remote/session",
       accessToken: credential,
     });
     await sendFrame(

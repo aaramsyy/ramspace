@@ -7,7 +7,7 @@ import {
   type ProviderKind,
   type ServerCodexResetCredits,
   type ServerGetProviderUsageSnapshotResult,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { type ReactNode } from "react";
 
 import { useAppSettings } from "~/appSettings";

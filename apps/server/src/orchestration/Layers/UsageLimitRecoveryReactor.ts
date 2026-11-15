@@ -7,7 +7,7 @@ import {
   type OrchestrationEvent,
   type OrchestrationThreadShell,
   type ThreadId,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { Cause, Clock, Duration, Effect, Layer, Option, Queue, Schedule, Stream } from "effect";
 
 import { ProviderCommandReactor } from "../Services/ProviderCommandReactor.ts";

@@ -10,12 +10,12 @@ import {
   NATIVE_EDITOR_BETA_FEATURE,
 } from "./betaFeatures";
 import {
-  SYNARA_BETA_BUNDLE_ID,
-  SYNARA_CANARY_BUNDLE_ID,
-  SYNARA_CUA_BUNDLE_ID,
-  SYNARA_DEVELOPMENT_BUNDLE_ID,
-  SYNARA_PRODUCTION_BUNDLE_ID,
-  SYNARA_REMOTE_BUNDLE_ID,
+  RAMSPACE_BETA_BUNDLE_ID,
+  RAMSPACE_CANARY_BUNDLE_ID,
+  RAMSPACE_CUA_BUNDLE_ID,
+  RAMSPACE_DEVELOPMENT_BUNDLE_ID,
+  RAMSPACE_PRODUCTION_BUNDLE_ID,
+  RAMSPACE_REMOTE_BUNDLE_ID,
 } from "./desktopIdentity";
 
 describe("isBetaFeatureEnabled", () => {
@@ -105,16 +105,16 @@ describe("isBetaFeatureEnabled", () => {
 
 describe("desktopFlavorFromBundleId", () => {
   it("maps each known bundle id", () => {
-    expect(desktopFlavorFromBundleId(SYNARA_PRODUCTION_BUNDLE_ID)).toBe("production");
-    expect(desktopFlavorFromBundleId(SYNARA_DEVELOPMENT_BUNDLE_ID)).toBe("development");
-    expect(desktopFlavorFromBundleId(SYNARA_CANARY_BUNDLE_ID)).toBe("canary");
-    expect(desktopFlavorFromBundleId(SYNARA_CUA_BUNDLE_ID)).toBe("cua");
-    expect(desktopFlavorFromBundleId(SYNARA_BETA_BUNDLE_ID)).toBe("beta");
-    expect(desktopFlavorFromBundleId(SYNARA_REMOTE_BUNDLE_ID)).toBe("remote");
+    expect(desktopFlavorFromBundleId(RAMSPACE_PRODUCTION_BUNDLE_ID)).toBe("production");
+    expect(desktopFlavorFromBundleId(RAMSPACE_DEVELOPMENT_BUNDLE_ID)).toBe("development");
+    expect(desktopFlavorFromBundleId(RAMSPACE_CANARY_BUNDLE_ID)).toBe("canary");
+    expect(desktopFlavorFromBundleId(RAMSPACE_CUA_BUNDLE_ID)).toBe("cua");
+    expect(desktopFlavorFromBundleId(RAMSPACE_BETA_BUNDLE_ID)).toBe("beta");
+    expect(desktopFlavorFromBundleId(RAMSPACE_REMOTE_BUNDLE_ID)).toBe("remote");
   });
 
   it("trims surrounding whitespace", () => {
-    expect(desktopFlavorFromBundleId(` ${SYNARA_BETA_BUNDLE_ID} `)).toBe("beta");
+    expect(desktopFlavorFromBundleId(` ${RAMSPACE_BETA_BUNDLE_ID} `)).toBe("beta");
   });
 
   it("returns unknown for blank or unrecognized ids", () => {
@@ -127,15 +127,15 @@ describe("desktopFlavorFromBundleId", () => {
 
 describe("desktopFlavorFromProtocol", () => {
   it("maps each desktop scheme", () => {
-    expect(desktopFlavorFromProtocol("synara-beta:", false)).toBe("beta");
-    expect(desktopFlavorFromProtocol("synara-remote:", false)).toBe("remote");
-    expect(desktopFlavorFromProtocol("synara-canary:", false)).toBe("canary");
-    expect(desktopFlavorFromProtocol("synara-cua:", false)).toBe("cua");
-    expect(desktopFlavorFromProtocol("synara:", false)).toBe("production");
+    expect(desktopFlavorFromProtocol("ramspace-beta:", false)).toBe("beta");
+    expect(desktopFlavorFromProtocol("ramspace-remote:", false)).toBe("remote");
+    expect(desktopFlavorFromProtocol("ramspace-canary:", false)).toBe("canary");
+    expect(desktopFlavorFromProtocol("ramspace-cua:", false)).toBe("cua");
+    expect(desktopFlavorFromProtocol("ramspace:", false)).toBe("production");
   });
 
-  it("treats the synara scheme in a dev build as development", () => {
-    expect(desktopFlavorFromProtocol("synara:", true)).toBe("development");
+  it("treats the ramspace scheme in a dev build as development", () => {
+    expect(desktopFlavorFromProtocol("ramspace:", true)).toBe("development");
   });
 
   it("returns unknown for non-desktop protocols and missing values", () => {

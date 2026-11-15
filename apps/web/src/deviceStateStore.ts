@@ -12,7 +12,11 @@
  * session would render a picker that lies.
  */
 
-import type { DeviceOpenPaneRequestedEvent, ThreadDeviceState, ThreadId } from "@synara/contracts";
+import type {
+  DeviceOpenPaneRequestedEvent,
+  ThreadDeviceState,
+  ThreadId,
+} from "@ramspace/contracts";
 import { create } from "zustand";
 
 interface DeviceStateStore {

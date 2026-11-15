@@ -2,7 +2,7 @@ import { randomUUID } from "node:crypto";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { ResultSchema } from "@modelcontextprotocol/sdk/types.js";
 import { JSONRPCMessageSchema } from "@modelcontextprotocol/sdk/types.js";
-import type { McpConnectorTransport } from "@synara/contracts";
+import type { McpConnectorTransport } from "@ramspace/contracts";
 import { McpStdioTransport } from "../platform/mcpStdioTransport.ts";
 import { jsonRpcErrorResult, type McpConnectorProxyResult } from "./proxy.ts";
 import type { McpConnectorForwardRequest } from "./runtime.ts";
@@ -30,7 +30,7 @@ async function open(
   owned: Set<StdioConnection>,
   connectorId: string | null,
 ): Promise<StdioConnection> {
-  const client = new Client({ name: "Synara", version: "1.0.0" }, { capabilities: {} });
+  const client = new Client({ name: "Ramspace", version: "1.0.0" }, { capabilities: {} });
   const transport = new McpStdioTransport(config);
   const connection = { client, transport, connectorId };
   owned.add(connection);

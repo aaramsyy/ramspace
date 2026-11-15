@@ -6,7 +6,7 @@ import { useTranslation } from "~/i18n";
 //          this section owns their full list plus add/edit/delete.
 // Layer: Environment panel section
 
-import type { ProjectScript, ResolvedKeybindingsConfig } from "@synara/contracts";
+import type { ProjectScript, ResolvedKeybindingsConfig } from "@ramspace/contracts";
 import { useCallback, useMemo, useState } from "react";
 
 import { IconButton } from "~/components/ui/icon-button";

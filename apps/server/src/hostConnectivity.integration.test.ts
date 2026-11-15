@@ -3,9 +3,9 @@ import http from "node:http";
 import { once } from "node:events";
 import os from "node:os";
 import path from "node:path";
-import { EnvironmentId, HOST_PROOF_JWT_TYP, type AccountHost } from "@synara/contracts";
-import type { AccountClient } from "@synara/shared/account";
-import { SYNARA_REMOTE_BUNDLE_ID } from "@synara/shared/desktopIdentity";
+import { EnvironmentId, HOST_PROOF_JWT_TYP, type AccountHost } from "@ramspace/contracts";
+import type { AccountClient } from "@ramspace/shared/account";
+import { RAMSPACE_REMOTE_BUNDLE_ID } from "@ramspace/shared/desktopIdentity";
 import * as NodeServices from "@effect/platform-node/NodeServices";
 import { Effect, Layer } from "effect";
 import { importSPKI, jwtVerify } from "jose";
@@ -33,7 +33,7 @@ afterAll(() => {
 // and hostConnections/resourcePool.test.ts. The removed fake-v1 splice did not
 // exercise that boundary and incorrectly admitted an organization member.
 it("persists host linking without creating remote device trust or a TLS root", async () => {
-  const baseDir = fs.mkdtempSync(path.join(os.tmpdir(), "synara-connectivity-integration-"));
+  const baseDir = fs.mkdtempSync(path.join(os.tmpdir(), "ramspace-connectivity-integration-"));
   temporaryDirectories.push(baseDir);
   const environmentId = "integration-environment";
   fs.mkdirSync(path.join(baseDir, "userdata"), { recursive: true });
@@ -104,8 +104,8 @@ it.each([
   { name: "explicitly disabled snapshot", status: 200, enforced: false, code: undefined },
   { name: "older default-off snapshot", status: 200, enforced: undefined, code: undefined },
 ])("handles $name before a missing TLS root can bypass admission policy", async (scenario) => {
-  vi.stubEnv("SYNARA_DESKTOP_BUNDLE_ID", SYNARA_REMOTE_BUNDLE_ID);
-  const baseDir = fs.mkdtempSync(path.join(os.tmpdir(), "synara-connectivity-policy-"));
+  vi.stubEnv("RAMSPACE_DESKTOP_BUNDLE_ID", RAMSPACE_REMOTE_BUNDLE_ID);
+  const baseDir = fs.mkdtempSync(path.join(os.tmpdir(), "ramspace-connectivity-policy-"));
   temporaryDirectories.push(baseDir);
   const config = await Effect.runPromise(
     Effect.gen(function* () {
@@ -138,7 +138,7 @@ it.each([
       await jwtVerify(authorization.slice("HostProof ".length), publicKey, {
         algorithms: ["EdDSA"],
         typ: HOST_PROOF_JWT_TYP,
-        issuer: `synara-host:${environmentId}`,
+        issuer: `ramspace-host:${environmentId}`,
         subject: hostId,
         audience: accountApiIssuer(accountUrl),
       });

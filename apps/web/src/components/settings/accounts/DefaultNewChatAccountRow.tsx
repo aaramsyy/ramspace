@@ -4,7 +4,7 @@
 // Layer: Settings UI
 // Depends on: provider instance options, resolveNewChatDefault, shared settings controls.
 
-import { PROVIDER_DISPLAY_NAMES } from "@synara/contracts";
+import { PROVIDER_DISPLAY_NAMES } from "@ramspace/contracts";
 import { useMemo } from "react";
 
 import {

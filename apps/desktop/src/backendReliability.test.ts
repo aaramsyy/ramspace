@@ -10,7 +10,7 @@ function makeChild(report: Parameters<typeof attachBackendReliability>[1]["repor
   return child;
 }
 
-const message = (code: string) => ({ type: "synara:reliability", issue: { code } });
+const message = (code: string) => ({ type: "ramspace:reliability", issue: { code } });
 
 it("relays only fixed backend issue codes without private envelope or issue fields", () => {
   const report = vi.fn();
@@ -19,7 +19,7 @@ it("relays only fixed backend issue codes without private envelope or issue fiel
   child.emit("message", message("private diagnosis"));
   child.emit("message", { ...message("provider.event_retry"), path: "/private/path" });
   child.emit("message", {
-    type: "synara:reliability",
+    type: "ramspace:reliability",
     issue: { code: "provider.event_retry", threadId: "private thread" },
   });
   child.emit("message", message("provider.event_quarantined"));

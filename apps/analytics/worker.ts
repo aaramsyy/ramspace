@@ -1,5 +1,5 @@
 // FILE: apps/analytics/worker.ts
-// Purpose: Cloudflare Worker ingest + dashboard API for Synara Beta diagnostics.
+// Purpose: Cloudflare Worker ingest + dashboard API for Ramspace Beta diagnostics.
 //
 // Endpoints:
 //   POST /v1/events   — NDJSON diagnostics events -> D1 `events` table
@@ -23,7 +23,7 @@ import {
   ANONYMOUS_PRODUCT_RETRY_DAYS,
   type ProductAnalyticsCohortStage,
   type AnonymousProductRecord,
-} from "@synara/contracts/productAnalytics";
+} from "@ramspace/contracts/productAnalytics";
 
 import {
   decodeReliabilityRecord,
@@ -31,7 +31,7 @@ import {
   RELIABILITY_MAX_EVENTS_PER_POST,
   RELIABILITY_MAX_RECORD_AGE_DAYS,
   type ReliabilityRecord,
-} from "@synara/contracts/reliability";
+} from "@ramspace/contracts/reliability";
 
 import {
   diagnosticErrorFingerprint,
@@ -39,7 +39,7 @@ import {
   sanitizeDiagnosticCrash,
   sanitizeDesktopUpdateFailureReason,
   sanitizeDiagnosticError,
-} from "@synara/shared/diagnosticsRedaction";
+} from "@ramspace/shared/diagnosticsRedaction";
 
 import {
   PRODUCT_COMMAND_CATEGORY_SQL,
@@ -48,8 +48,8 @@ import {
 } from "./usagePrivacySql";
 
 import { diagnosticMetadataSql, diagnosticReadCteSql } from "./diagnosticsPrivacySql";
-import { HOST_USAGE_RECEIPT_DAYS, HOST_USAGE_RETENTION_DAYS } from "@synara/contracts/hostUsage";
-import { normalizeHostUsageWindow } from "@synara/shared/hostUsage";
+import { HOST_USAGE_RECEIPT_DAYS, HOST_USAGE_RETENTION_DAYS } from "@ramspace/contracts/hostUsage";
+import { normalizeHostUsageWindow } from "@ramspace/shared/hostUsage";
 import { readHostUsage, storeHostUsage } from "./hostUsage";
 import {
   readReliabilityTotals,
@@ -80,7 +80,7 @@ export interface Env {
   /** Cloudflare Access app AUD tag. When set, dashboard auth comes from the
    *  Cf-Access-Jwt-Assertion header instead of the password session. */
   POLICY_AUD?: string;
-  /** Access team domain, e.g. "https://synara.cloudflareaccess.com". */
+  /** Access team domain, e.g. "https://ramspace.cloudflareaccess.com". */
   TEAM_DOMAIN?: string;
   /** Comma-separated email allowlist checked against the Access JWT's email
    *  claim. Defense in depth on top of the Access app policy. */
@@ -490,7 +490,7 @@ const MAX_EVENT_FUTURE_MS = 24 * 60 * 60 * 1000;
 const MAX_EVENT_AGE_MS = 30 * 24 * 60 * 60 * 1000;
 const VERSION_PATTERN = /^[0-9]+\.[0-9]+\.[0-9]+(?:-(?:beta|remote|canary)\.[0-9]+)?$/;
 const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-const SESSION_COOKIE = "synara_beta_dash";
+const SESSION_COOKIE = "ramspace_beta_dash";
 const SESSION_TTL_SECONDS = 7 * 24 * 60 * 60;
 // General diagnostics and minidumps retain their existing policy; raw usage
 // samples expire separately. The widest dashboard range is capped here.
@@ -752,8 +752,8 @@ async function overRateLimit(
   if (!limiter) return false;
   try {
     let key = request.headers.get("cf-connecting-ip") ?? "anonymous";
-    const forwardedIp = request.headers.get("x-synara-client-ip");
-    const proof = request.headers.get("x-synara-forwarder-secret");
+    const forwardedIp = request.headers.get("x-ramspace-client-ip");
+    const proof = request.headers.get("x-ramspace-forwarder-secret");
     if (
       forwarderSecret &&
       proof &&
@@ -821,7 +821,7 @@ export async function verifySessionCookie(
   nowSeconds = Math.floor(Date.now() / 1000),
 ): Promise<boolean> {
   if (!cookieHeader) return false;
-  const match = /(?:^|;\s*)synara_beta_dash=([0-9]+\.[A-Za-z0-9_-]+)/.exec(cookieHeader);
+  const match = /(?:^|;\s*)ramspace_beta_dash=([0-9]+\.[A-Za-z0-9_-]+)/.exec(cookieHeader);
   if (!match) return false;
   const [expiryText, signature] = match[1]!.split(".");
   const expiresAt = Number(expiryText);
@@ -1698,7 +1698,7 @@ async function handleApi(request: Request, env: Env, url: URL): Promise<Response
         title:
           row.event === "beta.installed"
             ? row.outcome === "imported"
-              ? "New install (copied from Synara)"
+              ? "New install (copied from Ramspace)"
               : row.outcome === "import-failed"
                 ? "New install (import failed)"
                 : "New install"
@@ -2714,7 +2714,7 @@ export default {
           received: body.events.length,
           ...(cohortEvents.length > 0 ? { cohortAcknowledged } : {}),
         },
-        { headers: { "x-synara-product-cohorts": "1" } },
+        { headers: { "x-ramspace-product-cohorts": "1" } },
       );
     }
 

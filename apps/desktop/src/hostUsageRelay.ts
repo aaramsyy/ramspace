@@ -11,14 +11,14 @@ import {
   writeFileSync,
 } from "node:fs";
 import { join } from "node:path";
-import { HOST_USAGE_RECEIPT_DAYS, type HostUsageWindow } from "@synara/contracts/hostUsage";
+import { HOST_USAGE_RECEIPT_DAYS, type HostUsageWindow } from "@ramspace/contracts/hostUsage";
 import {
   HOST_USAGE_DAY_MS,
   HOST_USAGE_DIRECTORY,
   HOST_USAGE_POLICY_FILE,
   HOST_USAGE_RECEIPTS_FILE,
   normalizeHostUsageWindow,
-} from "@synara/shared/hostUsage";
+} from "@ramspace/shared/hostUsage";
 
 type Policy = { enabled: true; policyId: string; since: string };
 export class HostUsageRelay {

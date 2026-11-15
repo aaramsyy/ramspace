@@ -1,4 +1,4 @@
-// The owner's accent for the public page: their Synara theme's accent for the light and the
+// The owner's accent for the public page: their Ramspace theme's accent for the light and the
 // dark appearance, falling back to their avatar color, then to the page's default blue.
 // Returned as CSS custom properties so the server-rendered page themes itself with no
 // client JS; globals.css maps them onto `--info`, which every accent surface reads.

@@ -39,8 +39,8 @@ describe("account API perf recorder", () => {
 
   it("is off unless the flag is exactly 1", () => {
     expect(isPerfEnabled({})).toBe(false);
-    expect(isPerfEnabled({ SYNARA_API_PERF: "true" })).toBe(false);
-    expect(isPerfEnabled({ SYNARA_API_PERF: "1" })).toBe(true);
+    expect(isPerfEnabled({ RAMSPACE_API_PERF: "true" })).toBe(false);
+    expect(isPerfEnabled({ RAMSPACE_API_PERF: "1" })).toBe(true);
   });
 
   it("groups by route pattern and counts database and outbound work per request", async () => {

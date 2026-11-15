@@ -12,8 +12,8 @@ import {
   type ProviderKind,
   type ResolvedKeybindingsConfig,
   type ThreadId,
-} from "@synara/contracts";
-import { isGenericChatThreadTitle } from "@synara/shared/chatThreads";
+} from "@ramspace/contracts";
+import { isGenericChatThreadTitle } from "@ramspace/shared/chatThreads";
 import React, { useEffect, useRef, useState } from "react";
 import type { ThreadPrimarySurface } from "../../types";
 import GitActionsControl from "../GitActionsControl";

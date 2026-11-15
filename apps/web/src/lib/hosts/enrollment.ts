@@ -4,7 +4,7 @@
 // Layer: Web remote-access feature logic.
 // Exports: shouldPromptForDiscoverability, normalizeDeviceUserCode, and friends.
 
-import { DEVICE_USER_CODE_ALPHABET } from "@synara/contracts";
+import { DEVICE_USER_CODE_ALPHABET } from "@ramspace/contracts";
 
 import type { HostEnrollment } from "./api";
 
@@ -62,7 +62,7 @@ export const DEVICE_USER_CODE_GROUP_SIZE = 4;
 
 const ALPHABET = new Set(DEVICE_USER_CODE_ALPHABET);
 
-/** Shared input rule for every human-compared code using Synara's alphabet. */
+/** Shared input rule for every human-compared code using Ramspace's alphabet. */
 export function normalizeUnambiguousCode(raw: string, maxLength: number): string {
   let normalized = "";
   for (const character of raw.toUpperCase()) {

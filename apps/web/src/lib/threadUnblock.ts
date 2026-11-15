@@ -4,7 +4,7 @@
 // Exports: unblockThreadFromClient, describeThreadUnblockResult, isProviderDeliveryReconciliationConflict, resolveThreadUnblockTarget, type ThreadUnblockResult
 
 import { t } from "~/i18n";
-import type { NativeApi, ThreadId } from "@synara/contracts";
+import type { NativeApi, ThreadId } from "@ramspace/contracts";
 
 /** Code the server returns when a blocker no longer matches the requested state. */
 export const PROVIDER_DELIVERY_RECONCILIATION_CONFLICT_CODE =

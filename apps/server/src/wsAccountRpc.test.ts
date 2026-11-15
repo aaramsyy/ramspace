@@ -2,8 +2,8 @@
 // reads included — because the machine account is owner state, and a paired
 // client-role session must neither read nor replace it. These tests iterate
 // the handler map, so a newly added account RPC is covered by construction.
-import { WS_METHODS, type SavedInboxRecap } from "@synara/contracts";
-import { AccountApiError } from "@synara/shared/account";
+import { WS_METHODS, type SavedInboxRecap } from "@ramspace/contracts";
+import { AccountApiError } from "@ramspace/shared/account";
 import { Effect } from "effect";
 import { describe, expect, it, vi } from "vitest";
 

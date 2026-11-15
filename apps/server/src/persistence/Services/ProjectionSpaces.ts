@@ -1,5 +1,11 @@
 /** Durable projection repository for custom Spaces. Void remains virtual (`spaceId = null`). */
-import { IsoDateTime, NonNegativeInt, SpaceIconName, SpaceId, SpaceName } from "@synara/contracts";
+import {
+  IsoDateTime,
+  NonNegativeInt,
+  SpaceIconName,
+  SpaceId,
+  SpaceName,
+} from "@ramspace/contracts";
 import { Option, Schema, ServiceMap } from "effect";
 import type { Effect } from "effect";
 
@@ -30,4 +36,4 @@ export interface ProjectionSpaceRepositoryShape {
 export class ProjectionSpaceRepository extends ServiceMap.Service<
   ProjectionSpaceRepository,
   ProjectionSpaceRepositoryShape
->()("synara/persistence/Services/ProjectionSpaces/ProjectionSpaceRepository") {}
+>()("ramspace/persistence/Services/ProjectionSpaces/ProjectionSpaceRepository") {}

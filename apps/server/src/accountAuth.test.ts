@@ -7,15 +7,15 @@ import path from "node:path";
 import { afterAll, afterEach, describe, expect, it, vi } from "vitest";
 import * as reliability from "./reliability";
 
-import { type AccountHost, EnvironmentId } from "@synara/contracts";
+import { type AccountHost, EnvironmentId } from "@ramspace/contracts";
 import { decodeJwt } from "jose";
 
-import type { AccountClient } from "@synara/shared/account";
+import type { AccountClient } from "@ramspace/shared/account";
 import {
   AccountApiError,
   createAccountClient,
   OrganizationRequiredError,
-} from "@synara/shared/account";
+} from "@ramspace/shared/account";
 import { generateAndPersistHostIdentity, readHostIdentity } from "./hostIdentity";
 
 vi.mock("./tailscaleEndpoint", () => ({
@@ -57,7 +57,7 @@ const temporaryDirectories: string[] = [];
 afterEach(() => vi.restoreAllMocks());
 
 function makeBaseDir(): string {
-  const value = fs.mkdtempSync(path.join(os.tmpdir(), "synara-account-auth-test-"));
+  const value = fs.mkdtempSync(path.join(os.tmpdir(), "ramspace-account-auth-test-"));
   temporaryDirectories.push(value);
   return value;
 }
@@ -120,7 +120,7 @@ function unimplemented(name: string) {
 const CLIENT_ID = "client_01ABC";
 const WORKOS_API_URL = "https://api.workos.example";
 
-/** A credentials file with a live session, as `synara auth` leaves it. */
+/** A credentials file with a live session, as `ramspace auth` leaves it. */
 function base64UrlJson(value: object): string {
   return Buffer.from(JSON.stringify(value)).toString("base64url");
 }
@@ -680,7 +680,7 @@ describe("withFreshAccessToken", () => {
       error: new AccountApiError({
         code: "subscription_required",
         status: 403,
-        message: "Remote access requires an active Synara Alto subscription",
+        message: "Remote access requires an active Ramspace Alto subscription",
       }),
     },
   ])("does not refresh on $name", async ({ error }) => {
@@ -1342,7 +1342,7 @@ describe("resolveEnvironmentId", () => {
     expect(await resolveEnvironmentId(baseDir)).toBe(generated);
   });
 
-  // First-time creation is exclusive: `synara auth` and a starting server can
+  // First-time creation is exclusive: `ramspace auth` and a starting server can
   // both see the file missing, and last-writer-wins would leave one of them
   // registering a host under an id nobody persisted (a phantom host).
   it("resolves concurrent first-time callers to one persisted id", async () => {
@@ -1363,18 +1363,20 @@ describe("resolveAccountUrl", () => {
     expect(
       resolveAccountUrl({
         flag: "https://flag.example ",
-        env: { SYNARA_ACCOUNT_URL: "https://env" },
+        env: { RAMSPACE_ACCOUNT_URL: "https://env" },
       }),
     ).toBe("https://flag.example");
-    expect(resolveAccountUrl({ env: { SYNARA_ACCOUNT_URL: " https://env " } })).toBe("https://env");
+    expect(resolveAccountUrl({ env: { RAMSPACE_ACCOUNT_URL: " https://env " } })).toBe(
+      "https://env",
+    );
     expect(resolveAccountUrl({ env: {} })).toBeUndefined();
-    expect(resolveAccountUrl({ flag: "  ", env: { SYNARA_ACCOUNT_URL: "" } })).toBeUndefined();
+    expect(resolveAccountUrl({ flag: "  ", env: { RAMSPACE_ACCOUNT_URL: "" } })).toBeUndefined();
   });
 });
 
 describe("resolveAuthLoginAccountUrl", () => {
   // The signed-in session already recorded which service minted its tokens;
-  // `synara auth` must use it even with no env/flag configured at all.
+  // `ramspace auth` must use it even with no env/flag configured at all.
   it("uses the persisted session's accountUrl when no explicit URL is given", async () => {
     const baseDir = makeBaseDir();
     await writeAccountCredentials(baseDir, credentials());
@@ -1401,7 +1403,7 @@ describe("resolveAuthLoginAccountUrl", () => {
 
     await expect(
       resolveAuthLoginAccountUrl({ baseDir, explicitUrl: "https://other.example.com" }),
-    ).rejects.toThrow(/signed in to https:\/\/accounts\.example\.com.*synara auth logout/su);
+    ).rejects.toThrow(/signed in to https:\/\/accounts\.example\.com.*ramspace auth logout/su);
   });
 
   it("passes the explicit URL through unchanged when no session exists", async () => {
@@ -1437,7 +1439,7 @@ describe("resolveAuthLoginAccountUrl", () => {
 describe("runAuthLogin", () => {
   // Sign-in is app-only now: with no stored session there is nothing to link
   // a host with, and the CLI must say where sign-in actually lives.
-  it("points a signed-out user at the Synara app instead of signing in", async () => {
+  it("points a signed-out user at the Ramspace app instead of signing in", async () => {
     const baseDir = makeBaseDir();
     const stdout = makeStdout();
 
@@ -1449,7 +1451,7 @@ describe("runAuthLogin", () => {
     });
 
     expect(stdout.text()).toContain("Not signed in");
-    expect(stdout.text()).toContain("sign in from the Synara app");
+    expect(stdout.text()).toContain("sign in from the Ramspace app");
     expect(await readAccountFile(baseDir)).toBeUndefined();
   });
 
@@ -1494,7 +1496,7 @@ describe("runAuthLogin", () => {
 
     expect(stdout.text()).toContain("Already signed in");
     expect(stdout.text()).toContain("this host is linked");
-    expect(stdout.text()).toContain("synara auth logout");
+    expect(stdout.text()).toContain("ramspace auth logout");
   });
 
   it("registers this host from the app's session, using the persisted environment id", async () => {
@@ -1914,7 +1916,7 @@ describe("runStatus", () => {
   it("reports when no account URL is configured", async () => {
     const stdout = makeStdout();
     await runStatus({ baseDir: makeBaseDir(), stdout: stdout.write });
-    expect(stdout.text()).toContain("SYNARA_ACCOUNT_URL");
+    expect(stdout.text()).toContain("RAMSPACE_ACCOUNT_URL");
     expect(stdout.text()).toContain("not configured");
   });
 
@@ -1927,7 +1929,7 @@ describe("runStatus", () => {
       client: makeClient({}),
     });
     expect(stdout.text()).toContain("Not signed in");
-    expect(stdout.text()).toContain("sign in from the Synara app");
+    expect(stdout.text()).toContain("sign in from the Ramspace app");
   });
 
   it("prints the identity, this host, and every registered host", async () => {
@@ -2033,7 +2035,7 @@ describe("runStatus", () => {
     });
 
     expect(stdout.text()).toContain("Session expired");
-    expect(stdout.text()).toContain("sign in again from the Synara app");
+    expect(stdout.text()).toContain("sign in again from the Ramspace app");
   });
 
   // Distinct advice from an expired session: the refresh token may be fine,

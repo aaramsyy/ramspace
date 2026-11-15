@@ -4,7 +4,7 @@ param([string]$GuardPath = "$PSScriptRoot/verify-windows-defender.ps1")
 # changes host protection and does not qualify an installer against real Defender.
 $ErrorActionPreference = 'Stop'
 $GuardPath = (Resolve-Path -LiteralPath $GuardPath).Path
-$root = Join-Path ([System.IO.Path]::GetTempPath()) ('synara-defender-test-' + [guid]::NewGuid())
+$root = Join-Path ([System.IO.Path]::GetTempPath()) ('ramspace-defender-test-' + [guid]::NewGuid())
 $originalEnvironment = @{}
 foreach ($name in @('GITHUB_ACTIONS', 'RUNNER_ENVIRONMENT', 'ProgramData')) {
     $originalEnvironment[$name] = [Environment]::GetEnvironmentVariable($name)

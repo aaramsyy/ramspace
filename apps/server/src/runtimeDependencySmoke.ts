@@ -18,7 +18,7 @@ import { loadClaudeAgentSdk } from "./provider/claudeAgentSdk.ts";
 
 // Exercise the actual sibling entry and its owned child, not an in-process import.
 async function verifyOfflineCompactorRuntime(): Promise<void> {
-  const root = await mkdtemp(join(tmpdir(), "synara-compactor-runtime-smoke-"));
+  const root = await mkdtemp(join(tmpdir(), "ramspace-compactor-runtime-smoke-"));
   const entry = fileURLToPath(new URL("./compactDatabase.mjs", import.meta.url));
   const env: NodeJS.ProcessEnv = { ...process.env, ELECTRON_RUN_AS_NODE: "1" };
   delete env.NODE_OPTIONS;
@@ -34,7 +34,7 @@ async function verifyOfflineCompactorRuntime(): Promise<void> {
     const usage = await runProcess(process.execPath, [entry], options);
     assert.equal(usage.timedOut, false);
     assert.equal(usage.code, 2, usage.stderr);
-    assert.match(usage.stderr, /Usage: synara-compact-database/);
+    assert.match(usage.stderr, /Usage: ramspace-compact-database/);
     assert.deepEqual(await readdir(root), []);
 
     const target = join(root, "state.sqlite");
@@ -87,7 +87,7 @@ async function verifyOfflineCompactorRuntime(): Promise<void> {
 }
 
 await verifyRemoteTlsRuntime();
-if (process.env.SYNARA_RUNTIME_SMOKE === "remote-tls") process.exit(0);
+if (process.env.RAMSPACE_RUNTIME_SMOKE === "remote-tls") process.exit(0);
 
 // Keep these imports external, just like the server. Running this entrypoint
 // from app.asar exposes missing peers that the development install can hide.
@@ -112,7 +112,7 @@ const originalTransport = {
 const denyNetwork = (): never => {
   throw new Error("Real network access is forbidden in the Pi runtime smoke.");
 };
-const root = await mkdtemp(join(tmpdir(), "synara-pi-runtime-smoke-"));
+const root = await mkdtemp(join(tmpdir(), "ramspace-pi-runtime-smoke-"));
 try {
   globalThis.fetch = Object.assign(denyNetwork, { preconnect: denyNetwork });
   http.request = denyNetwork;

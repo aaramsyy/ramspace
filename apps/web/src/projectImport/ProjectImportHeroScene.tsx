@@ -1,6 +1,6 @@
 // FILE: ProjectImportHeroScene.tsx
 // Purpose: The import announcement's hero scene: Claude Code and Codex projects travelling
-//          into Synara's project list. Decorative (the band is aria-hidden).
+//          into Ramspace's project list. Decorative (the band is aria-hidden).
 // Layer: Web project-import UI
 // Exports: ProjectImportHeroScene
 
@@ -13,7 +13,7 @@ import { VISIBLE_PROVIDER_DESCRIPTORS } from "../betaFeatures";
 const SOURCES = ["claudeAgent", "codex"] as const;
 
 /** Sample folder names shown inside the illustration: data, not copy, so untranslated. */
-const SAMPLE_PROJECTS = ["synara-web", "api-gateway", "ios-app"] as const;
+const SAMPLE_PROJECTS = ["ramspace-web", "api-gateway", "ios-app"] as const;
 
 const CARD_CLASS_NAME = cn(
   "rounded-xl border border-border bg-popover",

@@ -11,7 +11,7 @@ import { WebSocketServer } from "ws";
 import { getBetterwrightNetworkGuard } from "../src/browserAutomation/betterwrightNetworkGuard";
 import { runBetterwright } from "../src/browserAutomation/betterwrightRuntime";
 import { captureBrowserScreenshot } from "../src/browserAutomation/screenshotCapture";
-import { synaraHostTarget } from "../src/browserAutomation/betterwrightHostTarget";
+import { ramspaceHostTarget } from "../src/browserAutomation/betterwrightHostTarget";
 import { BrowserVaultCapture } from "../src/browserAutomation/browserVaultCapture";
 import type { BrowserVault } from "../src/browserAutomation/browserVault";
 import type { BrowserAutomationVisibleRuntime } from "../src/browserManager";
@@ -19,7 +19,7 @@ import type { BrowserAutomationVisibleRuntime } from "../src/browserManager";
 // Synthetic, loopback-only fixtures. No personal profiles, credentials, or
 // external sites are used. This runs in Electron, not a mocked Session.
 configureElectronNetwork();
-const home = await mkdtemp(join(tmpdir(), "synara-browser-lifecycle-"));
+const home = await mkdtemp(join(tmpdir(), "ramspace-browser-lifecycle-"));
 app.setPath("userData", join(home, "electron"));
 const deadline = setTimeout(() => {
   console.error("Browser lifecycle smoke timed out.");
@@ -27,7 +27,7 @@ const deadline = setTimeout(() => {
 }, 90_000);
 
 async function checkCookieImportMetadata(contents: WebContents) {
-  const hostTarget = synaraHostTarget(contents, { cookieImport: true });
+  const hostTarget = ramspaceHostTarget(contents, { cookieImport: true });
   const browser = new BetterWright({
     home: join(home, "cookie-worker"),
     hostTarget,
@@ -48,7 +48,7 @@ async function checkCookieImportMetadata(contents: WebContents) {
       cookies: includeCookie
         ? [
             {
-              name: "synara_synthetic_import",
+              name: "ramspace_synthetic_import",
               value: "synthetic-only",
               domain: "127.0.0.1",
               path: "/",
@@ -71,7 +71,7 @@ async function checkCookieImportMetadata(contents: WebContents) {
     assert.equal(result.synced, 1);
     assert.equal(result.target, "host");
     assert.deepEqual(result.cookieImportDomains, ["127.0.0.1"]);
-    const stored = await contents.session.cookies.get({ name: "synara_synthetic_import" });
+    const stored = await contents.session.cookies.get({ name: "ramspace_synthetic_import" });
     assert.equal(stored.length, 1);
     assert.equal(stored[0]?.value, "synthetic-only");
     includeCookie = false;
@@ -85,7 +85,7 @@ async function checkCookieImportMetadata(contents: WebContents) {
   }
 }
 
-// Exercise Synara's actual call boundary, which tears down each CDP worker.
+// Exercise Ramspace's actual call boundary, which tears down each CDP worker.
 async function checkRunRequestLifetime(contents: WebContents, url: string) {
   const run = (code: string, signal = new AbortController().signal, timeoutMs = 10_000) =>
     runBetterwright({ home: join(home, "request-worker"), contents, code, signal, timeoutMs });
@@ -237,7 +237,7 @@ async function smoke() {
   const guardedProxy = await session.resolveProxy(allowedUrl);
   await contents.loadURL(allowedUrl);
   await sibling.loadURL(allowedUrl);
-  const target = synaraHostTarget(contents);
+  const target = ramspaceHostTarget(contents);
   const proxyUrls: string[] = [];
   const leases: Awaited<ReturnType<typeof target.connect>>[] = [];
   const browser = new BetterWright({
@@ -259,7 +259,7 @@ async function smoke() {
     parkBackgroundPages: false,
     policy: networkGuard.policy,
   });
-  const siblingTarget = synaraHostTarget(sibling.webContents);
+  const siblingTarget = ramspaceHostTarget(sibling.webContents);
   const siblingQueued = Promise.withResolvers<void>();
   let siblingConnected = false;
   const siblingBrowser = new BetterWright({

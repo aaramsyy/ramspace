@@ -12,10 +12,10 @@ import { useRemoteProjectSpacesStore } from "../remoteProjectSpacesStore";
 // Layer: Web UI dialog
 // Exports: CreateProjectDialog, CreateProjectSubmitValue
 
-import { type GitHubProjectProvisionProgressEvent, type SpaceId } from "@synara/contracts";
-import { parseGitHubRepositoryInput } from "@synara/shared/githubRepository";
-import { findProjectFolderProblem } from "@synara/shared/projectFolders";
-import { normalizeProjectDirectoryName } from "@synara/shared/projectDirectoryName";
+import { type GitHubProjectProvisionProgressEvent, type SpaceId } from "@ramspace/contracts";
+import { parseGitHubRepositoryInput } from "@ramspace/shared/githubRepository";
+import { findProjectFolderProblem } from "@ramspace/shared/projectFolders";
+import { normalizeProjectDirectoryName } from "@ramspace/shared/projectDirectoryName";
 import { useCallback, useEffect, useId, useRef, useState, type KeyboardEvent } from "react";
 
 import { isElectron } from "../env";
@@ -364,7 +364,7 @@ export function CreateProjectDialog(props: {
       return;
     }
     if (source === "github" && !githubAvailable) {
-      setFormError(t("workspace:updateTheSynaraServerBeforeAddingAProjectFrom"));
+      setFormError(t("workspace:updateTheRamspaceServerBeforeAddingAProjectFrom"));
       return;
     }
     if (source === "github" && trimmedDestinationParent.length === 0) {

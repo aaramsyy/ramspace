@@ -58,17 +58,17 @@ describe("isTrustedMediaPermissionRequest", () => {
     );
   });
 
-  it("rejects subframes and origins other than the live Synara renderer", () => {
+  it("rejects subframes and origins other than the live Ramspace renderer", () => {
     const trusted = {
       isDestroyed: () => false,
-      getURL: () => "synara://app/index.html",
+      getURL: () => "ramspace://app/index.html",
     };
 
     expect(
       isTrustedMediaPermissionRequest(trusted, trusted, {
         mediaTypes: ["audio"],
         isMainFrame: true,
-        requestingUrl: "synara://app/chat",
+        requestingUrl: "ramspace://app/chat",
       }),
     ).toBe(true);
     expect(

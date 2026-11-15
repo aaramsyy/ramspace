@@ -12,7 +12,7 @@ import { parseOptionalBooleanEnvValue } from "./lib/env-bool.ts";
 
 const TRACKED_PRE_PUSH = ".githooks/pre-push";
 const PRE_PUSH_LAUNCHER = `#!/bin/sh
-# Installed by Synara. Git runs pre-push from the current worktree root.
+# Installed by Ramspace. Git runs pre-push from the current worktree root.
 if [ -f ${TRACKED_PRE_PUSH} ]; then
   exec /bin/sh ${TRACKED_PRE_PUSH} "$@"
 fi

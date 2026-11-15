@@ -1,6 +1,6 @@
 // FILE: identity/devProvider.ts
 // Purpose: The "dev" identity provider — a second, offline implementation of
-// the adapter seam so contributors can hack on Synara accounts with no hosted
+// the adapter seam so contributors can hack on Ramspace accounts with no hosted
 // identity tenancy. It runs the same in-process identity double the test
 // suite uses (testing/fakeWorkos.ts) on an ephemeral port and points the
 // hosted-provider adapter at it, so there is exactly one implementation of

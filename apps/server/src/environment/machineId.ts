@@ -7,7 +7,7 @@ import { execFile } from "node:child_process";
 import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
 
-const MACHINE_ID_SALT = "synara-machine-id-v1:";
+const MACHINE_ID_SALT = "ramspace-machine-id-v1:";
 const READ_TIMEOUT_MS = 3_000;
 
 /** The salted SHA-256 of a raw hardware id, 32 hex characters, or undefined for an empty one. */

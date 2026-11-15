@@ -3,7 +3,7 @@
 
 import { t } from "~/i18n";
 import { rateLimitWindowDisplayLabel } from "~/lib/rateLimits";
-import type { ServerProviderUsageSnapshot } from "@synara/contracts";
+import type { ServerProviderUsageSnapshot } from "@ramspace/contracts";
 import type { ProviderUsageDisplayRow } from "~/lib/providerUsageDisplay";
 
 export interface EnvironmentProviderUsageSummary {

@@ -1,6 +1,6 @@
-import { HOST_SESSION_CLOSE_AUTH_FAILED, HOST_SESSION_CLOSE_REVOKED } from "@synara/contracts";
-import { WsCompatibilityError, type HostConnectionState } from "@synara/contracts";
-import { AccountApiError } from "@synara/shared/account";
+import { HOST_SESSION_CLOSE_AUTH_FAILED, HOST_SESSION_CLOSE_REVOKED } from "@ramspace/contracts";
+import { WsCompatibilityError, type HostConnectionState } from "@ramspace/contracts";
+import { AccountApiError } from "@ramspace/shared/account";
 import { Schema } from "effect";
 import { SessionExpiredError } from "../accountAuth";
 import { HostDialError } from "./dialer";

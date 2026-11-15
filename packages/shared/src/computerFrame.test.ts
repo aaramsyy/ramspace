@@ -1,4 +1,4 @@
-import { COMPUTER_FRAME_MAGIC, DEVICE_FRAME_MAGIC } from "@synara/contracts";
+import { COMPUTER_FRAME_MAGIC, DEVICE_FRAME_MAGIC } from "@ramspace/contracts";
 import { describe, expect, it } from "vitest";
 
 import {

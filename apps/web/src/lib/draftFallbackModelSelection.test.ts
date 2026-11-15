@@ -1,4 +1,4 @@
-import { DEFAULT_MODEL_BY_PROVIDER, ProviderInstanceId } from "@synara/contracts";
+import { DEFAULT_MODEL_BY_PROVIDER, ProviderInstanceId } from "@ramspace/contracts";
 import { describe, expect, it } from "vitest";
 
 import type { NewChatDefault } from "../appSettings";

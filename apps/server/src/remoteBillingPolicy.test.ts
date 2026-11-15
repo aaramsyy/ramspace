@@ -38,7 +38,7 @@ afterEach(async () => {
 });
 
 async function fixture(enforced?: boolean) {
-  const baseDir = await fs.mkdtemp(path.join(os.tmpdir(), "synara-public-billing-policy-"));
+  const baseDir = await fs.mkdtemp(path.join(os.tmpdir(), "ramspace-public-billing-policy-"));
   directories.push(baseDir);
   const stateDir = path.join(baseDir, "userdata");
   await fs.mkdir(stateDir, { mode: 0o700 });

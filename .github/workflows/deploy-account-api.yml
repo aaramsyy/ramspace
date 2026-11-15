@@ -14,7 +14,7 @@ on:
   workflow_dispatch:
     inputs:
       deploy:
-        description: Publish the verified Account API to Synara Orgs
+        description: Publish the verified Account API to Ramspace Orgs
         type: boolean
         default: false
       bootstrap_secrets:
@@ -37,13 +37,13 @@ jobs:
       postgres:
         image: postgres:17
         env:
-          POSTGRES_USER: synara_test
+          POSTGRES_USER: ramspace_test
           POSTGRES_PASSWORD: local-ci-only
-          POSTGRES_DB: synara_api_test
+          POSTGRES_DB: ramspace_api_test
         ports:
           - 5432:5432
         options: >-
-          --health-cmd "pg_isready -U synara_test -d synara_api_test"
+          --health-cmd "pg_isready -U ramspace_test -d ramspace_api_test"
           --health-interval 5s --health-timeout 5s --health-retries 10
     steps:
       - uses: actions/checkout@v6
@@ -60,21 +60,21 @@ jobs:
       # Initialize once before parallel test files attempt their own migrations.
       - run: bun run --cwd apps/api db:migrate
         env:
-          DATABASE_URL: postgres://synara_test:local-ci-only@localhost:5432/synara_api_test
+          DATABASE_URL: postgres://ramspace_test:local-ci-only@localhost:5432/ramspace_api_test
       - run: bun run --cwd apps/api test
         env:
-          TEST_DATABASE_URL: postgres://synara_test:local-ci-only@localhost:5432/synara_api_test
+          TEST_DATABASE_URL: postgres://ramspace_test:local-ci-only@localhost:5432/ramspace_api_test
       - name: Build and smoke-test the actual container
         run: |
-          docker build --platform linux/amd64 -f apps/api/Dockerfile -t synara-account-api:check .
-          docker run -d --name synara-api-check --network host \
-            -e DATABASE_URL=postgres://synara_test:local-ci-only@localhost:5432/synara_api_test \
+          docker build --platform linux/amd64 -f apps/api/Dockerfile -t ramspace-account-api:check .
+          docker run -d --name ramspace-api-check --network host \
+            -e DATABASE_URL=postgres://ramspace_test:local-ci-only@localhost:5432/ramspace_api_test \
             -e WORKOS_API_KEY=ci-placeholder -e WORKOS_CLIENT_ID=ci-placeholder \
             -e ACCOUNT_BASE_URL=http://localhost:8788 \
             -e API_PUBLIC_URL=http://localhost:8788/api/v1 \
             -e API_SIGNING_KEY=AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA \
-            synara-account-api:check
-          trap 'docker logs synara-api-check; docker rm -f synara-api-check' EXIT
+            ramspace-account-api:check
+          trap 'docker logs ramspace-api-check; docker rm -f ramspace-api-check' EXIT
           ready=false
           for attempt in $(seq 1 30); do
             if curl --fail --silent http://localhost:8788/ > /dev/null; then
@@ -119,11 +119,11 @@ jobs:
         working-directory: apps/api
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          DATABASE_URL: ${{ secrets.SYNARA_API_DATABASE_URL }}
-          WORKOS_API_KEY: ${{ secrets.SYNARA_API_WORKOS_API_KEY }}
-          WORKOS_CLIENT_ID: ${{ secrets.SYNARA_API_WORKOS_CLIENT_ID }}
-          API_SIGNING_KEY: ${{ secrets.SYNARA_API_SIGNING_KEY }}
-          PROFILE_PROXY_SECRET: ${{ secrets.SYNARA_PROFILE_PROXY_SECRET }}
+          DATABASE_URL: ${{ secrets.RAMSPACE_API_DATABASE_URL }}
+          WORKOS_API_KEY: ${{ secrets.RAMSPACE_API_WORKOS_API_KEY }}
+          WORKOS_CLIENT_ID: ${{ secrets.RAMSPACE_API_WORKOS_CLIENT_ID }}
+          API_SIGNING_KEY: ${{ secrets.RAMSPACE_API_SIGNING_KEY }}
+          PROFILE_PROXY_SECRET: ${{ secrets.RAMSPACE_PROFILE_PROXY_SECRET }}
         run: |
           node -e 'for (const k of ["DATABASE_URL", "WORKOS_API_KEY", "WORKOS_CLIENT_ID", "API_SIGNING_KEY", "PROFILE_PROXY_SECRET"]) if (!process.env[k]) throw new Error(`Missing deployment secret: ${k}`)'
           node -e 'process.stdout.write(JSON.stringify(Object.fromEntries(["DATABASE_URL", "WORKOS_API_KEY", "WORKOS_CLIENT_ID", "API_SIGNING_KEY", "PROFILE_PROXY_SECRET"].map(k => [k, process.env[k]]))))' | bunx wrangler secret bulk

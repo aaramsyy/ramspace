@@ -3,9 +3,12 @@
 // Layer: Web composer helper
 // Exports: mention token formatters plus regex helpers used by composer parsing and prompt sync.
 
-import type { ProviderMentionReference, ProviderSkillReference } from "@synara/contracts";
-import { isMcpConnectorMentionPath } from "@synara/shared/mcpConnectors";
-import { isThreadMentionPath, threadIdFromThreadMentionPath } from "@synara/shared/threadMentions";
+import type { ProviderMentionReference, ProviderSkillReference } from "@ramspace/contracts";
+import { isMcpConnectorMentionPath } from "@ramspace/shared/mcpConnectors";
+import {
+  isThreadMentionPath,
+  threadIdFromThreadMentionPath,
+} from "@ramspace/shared/threadMentions";
 
 export function skillMentionPrefix(provider: string): string {
   return provider === "pi" ? "/skill:" : "/";

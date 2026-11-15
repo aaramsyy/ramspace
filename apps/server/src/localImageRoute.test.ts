@@ -12,7 +12,7 @@ import {
   DEFAULT_SERVER_SETTINGS,
   ServerSettingsError,
   type ProviderInstanceId,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { DateTime, Effect, Exit, Layer, Scope, Stream } from "effect";
 import { HttpRouter } from "effect/unstable/http";
 import { afterEach, describe, expect, it } from "vitest";
@@ -75,7 +75,7 @@ function makeGeneratedImage(prefix: string): { readonly homePath: string; readon
 }
 
 function makeServerConfig(overrides: Partial<ServerConfigShape> = {}): ServerConfigShape {
-  const baseDir = makeTempDir("synara-effect-route-");
+  const baseDir = makeTempDir("ramspace-effect-route-");
   return {
     mode: "web",
     port: 0,
@@ -108,7 +108,7 @@ function makeFakeServerAuth(): ServerAuthShape {
     policy: "loopback-browser" as const,
     bootstrapMethods: ["one-time-token" as const],
     sessionMethods: ["browser-session-cookie" as const, "bearer-session-token" as const],
-    sessionCookieName: "synara_session",
+    sessionCookieName: "ramspace_session",
   };
   const session = {
     sessionId: "session-id" as never,
@@ -278,7 +278,7 @@ async function withEffectServer(
 
 describe("localImageEffectRouteLayer", () => {
   it("serves an allowlisted workspace image and signals downloads via Content-Disposition", async () => {
-    const workspace = makeTempDir("synara-effect-image-workspace-");
+    const workspace = makeTempDir("ramspace-effect-image-workspace-");
     writeFileSync(path.join(workspace, ".git"), "gitdir: .git");
     const imagePath = path.join(workspace, "hero.png");
     writeFileSync(imagePath, Buffer.from([0x89, 0x50, 0x4e, 0x47]));
@@ -324,7 +324,7 @@ describe("localImageEffectRouteLayer", () => {
   });
 
   it("downloads files whose names are not plain ASCII through an RFC 5987 filename", async () => {
-    const workspace = makeTempDir("synara-effect-image-unicode-name-");
+    const workspace = makeTempDir("ramspace-effect-image-unicode-name-");
     writeFileSync(path.join(workspace, ".git"), "gitdir: .git");
     const config = makeServerConfig({ cwd: workspace });
     const files = [
@@ -365,9 +365,9 @@ describe("localImageEffectRouteLayer", () => {
   });
 
   it("serves an absolute local image outside the workspace for file-panel previews", async () => {
-    const workspace = makeTempDir("synara-effect-image-workspace-");
+    const workspace = makeTempDir("ramspace-effect-image-workspace-");
     writeFileSync(path.join(workspace, ".git"), "gitdir: .git");
-    const externalRoot = makeTempDir("synara-effect-external-preview-");
+    const externalRoot = makeTempDir("ramspace-effect-external-preview-");
     const imagePath = path.join(externalRoot, "downloads-file.pdf");
     writeFileSync(imagePath, Buffer.from("%PDF-1.7"));
     const config = makeServerConfig({ cwd: workspace });
@@ -388,9 +388,9 @@ describe("localImageEffectRouteLayer", () => {
 
   it("opens a generated PNG in a sibling Git worktree only with its canonical file grant", async () => {
     // Keep the fixture outside temporary roots, which already permit generated images.
-    const root = makeRepoTempDir("synara-linked-preview-");
+    const root = makeRepoTempDir("ramspace-linked-preview-");
     const workspace = path.join(root, "playjelly");
-    const worktree = path.join(root, "playjelly-test-synara");
+    const worktree = path.join(root, "playjelly-test-ramspace");
     mkdirSync(workspace);
     const git = (args: string[]) =>
       execFileSync("git", ["-C", workspace, ...args], { stdio: "pipe" });
@@ -482,7 +482,7 @@ describe("localImageEffectRouteLayer", () => {
   });
 
   it("serves an allowlisted workspace PDF and only allows the desktop app origin to read it", async () => {
-    const workspace = makeTempDir("synara-effect-pdf-workspace-");
+    const workspace = makeTempDir("ramspace-effect-pdf-workspace-");
     writeFileSync(path.join(workspace, ".git"), "gitdir: .git");
     const pdfPath = path.join(workspace, "spec.pdf");
     writeFileSync(pdfPath, Buffer.from("%PDF-1.4"));
@@ -491,14 +491,14 @@ describe("localImageEffectRouteLayer", () => {
     await withEffectServer(config, localImageEffectRouteLayer, async (origin) => {
       const params = new URLSearchParams({ path: pdfPath, cwd: workspace });
       const response = await fetch(`${origin}/api/local-image?${params}`, {
-        headers: { Origin: "synara://app" },
+        headers: { Origin: "ramspace://app" },
       });
       expect(response.status).toBe(200);
       expect(response.headers.get("content-type")).toContain("application/pdf");
       expect(response.headers.get("x-content-type-options")).toBe("nosniff");
       // The in-app viewer fetches bytes cross-origin, but only trusted app
       // origins should get a CORS-readable response.
-      expect(response.headers.get("access-control-allow-origin")).toBe("synara://app");
+      expect(response.headers.get("access-control-allow-origin")).toBe("ramspace://app");
       expect(response.headers.get("vary")).toBe("Origin");
       // Streamed responses must still advertise their size so the browser's
       // PDF viewer can show load progress.
@@ -511,7 +511,7 @@ describe("localImageEffectRouteLayer", () => {
   });
 
   it("allows the configured Vite dev origin to read PDF bytes", async () => {
-    const workspace = makeTempDir("synara-effect-pdf-dev-origin-");
+    const workspace = makeTempDir("ramspace-effect-pdf-dev-origin-");
     writeFileSync(path.join(workspace, ".git"), "gitdir: .git");
     const pdfPath = path.join(workspace, "spec.pdf");
     writeFileSync(pdfPath, Buffer.from("%PDF-1.4"));
@@ -532,7 +532,7 @@ describe("localImageEffectRouteLayer", () => {
   });
 
   it("does not expose local preview bytes to untrusted web origins through CORS", async () => {
-    const workspace = makeTempDir("synara-effect-pdf-untrusted-origin-");
+    const workspace = makeTempDir("ramspace-effect-pdf-untrusted-origin-");
     writeFileSync(path.join(workspace, ".git"), "gitdir: .git");
     const pdfPath = path.join(workspace, "spec.pdf");
     writeFileSync(pdfPath, Buffer.from("%PDF-1.4"));
@@ -551,25 +551,25 @@ describe("localImageEffectRouteLayer", () => {
   });
 
   it("exposes missing-file errors to desktop downloads without allowing untrusted origins", async () => {
-    const workspace = makeTempDir("synara-effect-missing-image-");
+    const workspace = makeTempDir("ramspace-effect-missing-image-");
     const config = makeServerConfig({ cwd: workspace });
     await withEffectServer(config, localImageEffectRouteLayer, async (origin) => {
       const params = new URLSearchParams({ path: "missing.png", cwd: workspace, download: "1" });
-      for (const requestOrigin of ["synara://app", "https://example.test"]) {
+      for (const requestOrigin of ["ramspace://app", "https://example.test"]) {
         const response = await fetch(`${origin}/api/local-image?${params}`, {
           headers: { Origin: requestOrigin },
         });
         expect(response.status).toBe(404);
         expect(await response.text()).toBe("Not Found");
         expect(response.headers.get("access-control-allow-origin")).toBe(
-          requestOrigin === "synara://app" ? requestOrigin : null,
+          requestOrigin === "ramspace://app" ? requestOrigin : null,
         );
       }
     });
   });
 
   it("returns 404 when the requested path has an unsupported extension", async () => {
-    const workspace = makeTempDir("synara-effect-image-bad-ext-");
+    const workspace = makeTempDir("ramspace-effect-image-bad-ext-");
     writeFileSync(path.join(workspace, ".git"), "gitdir: .git");
     const docPath = path.join(workspace, "notes.txt");
     writeFileSync(docPath, "hello");
@@ -583,9 +583,9 @@ describe("localImageEffectRouteLayer", () => {
   });
 
   it("serves generated images from live Codex session homes after settings drift", async () => {
-    const workspace = makeTempDir("synara-effect-image-live-session-workspace-");
+    const workspace = makeTempDir("ramspace-effect-image-live-session-workspace-");
     writeFileSync(path.join(workspace, ".git"), "gitdir: .git");
-    const image = makeGeneratedImage("synara-live-codex-home-");
+    const image = makeGeneratedImage("ramspace-live-codex-home-");
     const config = makeServerConfig({ cwd: workspace });
     const liveHomes = makeGeneratedImageHomeRegistry([
       { instanceId: "codex" as ProviderInstanceId, homePath: image.homePath },
@@ -609,9 +609,9 @@ describe("localImageEffectRouteLayer", () => {
   });
 
   it("serves live Codex session images when settings cannot be read", async () => {
-    const workspace = makeTempDir("synara-effect-image-settings-failure-workspace-");
+    const workspace = makeTempDir("ramspace-effect-image-settings-failure-workspace-");
     writeFileSync(path.join(workspace, ".git"), "gitdir: .git");
-    const image = makeGeneratedImage("synara-live-codex-settings-failure-home-");
+    const image = makeGeneratedImage("ramspace-live-codex-settings-failure-home-");
     const config = makeServerConfig({ cwd: workspace });
     const liveHomes = makeGeneratedImageHomeRegistry([
       { instanceId: "codex_work" as ProviderInstanceId, homePath: image.homePath },
@@ -643,9 +643,9 @@ describe("localImageEffectRouteLayer", () => {
   });
 
   it("filters live Codex session images to instances enabled by readable settings", async () => {
-    const workspace = makeTempDir("synara-effect-image-settings-scope-workspace-");
+    const workspace = makeTempDir("ramspace-effect-image-settings-scope-workspace-");
     writeFileSync(path.join(workspace, ".git"), "gitdir: .git");
-    const disabledImage = makeGeneratedImage("synara-live-codex-disabled-home-");
+    const disabledImage = makeGeneratedImage("ramspace-live-codex-disabled-home-");
     const config = makeServerConfig({ cwd: workspace });
     const settings = {
       ...DEFAULT_SERVER_SETTINGS,
@@ -686,7 +686,7 @@ describe("localImageEffectRouteLayer", () => {
   });
 
   it("returns 404 for missing files", async () => {
-    const workspace = makeTempDir("synara-effect-image-missing-");
+    const workspace = makeTempDir("ramspace-effect-image-missing-");
     writeFileSync(path.join(workspace, ".git"), "gitdir: .git");
     const ghostPath = path.join(workspace, "does-not-exist.png");
     const config = makeServerConfig({ cwd: workspace });

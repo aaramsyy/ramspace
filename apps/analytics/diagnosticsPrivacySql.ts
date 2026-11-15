@@ -1,11 +1,11 @@
 // Historical diagnostics use the same closed metadata before grouping, filtering or limits.
-import { DesktopUpdateFailureReason } from "@synara/contracts";
+import { DesktopUpdateFailureReason } from "@ramspace/contracts";
 import {
   DIAGNOSTIC_PROCESSES,
   DIAGNOSTIC_CRASH_REASONS,
   DIAGNOSTIC_SIGNALS,
   diagnosticPayloadKind,
-} from "@synara/shared/diagnosticsRedaction";
+} from "@ramspace/shared/diagnosticsRedaction";
 
 const literal = (value: string): string => `'${value.replaceAll("'", "''")}'`;
 const list = (values: Iterable<string>): string => [...values].map(literal).join(", ");

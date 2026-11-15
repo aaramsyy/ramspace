@@ -1,5 +1,5 @@
 // FILE: betaUsageSnapshot.ts
-// Purpose: Computes the anonymous last-24h usage snapshot for Synara Beta and Remote.
+// Purpose: Computes the anonymous last-24h usage snapshot for Ramspace Beta and Remote.
 // Layer: Server maintenance task — runs only on Beta and Remote desktop builds.
 //
 // The desktop main process cannot reach the projection database, so the server

@@ -1,5 +1,5 @@
-import { RemoteResource, type RemoteResourceReference } from "@synara/contracts";
-import { remoteResourceRoute } from "@synara/shared/remoteResources";
+import { RemoteResource, type RemoteResourceReference } from "@ramspace/contracts";
+import { remoteResourceRoute } from "@ramspace/shared/remoteResources";
 import { Schema } from "effect";
 
 export interface WorkspaceResourceRequest {

@@ -26,7 +26,7 @@ version, release notes and lockfile are final.
     Mach-O in the app must carry the `x86_64` slice. A short `qualify_intel`
     job then downloads it and runs the startup smoke on `macos-15-intel`:
     under Rosetta 2 the app took 135 seconds to over 180 seconds to start.
-    That job installs only `@synara/scripts` and `@synara/cli`, the workspaces
+    That job installs only `@ramspace/scripts` and `@ramspace/cli`, the workspaces
     the smoke imports.
   - Linux `x64` AppImage
   - Linux `arm64` AppImage on `ubuntu-24.04-arm`. It runs on a native arm64 host
@@ -46,12 +46,12 @@ version, release notes and lockfile are final.
 - Publishes one versioned GitHub Release with all produced files.
   - Versions with a suffix after `X.Y.Z` (for example `1.2.3-alpha.1`) are published as GitHub prereleases.
   - A `beta` prerelease identifier (`vX.Y.Z-beta.N`) selects the beta lane: the desktop artifact builds with `--flavor beta`, updater manifests publish under the `beta` channel, and the release never becomes Latest, never bumps `main` versions, and never touches the npm `latest` dist-tag. See [Beta channel](../BETA.md).
-  - A `remote` prerelease identifier (`vX.Y.Z-remote.N`) selects **Synara Remote**, a separate early-access app and `remote` update lane. From Remote .14, publication requires macOS ARM64, Windows x64 and Linux x64 artifacts and the three `remote` manifests, with no `latest` aliases. Windows has a dedicated NSIS GUID and Linux a dedicated executable/window class. These releases never become Latest, publish the CLI or alter Stable/Beta data. See [Remote identity](../BETA.md#synara-remote-early-access).
+  - A `remote` prerelease identifier (`vX.Y.Z-remote.N`) selects **Ramspace Remote**, a separate early-access app and `remote` update lane. From Remote .14, publication requires macOS ARM64, Windows x64 and Linux x64 artifacts and the three `remote` manifests, with no `latest` aliases. Windows has a dedicated NSIS GUID and Linux a dedicated executable/window class. These releases never become Latest, publish the CLI or alter Stable/Beta data. See [Remote identity](../BETA.md#ramspace-remote-early-access).
   - Stable clean-lane releases are GitHub Latest; the 0.4.x compatibility release remains historical.
-- Publishes default `latest*.yml` metadata plus byte-identical `synara*.yml` aliases on every stable release so existing packaged binaries keep working.
+- Publishes default `latest*.yml` metadata plus byte-identical `ramspace*.yml` aliases on every stable release so existing packaged binaries keep working.
 - Keeps the historical 0.4.x compatibility release unchanged; current stable payloads stay on their own GitHub Latest release.
-- Publishes prerelease installers only on their versioned GitHub prerelease; prereleases never replace the stable `synara` update manifests.
-- Publishes the CLI package (`apps/server`, npm package `@synara/cli`) with OIDC trusted publishing.
+- Publishes prerelease installers only on their versioned GitHub prerelease; prereleases never replace the stable `ramspace` update manifests.
+- Publishes the CLI package (`apps/server`, npm package `@ramspace/cli`) with OIDC trusted publishing.
 - Published macOS artifacts must be signed. Windows publication currently uses
   an explicit version-scoped unsigned exception; otherwise Azure signing is
   required. Build-only runs may produce unsigned artifacts when signing secrets
@@ -74,17 +74,17 @@ Backup validation and interrupted-migration recovery apply to both paths.
   - The desktop UI shows a rocket update button while preparing and switches to an install action once the update is ready.
 - Provider: GitHub Releases (`provider: github`) configured at build time.
 - Repository visibility: public. The authenticated private-repository provider does not honor custom channel filenames.
-- Runtime channel: `synara` for stable builds, `beta` for beta builds (resolved by `desktopUpdateChannel` in `packages/shared/src/desktopIdentity.ts`). Stable clean-lane releases publish both `latest` and `synara` metadata; beta releases publish `beta` channel aliases of the same default `latest` manifests, and beta builds run with `allowPrerelease=true` so they follow their own prerelease feed.
+- Runtime channel: `ramspace` for stable builds, `beta` for beta builds (resolved by `desktopUpdateChannel` in `packages/shared/src/desktopIdentity.ts`). Stable clean-lane releases publish both `latest` and `ramspace` metadata; beta releases publish `beta` channel aliases of the same default `latest` manifests, and beta builds run with `allowPrerelease=true` so they follow their own prerelease feed.
 - Repository slug source:
-  - `SYNARA_DESKTOP_UPDATE_REPOSITORY` (format `owner/repo`), if set.
+  - `RAMSPACE_DESKTOP_UPDATE_REPOSITORY` (format `owner/repo`), if set.
   - otherwise `GITHUB_REPOSITORY` from GitHub Actions.
-- Required Synara release assets for updater:
+- Required Ramspace release assets for updater:
   - platform installers (`.exe`, `.dmg`, `.AppImage`, plus macOS `.zip` for Squirrel.Mac update payloads)
-  - `synara-mac.yml`, `synara.yml`, and `synara-linux.yml` metadata, plus
-    `synara-linux-arm64.yml` on clean releases: electron-updater appends the
+  - `ramspace-mac.yml`, `ramspace.yml`, and `ramspace-linux.yml` metadata, plus
+    `ramspace-linux-arm64.yml` on clean releases: electron-updater appends the
     architecture to Linux manifest names (x64 keeps `-linux`, arm64 uses
     `-linux-arm64`), so each Linux architecture owns exactly one feed
-  - every clean-lane stable release includes the `synara*` manifests and the
+  - every clean-lane stable release includes the `ramspace*` manifests and the
     default `latest*` manifests: `latest-mac.yml`, `latest.yml`,
     `latest-linux.yml`, and `latest-linux-arm64.yml`. The pinned 0.4.x
     compatibility release stays on the x64 trio because it predates arm64.
@@ -92,11 +92,11 @@ Backup validation and interrupted-migration recovery apply to both paths.
     fallback is kept beside the channel copy.
   - `*.blockmap` files, except the macOS update ZIP, which uses a full-archive payload
 - Enforced upgrade path:
-  - Stable clean Synara releases are created with `make_latest=true` and carry the default `latest*` manifests and the dedicated `synara*` aliases, including the architecture-suffixed arm64 Linux manifest, in the versioned release.
+  - Stable clean Ramspace releases are created with `make_latest=true` and carry the default `latest*` manifests and the dedicated `ramspace*` aliases, including the architecture-suffixed arm64 Linux manifest, in the versioned release.
   - The historical 0.4.x compatibility release remains available for predecessor migration and is never overwritten by a clean-lane release.
   - Clean releases do not mirror payloads onto the historical compatibility release, so the 0.4.x line remains immutable.
-  - Clean-release publication fails closed if either the default Latest manifests or the dedicated `synara` aliases are missing.
-- Production desktop builds omit web/server/desktop source maps by default to keep update payloads small. Set `SYNARA_WEB_SOURCEMAP=1`, `SYNARA_SERVER_SOURCEMAP=1`, or `SYNARA_DESKTOP_SOURCEMAP=1` only for a diagnostic release that needs them.
+  - Clean-release publication fails closed if either the default Latest manifests or the dedicated `ramspace` aliases are missing.
+- Production desktop builds omit web/server/desktop source maps by default to keep update payloads small. Set `RAMSPACE_WEB_SOURCEMAP=1`, `RAMSPACE_SERVER_SOURCEMAP=1`, or `RAMSPACE_DESKTOP_SOURCEMAP=1` only for a diagnostic release that needs them.
 - macOS metadata note:
   - Installed macOS apps persist alternate icon choices using `NSWorkspace` custom-icon metadata, and reapply the saved choice on launch after an update. Default removes the override so the bundled icon follows system appearance. This requires a writable app bundle; development Electron bundles are not customized.
   - Custom icons leave signed `Contents` unchanged, but add Finder metadata that `codesign --verify --strict` rejects on a customized installation. Validate pristine distribution artifacts with the strict checks below. A local notarized app copy retained normal signature verification and Gatekeeper acceptance after customization; signed release/update testing must still cover this path.
@@ -106,7 +106,7 @@ Backup validation and interrupted-migration recovery apply to both paths.
     and writes its `latest-mac.yml` hash/size for each architecture; there is no
     preliminary ZIP or ZIP blockmap to generate and discard. Both must succeed
     before any artifact leaves the stage.
-  - The workflow merges the per-arch macOS metadata, then keeps the merged manifest as `latest-mac.yml` and copies it to `synara-mac.yml` for stable releases.
+  - The workflow merges the per-arch macOS metadata, then keeps the merged manifest as `latest-mac.yml` and copies it to `ramspace-mac.yml` for stable releases.
   - Finalization verifies Electron framework symlinks, extracts the ZIP and
     validates the extracted app signature before accepting the updater artifact.
     Retained older stages with existing metadata are updated to the final ZIP
@@ -124,7 +124,7 @@ the package version to the release tag version.
 
 Checklist:
 
-1. Confirm the npm account controls the `@synara` scope and can publish `@synara/cli`.
+1. Confirm the npm account controls the `@ramspace` scope and can publish `@ramspace/cli`.
 2. In npm package settings, configure Trusted Publisher:
    - Provider: GitHub Actions
    - Repository: this repo
@@ -136,15 +136,15 @@ Checklist:
    - build web + server
    - run `bun publish --access public`
 
-## Synara notes
+## Ramspace notes
 
-- Every stable versioned release must include both the default `latest` updater metadata and the dedicated `synara` aliases alongside its installers.
-- The published release title should read `Synara vX.Y.Z`.
+- Every stable versioned release must include both the default `latest` updater metadata and the dedicated `ramspace` aliases alongside its installers.
+- The published release title should read `Ramspace vX.Y.Z`.
 - By default, the first-party desktop release path does not require CLI publish or post-release version-bump automation.
 - Optional jobs stay disabled unless repository variables enable them:
-  - `SYNARA_PUBLISH_CLI=1`
-  - `SYNARA_FINALIZE_RELEASE=1`
-  - `SYNARA_AUTO_BETA=1` — tag the next `vX.Y.(Z+1)-beta.1` on the stable commit after each stable publish (see [BETA.md](../BETA.md)).
+  - `RAMSPACE_PUBLISH_CLI=1`
+  - `RAMSPACE_FINALIZE_RELEASE=1`
+  - `RAMSPACE_AUTO_BETA=1` — tag the next `vX.Y.(Z+1)-beta.1` on the stable commit after each stable publish (see [BETA.md](../BETA.md)).
 
 ## 1) Build-only native CI validation
 
@@ -298,7 +298,7 @@ wait does not cancel Apple's processing. With the same credentials in the
 environment, resume finalization without re-signing the app:
 
 ```bash
-node scripts/notarize-mac-app.ts /PATH/TO/STAGE/app/dist/mac-arm64/Synara.app
+node scripts/notarize-mac-app.ts /PATH/TO/STAGE/app/dist/mac-arm64/Ramspace.app
 node scripts/finalize-mac-dmg.ts /PATH/TO/STAGE/app/dist
 ```
 
@@ -328,9 +328,9 @@ packages, including DMG and update ZIP payloads.
 The generated and retained macOS update feeds use Darwin `22.0.0` for this minimum,
 because electron-updater compares `os.release()` rather than the macOS product version.
 
-The [read-only v1.0.1 inspection](https://github.com/Emanuele-web04/synara/actions/runs/38163962883)
+The [read-only v1.0.1 inspection](https://github.com/aaramsyy/ramspace/actions/runs/38163962883)
 found app/Electron metadata at 12.0 and bundled Claude/Cua at 13.0 on both architectures.
-The [actual Homebrew audit](https://github.com/Emanuele-web04/synara/actions/runs/38166229495)
+The [actual Homebrew audit](https://github.com/aaramsyy/ramspace/actions/runs/38166229495)
 rejected a cask requiring 13 because the old app plist still declares 12. This source fix
 does not modify signed historical releases. Recheck a newly built and published DMG's
 plist and native payload before refreshing the cask; the old audit failure remains
@@ -363,7 +363,7 @@ of the two. To warm a changed icon before a tag, dispatch the producer on
 `main`.
 
 Packaging still downloads only this run's `mac-icon-catalog` artifact.
-`SYNARA_MAC_ICON_CATALOG` points packaging at it; a missing file fails the build.
+`RAMSPACE_MAC_ICON_CATALOG` points packaging at it; a missing file fails the build.
 Local builds without that variable compile icons with the selected Xcode on the
 local host.
 
@@ -382,7 +382,7 @@ as a supported 0.9.0 feature.
 On an Apple Silicon Mac, build the DMG and macOS update ZIP in `release/` with:
 
 ```bash
-SYNARA_DESKTOP_UPDATE_REPOSITORY=Emanuele-web04/synara bun run dist:desktop:dmg:arm64
+RAMSPACE_DESKTOP_UPDATE_REPOSITORY=aaramsyy/ramspace bun run dist:desktop:dmg:arm64
 ```
 
 `dist:desktop:dmg:x64` builds the Intel app; on Apple Silicon, add the
@@ -403,7 +403,7 @@ backgrounds. The exported `app-icon.png` is retained alongside it as a reference
 the app continues to use the existing production ICNS generation pipeline.
 
 Mount the resulting DMG in Finder and check the 642×406 window, 128px icons,
-and icon centers at (172, 135) for `Synara.app` and (514, 241) for `Applications`.
+and icon centers at (172, 135) for `Ramspace.app` and (514, 241) for `Applications`.
 Verify both real filename labels remain readable and unclipped. Finder renders
 the app icon and Applications link, so their appearance can differ from Dmgly's
 preview; Retina displays also scale the supplied 1× background. Local Finder
@@ -446,7 +446,7 @@ Notes:
 
 The current Windows release policy publishes x64 installers unsigned under an
 explicit version-scoped exception. Before pushing the release tag, set the
-repository Actions variable `SYNARA_ALLOW_UNSIGNED_WINDOWS_RELEASE` to the exact
+repository Actions variable `RAMSPACE_ALLOW_UNSIGNED_WINDOWS_RELEASE` to the exact
 version without the `v` prefix (for example, `0.8.4`). The workflow checks equality
 with the resolved release version before packaging; do not use a permanent broad
 opt-out. Packaging, source provenance, startup smoke, and artifact upload must
@@ -498,7 +498,7 @@ Changes to the guard also run `Windows Defender Prerequisites` on a disposable
 Windows runner: the real guard scans a copied, Microsoft-signed system probe that
 is never executed, retaining its hash and live service/signature/MAPS evidence.
 The public system binary is not uploaded as evidence. That probe qualifies only
-the prerequisites and cannot qualify Synara's installer or its browser reputation.
+the prerequisites and cannot qualify Ramspace's installer or its browser reputation.
 Each final release artifact still requires its own live scan. This server scan
 does not replace Windows 11 browser-download qualification, prove that the cloud
 classified a particular installer, or establish that an antivirus download block
@@ -588,7 +588,7 @@ full subject distinguished name.
    recovery procedure below when a stage fails.
 7. Confirm the versioned release is public with all expected installers, manifests
    and provenance. Stable must be GitHub Latest and carry all four `latest`
-   manifests, including `latest-linux-arm64.yml`, plus byte-identical `synara`
+   manifests, including `latest-linux-arm64.yml`, plus byte-identical `ramspace`
    aliases; Beta must remain a prerelease
    with its own feed. Verify the historical compatibility release is unchanged.
 8. Verify public downloads and the authorized website deployment. Report packaged
@@ -638,7 +638,7 @@ full subject distinguished name.
 - macOS build unsigned when expected signed:
   - Check all Apple secrets are populated and non-empty.
 - Published Windows build rejected before packaging:
-  - For the unsigned release policy, check that `SYNARA_ALLOW_UNSIGNED_WINDOWS_RELEASE` matches the exact version without `v`.
+  - For the unsigned release policy, check that `RAMSPACE_ALLOW_UNSIGNED_WINDOWS_RELEASE` matches the exact version without `v`.
   - For a signed release, check all eight Azure ATS, identity, and auth secrets are populated and non-empty.
 - Build fails with signing error:
   - Re-check certificate/profile names and tenant/client credentials.

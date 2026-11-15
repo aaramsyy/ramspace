@@ -4,7 +4,7 @@
 
 import type { ReactNode } from "react";
 
-import { isGenericChatThreadTitle } from "@synara/shared/chatThreads";
+import { isGenericChatThreadTitle } from "@ramspace/shared/chatThreads";
 import { pluralize } from "~/i18n/pluralize";
 
 import { useThreadHasPendingDraft } from "../composerDraftStore";

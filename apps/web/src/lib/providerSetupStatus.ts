@@ -1,5 +1,5 @@
 import { t } from "~/i18n";
-import type { ServerProviderStatus, ServerProviderUsageSnapshot } from "@synara/contracts";
+import type { ServerProviderStatus, ServerProviderUsageSnapshot } from "@ramspace/contracts";
 
 /** Installation/auth health is independent of permission to run background work. */
 export function providerSetupStatusLabel(

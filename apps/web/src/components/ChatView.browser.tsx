@@ -2,8 +2,8 @@ import { FEATURE_TOUR_STORAGE_KEY } from "../featureTour/store";
 import {
   buildStalePendingRequestFailureDetail,
   pendingRequestInstanceKey,
-} from "@synara/shared/threadSummary";
-import { applyServerSettingsPatch } from "@synara/shared/serverSettings";
+} from "@ramspace/shared/threadSummary";
+import { applyServerSettingsPatch } from "@ramspace/shared/serverSettings";
 // Production CSS is part of the behavior under test because row height depends on it.
 import "../index.css";
 
@@ -35,11 +35,11 @@ import {
   type WsWelcomePayload,
   WS_METHODS,
   OrchestrationSessionStatus,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import {
   ATTACHMENT_CANCEL_ROUTE_PATH,
   ATTACHMENT_UPLOAD_ROUTE_PATH,
-} from "@synara/shared/binaryTransfer";
+} from "@ramspace/shared/binaryTransfer";
 import { RouterProvider, createMemoryHistory } from "@tanstack/react-router";
 import { HttpResponse, http, ws } from "msw";
 import { setupWorker } from "msw/browser";
@@ -772,7 +772,7 @@ function withStudioProject(snapshot: OrchestrationReadModel): OrchestrationReadM
         id: STUDIO_PROJECT_ID,
         kind: "studio",
         title: "Studio",
-        workspaceRoot: "/Users/tester/Documents/Synara/Studio",
+        workspaceRoot: "/Users/tester/Documents/Ramspace/Studio",
         defaultModelSelection: {
           provider: "codex",
           model: "gpt-5",
@@ -1426,7 +1426,7 @@ function resolveWsRpc(body: WsRequestEnvelope["body"]): unknown {
   if (tag === WS_METHODS.gitCreateDetachedWorktree) {
     return {
       worktree: {
-        path: "/repo/.codex/worktrees/generated/synara",
+        path: "/repo/.codex/worktrees/generated/ramspace",
         ref: "0123456789abcdef0123456789abcdef01234567",
         branch: typeof body.newBranch === "string" ? body.newBranch : null,
       },
@@ -2544,7 +2544,7 @@ describe("ChatView transcript geometry (full app)", () => {
       const warningsHidden = attribution === "hidden" || attribution === "editor-hidden";
       if (warningsHidden)
         localStorage.setItem(
-          "synara:app-settings:v1",
+          "ramspace:app-settings:v1",
           JSON.stringify({ showRateLimitWarnings: false }),
         );
       const base = createSnapshotWithInlineToolOverflow({ active: false });
@@ -2765,7 +2765,7 @@ describe("ChatView transcript geometry (full app)", () => {
         if (surface !== "hub discovery pending") return;
         nextFixture.welcome = {
           ...nextFixture.welcome,
-          studioWorkspaceRoot: "/Users/tester/Documents/Synara/Studio",
+          studioWorkspaceRoot: "/Users/tester/Documents/Ramspace/Studio",
         };
         const overview = createCoordinatorOverview(STUDIO_PROJECT_ID, THREAD_ID);
         nextFixture.projectAgentOverviews[STUDIO_PROJECT_ID] = overview;
@@ -2998,7 +2998,7 @@ describe("ChatView transcript geometry (full app)", () => {
       onTestFinished(() => {
         usePinnedThreadsStore.setState({ pinnedThreadIds: previousPins });
       });
-      localStorage.setItem("synara:sidebar-ui:v1", JSON.stringify({ activityViewEnabled }));
+      localStorage.setItem("ramspace:sidebar-ui:v1", JSON.stringify({ activityViewEnabled }));
       if (customShortcut) {
         const platformSpy = vi.spyOn(navigator, "platform", "get").mockReturnValue("Win32");
         onTestFinished(() => platformSpy.mockRestore());
@@ -3247,7 +3247,7 @@ describe("ChatView transcript geometry (full app)", () => {
         }),
       );
       localStorage.setItem(
-        "synara:sidebar-ui:v1",
+        "ramspace:sidebar-ui:v1",
         JSON.stringify({
           activityViewEnabled: false,
           projectThreadListExtraPagesByCwd: { [base.projects[0]!.workspaceRoot]: 10 },
@@ -3330,7 +3330,7 @@ describe("ChatView transcript geometry (full app)", () => {
       messages: [],
       session: { ...parent.session!, threadId: OTHER_THREAD_ID, updatedAt: olderIso },
     };
-    localStorage.setItem("synara:sidebar-ui:v1", JSON.stringify({ activityViewEnabled: false }));
+    localStorage.setItem("ramspace:sidebar-ui:v1", JSON.stringify({ activityViewEnabled: false }));
     const mounted = await mountChatView({
       viewport: DEFAULT_VIEWPORT,
       snapshot: { ...base, threads: [parent, ...subagents, other] },
@@ -3652,7 +3652,7 @@ describe("ChatView transcript geometry (full app)", () => {
       const sourceChat = document.querySelector(`[data-chat-pane-scope="${sourceScope}"]`)!;
       const sourceBox = sourceChat.closest('[data-slot="sidebar-inset"]')!.parentElement!;
       const persistedRatio = () =>
-        JSON.parse(localStorage.getItem("synara:split-view-state:v1")!).state.splitViewsById[
+        JSON.parse(localStorage.getItem("ramspace:split-view-state:v1")!).state.splitViewsById[
           splitViewId
         ].root.ratio;
       const dispatch = (target: EventTarget, type: string, ratio: number, buttons: number) =>
@@ -3681,10 +3681,10 @@ describe("ChatView transcript geometry (full app)", () => {
       dispatch(overlay, "pointerup", 0.65, 0);
       await vi.waitFor(() => expect(persistedRatio()).toBeCloseTo(0.65));
       expect([...document.querySelectorAll('[contenteditable="true"]')]).toEqual(editors);
-      const saved = localStorage.getItem("synara:split-view-state:v1")!;
+      const saved = localStorage.getItem("ramspace:split-view-state:v1")!;
       await mounted.cleanup();
       useSplitViewStore.setState({ splitViewsById: {}, splitViewIdBySourceThreadId: {} });
-      localStorage.setItem("synara:split-view-state:v1", saved);
+      localStorage.setItem("ramspace:split-view-state:v1", saved);
       await useSplitViewStore.persist.rehydrate();
       mounted = await mountChatView({ viewport: DEFAULT_VIEWPORT, snapshot });
       await openSplit();
@@ -3717,7 +3717,7 @@ describe("ChatView transcript geometry (full app)", () => {
           nextFixture.welcome = {
             ...nextFixture.welcome,
             homeDir: "/Users/tester",
-            chatWorkspaceRoot: "/Users/tester/Documents/Synara",
+            chatWorkspaceRoot: "/Users/tester/Documents/Ramspace",
           };
         },
       });
@@ -4019,7 +4019,7 @@ describe("ChatView transcript geometry (full app)", () => {
           expect(mounted.router.state.location.pathname).toBe(`/${closingThreadId}`),
         );
         const persistedSplit = () =>
-          JSON.parse(localStorage.getItem("synara:split-view-state:v1")!).state.splitViewsById[
+          JSON.parse(localStorage.getItem("ramspace:split-view-state:v1")!).state.splitViewsById[
             splitViewId
           ];
         expect(persistedSplit()).toBeDefined();
@@ -4247,7 +4247,7 @@ describe("ChatView transcript geometry (full app)", () => {
           color: "blue",
         });
       expect(project()?.localName).toBeNull();
-      const persisted = JSON.parse(localStorage.getItem("synara:renderer-state:v8") ?? "{}");
+      const persisted = JSON.parse(localStorage.getItem("ramspace:renderer-state:v8") ?? "{}");
       expect(persisted.projectNamesByCwd["/repo/project"]).toBeUndefined();
 
       useStore.getState().syncServerReadModel({
@@ -4265,7 +4265,10 @@ describe("ChatView transcript geometry (full app)", () => {
   });
 
   it("preserves the hidden board slot when Tasks replaces Kanban in the rail", async () => {
-    localStorage.setItem("synara:app-settings:v1", JSON.stringify({ hiddenRailItems: ["kanban"] }));
+    localStorage.setItem(
+      "ramspace:app-settings:v1",
+      JSON.stringify({ hiddenRailItems: ["kanban"] }),
+    );
     const mounted = await mountChatView({
       viewport: DEFAULT_VIEWPORT,
       snapshot: createSnapshotForTargetUser({
@@ -4287,7 +4290,7 @@ describe("ChatView transcript geometry (full app)", () => {
       await page.getByRole("button", { name: "Done", exact: true }).click();
       await expect.element(page.getByRole("button", { name: "Tasks", exact: true })).toBeVisible();
       expect(
-        JSON.parse(localStorage.getItem("synara:app-settings:v1") ?? "{}").hiddenRailItems,
+        JSON.parse(localStorage.getItem("ramspace:app-settings:v1") ?? "{}").hiddenRailItems,
       ).toEqual([]);
     } finally {
       await mounted.cleanup();
@@ -4327,7 +4330,7 @@ describe("ChatView transcript geometry (full app)", () => {
 
   it("preserves absent project pins when toggling a rail Space shortcut", async () => {
     localStorage.setItem(
-      "synara:app-settings:v1",
+      "ramspace:app-settings:v1",
       JSON.stringify({ railShortcuts: ["project:temporarily-absent"] }),
     );
     const mounted = await mountChatView({
@@ -4347,7 +4350,7 @@ describe("ChatView transcript geometry (full app)", () => {
       await page.getByRole("menuitemcheckbox", { name: "Void", exact: true }).click();
       await expect
         .poll(
-          () => JSON.parse(localStorage.getItem("synara:app-settings:v1") ?? "{}").railShortcuts,
+          () => JSON.parse(localStorage.getItem("ramspace:app-settings:v1") ?? "{}").railShortcuts,
         )
         .toEqual(["project:temporarily-absent", "space:void"]);
     } finally {
@@ -4388,7 +4391,7 @@ describe("ChatView transcript geometry (full app)", () => {
   });
 
   it("restores Activity grouping on mount and adopts an external grouping change", async () => {
-    const key = "synara:sidebar-ui:v1";
+    const key = "ramspace:sidebar-ui:v1";
     localStorage.setItem(
       key,
       JSON.stringify({
@@ -4445,7 +4448,7 @@ describe("ChatView transcript geometry (full app)", () => {
     "keeps Activity=$keepsActivity when selecting rail $destination",
     async ({ destination, keepsActivity }) => {
       localStorage.setItem(
-        "synara:app-settings:v1",
+        "ramspace:app-settings:v1",
         JSON.stringify({ railShortcuts: ["project:project-1", "space:void"] }),
       );
       const mounted = await mountChatView({
@@ -6274,7 +6277,7 @@ describe("ChatView transcript geometry (full app)", () => {
       const previousTop = scrollContainer.scrollTop;
       emitWsTransportState("connecting");
       await expect
-        .element(page.getByRole("status").filter({ hasText: "Reconnecting to Synara…" }), {
+        .element(page.getByRole("status").filter({ hasText: "Reconnecting to Ramspace…" }), {
           timeout: 4000,
         })
         .toBeVisible();
@@ -6282,7 +6285,7 @@ describe("ChatView transcript geometry (full app)", () => {
       expect(Math.abs(scrollContainer.scrollTop - previousTop)).toBeLessThanOrEqual(1);
       emitWsTransportState("open");
       await expect
-        .element(page.getByRole("status").filter({ hasText: "Reconnecting to Synara…" }))
+        .element(page.getByRole("status").filter({ hasText: "Reconnecting to Ramspace…" }))
         .not.toBeInTheDocument();
       await waitForLayout();
       expect(Math.abs(scrollContainer.scrollTop - previousTop)).toBeLessThanOrEqual(1);
@@ -6746,7 +6749,7 @@ describe("ChatView transcript geometry (full app)", () => {
     "keeps sent messages at the bottom with anchoring disabled when using %s, and follows streaming text",
     async (sendMethod) => {
       localStorage.setItem(
-        "synara:app-settings:v1",
+        "ramspace:app-settings:v1",
         JSON.stringify({ anchorSentMessagesToTop: false }),
       );
       const restoreNativeApi = installDeterministicSendNativeApi();
@@ -7072,12 +7075,12 @@ describe("ChatView transcript geometry (full app)", () => {
 
       const anchoredScrollHeight = scrollContainer.scrollHeight;
       for (const enabled of [false, true]) {
-        const storedSettings = JSON.parse(localStorage.getItem("synara:app-settings:v1") ?? "{}");
+        const storedSettings = JSON.parse(localStorage.getItem("ramspace:app-settings:v1") ?? "{}");
         localStorage.setItem(
-          "synara:app-settings:v1",
+          "ramspace:app-settings:v1",
           JSON.stringify({ ...storedSettings, anchorSentMessagesToTop: enabled }),
         );
-        window.dispatchEvent(new StorageEvent("storage", { key: "synara:app-settings:v1" }));
+        window.dispatchEvent(new StorageEvent("storage", { key: "ramspace:app-settings:v1" }));
         await vi.waitFor(
           () => {
             expect(
@@ -9104,8 +9107,8 @@ describe("ChatView transcript geometry (full app)", () => {
               threadId: dockTerminalThreadId(THREAD_ID),
               cwd: "/repo/worktrees/feature-draft",
               env: {
-                SYNARA_PROJECT_ROOT: "/repo/project",
-                SYNARA_WORKTREE_PATH: "/repo/worktrees/feature-draft",
+                RAMSPACE_PROJECT_ROOT: "/repo/project",
+                RAMSPACE_WORKTREE_PATH: "/repo/worktrees/feature-draft",
               },
             });
           },
@@ -9171,7 +9174,10 @@ describe("ChatView transcript geometry (full app)", () => {
   );
 
   it("cycles model effort with Shift+Tab in the existing model picker", async () => {
-    localStorage.setItem("synara:app-settings:v1", JSON.stringify({ composerEffortSlider: true }));
+    localStorage.setItem(
+      "ramspace:app-settings:v1",
+      JSON.stringify({ composerEffortSlider: true }),
+    );
     localStorage.setItem(
       STARRED_MODELS_STORAGE_KEY,
       JSON.stringify([
@@ -9278,7 +9284,10 @@ describe("ChatView transcript geometry (full app)", () => {
   });
 
   it("keeps the model picker open for 1500ms after the latest Shift+Tab press", async () => {
-    localStorage.setItem("synara:app-settings:v1", JSON.stringify({ composerEffortSlider: true }));
+    localStorage.setItem(
+      "ramspace:app-settings:v1",
+      JSON.stringify({ composerEffortSlider: true }),
+    );
     // A started chat's composer shows the selection stored on the thread.
     const storedSelection = {
       provider: "codex",
@@ -9334,7 +9343,10 @@ describe("ChatView transcript geometry (full app)", () => {
   });
 
   it("keeps a manually opened model picker open after the effort shortcut timer expires", async () => {
-    localStorage.setItem("synara:app-settings:v1", JSON.stringify({ composerEffortSlider: true }));
+    localStorage.setItem(
+      "ramspace:app-settings:v1",
+      JSON.stringify({ composerEffortSlider: true }),
+    );
     // A started chat's composer shows the selection stored on the thread.
     const storedSelection = {
       provider: "codex",
@@ -9381,7 +9393,10 @@ describe("ChatView transcript geometry (full app)", () => {
   });
 
   it("keeps the existing slider menu open when choosing another model after Shift+Tab", async () => {
-    localStorage.setItem("synara:app-settings:v1", JSON.stringify({ composerEffortSlider: true }));
+    localStorage.setItem(
+      "ramspace:app-settings:v1",
+      JSON.stringify({ composerEffortSlider: true }),
+    );
     // A started chat's composer shows the selection stored on the thread.
     const storedSelection = {
       provider: "codex",
@@ -9443,7 +9458,10 @@ describe("ChatView transcript geometry (full app)", () => {
   });
 
   it("opens the existing model picker effort menu when its slider setting is disabled", async () => {
-    localStorage.setItem("synara:app-settings:v1", JSON.stringify({ composerEffortSlider: false }));
+    localStorage.setItem(
+      "ramspace:app-settings:v1",
+      JSON.stringify({ composerEffortSlider: false }),
+    );
     // A started chat's composer shows the selection stored on the thread.
     const storedSelection = {
       provider: "codex",
@@ -9779,7 +9797,7 @@ describe("ChatView transcript geometry (full app)", () => {
     try {
       await expect.poll(() => document.hasFocus()).toBe(false);
       localStorage.setItem(
-        "synara:app-settings:v1",
+        "ramspace:app-settings:v1",
         JSON.stringify({ composerEffortSlider: true }),
       );
       mounted = await mountChatView({
@@ -10178,7 +10196,7 @@ describe("ChatView transcript geometry (full app)", () => {
   });
 
   it("steers a running turn when Follow-up behavior is set to Steer", async () => {
-    localStorage.setItem("synara:app-settings:v1", JSON.stringify({ followUpBehavior: "steer" }));
+    localStorage.setItem("ramspace:app-settings:v1", JSON.stringify({ followUpBehavior: "steer" }));
     useComposerDraftStore.getState().setPrompt(THREAD_ID, "steer this running turn");
 
     const mounted = await mountChatView({
@@ -11926,9 +11944,9 @@ describe("ChatView transcript geometry (full app)", () => {
           nextFixture.welcome = {
             ...nextFixture.welcome,
             homeDir: "/Users/tester",
-            chatWorkspaceRoot: "/Users/tester/Documents/Synara",
-            studioWorkspaceRoot: "/Users/tester/Documents/Synara/Studio",
-            groupsWorkspaceRoot: "/Users/tester/Documents/Synara/Groups",
+            chatWorkspaceRoot: "/Users/tester/Documents/Ramspace",
+            studioWorkspaceRoot: "/Users/tester/Documents/Ramspace/Studio",
+            groupsWorkspaceRoot: "/Users/tester/Documents/Ramspace/Groups",
           };
         },
       });
@@ -12051,7 +12069,7 @@ describe("ChatView transcript geometry (full app)", () => {
       configureFixture: (nextFixture) => {
         nextFixture.welcome = {
           ...nextFixture.welcome,
-          studioWorkspaceRoot: "/Users/tester/Documents/Synara/Studio",
+          studioWorkspaceRoot: "/Users/tester/Documents/Ramspace/Studio",
         };
         nextFixture.projectAgentOverviews[STUDIO_PROJECT_ID] = createCoordinatorOverview(
           STUDIO_PROJECT_ID,
@@ -12152,8 +12170,8 @@ describe("ChatView transcript geometry (full app)", () => {
         nextFixture.welcome = {
           ...nextFixture.welcome,
           homeDir: "/Users/tester",
-          chatWorkspaceRoot: "/Users/tester/Documents/Synara",
-          studioWorkspaceRoot: "/Users/tester/Documents/Synara/Studio",
+          chatWorkspaceRoot: "/Users/tester/Documents/Ramspace",
+          studioWorkspaceRoot: "/Users/tester/Documents/Ramspace/Studio",
         };
         nextFixture.projectAgentOverviews[STUDIO_PROJECT_ID] = createCoordinatorOverview(
           STUDIO_PROJECT_ID,
@@ -12194,7 +12212,7 @@ describe("ChatView transcript geometry (full app)", () => {
   });
 
   it("keeps a hub thread open when the Hubs section is hidden", async () => {
-    localStorage.setItem("synara:app-settings:v1", JSON.stringify({ showGroupsSection: false }));
+    localStorage.setItem("ramspace:app-settings:v1", JSON.stringify({ showGroupsSection: false }));
     const groupProjectId = "project-group-alpha" as ProjectId;
     const snapshot = createSnapshotForTargetUser({
       targetMessageId: "msg-group-thread-hidden-tab" as MessageId,
@@ -12229,8 +12247,8 @@ describe("ChatView transcript geometry (full app)", () => {
         nextFixture.welcome = {
           ...nextFixture.welcome,
           homeDir: "/Users/tester",
-          chatWorkspaceRoot: "/Users/tester/Documents/Synara",
-          studioWorkspaceRoot: "/Users/tester/Documents/Synara/Studio",
+          chatWorkspaceRoot: "/Users/tester/Documents/Ramspace",
+          studioWorkspaceRoot: "/Users/tester/Documents/Ramspace/Studio",
           groupsWorkspaceRoot: "/Users/tester/Groups",
         };
       },
@@ -12268,7 +12286,7 @@ describe("ChatView transcript geometry (full app)", () => {
         nextFixture.welcome = {
           ...nextFixture.welcome,
           homeDir: "/Users/tester",
-          chatWorkspaceRoot: "/Users/tester/Documents/Synara",
+          chatWorkspaceRoot: "/Users/tester/Documents/Ramspace",
         };
       },
     });
@@ -12404,7 +12422,7 @@ describe("ChatView transcript geometry (full app)", () => {
         nextFixture.welcome = {
           ...nextFixture.welcome,
           homeDir: "/Users/tester",
-          chatWorkspaceRoot: "/Users/tester/Documents/Synara",
+          chatWorkspaceRoot: "/Users/tester/Documents/Ramspace",
         };
         nextFixture.gitBranchByCwd = {
           "/Users/tester": "home-main",
@@ -12636,7 +12654,7 @@ describe("ChatView transcript geometry (full app)", () => {
         latestUserMessageAt: "2026-04-01T00:00:00.000Z",
       };
       localStorage.setItem(
-        "synara:app-settings:v1",
+        "ramspace:app-settings:v1",
         JSON.stringify({
           sidebarThreadSortOrder: "updated_at",
           sidebarThreadAttentionFirst: attentionFirst,
@@ -13667,9 +13685,9 @@ describe("ChatView transcript geometry (full app)", () => {
   ] as const)(
     "names the customized theme pack in the reset confirmation ($variant)",
     async ({ variant, reset, label }) => {
-      const previousTheme = localStorage.getItem("synara:theme");
+      const previousTheme = localStorage.getItem("ramspace:theme");
       localStorage.setItem(
-        "synara:theme",
+        "ramspace:theme",
         JSON.stringify({
           ...DEFAULT_THEME_STATE,
           mode: variant,
@@ -13685,7 +13703,7 @@ describe("ChatView transcript geometry (full app)", () => {
         snapshot: addThreadToSnapshot(createDraftOnlySnapshot(), THREAD_ID),
       });
       // The theme store subscribes while mounted; notify it after attaching the real app.
-      window.dispatchEvent(new StorageEvent("storage", { key: "synara:theme" }));
+      window.dispatchEvent(new StorageEvent("storage", { key: "ramspace:theme" }));
       const previousNativeApi = window.nativeApi;
       const api = readNativeApi()!;
       const confirm = vi.fn(async () => false);
@@ -13707,22 +13725,22 @@ describe("ChatView transcript geometry (full app)", () => {
           configurable: true,
           value: previousNativeApi,
         });
-        if (previousTheme === null) localStorage.removeItem("synara:theme");
-        else localStorage.setItem("synara:theme", previousTheme);
-        window.dispatchEvent(new StorageEvent("storage", { key: "synara:theme" }));
+        if (previousTheme === null) localStorage.removeItem("ramspace:theme");
+        else localStorage.setItem("ramspace:theme", previousTheme);
+        window.dispatchEvent(new StorageEvent("storage", { key: "ramspace:theme" }));
         await mounted.cleanup();
       }
     },
   );
 
   it("counts the system-font preference and the inactive theme pack toward Restore defaults", async () => {
-    const previousTheme = localStorage.getItem("synara:theme");
+    const previousTheme = localStorage.getItem("ramspace:theme");
     // Stay in System mode so only the inactive pack and the font switch differ from defaults.
     const inactiveVariant = window.matchMedia("(prefers-color-scheme: dark)").matches
       ? "light"
       : "dark";
     localStorage.setItem(
-      "synara:theme",
+      "ramspace:theme",
       JSON.stringify({
         ...DEFAULT_THEME_STATE,
         systemUiFont: false,
@@ -13737,7 +13755,7 @@ describe("ChatView transcript geometry (full app)", () => {
       viewport: DEFAULT_VIEWPORT,
       snapshot: addThreadToSnapshot(createDraftOnlySnapshot(), THREAD_ID),
     });
-    window.dispatchEvent(new StorageEvent("storage", { key: "synara:theme" }));
+    window.dispatchEvent(new StorageEvent("storage", { key: "ramspace:theme" }));
     const previousNativeApi = window.nativeApi;
     const api = readNativeApi()!;
     const confirm = vi.fn(async () => false);
@@ -13765,9 +13783,9 @@ describe("ChatView transcript geometry (full app)", () => {
         configurable: true,
         value: previousNativeApi,
       });
-      if (previousTheme === null) localStorage.removeItem("synara:theme");
-      else localStorage.setItem("synara:theme", previousTheme);
-      window.dispatchEvent(new StorageEvent("storage", { key: "synara:theme" }));
+      if (previousTheme === null) localStorage.removeItem("ramspace:theme");
+      else localStorage.setItem("ramspace:theme", previousTheme);
+      window.dispatchEvent(new StorageEvent("storage", { key: "ramspace:theme" }));
       await mounted.cleanup();
     }
   });
@@ -13788,7 +13806,8 @@ describe("ChatView transcript geometry (full app)", () => {
       await expect
         .poll(
           () =>
-            JSON.parse(localStorage.getItem("synara:app-settings:v1") ?? "{}").showAsciiBackground,
+            JSON.parse(localStorage.getItem("ramspace:app-settings:v1") ?? "{}")
+              .showAsciiBackground,
         )
         .toBe(false);
       await mounted.router.navigate({ to: "/$threadId", params: { threadId: THREAD_ID } });
@@ -14170,7 +14189,7 @@ describe("ChatView transcript geometry (full app)", () => {
           expect(createWorktreeRequest).toBeTruthy();
           const temporaryBranch = createWorktreeRequest?.newBranch;
           expect(typeof temporaryBranch).toBe("string");
-          expect(temporaryBranch).toMatch(/^synara\/[0-9a-f]{8}$/);
+          expect(temporaryBranch).toMatch(/^ramspace\/[0-9a-f]{8}$/);
 
           const createThreadRequest = wsRequests.find(
             (request) =>
@@ -14194,13 +14213,13 @@ describe("ChatView transcript geometry (full app)", () => {
               (command) =>
                 command?.type === "thread.meta.update" &&
                 command.threadId === newThreadId &&
-                command.worktreePath === "/repo/.codex/worktrees/generated/synara",
+                command.worktreePath === "/repo/.codex/worktrees/generated/ramspace",
             );
           expect(linkedWorkspace).toMatchObject({
             envMode: "worktree",
             branch: temporaryBranch,
-            worktreePath: "/repo/.codex/worktrees/generated/synara",
-            associatedWorktreePath: "/repo/.codex/worktrees/generated/synara",
+            worktreePath: "/repo/.codex/worktrees/generated/ramspace",
+            associatedWorktreePath: "/repo/.codex/worktrees/generated/ramspace",
             associatedWorktreeBranch: temporaryBranch,
             associatedWorktreeRef: "0123456789abcdef0123456789abcdef01234567",
           });
@@ -14292,7 +14311,7 @@ describe("ChatView transcript geometry (full app)", () => {
             wsRequests.some(
               (candidate) =>
                 candidate._tag === WS_METHODS.gitRemoveWorktree &&
-                candidate.path === "/repo/.codex/worktrees/generated/synara" &&
+                candidate.path === "/repo/.codex/worktrees/generated/ramspace" &&
                 candidate.force === true &&
                 candidate.reclaimTemporaryBranch === true,
             ),
@@ -14416,7 +14435,7 @@ describe("ChatView transcript geometry (full app)", () => {
         { timeout: 10_000, interval: 16 },
       );
       const createWorktreeIndex = wsRequests.indexOf(createWorktreeRequest);
-      const worktreePath = "/repo/.codex/worktrees/generated/synara";
+      const worktreePath = "/repo/.codex/worktrees/generated/ramspace";
 
       const terminalOpenRequest = await vi.waitFor(
         () => {
@@ -14445,8 +14464,8 @@ describe("ChatView transcript geometry (full app)", () => {
         _tag: WS_METHODS.terminalOpen,
         cwd: worktreePath,
         env: {
-          SYNARA_PROJECT_ROOT: "/repo/project",
-          SYNARA_WORKTREE_PATH: worktreePath,
+          RAMSPACE_PROJECT_ROOT: "/repo/project",
+          RAMSPACE_WORKTREE_PATH: worktreePath,
         },
       });
 
@@ -14771,8 +14790,8 @@ describe("ChatView transcript geometry (full app)", () => {
         nextFixture.welcome = {
           ...nextFixture.welcome,
           homeDir: "/Users/tester",
-          chatWorkspaceRoot: "/Users/tester/Documents/Synara",
-          studioWorkspaceRoot: "/Users/tester/Documents/Synara/Studio",
+          chatWorkspaceRoot: "/Users/tester/Documents/Ramspace",
+          studioWorkspaceRoot: "/Users/tester/Documents/Ramspace/Studio",
         };
       },
     });
@@ -14846,7 +14865,7 @@ describe("ChatView transcript geometry (full app)", () => {
   });
 
   it("applies the selected chat width to the transcript column", async () => {
-    localStorage.setItem("synara:app-settings:v1", JSON.stringify({ chatWidth: "wide" }));
+    localStorage.setItem("ramspace:app-settings:v1", JSON.stringify({ chatWidth: "wide" }));
     const mounted = await mountChatView({
       viewport: DEFAULT_VIEWPORT,
       snapshot: createSnapshotForTargetUser({
@@ -15227,7 +15246,7 @@ describe("ChatView transcript geometry (full app)", () => {
           ]),
         );
         expect(
-          JSON.parse(localStorage.getItem("synara:open-thread-tabs:v1")!).state.threadIds,
+          JSON.parse(localStorage.getItem("ramspace:open-thread-tabs:v1")!).state.threadIds,
         ).toEqual([THREAD_ID, thirdId, OTHER_THREAD_ID]);
         await vi.waitFor(() =>
           expect(mounted.router.state.location.pathname).toBe(`/${OTHER_THREAD_ID}`),
@@ -15536,7 +15555,7 @@ describe("ChatView transcript geometry (full app)", () => {
       const pr = {
         number: 841,
         title: "Fix session recovery",
-        url: "https://github.com/acme/synara/pull/841",
+        url: "https://github.com/acme/ramspace/pull/841",
         baseBranch: "main",
         headBranch: "fix/session-recovery",
         state: "open" as const,
@@ -15763,7 +15782,7 @@ describe("ChatView transcript geometry (full app)", () => {
             reactMs: commits.reduce((sum, duration) => sum + duration, 0),
             commits: commits.length,
             tabWrites: storageWrites.mock.calls.filter(
-              ([key]) => key === "synara:open-thread-tabs:v1",
+              ([key]) => key === "ramspace:open-thread-tabs:v1",
             ).length,
             missingHeaderFrames,
             missingComposerFrames,
@@ -16069,7 +16088,7 @@ describe("ChatView transcript geometry (full app)", () => {
           nextFixture.welcome = {
             ...nextFixture.welcome,
             homeDir: "/Users/tester",
-            chatWorkspaceRoot: "/Users/tester/Documents/Synara",
+            chatWorkspaceRoot: "/Users/tester/Documents/Ramspace",
           };
         },
       });
@@ -16276,8 +16295,8 @@ describe("ChatView transcript geometry (full app)", () => {
         nextFixture.welcome = {
           ...nextFixture.welcome,
           homeDir: "/Users/tester",
-          chatWorkspaceRoot: "/Users/tester/Documents/Synara",
-          studioWorkspaceRoot: "/Users/tester/Documents/Synara/Studio",
+          chatWorkspaceRoot: "/Users/tester/Documents/Ramspace",
+          studioWorkspaceRoot: "/Users/tester/Documents/Ramspace/Studio",
         };
         nextFixture.serverConfig = {
           ...nextFixture.serverConfig,
@@ -17598,7 +17617,7 @@ describe("ChatView transcript geometry (full app)", () => {
               {
                 ...createAssistantMessage({
                   id: MessageId.makeUnsafe("visual-answer"),
-                  text: `\`\`\`synara-visual\n${visualId}\n\`\`\``,
+                  text: `\`\`\`ramspace-visual\n${visualId}\n\`\`\``,
                   offsetSeconds: 152,
                 }),
                 turnId,

@@ -2,7 +2,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 
-import { generateSyncKey, openHostSecret, sealHostSecret } from "@synara/shared/hostSecrets";
+import { generateSyncKey, openHostSecret, sealHostSecret } from "@ramspace/shared/hostSecrets";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import {
@@ -16,7 +16,7 @@ import {
 const roots: string[] = [];
 
 async function makePath(): Promise<string> {
-  const root = await fs.mkdtemp(path.join(os.tmpdir(), "synara-host-secrets-key-"));
+  const root = await fs.mkdtemp(path.join(os.tmpdir(), "ramspace-host-secrets-key-"));
   roots.push(root);
   return hostSecretsSyncKeyPath(path.join(root, "secrets"));
 }

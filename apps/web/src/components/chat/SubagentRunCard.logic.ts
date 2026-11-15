@@ -8,7 +8,7 @@ import { t } from "~/i18n";
 // Exports: foldSubagentRunWorkEntries, deriveSubagentRunCard, scanSubagentRunCards,
 // summarizeRunningAgents, and the card model types
 
-import { ThreadId, type TurnId } from "@synara/contracts";
+import { ThreadId, type TurnId } from "@ramspace/contracts";
 
 import {
   deriveWorkLogEntries,

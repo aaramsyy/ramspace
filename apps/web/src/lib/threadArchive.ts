@@ -3,11 +3,11 @@
 // Layer: Web orchestration helper
 // Exports: archiveThreadFromClient, unarchiveThreadFromClient, isThreadAlreadyUnarchivedError
 
-import type { NativeApi, ThreadId } from "@synara/contracts";
+import type { NativeApi, ThreadId } from "@ramspace/contracts";
 import {
   collectErrorMessages,
   THREAD_NOT_ARCHIVED_INVARIANT_MARKER,
-} from "@synara/shared/errorMessages";
+} from "@ramspace/shared/errorMessages";
 
 import { newCommandId } from "./utils";
 

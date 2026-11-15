@@ -1,12 +1,12 @@
-import type { InboxDayRange, InboxSlotId, InboxTimeRange } from "@synara/shared/inboxDay";
-export { resolveInboxDay, recapInputForRange } from "@synara/shared/inboxDay";
+import type { InboxDayRange, InboxSlotId, InboxTimeRange } from "@ramspace/shared/inboxDay";
+export { resolveInboxDay, recapInputForRange } from "@ramspace/shared/inboxDay";
 export type {
   InboxDay,
   InboxDayRange,
   InboxSlot,
   InboxSlotId,
   InboxTimeRange,
-} from "@synara/shared/inboxDay";
+} from "@ramspace/shared/inboxDay";
 // FILE: inbox.logic.ts
 // Purpose: Pure rules for the Inbox page: the working day, its hours and its morning/
 //          afternoon/evening slots, the recap per slot, and the threads that need the user.
@@ -15,7 +15,7 @@ export type {
 //          compareWithYesterday, modelIconProvider, collectNeedsYouItems,
 //          countNeedsYouActions, groupInboxThreads, selectInboxTasks
 
-import type { ProviderKind, StatsGetRecapResult, ThreadId } from "@synara/contracts";
+import type { ProviderKind, StatsGetRecapResult, ThreadId } from "@ramspace/contracts";
 
 import type { SidebarThreadSummary } from "../../types";
 import { hasUnseenCompletion, resolveThreadStatusPill } from "../Sidebar.logic";

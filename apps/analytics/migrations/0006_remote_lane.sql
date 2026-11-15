@@ -1,4 +1,4 @@
--- Synara Remote reports diagnostics alongside Beta. Existing rows are Beta.
+-- Ramspace Remote reports diagnostics alongside Beta. Existing rows are Beta.
 ALTER TABLE events ADD COLUMN flavor TEXT NOT NULL DEFAULT 'beta';
 CREATE INDEX IF NOT EXISTS idx_events_flavor_ts ON events (flavor, ts);
 

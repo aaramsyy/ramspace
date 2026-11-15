@@ -19,11 +19,11 @@ describe("release download assets", () => {
         tag_name: "v1.5.1",
         html_url: releaseUrl,
         assets: [
-          asset("Synara-1.5.1-arm64.dmg"),
-          asset("Synara-1.5.1-x64.dmg"),
-          asset("Synara-1.5.1-x64.exe"),
-          asset("Synara-1.5.1-x86_64.AppImage"),
-          asset("Synara-1.5.1-arm64.AppImage"),
+          asset("Ramspace-1.5.1-arm64.dmg"),
+          asset("Ramspace-1.5.1-x64.dmg"),
+          asset("Ramspace-1.5.1-x64.exe"),
+          asset("Ramspace-1.5.1-x86_64.AppImage"),
+          asset("Ramspace-1.5.1-arm64.AppImage"),
           asset("latest-linux.yml"),
           asset("artifact-linux-arm64.provenance.json"),
         ],
@@ -34,13 +34,13 @@ describe("release download assets", () => {
     expect(downloads.version).toBe("v1.5.1");
     expect(downloads.releasesUrl).toBe(releaseUrl);
     expect(downloads.mac).toEqual({
-      arm64: asset("Synara-1.5.1-arm64.dmg").browser_download_url,
-      x64: asset("Synara-1.5.1-x64.dmg").browser_download_url,
+      arm64: asset("Ramspace-1.5.1-arm64.dmg").browser_download_url,
+      x64: asset("Ramspace-1.5.1-x64.dmg").browser_download_url,
     });
-    expect(downloads.windows).toBe(asset("Synara-1.5.1-x64.exe").browser_download_url);
+    expect(downloads.windows).toBe(asset("Ramspace-1.5.1-x64.exe").browser_download_url);
     expect(downloads.linux).toEqual({
-      x64: asset("Synara-1.5.1-x86_64.AppImage").browser_download_url,
-      arm64: asset("Synara-1.5.1-arm64.AppImage").browser_download_url,
+      x64: asset("Ramspace-1.5.1-x86_64.AppImage").browser_download_url,
+      arm64: asset("Ramspace-1.5.1-arm64.AppImage").browser_download_url,
     });
   });
 
@@ -50,7 +50,7 @@ describe("release download assets", () => {
         tag_name: "v1.5.1",
         html_url: releaseUrl,
         assets: [
-          { name: "Synara-1.5.1-arm64.AppImage", browser_download_url: "javascript:alert(1)" },
+          { name: "Ramspace-1.5.1-arm64.AppImage", browser_download_url: "javascript:alert(1)" },
         ],
       },
       releaseUrl,
@@ -60,14 +60,14 @@ describe("release download assets", () => {
 
   it("keeps the architectures apart when a release ships only one of them", () => {
     const intelOnly = mapReleaseAssets(
-      { tag_name: "v1.5.1", assets: [asset("Synara-1.5.1-x86_64.AppImage")] },
+      { tag_name: "v1.5.1", assets: [asset("Ramspace-1.5.1-x86_64.AppImage")] },
       releaseUrl,
     );
     expect(intelOnly.linux.x64).toContain("x86_64.AppImage");
     expect(intelOnly.linux.arm64).toBe(releaseUrl);
 
     const armOnly = mapReleaseAssets(
-      { tag_name: "v1.5.1", assets: [asset("Synara-1.5.1-arm64.AppImage")] },
+      { tag_name: "v1.5.1", assets: [asset("Ramspace-1.5.1-arm64.AppImage")] },
       releaseUrl,
     );
     expect(armOnly.linux.arm64).toContain("arm64.AppImage");
@@ -183,14 +183,16 @@ describe("release download assets", () => {
   });
 
   it("anchors the patterns to the installer suffix", () => {
-    expect(RELEASE_ASSET_PATTERNS.macArm64.test("Synara-1.5.1-arm64.dmg")).toBe(true);
-    expect(RELEASE_ASSET_PATTERNS.macArm64.test("Synara-1.5.1-arm64.zip")).toBe(false);
-    expect(RELEASE_ASSET_PATTERNS.linuxX64.test("Synara-1.5.1-x86_64.AppImage")).toBe(true);
-    expect(RELEASE_ASSET_PATTERNS.linuxX64.test("Synara-1.5.1-x86_64.AppImage.sha256")).toBe(false);
-    expect(RELEASE_ASSET_PATTERNS.linuxX64.test("Synara-1.5.1-x64.AppImage")).toBe(false);
-    expect(RELEASE_ASSET_PATTERNS.linuxArm64.test("Synara-1.5.1-arm64.AppImage")).toBe(true);
-    expect(RELEASE_ASSET_PATTERNS.linuxArm64.test("Synara-1.5.1-x86_64.AppImage")).toBe(false);
-    expect(RELEASE_ASSET_PATTERNS.windows.test("Synara-1.5.1-x64.exe")).toBe(true);
-    expect(RELEASE_ASSET_PATTERNS.windows.test("Synara-1.5.1-x64.exe.blockmap")).toBe(false);
+    expect(RELEASE_ASSET_PATTERNS.macArm64.test("Ramspace-1.5.1-arm64.dmg")).toBe(true);
+    expect(RELEASE_ASSET_PATTERNS.macArm64.test("Ramspace-1.5.1-arm64.zip")).toBe(false);
+    expect(RELEASE_ASSET_PATTERNS.linuxX64.test("Ramspace-1.5.1-x86_64.AppImage")).toBe(true);
+    expect(RELEASE_ASSET_PATTERNS.linuxX64.test("Ramspace-1.5.1-x86_64.AppImage.sha256")).toBe(
+      false,
+    );
+    expect(RELEASE_ASSET_PATTERNS.linuxX64.test("Ramspace-1.5.1-x64.AppImage")).toBe(false);
+    expect(RELEASE_ASSET_PATTERNS.linuxArm64.test("Ramspace-1.5.1-arm64.AppImage")).toBe(true);
+    expect(RELEASE_ASSET_PATTERNS.linuxArm64.test("Ramspace-1.5.1-x86_64.AppImage")).toBe(false);
+    expect(RELEASE_ASSET_PATTERNS.windows.test("Ramspace-1.5.1-x64.exe")).toBe(true);
+    expect(RELEASE_ASSET_PATTERNS.windows.test("Ramspace-1.5.1-x64.exe.blockmap")).toBe(false);
   });
 });

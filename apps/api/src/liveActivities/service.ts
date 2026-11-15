@@ -8,7 +8,7 @@ import {
   type RegisterTurnNotification,
   type RemoveTurnNotifications,
   type LiveActivitySource,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { HostAuthDomainError, type HostRecord } from "../identity/interfaces";
 import type { ActivityDelivery, NotificationDelivery, ApnsResult } from "./apns";
 import { liveActivityContent } from "./presentation";

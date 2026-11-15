@@ -1,27 +1,27 @@
 // FILE: trustedOrigins.ts
 // Purpose: Shared origin checks for browser-facing HTTP/WS routes that expose
-//          local machine data only to Synara's own app surfaces.
+//          local machine data only to Ramspace's own app surfaces.
 // Layer: Server HTTP/security utility
 // Exports: normalizeCorsOrigin, isTrustedAppOrigin,
 //          shouldRejectUntrustedRequestOrigin
 
 import {
-  SYNARA_BETA_DESKTOP_ORIGIN,
-  SYNARA_CANARY_DESKTOP_ORIGIN,
-  SYNARA_CUA_DESKTOP_ORIGIN,
-  SYNARA_DESKTOP_ORIGIN,
-  SYNARA_REMOTE_DESKTOP_ORIGIN,
-} from "@synara/shared/desktopIdentity";
+  RAMSPACE_BETA_DESKTOP_ORIGIN,
+  RAMSPACE_CANARY_DESKTOP_ORIGIN,
+  RAMSPACE_CUA_DESKTOP_ORIGIN,
+  RAMSPACE_DESKTOP_ORIGIN,
+  RAMSPACE_REMOTE_DESKTOP_ORIGIN,
+} from "@ramspace/shared/desktopIdentity";
 
 import type { ServerConfigShape } from "./config";
 import { isLoopbackHost, isWildcardHost } from "./startupAccess";
 
 export const DESKTOP_APP_CORS_ORIGINS: ReadonlySet<string> = new Set([
-  SYNARA_DESKTOP_ORIGIN,
-  SYNARA_CANARY_DESKTOP_ORIGIN,
-  SYNARA_CUA_DESKTOP_ORIGIN,
-  SYNARA_BETA_DESKTOP_ORIGIN,
-  SYNARA_REMOTE_DESKTOP_ORIGIN,
+  RAMSPACE_DESKTOP_ORIGIN,
+  RAMSPACE_CANARY_DESKTOP_ORIGIN,
+  RAMSPACE_CUA_DESKTOP_ORIGIN,
+  RAMSPACE_BETA_DESKTOP_ORIGIN,
+  RAMSPACE_REMOTE_DESKTOP_ORIGIN,
 ]);
 
 export function normalizeCorsOrigin(rawOrigin: string | ReadonlyArray<string> | undefined) {

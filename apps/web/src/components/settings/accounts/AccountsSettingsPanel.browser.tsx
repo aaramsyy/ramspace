@@ -6,8 +6,8 @@ import {
   type ServerProviderUsageSnapshot,
   type TerminalEvent,
   type TerminalOpenInput,
-} from "@synara/contracts";
-import { PROVIDER_DESCRIPTORS } from "@synara/shared/providerMetadata";
+} from "@ramspace/contracts";
+import { PROVIDER_DESCRIPTORS } from "@ramspace/shared/providerMetadata";
 import { page, userEvent } from "vitest/browser";
 import { beforeEach, expect, it, vi } from "vitest";
 import { render } from "vitest-browser-react";

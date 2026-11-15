@@ -10,9 +10,9 @@ import { readNativeApi } from "~/nativeApi";
 
 export { downloadBlob } from "~/lib/browserDownload";
 
-const SHARE_BRAND_HANDLE = "@trySynara";
+const SHARE_BRAND_HANDLE = "@tryRamspace";
 export const SHARE_TWEET_TEXT = `Just checking my ${SHARE_BRAND_HANDLE} dev stats. Absolute masterpiece of an IDE.`;
-const SHARE_URL = "https://trysynara.com";
+const SHARE_URL = "https://tryramspace.com";
 
 export type ShareTarget = "x" | "linkedin" | "reddit";
 
@@ -79,6 +79,6 @@ export function shareIntentUrl(target: ShareTarget, linkUrl: string = SHARE_URL)
     case "reddit":
       return `https://www.reddit.com/submit?url=${encodeURIComponent(
         linkUrl,
-      )}&title=${encodeURIComponent("My Synara dev stats")}`;
+      )}&title=${encodeURIComponent("My Ramspace dev stats")}`;
   }
 }

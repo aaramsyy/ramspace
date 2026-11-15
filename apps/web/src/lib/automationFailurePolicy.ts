@@ -6,7 +6,7 @@
 // detail page's "On failure" row so both surfaces read identically.
 
 import { t } from "~/i18n";
-import { DEFAULT_AUTOMATION_STOP_AFTER_CONSECUTIVE_FAILURES } from "@synara/contracts";
+import { DEFAULT_AUTOMATION_STOP_AFTER_CONSECUTIVE_FAILURES } from "@ramspace/contracts";
 
 /** "never" or a positive integer rendered as a string ("1", "3", "5", …). */
 export type AutomationFailurePolicyValue = string;

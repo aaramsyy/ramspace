@@ -2,7 +2,7 @@
 // receipt's lines, and the trailing month both draw. Pure data so the image route only
 // lays it out.
 
-import { formatCompact, formatHourLabel } from "@synara/profile-ui/formatting";
+import { formatCompact, formatHourLabel } from "@ramspace/profile-ui/formatting";
 import { buildDailySeries } from "./dailySeries";
 import { groupModelUsage } from "./modelUsage";
 import { resolveProfileAccent } from "./profileAccent";

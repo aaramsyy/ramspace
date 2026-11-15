@@ -2,16 +2,16 @@
 // Purpose: Shared storage keys + readers for per-provider favorite model slugs.
 // Layer: Web local-storage helpers used by the model picker and model cycle shortcuts.
 
-import type { ProviderInstanceId, ProviderKind } from "@synara/contracts";
+import type { ProviderInstanceId, ProviderKind } from "@ramspace/contracts";
 import { Schema } from "effect";
 
 export const FAVORITE_MODEL_STORAGE_KEYS = {
-  cursor: "synara:cursor-favourite-models:v1",
-  opencode: "synara:opencode-favourite-models:v1",
-  pi: "synara:pi-favourite-models:v1",
+  cursor: "ramspace:cursor-favourite-models:v1",
+  opencode: "ramspace:opencode-favourite-models:v1",
+  pi: "ramspace:pi-favourite-models:v1",
 } as const;
 
-const LEGACY_KILO_FAVORITE_MODEL_STORAGE_KEY = "synara:kilo-favourite-models:v1";
+const LEGACY_KILO_FAVORITE_MODEL_STORAGE_KEY = "ramspace:kilo-favourite-models:v1";
 
 export type FavoriteModelProvider = keyof typeof FAVORITE_MODEL_STORAGE_KEYS;
 

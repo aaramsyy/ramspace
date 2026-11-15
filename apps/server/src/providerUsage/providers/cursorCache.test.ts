@@ -5,7 +5,7 @@
 import * as childProcess from "node:child_process";
 
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
-import { outboundHttp } from "@synara/shared/outboundHttp";
+import { outboundHttp } from "@ramspace/shared/outboundHttp";
 
 import { __resetProviderUsageCacheForTests, collectProviderUsageSnapshots } from "../index";
 import { readItemTableValues } from "../sqlite";

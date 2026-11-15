@@ -15,7 +15,7 @@ import {
   type ProfileTokenStats,
   type ProviderKind,
   type UsageSummary,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import {
   serverProfileStatsQueryOptions,
   serverProfileTokenStatsQueryOptions,
@@ -32,7 +32,7 @@ import { Button } from "~/components/ui/button";
 import { Skeleton } from "~/components/ui/skeleton";
 import { Tooltip, TooltipPopup, TooltipTrigger } from "~/components/ui/tooltip";
 import { ActivityHeatmap, heatmapTooltipText } from "../profile/ActivityHeatmap";
-import { InsightRow, ModelUsageRow, StatTileGrid } from "@synara/profile-ui/sections";
+import { InsightRow, ModelUsageRow, StatTileGrid } from "@ramspace/profile-ui/sections";
 import {
   selectAccountShareCardStats,
   selectDeviceShareCardStats,
@@ -44,7 +44,7 @@ import { ProfileUsageCoverage } from "../profile/ProfileUsageCoverage";
 import { ShareDialog } from "../profile/ShareDialog";
 import { EditProfileDialog } from "../profile/EditProfileDialog";
 import { useProfileIdentity } from "../profile/useProfileIdentity";
-import { ProfileAvatar } from "@synara/profile-ui/avatar";
+import { ProfileAvatar } from "@ramspace/profile-ui/avatar";
 import {
   formatCompact,
   formatDays,
@@ -55,7 +55,7 @@ import {
   toDisplayName,
 } from "../profile/profileFormatting";
 import { SettingsSegmentedControl } from "./SettingControls";
-import { useSynaraPlan } from "./BillingSettingsPanel";
+import { useRamspacePlan } from "./BillingSettingsPanel";
 import { SettingsRow, SettingsSection } from "./SettingsPanelPrimitives";
 import { accountUsageSummaryQueryOptions } from "~/lib/accountReactQuery";
 import { profileShareUrl } from "~/lib/accountLogic";
@@ -232,7 +232,7 @@ function ProfileContent({
             <span>{handle}</span>
             <span aria-hidden>·</span>
             <span className="rounded-full border px-1.5 py-px text-ui leading-snug text-muted-foreground">
-              Synara
+              Ramspace
             </span>
           </div>
         </div>
@@ -259,7 +259,7 @@ function ProfileContent({
         />
       )}
 
-      {userId ? <SynaraAccountSection /> : null}
+      {userId ? <RamspaceAccountSection /> : null}
       <EditProfileDialog
         open={editOpen}
         onOpenChange={setEditOpen}
@@ -729,12 +729,12 @@ function capitalize(value: string): string {
 }
 
 // Signed-in account actions grouped in one card: identity + sign out, plan, delete.
-function SynaraAccountSection() {
+function RamspaceAccountSection() {
   const { t } = useTranslation();
   const account = useAccount();
-  const plan = useSynaraPlan();
+  const plan = useRamspacePlan();
   return (
-    <SettingsSection title="settings:profile_synaraAccount">
+    <SettingsSection title="settings:profile_ramspaceAccount">
       <SettingsRow
         title={t("settings:profile_signedIn")}
         description={account.me?.email ?? ""}

@@ -1,6 +1,6 @@
 // FILE: ProviderRing.tsx
 // Purpose: The onboarding hero illustration: every visible provider on a ring around the
-//          Synara app icon. Agents detected as connected on this machine get a live (blue)
+//          Ramspace app icon. Agents detected as connected on this machine get a live (blue)
 //          link with a halo; the rest stay dashed until they are set up.
 // Layer: Web UI illustration (aria-hidden)
 //
@@ -8,7 +8,7 @@
 // then the tiles drift, the outer guide turns, and a packet keeps travelling out along
 // every link. Reduced motion shows the settled frame with no packets or halos.
 
-import type { ProviderKind } from "@synara/contracts";
+import type { ProviderKind } from "@ramspace/contracts";
 import type { CSSProperties } from "react";
 
 import { ProviderIcon } from "~/components/ProviderIcon";

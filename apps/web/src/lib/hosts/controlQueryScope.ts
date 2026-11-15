@@ -1,4 +1,4 @@
-import type { AccountStatus } from "@synara/contracts";
+import type { AccountStatus } from "@ramspace/contracts";
 import { readExecutionContext } from "./executionContext";
 
 let accountScope = "signed-out";

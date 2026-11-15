@@ -5,7 +5,7 @@
 import { createDecipheriv, pbkdf2Sync } from "node:crypto";
 import nodePath from "node:path";
 
-import { execProcessFile } from "@synara/shared/processRuntime";
+import { execProcessFile } from "@ramspace/shared/processRuntime";
 
 import type { ProviderUsageContext } from "../types";
 

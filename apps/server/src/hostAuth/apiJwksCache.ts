@@ -1,4 +1,4 @@
-import type { ApiJwks } from "@synara/contracts";
+import type { ApiJwks } from "@ramspace/contracts";
 
 /** Shortest gap between forced refreshes, so an unknown kid cannot be a DoS. */
 const MIN_FORCED_REFRESH_INTERVAL_MS = 60_000;

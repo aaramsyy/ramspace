@@ -1,7 +1,7 @@
 import {
   remoteMethodUnavailable,
   REMOTE_NATIVE_UNAVAILABLE,
-} from "@synara/shared/remoteCapabilities";
+} from "@ramspace/shared/remoteCapabilities";
 import { readExecutionContext } from "./lib/hosts/executionContext";
 import {
   getConnectionClients,
@@ -69,8 +69,8 @@ import {
   COMPUTER_WS_CHANNELS,
   COMPUTER_WS_METHODS,
   type ComputerEvent,
-} from "@synara/contracts";
-import { VOICE_TRANSCRIPTION_UPLOAD_ROUTE_PATH } from "@synara/shared/binaryTransfer";
+} from "@ramspace/contracts";
+import { VOICE_TRANSCRIPTION_UPLOAD_ROUTE_PATH } from "@ramspace/shared/binaryTransfer";
 import { Schema } from "effect";
 
 import { showConfirmDialogFallback } from "./confirmDialogFallback";

@@ -60,7 +60,7 @@ export function McpConnectorProposalCard({ proposalId }: { proposalId: string })
       {pending ? (
         <p className="mt-4 text-ui-sm text-muted-foreground">
           {proposal.action === "remove"
-            ? `Remove ${connector.name} from Synara and stop access from its chats.`
+            ? `Remove ${connector.name} from Ramspace and stop access from its chats.`
             : `Connect ${connector.name} to use its tools in new chats.`}
         </p>
       ) : null}

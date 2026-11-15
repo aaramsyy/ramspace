@@ -4,7 +4,7 @@ import {
   SERVER_VOICE_TRANSCRIPTION_MAX_AUDIO_BYTES,
   PROVIDER_SEND_TURN_MAX_FILE_BYTES,
   PROVIDER_SEND_TURN_MAX_IMAGE_BYTES,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { Schema } from "effect";
 
 export const REMOTE_RESOURCE_PATH = "/v2/resource";
@@ -99,5 +99,5 @@ export function remoteResourcePresentationUrl(
   environmentId: string,
   encodedReference: string,
 ): string {
-  return `synara://remote/${encodeURIComponent(environmentId)}${REMOTE_RESOURCE_PATH}/${encodeURIComponent(encodedReference)}`;
+  return `ramspace://remote/${encodeURIComponent(environmentId)}${REMOTE_RESOURCE_PATH}/${encodeURIComponent(encodedReference)}`;
 }

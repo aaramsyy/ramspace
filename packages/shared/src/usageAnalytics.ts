@@ -1,6 +1,6 @@
 // Anonymous usage categories shared by the snapshot producer, desktop queue and
 // analytics receiver. Only bundled catalog values may cross these boundaries.
-import { MODEL_CAPABILITIES_INDEX, ProviderKind } from "@synara/contracts";
+import { MODEL_CAPABILITIES_INDEX, ProviderKind } from "@ramspace/contracts";
 import { normalizeModelSlug, stripClaudeContextWindowSuffix } from "./model";
 
 // Also used by analytics SQL read guards; migrations freeze this vocabulary once.

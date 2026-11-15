@@ -3,7 +3,7 @@
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
-import { EnvironmentId } from "@synara/contracts";
+import { EnvironmentId } from "@ramspace/contracts";
 import { Effect } from "effect";
 import { calculateJwkThumbprint, exportJWK, generateKeyPair } from "jose";
 import { afterEach, expect, it, vi } from "vitest";
@@ -19,9 +19,9 @@ afterEach(() => {
 it.each(["unchanged", "replaced"] as const)(
   "keeps pairing's first bearer bound to its captured authority (account %s)",
   async (accountState) => {
-    vi.stubEnv("SYNARA_DESKTOP_BUNDLE_ID", "");
-    vi.stubEnv("SYNARA_REMOTE_CONNECTIONS", "1");
-    const baseDir = await mkdtemp(path.join(tmpdir(), "synara-pairing-account-scope-"));
+    vi.stubEnv("RAMSPACE_DESKTOP_BUNDLE_ID", "");
+    vi.stubEnv("RAMSPACE_REMOTE_CONNECTIONS", "1");
+    const baseDir = await mkdtemp(path.join(tmpdir(), "ramspace-pairing-account-scope-"));
     const initial = {
       accountUrl: "https://account-a.example.test",
       workosClientId: "client-a",

@@ -8,9 +8,9 @@ import {
   type SpaceJumpKeybindingCommand,
   THREAD_JUMP_KEYBINDING_COMMANDS,
   type ThreadJumpKeybindingCommand,
-} from "@synara/contracts";
-import { isKeyboardShortcutsHelpChord } from "@synara/shared/browserShortcuts";
-import { isUnassignedKeybindingShortcut } from "@synara/shared/keybindingRules";
+} from "@ramspace/contracts";
+import { isKeyboardShortcutsHelpChord } from "@ramspace/shared/browserShortcuts";
+import { isUnassignedKeybindingShortcut } from "@ramspace/shared/keybindingRules";
 import { trackShortcutCommand } from "./lib/productAnalytics";
 import { isMacPlatform, isWindowsPlatform } from "./lib/utils";
 

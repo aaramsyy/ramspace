@@ -15,7 +15,7 @@ import * as Command from "effect/unstable/cli/Command";
 import { FetchHttpClient } from "effect/unstable/http";
 import * as SqlClient from "effect/unstable/sql/SqlClient";
 import { afterEach, beforeEach, vi } from "vitest";
-import { NetService } from "@synara/shared/Net";
+import { NetService } from "@ramspace/shared/Net";
 
 import { ServerConfig, type ServerConfigShape } from "./config";
 import {
@@ -39,7 +39,7 @@ vi.mock("./remoteBillingPolicy", () => ({
   recordRemoteBillingPolicyHint: vi.fn(async () => {}),
 }));
 
-import { CliConfig, makeServerStartupLogData, synaraCli, type CliConfigShape } from "./main";
+import { CliConfig, makeServerStartupLogData, ramspaceCli, type CliConfigShape } from "./main";
 
 const start = vi.fn(() => undefined);
 const stop = vi.fn(() => undefined);
@@ -71,10 +71,10 @@ const serverStart = Effect.acquireRelease(
     ),
 ).pipe(Effect.map(({ server }) => server));
 const findAvailablePort = vi.fn((preferred: number) => Effect.succeed(preferred));
-let defaultSynaraHome = "";
+let defaultRamspaceHome = "";
 const tempHomes = new Set<string>();
 
-function makeTempHome(prefix = "synara-main-test-"): string {
+function makeTempHome(prefix = "ramspace-main-test-"): string {
   const directory = fs.mkdtempSync(path.join(os.tmpdir(), prefix));
   tempHomes.add(directory);
   return directory;
@@ -87,7 +87,7 @@ function permissionMode(filePath: string): number {
 // Shared service layer used by this CLI test suite.
 const testLayer = Layer.mergeAll(
   Layer.succeed(CliConfig, {
-    cwd: "/tmp/synara-test-workspace",
+    cwd: "/tmp/ramspace-test-workspace",
     fixPath: Effect.void,
     resolveStaticDir: Effect.undefined,
   } satisfies CliConfigShape),
@@ -110,13 +110,13 @@ const testLayer = Layer.mergeAll(
 );
 
 const runCli = (args: ReadonlyArray<string>, env: Record<string, string> = {}) => {
-  const program = Command.runWith(synaraCli, { version: "0.0.0-test" })(args).pipe(
+  const program = Command.runWith(ramspaceCli, { version: "0.0.0-test" })(args).pipe(
     Effect.provide(
       ConfigProvider.layer(
         ConfigProvider.fromEnv({
           env: {
-            SYNARA_HOME: defaultSynaraHome,
-            SYNARA_NO_BROWSER: "true",
+            RAMSPACE_HOME: defaultRamspaceHome,
+            RAMSPACE_NO_BROWSER: "true",
             ...env,
           },
         }),
@@ -128,7 +128,7 @@ const runCli = (args: ReadonlyArray<string>, env: Record<string, string> = {}) =
 
 beforeEach(() => {
   vi.clearAllMocks();
-  defaultSynaraHome = makeTempHome();
+  defaultRamspaceHome = makeTempHome();
   resolvedConfig = null;
   serverStopSignal = Effect.void;
   retainedSqlClient = null;
@@ -148,7 +148,7 @@ afterEach(() => {
 it.layer(testLayer)("server CLI command", (it) => {
   it.effect("parses all CLI flags and wires scoped start/stop", () =>
     Effect.gen(function* () {
-      const flagHome = makeTempHome("synara-main-flag-");
+      const flagHome = makeTempHome("ramspace-main-flag-");
 
       yield* runCli([
         "--mode",
@@ -199,7 +199,7 @@ it.layer(testLayer)("server CLI command", (it) => {
 
   it.effect("passes the root --home-dir flag to MCP subcommands", () =>
     Effect.gen(function* () {
-      const flagHome = makeTempHome("synara-main-mcp-flag-");
+      const flagHome = makeTempHome("ramspace-main-mcp-flag-");
 
       const exit = yield* Effect.exit(runCli(["mcp", "serve", "--home-dir", flagHome]));
 
@@ -213,7 +213,7 @@ it.layer(testLayer)("server CLI command", (it) => {
 
   it.effect("discovers the persisted runtime origin for the server status subcommand", () =>
     Effect.gen(function* () {
-      const flagHome = makeTempHome("synara-main-status-flag-");
+      const flagHome = makeTempHome("ramspace-main-status-flag-");
       const stateDir = path.join(flagHome, "userdata");
       fs.mkdirSync(stateDir, { recursive: true, mode: 0o700 });
       fs.chmodSync(stateDir, 0o700);
@@ -260,7 +260,7 @@ it.layer(testLayer)("server CLI command", (it) => {
 
   it.effect("rejects a discovered endpoint that cannot prove the persisted runtime identity", () =>
     Effect.gen(function* () {
-      const flagHome = makeTempHome("synara-main-status-proof-");
+      const flagHome = makeTempHome("ramspace-main-status-proof-");
       const stateDir = path.join(flagHome, "userdata");
       fs.mkdirSync(stateDir, { recursive: true, mode: 0o700 });
       fs.chmodSync(stateDir, 0o700);
@@ -307,7 +307,7 @@ it.layer(testLayer)("server CLI command", (it) => {
 
   it.effect("reports an unreachable result when no persisted runtime exists", () =>
     Effect.gen(function* () {
-      const flagHome = makeTempHome("synara-main-status-missing-");
+      const flagHome = makeTempHome("ramspace-main-status-missing-");
       const previousExitCode = process.exitCode;
       const output: string[] = [];
       const stdout = vi.spyOn(process.stdout, "write").mockImplementation((chunk) => {
@@ -334,7 +334,7 @@ it.layer(testLayer)("server CLI command", (it) => {
   it.effect("creates fresh local state directories with private permissions", () =>
     Effect.gen(function* () {
       if (process.platform === "win32") return;
-      const homeDir = makeTempHome("synara-main-private-fresh-");
+      const homeDir = makeTempHome("ramspace-main-private-fresh-");
 
       yield* runCli(["--home-dir", homeDir]);
 
@@ -356,7 +356,7 @@ it.layer(testLayer)("server CLI command", (it) => {
   it.effect("repairs permissions for an upgraded local state directory", () =>
     Effect.gen(function* () {
       if (process.platform === "win32") return;
-      const homeDir = makeTempHome("synara-main-private-upgrade-");
+      const homeDir = makeTempHome("ramspace-main-private-upgrade-");
       const stateDir = path.join(homeDir, "userdata");
       const attachmentDir = path.join(stateDir, "attachments");
       const attachmentPath = path.join(attachmentDir, "existing.bin");
@@ -375,20 +375,20 @@ it.layer(testLayer)("server CLI command", (it) => {
 
   it.effect("uses env fallbacks when flags are not provided", () =>
     Effect.gen(function* () {
-      const envHome = makeTempHome("synara-main-env-");
+      const envHome = makeTempHome("ramspace-main-env-");
 
       yield* runCli([], {
-        SYNARA_MODE: "desktop",
-        SYNARA_PORT: "4999",
-        SYNARA_HOST: "127.0.0.1",
-        SYNARA_HOME: envHome,
+        RAMSPACE_MODE: "desktop",
+        RAMSPACE_PORT: "4999",
+        RAMSPACE_HOST: "127.0.0.1",
+        RAMSPACE_HOME: envHome,
         VITE_DEV_SERVER_URL: "http://localhost:5173",
-        SYNARA_NO_BROWSER: "true",
-        SYNARA_AUTH_TOKEN: "env-token",
-        SYNARA_REMOTE_BILLING_POLICY_REQUIRED: "true",
-        SYNARA_DESKTOP_SHUTDOWN_TOKEN: "shutdown-token",
-        SYNARA_MIGRATION_DIVERGENCE_CONSENT: "migration-consent",
-        SYNARA_SSH_FORWARD_PORT: "4777",
+        RAMSPACE_NO_BROWSER: "true",
+        RAMSPACE_AUTH_TOKEN: "env-token",
+        RAMSPACE_REMOTE_BILLING_POLICY_REQUIRED: "true",
+        RAMSPACE_DESKTOP_SHUTDOWN_TOKEN: "shutdown-token",
+        RAMSPACE_MIGRATION_DIVERGENCE_CONSENT: "migration-consent",
+        RAMSPACE_SSH_FORWARD_PORT: "4777",
       });
 
       assert.equal(start.mock.calls.length, 1);
@@ -414,8 +414,8 @@ it.layer(testLayer)("server CLI command", (it) => {
 
   it.effect("consumes desktop shutdown authority before generic child launches", () =>
     Effect.gen(function* () {
-      const canonicalKey = "SYNARA_DESKTOP_SHUTDOWN_TOKEN";
-      const mixedCaseKey = "sYnArA_dEsKtOp_ShUtDoWn_ToKeN";
+      const canonicalKey = "RAMSPACE_DESKTOP_SHUTDOWN_TOKEN";
+      const mixedCaseKey = "ramspace_dEsKtOp_ShUtDoWn_ToKeN";
       const liveToken = "live-process-shutdown-token";
       const injectedToken = "injected-shutdown-token";
       const posixCaseSensitiveSentinel = "posix-case-sensitive-sentinel";
@@ -458,7 +458,7 @@ it.layer(testLayer)("server CLI command", (it) => {
         assert.equal(descendant.stdout, "missing");
 
         resolvedConfig = null;
-        yield* runCli([], { SYNARA_DESKTOP_SHUTDOWN_TOKEN: injectedToken });
+        yield* runCli([], { RAMSPACE_DESKTOP_SHUTDOWN_TOKEN: injectedToken });
         assert.equal(getResolvedConfig()?.desktopShutdownToken, injectedToken);
         assert.deepEqual(matchingLiveKeys(), []);
       } finally {
@@ -474,7 +474,7 @@ it.layer(testLayer)("server CLI command", (it) => {
 
   it.effect("consumes migration divergence consent before generic child launches", () =>
     Effect.gen(function* () {
-      const environmentKey = "SYNARA_MIGRATION_DIVERGENCE_CONSENT";
+      const environmentKey = "RAMSPACE_MIGRATION_DIVERGENCE_CONSENT";
       const originalValue = process.env[environmentKey];
       process.env[environmentKey] = "one-startup-consent";
 
@@ -570,9 +570,9 @@ it.layer(testLayer)("server CLI command", (it) => {
   it.effect("omits both server authority secrets from startup log data", () =>
     Effect.gen(function* () {
       yield* runCli([], {
-        SYNARA_AUTH_TOKEN: "browser-secret",
-        SYNARA_DESKTOP_SHUTDOWN_TOKEN: "shutdown-secret",
-        SYNARA_MIGRATION_DIVERGENCE_CONSENT: "migration-secret",
+        RAMSPACE_AUTH_TOKEN: "browser-secret",
+        RAMSPACE_DESKTOP_SHUTDOWN_TOKEN: "shutdown-secret",
+        RAMSPACE_MIGRATION_DIVERGENCE_CONSENT: "migration-secret",
       });
       const config = resolvedConfig;
       if (!config) throw new Error("Expected resolved server config");
@@ -588,12 +588,12 @@ it.layer(testLayer)("server CLI command", (it) => {
     }),
   );
 
-  it.effect("prefers --mode over SYNARA_MODE", () =>
+  it.effect("prefers --mode over RAMSPACE_MODE", () =>
     Effect.gen(function* () {
       findAvailablePort.mockImplementation((_preferred: number) => Effect.succeed(4666));
       yield* runCli(["--mode", "web"], {
-        SYNARA_MODE: "desktop",
-        SYNARA_NO_BROWSER: "true",
+        RAMSPACE_MODE: "desktop",
+        RAMSPACE_NO_BROWSER: "true",
       });
 
       assert.deepStrictEqual(findAvailablePort.mock.calls, [[3773]]);
@@ -614,11 +614,11 @@ it.layer(testLayer)("server CLI command", (it) => {
           "--no-log-websocket-events",
         ],
         {
-          SYNARA_MODE: "desktop",
-          SYNARA_NO_BROWSER: "true",
-          SYNARA_AUTO_BOOTSTRAP_PROJECT_FROM_CWD: "true",
-          SYNARA_LOG_PROVIDER_EVENTS: "true",
-          SYNARA_LOG_WS_EVENTS: "true",
+          RAMSPACE_MODE: "desktop",
+          RAMSPACE_NO_BROWSER: "true",
+          RAMSPACE_AUTO_BOOTSTRAP_PROJECT_FROM_CWD: "true",
+          RAMSPACE_LOG_PROVIDER_EVENTS: "true",
+          RAMSPACE_LOG_WS_EVENTS: "true",
         },
       );
 
@@ -645,8 +645,8 @@ it.layer(testLayer)("server CLI command", (it) => {
   it.effect("uses fixed localhost defaults in desktop mode", () =>
     Effect.gen(function* () {
       yield* runCli([], {
-        SYNARA_MODE: "desktop",
-        SYNARA_NO_BROWSER: "true",
+        RAMSPACE_MODE: "desktop",
+        RAMSPACE_NO_BROWSER: "true",
       });
 
       assert.equal(findAvailablePort.mock.calls.length, 0);
@@ -662,8 +662,8 @@ it.layer(testLayer)("server CLI command", (it) => {
       yield* runCli(
         ["--host", "0.0.0.0", "--auth-token", "remote-secret", "--allow-insecure-remote"],
         {
-          SYNARA_MODE: "desktop",
-          SYNARA_NO_BROWSER: "true",
+          RAMSPACE_MODE: "desktop",
+          RAMSPACE_NO_BROWSER: "true",
         },
       );
 
@@ -677,8 +677,8 @@ it.layer(testLayer)("server CLI command", (it) => {
   it.effect("honors insecure remote opt-in from the environment when the CLI flag is absent", () =>
     Effect.gen(function* () {
       yield* runCli(["--host", "0.0.0.0", "--auth-token", "remote-secret"], {
-        SYNARA_ALLOW_INSECURE_REMOTE: "true",
-        SYNARA_NO_BROWSER: "true",
+        RAMSPACE_ALLOW_INSECURE_REMOTE: "true",
+        RAMSPACE_NO_BROWSER: "true",
       });
 
       assert.equal(start.mock.calls.length, 1);
@@ -692,8 +692,8 @@ it.layer(testLayer)("server CLI command", (it) => {
         runCli(
           ["--host", "0.0.0.0", "--auth-token", "remote-secret", "--no-allow-insecure-remote"],
           {
-            SYNARA_ALLOW_INSECURE_REMOTE: "true",
-            SYNARA_NO_BROWSER: "true",
+            RAMSPACE_ALLOW_INSECURE_REMOTE: "true",
+            RAMSPACE_NO_BROWSER: "true",
           },
         ),
       );
@@ -723,16 +723,16 @@ it.layer(testLayer)("server CLI command", (it) => {
           "--auth-token",
           "remote-secret",
           "--public-url",
-          "https://synara.example.test",
+          "https://ramspace.example.test",
         ],
-        { SYNARA_NO_BROWSER: "false" },
+        { RAMSPACE_NO_BROWSER: "false" },
       );
 
-      assert.equal(resolvedConfig?.publicUrl?.origin, "https://synara.example.test");
+      assert.equal(resolvedConfig?.publicUrl?.origin, "https://ramspace.example.test");
       assert.equal(openBrowser.mock.calls.length, 1);
       assert.match(
         openBrowser.mock.calls[0]?.[0] ?? "",
-        /^https:\/\/synara\.example\.test\/pair#token=/,
+        /^https:\/\/ramspace\.example\.test\/pair#token=/,
       );
     }),
   );
@@ -740,13 +740,13 @@ it.layer(testLayer)("server CLI command", (it) => {
   it.effect("supports the HTTPS public origin through environment configuration", () =>
     Effect.gen(function* () {
       yield* runCli([], {
-        SYNARA_HOST: "192.168.1.50",
-        SYNARA_AUTH_TOKEN: "remote-secret",
-        SYNARA_PUBLIC_URL: "https://synara.example.test",
+        RAMSPACE_HOST: "192.168.1.50",
+        RAMSPACE_AUTH_TOKEN: "remote-secret",
+        RAMSPACE_PUBLIC_URL: "https://ramspace.example.test",
       });
 
       assert.equal(start.mock.calls.length, 1);
-      assert.equal(resolvedConfig?.publicUrl?.origin, "https://synara.example.test");
+      assert.equal(resolvedConfig?.publicUrl?.origin, "https://ramspace.example.test");
       assert.equal(resolvedConfig?.allowInsecureRemote, false);
     }),
   );
@@ -773,7 +773,10 @@ it.layer(testLayer)("server CLI command", (it) => {
 
   it.effect("rejects non-root or non-HTTPS public URLs", () =>
     Effect.gen(function* () {
-      for (const publicUrl of ["http://synara.example.test", "https://synara.example.test/app"]) {
+      for (const publicUrl of [
+        "http://ramspace.example.test",
+        "https://ramspace.example.test/app",
+      ]) {
         const error = yield* Effect.flip(
           runCli(["--host", "0.0.0.0", "--auth-token", "remote-secret", "--public-url", publicUrl]),
         );
@@ -787,14 +790,14 @@ it.layer(testLayer)("server CLI command", (it) => {
     Effect.gen(function* () {
       const error = yield* Effect.flip(
         runCli(["--host", "0.0.0.0"], {
-          SYNARA_MODE: "web",
-          SYNARA_NO_BROWSER: "true",
+          RAMSPACE_MODE: "web",
+          RAMSPACE_NO_BROWSER: "true",
         }),
       );
 
       assert.equal(start.mock.calls.length, 0);
       assert.equal(resolvedConfig, null);
-      assert.match(String(error), /Refusing to bind Synara to non-loopback host 0\.0\.0\.0/);
+      assert.match(String(error), /Refusing to bind Ramspace to non-loopback host 0\.0\.0\.0/);
     }),
   );
 
@@ -811,8 +814,8 @@ it.layer(testLayer)("server CLI command", (it) => {
             "http://localhost:5173",
           ],
           {
-            SYNARA_MODE: "web",
-            SYNARA_NO_BROWSER: "true",
+            RAMSPACE_MODE: "web",
+            RAMSPACE_NO_BROWSER: "true",
           },
         ),
       );
@@ -829,11 +832,11 @@ it.layer(testLayer)("server CLI command", (it) => {
   it.effect("supports CLI and env for bootstrap/provider-log/websocket toggles", () =>
     Effect.gen(function* () {
       yield* runCli(["--auto-bootstrap-project-from-cwd"], {
-        SYNARA_MODE: "desktop",
-        SYNARA_LOG_PROVIDER_EVENTS: "true",
-        SYNARA_LOG_WS_EVENTS: "false",
-        SYNARA_AUTO_BOOTSTRAP_PROJECT_FROM_CWD: "false",
-        SYNARA_NO_BROWSER: "true",
+        RAMSPACE_MODE: "desktop",
+        RAMSPACE_LOG_PROVIDER_EVENTS: "true",
+        RAMSPACE_LOG_WS_EVENTS: "false",
+        RAMSPACE_AUTO_BOOTSTRAP_PROJECT_FROM_CWD: "false",
+        RAMSPACE_NO_BROWSER: "true",
       });
 
       assert.equal(start.mock.calls.length, 1);
@@ -847,7 +850,7 @@ it.layer(testLayer)("server CLI command", (it) => {
     Effect.gen(function* () {
       const error = yield* Effect.flip(
         runCli([], {
-          SYNARA_LOG_PROVIDER_EVENTS: "sometimes",
+          RAMSPACE_LOG_PROVIDER_EVENTS: "sometimes",
         }),
       );
 
@@ -875,12 +878,12 @@ it.layer(testLayer)("server CLI command", (it) => {
     }),
   );
 
-  // `synara auth` with a stored session must never send the stored token to a
+  // `ramspace auth` with a stored session must never send the stored token to a
   // DIFFERENT service: a conflicting explicit --account-url fails before any
-  // request is made, pointing at `synara auth logout`.
-  it.effect("refuses `synara auth` against a URL conflicting with the stored session", () =>
+  // request is made, pointing at `ramspace auth logout`.
+  it.effect("refuses `ramspace auth` against a URL conflicting with the stored session", () =>
     Effect.gen(function* () {
-      const homeDir = makeTempHome("synara-main-auth-conflict-");
+      const homeDir = makeTempHome("ramspace-main-auth-conflict-");
       fs.writeFileSync(
         path.join(homeDir, "account-credentials.json"),
         JSON.stringify({
@@ -901,19 +904,19 @@ it.layer(testLayer)("server CLI command", (it) => {
       if (Exit.isFailure(exit)) {
         const rendered = Cause.pretty(exit.cause);
         assert.include(rendered, "signed in to https://accounts.example.com");
-        assert.include(rendered, "synara auth logout");
+        assert.include(rendered, "ramspace auth logout");
       }
       assert.equal(start.mock.calls.length, 0);
     }),
   );
 
-  // With a stored session and NO explicit URL anywhere, `synara auth` resolves
+  // With a stored session and NO explicit URL anywhere, `ramspace auth` resolves
   // the persisted accountUrl instead of failing "not configured". The session
   // proves the URL requirement is satisfied from the file even when the host
   // link still needs to be completed.
-  it.effect("lets `synara auth` use the persisted accountUrl with no env or flag", () =>
+  it.effect("lets `ramspace auth` use the persisted accountUrl with no env or flag", () =>
     Effect.gen(function* () {
-      const homeDir = makeTempHome("synara-main-auth-persisted-");
+      const homeDir = makeTempHome("ramspace-main-auth-persisted-");
       fs.writeFileSync(
         path.join(homeDir, "account-credentials.json"),
         JSON.stringify({

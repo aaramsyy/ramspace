@@ -1,4 +1,4 @@
-import { TurnId } from "@synara/contracts";
+import { TurnId } from "@ramspace/contracts";
 import { expect, it } from "vitest";
 import { snapshotProviderTurns } from "./snapshotProviderTurns.ts";
 

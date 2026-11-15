@@ -1,4 +1,4 @@
-import { ServerRuntimeStatus } from "@synara/contracts";
+import { ServerRuntimeStatus } from "@ramspace/contracts";
 import { Schema } from "effect";
 
 export const DEFAULT_SERVER_STATUS_URL = "http://127.0.0.1:3773";
@@ -6,7 +6,7 @@ const DEFAULT_SERVER_STATUS_TIMEOUT_MS = 3_000;
 
 type FetchLike = (input: string | URL | Request, init?: RequestInit) => Promise<Response>;
 
-export interface SynaraServerHealthSnapshot {
+export interface RamspaceServerHealthSnapshot {
   readonly eventLoop?: ServerRuntimeStatus;
   readonly status: string;
   readonly startupReady: boolean;
@@ -25,12 +25,12 @@ export interface SynaraServerHealthSnapshot {
   };
 }
 
-export type SynaraServerStatusResult =
+export type RamspaceServerStatusResult =
   | {
       readonly reachable: true;
       readonly ready: boolean;
       readonly url: string;
-      readonly health: SynaraServerHealthSnapshot;
+      readonly health: RamspaceServerHealthSnapshot;
     }
   | {
       readonly reachable: false;
@@ -39,7 +39,7 @@ export type SynaraServerStatusResult =
       readonly error: string;
     };
 
-export interface FetchSynaraServerStatusOptions {
+export interface FetchRamspaceServerStatusOptions {
   readonly url?: string;
   readonly timeoutMs?: number;
   readonly fetch?: FetchLike;
@@ -72,7 +72,7 @@ function healthUrlFromBaseUrl(rawUrl: string): {
   return { displayUrl, url: url.toString() };
 }
 
-function decodeHealthSnapshot(value: unknown): SynaraServerHealthSnapshot | null {
+function decodeHealthSnapshot(value: unknown): RamspaceServerHealthSnapshot | null {
   if (!value || typeof value !== "object" || Array.isArray(value)) {
     return null;
   }
@@ -84,12 +84,12 @@ function decodeHealthSnapshot(value: unknown): SynaraServerHealthSnapshot | null
   return {
     ...rest,
     ...(Schema.is(ServerRuntimeStatus)(eventLoop) ? { eventLoop } : {}),
-  } as unknown as SynaraServerHealthSnapshot;
+  } as unknown as RamspaceServerHealthSnapshot;
 }
 
-export async function fetchSynaraServerStatus(
-  options: FetchSynaraServerStatusOptions = {},
-): Promise<SynaraServerStatusResult> {
+export async function fetchRamspaceServerStatus(
+  options: FetchRamspaceServerStatusOptions = {},
+): Promise<RamspaceServerStatusResult> {
   const rawUrl = options.url ?? DEFAULT_SERVER_STATUS_URL;
   let healthUrl: { readonly displayUrl: string; readonly url: string };
   try {
@@ -125,7 +125,7 @@ export async function fetchSynaraServerStatus(
         reachable: false,
         ready: false,
         url: healthUrl.displayUrl,
-        error: "Health response did not match the Synara health shape.",
+        error: "Health response did not match the Ramspace health shape.",
       };
     }
 
@@ -146,16 +146,16 @@ export async function fetchSynaraServerStatus(
   }
 }
 
-export function formatSynaraServerStatus(result: SynaraServerStatusResult): string {
+export function formatRamspaceServerStatus(result: RamspaceServerStatusResult): string {
   if (!result.reachable) {
-    return `Synara server: unreachable\nURL: ${result.url}\nError: ${result.error}`;
+    return `Ramspace server: unreachable\nURL: ${result.url}\nError: ${result.error}`;
   }
 
   const projectionState = result.health.projection?.state;
   const status = result.ready ? "ready" : result.health.startupReady ? "not ready" : "starting";
   const loop = result.health.eventLoop;
   return [
-    `Synara server: ${status}`,
+    `Ramspace server: ${status}`,
     `URL: ${result.url}`,
     ...(projectionState ? [`Projection: ${projectionState}`] : []),
     ...(loop

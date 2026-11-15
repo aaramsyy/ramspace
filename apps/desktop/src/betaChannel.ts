@@ -1,5 +1,5 @@
 // FILE: betaChannel.ts
-// Purpose: Stable-side probe + handoff into a parallel Synara Beta install.
+// Purpose: Stable-side probe + handoff into a parallel Ramspace Beta install.
 // Layer: Desktop platform adapter (no Electron imports; every path is injectable for tests).
 //
 // Flow: stable writes `<betaHome>/import-requested.json` and launches the beta
@@ -23,41 +23,41 @@ import { delimiter, isAbsolute, join, resolve } from "node:path";
 import {
   BETA_IMPORT_REQUEST_FILE_NAME,
   BETA_IMPORT_RESULT_FILE_NAME,
-  SYNARA_BETA_HOME_DIR_NAME,
-  SYNARA_BETA_HOME_ENV,
-  SYNARA_BETA_INSTALL_DIR_ENV,
-  SYNARA_BETA_RELEASES_URL,
-  SYNARA_BETA_USER_DATA_ENV,
-  SYNARA_BETA_WINDOWS_INSTALLER_GUID,
-  SYNARA_STABLE_EXECUTABLE_ENV,
-  SYNARA_STABLE_HOME_ENV,
-  SYNARA_STABLE_RELEASES_URL,
-  SYNARA_STABLE_WINDOWS_INSTALLER_GUID,
+  RAMSPACE_BETA_HOME_DIR_NAME,
+  RAMSPACE_BETA_HOME_ENV,
+  RAMSPACE_BETA_INSTALL_DIR_ENV,
+  RAMSPACE_BETA_RELEASES_URL,
+  RAMSPACE_BETA_USER_DATA_ENV,
+  RAMSPACE_BETA_WINDOWS_INSTALLER_GUID,
+  RAMSPACE_STABLE_EXECUTABLE_ENV,
+  RAMSPACE_STABLE_HOME_ENV,
+  RAMSPACE_STABLE_RELEASES_URL,
+  RAMSPACE_STABLE_WINDOWS_INSTALLER_GUID,
   type BetaImportResult,
-} from "@synara/shared/betaChannel";
+} from "@ramspace/shared/betaChannel";
 import {
-  SYNARA_DESKTOP_SMOKE_USER_DATA_ENV,
-  synaraDesktopIdentity,
-} from "@synara/shared/desktopIdentity";
+  RAMSPACE_DESKTOP_SMOKE_USER_DATA_ENV,
+  ramspaceDesktopIdentity,
+} from "@ramspace/shared/desktopIdentity";
 import type {
   DesktopBetaActionError,
   DesktopBetaActionResult,
   DesktopBetaChannelState,
   DesktopBetaInstallProgress,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 
 import { installBetaFromFeed, type BetaInstallDeps, type ExpectedTeamId } from "./betaInstaller";
 
 // electron-builder registers the uninstall key under the raw NSIS guid (no
-// braces); the value itself lives in @synara/shared/betaChannel.
-export const BETA_WINDOWS_UNINSTALL_GUID = SYNARA_BETA_WINDOWS_INSTALLER_GUID;
-const BETA_MAC_APP_NAME = "Synara Beta.app";
-const BETA_MAC_EXECUTABLE_NAME = "Synara Beta";
-const BETA_WINDOWS_EXE_NAME = "Synara Beta.exe";
-const BETA_LINUX_DESKTOP_FILE = `${synaraDesktopIdentity("beta").userDataDirectoryName}.desktop`;
-const STABLE_MAC_APP_NAME = "Synara.app";
-const STABLE_MAC_EXECUTABLE_NAME = "Synara";
-const STABLE_WINDOWS_EXE_NAME = "Synara.exe";
+// braces); the value itself lives in @ramspace/shared/betaChannel.
+export const BETA_WINDOWS_UNINSTALL_GUID = RAMSPACE_BETA_WINDOWS_INSTALLER_GUID;
+const BETA_MAC_APP_NAME = "Ramspace Beta.app";
+const BETA_MAC_EXECUTABLE_NAME = "Ramspace Beta";
+const BETA_WINDOWS_EXE_NAME = "Ramspace Beta.exe";
+const BETA_LINUX_DESKTOP_FILE = `${ramspaceDesktopIdentity("beta").userDataDirectoryName}.desktop`;
+const STABLE_MAC_APP_NAME = "Ramspace.app";
+const STABLE_MAC_EXECUTABLE_NAME = "Ramspace";
+const STABLE_WINDOWS_EXE_NAME = "Ramspace.exe";
 
 export interface BetaInstallDetection {
   readonly installed: boolean;
@@ -83,7 +83,7 @@ interface BetaChannelDeps {
   /** Stable's own executable and data home, handed to beta for the way back. */
   readonly stableExecutablePath?: string | undefined;
   readonly stableHomeDir?: string | undefined;
-  /** Beta only: the running bundle is a packaged `Synara Beta.app` main may trash. */
+  /** Beta only: the running bundle is a packaged `Ramspace Beta.app` main may trash. */
   readonly canTrashOwnBundle?: boolean | undefined;
   /** Environment beta was launched with; read for the stable handoff (tests). */
   readonly env?: NodeJS.ProcessEnv | undefined;
@@ -119,17 +119,17 @@ export function spawnDetached(command: string, env: NodeJS.ProcessEnv): Promise<
 
 /** Per-process overrides that belong to the launching app, never the launched one. */
 const LAUNCHER_ONLY_ENV_KEYS = [
-  "SYNARA_HOME",
-  SYNARA_DESKTOP_SMOKE_USER_DATA_ENV,
-  "SYNARA_PORT",
-  "SYNARA_AUTH_TOKEN",
-  "SYNARA_DESKTOP_WS_URL",
-  "SYNARA_DESKTOP_SHUTDOWN_TOKEN",
-  "SYNARA_DESKTOP_FLAVOR",
+  "RAMSPACE_HOME",
+  RAMSPACE_DESKTOP_SMOKE_USER_DATA_ENV,
+  "RAMSPACE_PORT",
+  "RAMSPACE_AUTH_TOKEN",
+  "RAMSPACE_DESKTOP_WS_URL",
+  "RAMSPACE_DESKTOP_SHUTDOWN_TOKEN",
+  "RAMSPACE_DESKTOP_FLAVOR",
   "VITE_DEV_SERVER_URL",
   "ELECTRON_RUN_AS_NODE",
-  SYNARA_STABLE_EXECUTABLE_ENV,
-  SYNARA_STABLE_HOME_ENV,
+  RAMSPACE_STABLE_EXECUTABLE_ENV,
+  RAMSPACE_STABLE_HOME_ENV,
 ];
 
 function withoutLauncherOverrides(env: NodeJS.ProcessEnv): NodeJS.ProcessEnv {
@@ -148,13 +148,13 @@ export function betaLaunchEnvironment(input: {
   readonly stableHomeDir?: string | undefined;
 }): NodeJS.ProcessEnv {
   const env = withoutLauncherOverrides(input.env ?? process.env);
-  env[SYNARA_BETA_HOME_ENV] = input.betaHomeDir;
-  const userData = input.betaUserDataDir ?? env[SYNARA_BETA_USER_DATA_ENV];
+  env[RAMSPACE_BETA_HOME_ENV] = input.betaHomeDir;
+  const userData = input.betaUserDataDir ?? env[RAMSPACE_BETA_USER_DATA_ENV];
   if (userData) {
-    env[SYNARA_DESKTOP_SMOKE_USER_DATA_ENV] = userData;
+    env[RAMSPACE_DESKTOP_SMOKE_USER_DATA_ENV] = userData;
   }
-  if (input.stableExecutablePath) env[SYNARA_STABLE_EXECUTABLE_ENV] = input.stableExecutablePath;
-  if (input.stableHomeDir) env[SYNARA_STABLE_HOME_ENV] = input.stableHomeDir;
+  if (input.stableExecutablePath) env[RAMSPACE_STABLE_EXECUTABLE_ENV] = input.stableExecutablePath;
+  if (input.stableHomeDir) env[RAMSPACE_STABLE_HOME_ENV] = input.stableHomeDir;
   return env;
 }
 
@@ -162,8 +162,8 @@ export function betaLaunchEnvironment(input: {
  * stable gets back the data home it handed over, when it handed one over. */
 export function stableLaunchEnvironment(env: NodeJS.ProcessEnv = process.env): NodeJS.ProcessEnv {
   const next = withoutLauncherOverrides(env);
-  const stableHome = env[SYNARA_STABLE_HOME_ENV]?.trim();
-  if (stableHome) next.SYNARA_HOME = stableHome;
+  const stableHome = env[RAMSPACE_STABLE_HOME_ENV]?.trim();
+  if (stableHome) next.RAMSPACE_HOME = stableHome;
   return next;
 }
 
@@ -176,7 +176,7 @@ export function detectStableExecutable(
   homeDir: string = homedir(),
   env: NodeJS.ProcessEnv = process.env,
 ): string | null {
-  const handedOver = env[SYNARA_STABLE_EXECUTABLE_ENV]?.trim();
+  const handedOver = env[RAMSPACE_STABLE_EXECUTABLE_ENV]?.trim();
   if (handedOver && isAbsolute(handedOver) && isFile(handedOver)) return handedOver;
   if (platform === "darwin") {
     for (const appPath of [
@@ -191,7 +191,7 @@ export function detectStableExecutable(
   if (platform === "win32") {
     for (const hive of ["HKCU", "HKLM"]) {
       const installLocation = readRegistryValue(
-        `${hive}\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\${SYNARA_STABLE_WINDOWS_INSTALLER_GUID}`,
+        `${hive}\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\${RAMSPACE_STABLE_WINDOWS_INSTALLER_GUID}`,
         "InstallLocation",
       );
       const executable = installLocation ? join(installLocation, STABLE_WINDOWS_EXE_NAME) : null;
@@ -201,13 +201,13 @@ export function detectStableExecutable(
   return null;
 }
 
-/** The directories macOS installs probe, honoring `SYNARA_BETA_INSTALL_DIR`. */
+/** The directories macOS installs probe, honoring `RAMSPACE_BETA_INSTALL_DIR`. */
 export function betaMacInstallDirs(input?: {
   readonly homeDir?: string;
   readonly env?: NodeJS.ProcessEnv;
 }): string[] {
   const env = input?.env ?? process.env;
-  const override = env[SYNARA_BETA_INSTALL_DIR_ENV]?.trim();
+  const override = env[RAMSPACE_BETA_INSTALL_DIR_ENV]?.trim();
   const homeDir = input?.homeDir ?? homedir();
   return [
     ...(override ? [join(override, BETA_MAC_APP_NAME)] : []),
@@ -272,7 +272,7 @@ export function detectBetaInstall(
     return missing;
   }
   if (platform === "linux") {
-    const executablePath = findOnPath("synara-beta");
+    const executablePath = findOnPath("ramspace-beta");
     if (executablePath) {
       return {
         installed: true,
@@ -401,7 +401,7 @@ export async function launchBetaInstall(
   env?: NodeJS.ProcessEnv,
 ): Promise<void> {
   if (!detection.installed || !detection.executablePath) {
-    throw new Error("Synara Beta is not installed");
+    throw new Error("Ramspace Beta is not installed");
   }
   const executable =
     platform === "darwin"
@@ -449,16 +449,16 @@ export class DesktopBetaChannel {
   }
 
   /**
-   * Beta side of "Switch back to Synara": opens stable with its own data home.
+   * Beta side of "Switch back to Ramspace": opens stable with its own data home.
    * Beta data is never copied back; the caller quits beta once this succeeds.
    */
   async leave(): Promise<DesktopBetaActionResult> {
     if (this.deps.flavor !== "beta") {
-      return action(false, "not-supported", "Switching back is only available from Synara Beta.");
+      return action(false, "not-supported", "Switching back is only available from Ramspace Beta.");
     }
     const executable = this.detectStable();
     if (!executable) {
-      return action(false, "not-installed", "Synara isn't installed on this computer.");
+      return action(false, "not-installed", "Ramspace isn't installed on this computer.");
     }
     try {
       await spawnDetached(executable, stableLaunchEnvironment(this.deps.env ?? process.env));
@@ -480,14 +480,14 @@ export class DesktopBetaChannel {
       flavor: this.deps.flavor,
       stableInstalled: stableExecutable !== null,
       canMoveBetaToTrash: this.deps.flavor === "beta" && this.deps.canTrashOwnBundle === true,
-      stableDownloadUrl: SYNARA_STABLE_RELEASES_URL,
+      stableDownloadUrl: RAMSPACE_STABLE_RELEASES_URL,
       installed: detection?.installed ?? false,
       version: detection?.version ?? null,
       canInstall: supported && this.canInstall,
       running,
       lastImportAt: result && result.ok ? result.completedAt : null,
       lastImportError: result && !result.ok ? (result.error ?? "import failed") : null,
-      downloadUrl: SYNARA_BETA_RELEASES_URL,
+      downloadUrl: RAMSPACE_BETA_RELEASES_URL,
       install: this.installProgress,
     };
   }
@@ -495,11 +495,11 @@ export class DesktopBetaChannel {
   /** Launch beta as-is; refuses only when the install is missing. */
   async launch(): Promise<DesktopBetaActionResult> {
     if (this.deps.flavor !== "production") {
-      return action(false, "not-supported", "Beta handoff is only available from stable Synara.");
+      return action(false, "not-supported", "Beta handoff is only available from stable Ramspace.");
     }
     const detection = this.detect();
     if (!detection.installed || !detection.executablePath) {
-      return action(false, "not-installed", "Synara Beta is not installed yet.");
+      return action(false, "not-installed", "Ramspace Beta is not installed yet.");
     }
     try {
       await launchBetaInstall(detection, this.deps.platform, this.launchEnv());
@@ -516,7 +516,7 @@ export class DesktopBetaChannel {
   private async ensureInstalled(): Promise<DesktopBetaActionResult> {
     if (this.detect().installed) return action(true);
     if (!this.canInstall) {
-      return action(false, "not-installed", "Synara Beta is not installed yet.");
+      return action(false, "not-installed", "Ramspace Beta is not installed yet.");
     }
     this.installInFlight ??= (async () => {
       const install =
@@ -561,7 +561,7 @@ export class DesktopBetaChannel {
    */
   async install(): Promise<DesktopBetaActionResult> {
     if (this.deps.flavor !== "production") {
-      return action(false, "not-supported", "Beta handoff is only available from stable Synara.");
+      return action(false, "not-supported", "Beta handoff is only available from stable Ramspace.");
     }
     const installed = await this.ensureInstalled();
     if (!installed.ok) return installed;
@@ -576,19 +576,19 @@ export class DesktopBetaChannel {
    */
   async importAndLaunch(sourceHomeDir: string): Promise<DesktopBetaActionResult> {
     if (this.deps.flavor !== "production") {
-      return action(false, "not-supported", "Beta handoff is only available from stable Synara.");
+      return action(false, "not-supported", "Beta handoff is only available from stable Ramspace.");
     }
     const installed = await this.ensureInstalled();
     if (!installed.ok) return installed;
     const detection = this.detect();
     if (!detection.installed || !detection.executablePath) {
-      return action(false, "not-installed", "Synara Beta is not installed yet.");
+      return action(false, "not-installed", "Ramspace Beta is not installed yet.");
     }
     if (isBetaServerRunning(this.deps.betaHomeDir)) {
       return action(
         false,
         "beta-running",
-        "Quit Synara Beta first so it can pick up the import on its next launch.",
+        "Quit Ramspace Beta first so it can pick up the import on its next launch.",
       );
     }
     try {
@@ -620,4 +620,4 @@ export class DesktopBetaChannel {
 export const resolveBetaHomeDir = (
   homeDir: string = homedir(),
   env: NodeJS.ProcessEnv = process.env,
-): string => env[SYNARA_BETA_HOME_ENV]?.trim() || join(homeDir, SYNARA_BETA_HOME_DIR_NAME);
+): string => env[RAMSPACE_BETA_HOME_ENV]?.trim() || join(homeDir, RAMSPACE_BETA_HOME_DIR_NAME);

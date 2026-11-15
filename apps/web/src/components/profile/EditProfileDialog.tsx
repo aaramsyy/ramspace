@@ -10,7 +10,7 @@
 // and uploads go through account.uploadAvatar.
 
 import { type ReactNode, useRef, useState } from "react";
-import type { AccountProfileAvatarSource, AccountProfileSocialLinks } from "@synara/contracts";
+import type { AccountProfileAvatarSource, AccountProfileSocialLinks } from "@ramspace/contracts";
 import { Dialog, DialogClose, DialogPopup, DialogTitle } from "~/components/ui/dialog";
 import { ColorPill } from "~/components/ThemePackEditor";
 import { readProfileThemeAccent } from "~/hooks/useTheme";
@@ -29,19 +29,19 @@ import {
   readAccountErrorCode,
 } from "~/lib/accountLogic";
 import { ACCOUNT_BILLING_ENABLED } from "~/lib/accountBillingFlag";
-import { useOpenSynaraPlan } from "../settings/BillingSettingsPanel";
+import { useOpenRamspacePlan } from "../settings/BillingSettingsPanel";
 import { cn } from "~/lib/utils";
-import { normalizeHandle } from "@synara/profile-ui/formatting";
+import { normalizeHandle } from "@ramspace/profile-ui/formatting";
 import { PROFILE_AVATAR_COLORS } from "./useProfileAvatarColor";
 import { AvatarImageError, compressAvatarImage } from "./avatarImage";
-import { ProfileAvatar } from "@synara/profile-ui/avatar";
-import { SOCIAL_GLYPHS } from "@synara/profile-ui/social-icon";
+import { ProfileAvatar } from "@ramspace/profile-ui/avatar";
+import { SOCIAL_GLYPHS } from "@ramspace/profile-ui/social-icon";
 import {
   SOCIAL_LINK_PLATFORMS,
   type SocialLinkPlatform,
   type SocialLinks,
   socialLinkLabel,
-} from "@synara/shared/socialLinks";
+} from "@ramspace/shared/socialLinks";
 import { parseSocialLinkDrafts, seedSocialLinkDrafts } from "./socialLinkDrafts";
 import { useTranslation } from "~/i18n";
 
@@ -178,7 +178,7 @@ function EditProfileDialogContent({
   // without Alto. "See plans" shows only while that error is the one on screen, so
   // any later message (a bad link, an upload failure) never inherits it.
   const [planError, setPlanError] = useState<string | null>(null);
-  const openPlan = useOpenSynaraPlan();
+  const openPlan = useOpenRamspacePlan();
   const [processing, setProcessing] = useState(false);
   const [saving, setSaving] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);

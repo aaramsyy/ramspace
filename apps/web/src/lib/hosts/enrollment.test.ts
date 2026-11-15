@@ -4,7 +4,7 @@
 //          O/0 and a burnt approval attempt.
 // Layer: Web remote-access feature tests.
 
-import type { AccountHost, EnvironmentId } from "@synara/contracts";
+import type { AccountHost, EnvironmentId } from "@ramspace/contracts";
 import { describe, expect, it } from "vitest";
 
 import type { HostEnrollment } from "./api";

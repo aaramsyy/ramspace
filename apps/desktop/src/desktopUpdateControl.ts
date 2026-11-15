@@ -7,10 +7,10 @@ import {
   DesktopUpdateIpcRequest,
   type DesktopUpdateState,
   type ServerDesktopUpdateResult,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { Schema } from "effect";
 
-export const DESKTOP_UPDATE_IPC_ENV = "SYNARA_DESKTOP_UPDATE_IPC";
+export const DESKTOP_UPDATE_IPC_ENV = "RAMSPACE_DESKTOP_UPDATE_IPC";
 
 export function supportsDesktopUpdateControl(
   isPackaged: boolean,
@@ -60,7 +60,7 @@ export function attachDesktopUpdateControl(
       return;
     }
     try {
-      child.send({ type: "synara:desktop-update:response", id, result }, (error) => {
+      child.send({ type: "ramspace:desktop-update:response", id, result }, (error) => {
         afterSend?.(!error && input.isCurrentChild());
       });
     } catch {
@@ -75,7 +75,7 @@ export function attachDesktopUpdateControl(
       send(request.id, { accepted: false, status: status(message) });
     if (!supported()) {
       refuse(
-        "Updates from iOS require the packaged Synara Desktop app on macOS with its updater enabled.",
+        "Updates from iOS require the packaged Ramspace Desktop app on macOS with its updater enabled.",
       );
       return;
     }
@@ -84,7 +84,7 @@ export function attachDesktopUpdateControl(
       return;
     }
     if (committed) {
-      refuse("Synara is already preparing to restart.");
+      refuse("Ramspace is already preparing to restart.");
       return;
     }
     if (request.action === "check" || request.action === "download") {
@@ -123,7 +123,7 @@ export function attachDesktopUpdateControl(
       send(request.id, {
         accepted: true,
         status: status(
-          "Synara will restart to install the update. This connection will disconnect.",
+          "Ramspace will restart to install the update. This connection will disconnect.",
         ),
         restartToken: ticket.token,
       });

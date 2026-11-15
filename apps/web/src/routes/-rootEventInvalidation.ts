@@ -7,8 +7,8 @@ import {
   STUDIO_OUTPUTS_ACTIVITY_KIND,
   type OrchestrationEvent,
   type ThreadId,
-} from "@synara/contracts";
-import { resolveThreadWorkspaceCwd } from "@synara/shared/threadEnvironment";
+} from "@ramspace/contracts";
+import { resolveThreadWorkspaceCwd } from "@ramspace/shared/threadEnvironment";
 import type { QueryClient } from "@tanstack/react-query";
 
 import { providerQueryKeys } from "../lib/providerReactQuery";

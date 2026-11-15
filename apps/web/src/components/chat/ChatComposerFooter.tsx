@@ -1,5 +1,5 @@
 import { useTranslation } from "~/i18n";
-import { ProviderInteractionMode } from "@synara/contracts";
+import { ProviderInteractionMode } from "@ramspace/contracts";
 import { type ReactNode } from "react";
 import { GoTasklist } from "react-icons/go";
 import {

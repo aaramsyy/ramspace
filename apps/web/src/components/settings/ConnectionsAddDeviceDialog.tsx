@@ -150,11 +150,11 @@ function AddDeviceDialogContent({
             <DialogDescription>
               {email ? (
                 <>
-                  Use the same Synara account on both:{" "}
+                  Use the same Ramspace account on both:{" "}
                   <span className="font-medium break-all text-foreground">{email}</span>
                 </>
               ) : (
-                "Use the same Synara account on both devices."
+                "Use the same Ramspace account on both devices."
               )}
             </DialogDescription>
           </>
@@ -279,7 +279,7 @@ function AddDeviceDialogContent({
                 <span className="font-mono font-medium text-foreground">
                   {invitation.code}
                 </span> in
-                Synara on your phone or iPad.
+                Ramspace on your phone or iPad.
               </p>
             ) : null}
             {invitation && remaining && tab === "computer" ? (

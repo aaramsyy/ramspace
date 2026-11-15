@@ -1,6 +1,6 @@
 # Managed remote access: operations and qualification
 
-The execution host runs cloudflared; the account API owns Cloudflare administration. The controller obtains an HTTPS endpoint from the account directory and verifies the existing pinned TLS 1.3 channel inside its outer WebSocket. No Synara traffic-relay deployment or `SYNARA_RELAY_URL` is required. WorkOS and one PostgreSQL database remain account-service dependencies.
+The execution host runs cloudflared; the account API owns Cloudflare administration. The controller obtains an HTTPS endpoint from the account directory and verifies the existing pinned TLS 1.3 channel inside its outer WebSocket. No Ramspace traffic-relay deployment or `RAMSPACE_RELAY_URL` is required. WorkOS and one PostgreSQL database remain account-service dependencies.
 
 For the ordered service setup and first two-Mac test, follow [Configure the remote MVP](implementation/cloudflare-remote/READINESS.md).
 
@@ -23,7 +23,7 @@ Cloudflare's [published account limits](https://developers.cloudflare.com/cloudf
 
 ## Distribution and lifecycle
 
-Version `2026.10.3` is pinned in `packages/shared/src/cloudflared.ts`, with official GitHub asset SHA256 digests. Desktop packaging stages the verified executable outside asar at `Resources/cloudflared/cloudflared` (`cloudflared.exe` on Windows); macOS signing includes it. Universal Mac packaging joins the verified arm64 and x64 executables. The Apache 2.0 license is retained in desktop runtime resources. CLI development installs the same verified release in its own home under `tools/cloudflared/2026.10.3`. An absolute `SYNARA_CLOUDFLARED_PATH` is an operator/test override, never an account-provided value. Packaged desktop chooses its bundled path.
+Version `2026.10.3` is pinned in `packages/shared/src/cloudflared.ts`, with official GitHub asset SHA256 digests. Desktop packaging stages the verified executable outside asar at `Resources/cloudflared/cloudflared` (`cloudflared.exe` on Windows); macOS signing includes it. Universal Mac packaging joins the verified arm64 and x64 executables. The Apache 2.0 license is retained in desktop runtime resources. CLI development installs the same verified release in its own home under `tools/cloudflared/2026.10.3`. An absolute `RAMSPACE_CLOUDFLARED_PATH` is an operator/test override, never an account-provided value. Packaged desktop chooses its bundled path.
 
 Native assets are pinned for macOS arm64/x64, Linux arm64/x64 and Windows x64. Windows ARM desktop packaging carries the official x64 executable and therefore needs OS emulation; this has not been runtime-qualified. The local MVP qualification targets macOS arm64. Linux, Windows, universal Mac and signed distribution need their respective runtime evidence.
 
@@ -115,7 +115,7 @@ not in the navigation URL. An unavailable computer cannot accept a new automatio
 
 The selected host owns the saved automation, its scheduler and its runs. Once
 saved on a Mac Mini, it runs there with the MacBook/controller closed. Keep the
-execution host awake with Synara running, the project available and its provider
+execution host awake with Ramspace running, the project available and its provider
 authenticated. Cloudflare supplies connectivity, not execution or automatic
 failover. Existing automations keep their original host; selecting a computer
 while creating one does not migrate earlier automations or their history.
@@ -203,7 +203,7 @@ The account API requires additive migrations `0016_private_inbox_recaps.sql`
 and `0017_inbox_automatic_sync.sql`. See the [private recap API contract](../apps/api/README.md#private-saved-inbox-recaps)
 for endpoints, ownership checks, pagination and default-deny RLS.
 
-Run affected PostgreSQL API tests against one disposable database, then the E2E transport suite against that database without concurrent destructive fixture setup. After `bun run build:desktop`, `TEST_DATABASE_URL=... SYNARA_E2E_EVIDENCE=/private/path bun run --cwd apps/e2e test:workspace` launches two built Node servers and Chromium with separate homes. Its external HTTPS proxy and connector subprocess simulate the Cloudflare boundary; WorkOS and provider CLI are deterministic fixtures. The inner TLS, actual account coordinator, approvals, resources, persistence and reconnect code are production paths. No public-CA verification is disabled: an ephemeral fixture certificate is trusted only by the isolated test processes.
+Run affected PostgreSQL API tests against one disposable database, then the E2E transport suite against that database without concurrent destructive fixture setup. After `bun run build:desktop`, `TEST_DATABASE_URL=... RAMSPACE_E2E_EVIDENCE=/private/path bun run --cwd apps/e2e test:workspace` launches two built Node servers and Chromium with separate homes. Its external HTTPS proxy and connector subprocess simulate the Cloudflare boundary; WorkOS and provider CLI are deterministic fixtures. The inner TLS, actual account coordinator, approvals, resources, persistence and reconnect code are production paths. No public-CA verification is disabled: an ephemeral fixture certificate is trusted only by the isolated test processes.
 
 The authoritative execution ledger is [STATUS.md](implementation/cloudflare-remote/STATUS.md). Record the final checks and limitations there. Root checks alone skip database/build-dependent cases when their explicit environment variables are absent.
 
@@ -231,7 +231,7 @@ in one authenticated `DELETE /api/v1/notification-subscriptions` request.
 
 The sender reuses the existing environment-specific APNs credentials, with the
 ordinary app bundle topic, `apns-push-type=alert` and a per-turn collapse ID.
-The default payload contains generic “Synara” / “Response ready” or “Run failed”
+The default payload contains generic “Ramspace” / “Response ready” or “Run failed”
 text and opaque routing IDs. If a device opts in to completion previews, its
 watch includes a separate public encryption key signed by its paired device
 identity. A compatible host verifies that proof against its local device trust
@@ -290,7 +290,7 @@ activity registrations and host snapshots. The ordinary API startup migration
 runner applies it on deployment. Registrations have a four-hour maximum lifetime,
 a per-account limit of eight, and durable coalescing/retry state. Tokens are
 cleared on retirement. No prompt, output, project path, or conversation title is
-uploaded; the background widget uses the generic title “Synara task”.
+uploaded; the background widget uses the generic title “Ramspace task”.
 
 The Beta host reporter polls only explicitly subscribed turns (15 seconds while
 idle, 5 seconds while watched); delivery sweeps run every 5 seconds. Idle reads
@@ -313,11 +313,11 @@ a device or supported simulator. `simctl push`, mocks, a successful build, and
 installed Cloudflare secrets do not prove real Apple delivery.
 
 For the TestFlight qualification, install the existing mobile build, sign in with
-the same Synara account as the desktop host, and pair that installation through
-Connections. Keep the host online and enable Live Activities for Synara in iOS
+the same Ramspace account as the desktop host, and pair that installation through
+Connections. Keep the host online and enable Live Activities for Ramspace in iOS
 Settings. From a scratch chat on the phone, start a turn long enough to observe
 (for example, ask the agent to run only `sleep 45`, wait for it, then reply).
-Wait until the activity appears, then background Synara or lock the phone without
+Wait until the activity appears, then background Ramspace or lock the phone without
 force-quitting it. Verify its running state changes to Ready without reopening
 the app and the ended activity dismisses after about 60 seconds. Repeat over
 cellular with Wi-Fi disabled. A failure report should include the test time and

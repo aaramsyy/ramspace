@@ -8,7 +8,7 @@ import type {
   CompletionPreviewHostReport,
   RegisterLiveActivity,
   RegisterTurnNotification,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 
 const databaseUrl = process.env.TEST_DATABASE_URL;
 describe.skipIf(!databaseUrl)("Live Activity durable delivery", () => {

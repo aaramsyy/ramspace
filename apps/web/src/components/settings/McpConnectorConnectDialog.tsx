@@ -1,17 +1,17 @@
 // FILE: McpConnectorConnectDialog.tsx
-// Purpose: Consent dialog shown before Synara signs in to a connector: what the user
+// Purpose: Consent dialog shown before Ramspace signs in to a connector: what the user
 //   controls, the risk, and what data flows where, then a capsule to continue.
 // Layer: Settings UI components
 // Exports: McpConnectorConnectDialog, McpConnectorTarget
 
-import { MCP_CONNECTOR_CLIENT_REQUIRED_ERROR_CODE, type McpConnector } from "@synara/contracts";
-import { normalizeMcpConnectorUrl } from "@synara/shared/mcpConnectors";
+import { MCP_CONNECTOR_CLIENT_REQUIRED_ERROR_CODE, type McpConnector } from "@ramspace/contracts";
+import { normalizeMcpConnectorUrl } from "@ramspace/shared/mcpConnectors";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 
 import { AppIconTile, ConnectorDots } from "~/components/AppIconTile";
 import { ConnectorIcon } from "~/components/ConnectorIcon";
-import { SynaraLogo } from "@synara/profile-ui/logo";
+import { RamspaceLogo } from "@ramspace/profile-ui/logo";
 import { Button } from "~/components/ui/button";
 import { CopyTextButton } from "~/components/ui/copyTextButton";
 import {
@@ -207,7 +207,7 @@ export function McpConnectorConnectDialog(props: {
                 glowColor={NEUTRAL_GLOW}
                 className="bg-black text-white"
               >
-                <SynaraLogo className="size-8 text-white" />
+                <RamspaceLogo className="size-8 text-white" />
               </AppIconTile>
               <ConnectorDots
                 size="xl"

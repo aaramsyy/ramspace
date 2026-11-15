@@ -234,7 +234,7 @@ describe("product-consent host usage", () => {
     const dashboard = await worker.fetch(
       new Request(
         "https://worker.invalid/api/product?from=2026-11-07&to=2026-11-07&channel=stable",
-        { headers: { cookie: `synara_beta_dash=${token}` } },
+        { headers: { cookie: `ramspace_beta_dash=${token}` } },
       ),
       { DB: db, DASHBOARD_SESSION_KEY: "test-key" },
     );
@@ -486,7 +486,7 @@ describe("product-consent host usage", () => {
     const token = await signSession("test-key", Math.floor(NOW / 1000) + 3600);
     const response = await worker.fetch(
       new Request("https://worker.invalid/api/product?from=2026-11-07&to=2026-11-07", {
-        headers: { cookie: `synara_beta_dash=${token}` },
+        headers: { cookie: `ramspace_beta_dash=${token}` },
       }),
       { DB: db, DASHBOARD_SESSION_KEY: "test-key" },
     );

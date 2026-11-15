@@ -4,7 +4,7 @@ import { getExecutionStorage } from "./lib/hosts/executionStorage";
 // Layer: UI state store
 // Exports: usePinnedProjectsStore
 
-import { MAX_PINNED_PROJECTS, type ProjectId } from "@synara/contracts";
+import { MAX_PINNED_PROJECTS, type ProjectId } from "@ramspace/contracts";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import { normalizePinnedIds, pinId, prunePinnedIds, unpinId } from "./pinning.logic";
@@ -16,7 +16,7 @@ interface PinnedProjectsStoreState {
   prunePinnedProjects: (projectIds: readonly ProjectId[]) => void;
 }
 
-const PINNED_PROJECTS_STORAGE_KEY = "synara:pinned-projects:v1";
+const PINNED_PROJECTS_STORAGE_KEY = "ramspace:pinned-projects:v1";
 const PINNED_PROJECTS_OPTIONS = { maxCount: MAX_PINNED_PROJECTS } as const;
 
 export const usePinnedProjectsStore = create<PinnedProjectsStoreState>()(

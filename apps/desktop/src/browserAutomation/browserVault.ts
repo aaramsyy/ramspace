@@ -7,7 +7,7 @@ import {
   BrowserVaultSettings,
   type BrowserVaultSavePrompt,
   type BrowserVaultSnapshot,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import {
   createLocalCredentialVault,
   type CredentialVault,

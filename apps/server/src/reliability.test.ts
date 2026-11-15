@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import type { ReliabilityCode } from "@synara/contracts";
+import type { ReliabilityCode } from "@ramspace/contracts";
 import { reportReliabilityIssue } from "./reliability";
 
 const connected = Object.getOwnPropertyDescriptor(process, "connected");
@@ -58,7 +58,7 @@ describe("server reliability IPC", () => {
     reportReliabilityIssue("account.refresh_uncertain");
     reportReliabilityIssue("private error /Users/customer/project" as ReliabilityCode);
     expect(sendMessage).toHaveBeenCalledExactlyOnceWith(
-      { type: "synara:reliability", issue: { code: "account.refresh_uncertain" } },
+      { type: "ramspace:reliability", issue: { code: "account.refresh_uncertain" } },
       expect.any(Function),
     );
   });

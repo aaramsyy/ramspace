@@ -20,8 +20,8 @@ import { tmpdir } from "node:os";
 import { basename, dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { CLOUDFLARED_VERSION } from "@synara/shared/cloudflared";
-import { spawnProcess, spawnProcessSync } from "@synara/shared/processRuntime";
+import { CLOUDFLARED_VERSION } from "@ramspace/shared/cloudflared";
+import { spawnProcess, spawnProcessSync } from "@ramspace/shared/processRuntime";
 import { teardownChildProcessTree } from "../apps/server/src/platform/supervisedProcessTeardown.ts";
 import { findMacBundleArchitectureMismatches } from "./lib/mac-bundle-architecture.ts";
 
@@ -72,7 +72,7 @@ export function parsePackagedDesktopStartupArgs(
   if (!Number.isInteger(timeoutMs) || timeoutMs < 5_000 || timeoutMs > 180_000) {
     throw new Error("--timeout-ms must be an integer between 5000 and 180000.");
   }
-  const executableName = values.get("--executable-name")?.trim() || "synara";
+  const executableName = values.get("--executable-name")?.trim() || "ramspace";
   if (!/^[A-Za-z0-9._-]+$/.test(executableName) || executableName.includes("..")) {
     throw new Error(`Invalid packaged startup executable name: ${executableName}.`);
   }
@@ -218,11 +218,11 @@ function prepareWindowsLaunch(assetsDirectory: string, extractionRoot: string): 
   }
   runCommand("7z", ["x", "-y", `-o${applicationRoot}`, applicationArchives[0]!]);
   const executables = findFiles(applicationRoot, (candidate) =>
-    /[/\\]Synara[^/\\]*\.exe$/i.test(candidate),
+    /[/\\]Ramspace[^/\\]*\.exe$/i.test(candidate),
   );
   if (executables.length !== 1) {
     throw new Error(
-      `Expected one extracted Synara application executable, found ${executables.length}.`,
+      `Expected one extracted Ramspace application executable, found ${executables.length}.`,
     );
   }
   return {
@@ -282,7 +282,7 @@ async function verifyPackagedCloudflared(
     process.platform === "win32" ? "cloudflared.exe" : "cloudflared",
   );
   if (!existsSync(binary)) throw new Error("Packaged Cloudflare connector is missing.");
-  const directory = mkdtempSync(join(tmpdir(), "synara-connector-smoke-"));
+  const directory = mkdtempSync(join(tmpdir(), "ramspace-connector-smoke-"));
   // Never forward provider, account, signing or Cloudflare credentials/configuration.
   const env = Object.fromEntries(
     ["PATH", "SystemRoot", "TMPDIR", "TMP", "TEMP"].flatMap((name) =>
@@ -364,15 +364,15 @@ export function createPackagedDesktopSmokeEnvironment(
     XDG_CONFIG_HOME: join(root, "xdg-config"),
     XDG_CACHE_HOME: join(root, "xdg-cache"),
     XDG_DATA_HOME: join(root, "xdg-data"),
-    SYNARA_HOME: join(root, "synara-home"),
-    SYNARA_BETA_HOME: join(root, "synara-beta-home"),
-    SYNARA_REMOTE_HOME: join(root, "synara-remote-home"),
-    SYNARA_DISABLE_AUTO_UPDATE: "1",
+    RAMSPACE_HOME: join(root, "ramspace-home"),
+    RAMSPACE_BETA_HOME: join(root, "ramspace-beta-home"),
+    RAMSPACE_REMOTE_HOME: join(root, "ramspace-remote-home"),
+    RAMSPACE_DISABLE_AUTO_UPDATE: "1",
     ELECTRON_ENABLE_LOGGING: "1",
   };
-  delete env.SYNARA_AUTH_TOKEN;
+  delete env.RAMSPACE_AUTH_TOKEN;
   // Qualify the installer's account default, not the release operator's override.
-  delete env.SYNARA_ACCOUNT_URL;
+  delete env.RAMSPACE_ACCOUNT_URL;
   delete env.ELECTRON_RUN_AS_NODE;
   for (const path of [
     env.HOME,
@@ -381,9 +381,9 @@ export function createPackagedDesktopSmokeEnvironment(
     env.XDG_CONFIG_HOME,
     env.XDG_CACHE_HOME,
     env.XDG_DATA_HOME,
-    env.SYNARA_HOME,
-    env.SYNARA_BETA_HOME,
-    env.SYNARA_REMOTE_HOME,
+    env.RAMSPACE_HOME,
+    env.RAMSPACE_BETA_HOME,
+    env.RAMSPACE_REMOTE_HOME,
   ]) {
     if (path) mkdirSync(path, { recursive: true });
   }
@@ -392,9 +392,9 @@ export function createPackagedDesktopSmokeEnvironment(
       env.HOME!,
       "Library",
       "Application Support",
-      options.executableName === "synara-beta" || options.executableName === "synara-remote"
+      options.executableName === "ramspace-beta" || options.executableName === "ramspace-remote"
         ? options.executableName
-        : "synara",
+        : "ramspace",
     );
     mkdirSync(userDataPath, { recursive: true });
     // Prevent the packaged app's update-only icon repair from registering this
@@ -488,7 +488,7 @@ export async function verifyPackagedDesktopStartup(
       `Packaged ${options.platform} startup smoke must run on its native host, not ${process.platform}.`,
     );
   }
-  const temporaryRoot = mkdtempSync(join(tmpdir(), `synara-packaged-smoke-${options.platform}-`));
+  const temporaryRoot = mkdtempSync(join(tmpdir(), `ramspace-packaged-smoke-${options.platform}-`));
   const extractionRoot = join(temporaryRoot, "payload");
   mkdirSync(extractionRoot, { recursive: true });
 
@@ -501,11 +501,11 @@ export async function verifyPackagedDesktopStartup(
     await verifyPackagedRuntimeDependencies(launch.runtime, env, options.timeoutMs);
     // Isolated release flavors never use Stable's data home.
     const appHome =
-      options.executableName === "synara-remote"
-        ? env.SYNARA_REMOTE_HOME!
-        : options.executableName === "synara-beta"
-          ? env.SYNARA_BETA_HOME!
-          : env.SYNARA_HOME!;
+      options.executableName === "ramspace-remote"
+        ? env.RAMSPACE_REMOTE_HOME!
+        : options.executableName === "ramspace-beta"
+          ? env.RAMSPACE_BETA_HOME!
+          : env.RAMSPACE_HOME!;
     logDirectory = join(appHome, "userdata", "logs");
     const logPath = join(logDirectory, "desktop-main.log");
     child = spawn(launch.command, [...launch.args], {

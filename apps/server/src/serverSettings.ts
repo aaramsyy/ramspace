@@ -23,17 +23,17 @@ import {
   type ServerSettingsView,
   type ServerUpdateSettingsInput,
   type ServerUpdateSettingsResult,
-} from "@synara/contracts";
-import type { DeepPartial } from "@synara/shared/Struct";
+} from "@ramspace/contracts";
+import type { DeepPartial } from "@ramspace/shared/Struct";
 import {
   deriveProviderInstances,
   type ResolvedProviderInstance,
   resolveModelSelectionInstanceId,
-} from "@synara/shared/providerInstances";
+} from "@ramspace/shared/providerInstances";
 import {
   applyServerSettingsPatch,
   settingsChangedBeyondNewThreadDefaults,
-} from "@synara/shared/serverSettings";
+} from "@ramspace/shared/serverSettings";
 import {
   Cause,
   Deferred,
@@ -162,7 +162,7 @@ export function toServerSettingsView(settings: ServerSettings): ServerSettingsVi
 export class ServerSettingsService extends ServiceMap.Service<
   ServerSettingsService,
   ServerSettingsShape
->()("synara/serverSettings/ServerSettingsService") {
+>()("ramspace/serverSettings/ServerSettingsService") {
   static readonly layerTest = (overrides: DeepPartial<ServerSettings> = {}) =>
     Layer.effect(
       ServerSettingsService,
@@ -1178,7 +1178,7 @@ const makeServerSettings = Effect.gen(function* () {
       if (decoded._tag === "UnsupportedVersion") {
         return yield* new ServerSettingsError({
           settingsPath,
-          detail: `Settings use format ${decoded.migrationVersion}, but this build supports ${SERVER_SETTINGS_MIGRATION_VERSION}. Update Synara to open them.`,
+          detail: `Settings use format ${decoded.migrationVersion}, but this build supports ${SERVER_SETTINGS_MIGRATION_VERSION}. Update Ramspace to open them.`,
         });
       }
       if (decoded._tag === "InvalidLegacyImportReceipt") {

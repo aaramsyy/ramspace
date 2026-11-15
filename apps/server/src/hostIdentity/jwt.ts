@@ -6,7 +6,7 @@ import {
   HOST_PROOF_JWT_TYP,
   HOST_PROOF_MAX_AGE_SECONDS,
   type AccountHostPlatform,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { importPKCS8, SignJWT } from "jose";
 
 import type { HostIdentity } from "./store";
@@ -16,7 +16,7 @@ async function signingKey(identity: HostIdentity): Promise<CryptoKey> {
 }
 
 function hostIssuer(environmentId: string): string {
-  return `synara-host:${environmentId}`;
+  return `ramspace-host:${environmentId}`;
 }
 
 export async function mintHostLinkProof(input: {

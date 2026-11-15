@@ -1,4 +1,4 @@
-import { PROVIDER_SEND_TURN_MAX_IMAGE_BYTES } from "@synara/contracts";
+import { PROVIDER_SEND_TURN_MAX_IMAGE_BYTES } from "@ramspace/contracts";
 import { type SyntheticEvent, useEffect, useState } from "react";
 
 import { fetchExecutionImageResourceUrl, isDesktopFrameResourceUrl } from "~/lib/wsHttpUrl";

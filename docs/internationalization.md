@@ -1,6 +1,6 @@
 # Interface text
 
-Synara's interface is English-only. There is no language setting: the web app, native menus, startup dialogs and macOS permission explanations always use English. Dates, times and numbers follow the system locale, as an unspecified `Intl` locale does.
+Ramspace's interface is English-only. There is no language setting: the web app, native menus, startup dialogs and macOS permission explanations always use English. Dates, times and numbers follow the system locale, as an unspecified `Intl` locale does.
 
 Application copy lives in English message catalogs and is read through `t()`. This keeps wording in one place and lets other languages be added later without touching every component.
 

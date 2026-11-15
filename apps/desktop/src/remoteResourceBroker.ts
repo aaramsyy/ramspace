@@ -1,11 +1,14 @@
 import { randomUUID } from "node:crypto";
 import { ipcMain, session, type WebContents } from "electron";
 import { Schema } from "effect";
-import { RemoteResourceReference } from "@synara/contracts";
-import { REMOTE_RESOURCE_LOCAL_PREFIX, remoteResourceRoute } from "@synara/shared/remoteResources";
+import { RemoteResourceReference } from "@ramspace/contracts";
+import {
+  REMOTE_RESOURCE_LOCAL_PREFIX,
+  remoteResourceRoute,
+} from "@ramspace/shared/remoteResources";
 import { DESKTOP_IPC_CHANNELS } from "./ipcChannels";
 
-export const REMOTE_RESOURCE_SCHEME = "synara-resource";
+export const REMOTE_RESOURCE_SCHEME = "ramspace-resource";
 interface ResourceHandle {
   readonly cacheKey: string;
   readonly hostId: string;

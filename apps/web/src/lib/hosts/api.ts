@@ -16,7 +16,7 @@ import type {
   ConfirmSyncKeyPairingRequest,
   SyncKeyPairingCode,
   SyncKeyPairingRequest,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 
 import { ensureNativeApi, readNativeApi } from "~/nativeApi";
 import type { HostReachability } from "./reachability";
@@ -152,7 +152,7 @@ export function readHostsApi(): HostsApi | null {
 export function ensureHostsApi(): HostsApi {
   const hosts = readHostsNamespace(ensureNativeApi());
   if (!hosts) {
-    throw new Error("This Synara server does not support hosts yet.");
+    throw new Error("This Ramspace server does not support hosts yet.");
   }
   return hosts;
 }

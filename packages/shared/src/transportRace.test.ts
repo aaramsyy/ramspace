@@ -16,7 +16,7 @@ const loopback: TransportCandidate = { kind: "loopback", url: "http://127.0.0.1:
 const lan: TransportCandidate = { kind: "lan", url: "http://192.168.1.20:5173", label: "mDNS" };
 const tailscale: TransportCandidate = { kind: "tailscale", url: "http://mac.tailnet.ts.net:5173" };
 const ssh: TransportCandidate = { kind: "ssh", url: "http://127.0.0.1:41234" };
-const relay: TransportCandidate = { kind: "relay", url: "wss://relay.synara.dev/client/session" };
+const relay: TransportCandidate = { kind: "relay", url: "wss://relay.ramspace.dev/client/session" };
 
 /**
  * Flushes the microtask queue to quiescence. A settled probe hops through

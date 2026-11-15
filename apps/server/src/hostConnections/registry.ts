@@ -8,7 +8,7 @@ import type {
   RemoteExecutionScope,
   WsBootstrapNegotiateInput,
   WsBootstrapNegotiateResult,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { Effect, Layer, ServiceMap } from "effect";
 import WebSocket, { type RawData } from "ws";
 import {
@@ -460,7 +460,7 @@ export class HostConnectionRegistry {
 export class HostConnectionRegistryService extends ServiceMap.Service<
   HostConnectionRegistryService,
   HostConnectionRegistry
->()("synara/HostConnectionRegistry") {}
+>()("ramspace/HostConnectionRegistry") {}
 export const HostConnectionRegistryLive = Layer.effect(
   HostConnectionRegistryService,
   Effect.gen(function* () {

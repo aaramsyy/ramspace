@@ -1,4 +1,4 @@
-import { ThreadId } from "@synara/contracts";
+import { ThreadId } from "@ramspace/contracts";
 import { describe, expect, it, vi } from "vitest";
 
 import {

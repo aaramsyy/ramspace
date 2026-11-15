@@ -131,7 +131,7 @@ describe("analytics ingest and D1 storage", () => {
 
     const token = await signSession(env.DASHBOARD_SESSION_KEY, Math.floor(now / 1000) + 3600);
     const dashboard = (url) =>
-      worker.fetch(new Request(url, { headers: { cookie: `synara_beta_dash=${token}` } }), env);
+      worker.fetch(new Request(url, { headers: { cookie: `ramspace_beta_dash=${token}` } }), env);
     const response = await dashboard(url);
     expect(response.status).toBe(200);
     expect(response.headers.get("cache-control")).toBe("no-store");
@@ -255,7 +255,7 @@ describe("analytics ingest and D1 storage", () => {
     const token = await signSession(env.DASHBOARD_SESSION_KEY, Math.floor(now / 1000) + 3600);
     const response = await worker.fetch(
       new Request(`https://worker.invalid/api/product?from=${day}&to=${day}&channel=stable`, {
-        headers: { cookie: `synara_beta_dash=${token}` },
+        headers: { cookie: `ramspace_beta_dash=${token}` },
       }),
       env,
     );
@@ -332,7 +332,7 @@ describe("analytics ingest and D1 storage", () => {
       const token = await signSession(env.DASHBOARD_SESSION_KEY, Math.floor(now / 1000) + 3600);
       const response = await worker.fetch(
         new Request(`https://worker.invalid/api/product?from=${day}&to=${day}&channel=stable`, {
-          headers: { cookie: `synara_beta_dash=${token}` },
+          headers: { cookie: `ramspace_beta_dash=${token}` },
         }),
         env,
       );
@@ -470,7 +470,7 @@ describe("analytics ingest and D1 storage", () => {
       const token = await signSession("test-session-key", Math.floor(Date.now() / 1000) + 3600);
       const response = await worker.fetch(
         new Request("https://worker.invalid/api/issues/err:1234567812345678?days=7", {
-          headers: { cookie: `synara_beta_dash=${token}` },
+          headers: { cookie: `ramspace_beta_dash=${token}` },
         }),
         env,
       );
@@ -499,7 +499,7 @@ describe("analytics ingest and D1 storage", () => {
     const get = (path) =>
       worker.fetch(
         new Request(`https://worker.invalid${path}`, {
-          headers: { cookie: `synara_beta_dash=${token}` },
+          headers: { cookie: `ramspace_beta_dash=${token}` },
         }),
         env,
       );
@@ -555,7 +555,7 @@ describe("analytics ingest and D1 storage", () => {
     const get = (path) =>
       worker.fetch(
         new Request(`https://worker.invalid${path}`, {
-          headers: { cookie: `synara_beta_dash=${token}` },
+          headers: { cookie: `ramspace_beta_dash=${token}` },
         }),
         env,
       );
@@ -610,7 +610,7 @@ describe("analytics ingest and D1 storage", () => {
     const token = await signSession("test-session-key", Math.floor(Date.now() / 1000) + 3600);
     const download = await worker.fetch(
       new Request("https://worker.invalid/api/dumps/dumps/synthetic.dmp", {
-        headers: { cookie: `synara_beta_dash=${token}` },
+        headers: { cookie: `ramspace_beta_dash=${token}` },
       }),
       env,
     );
@@ -890,7 +890,7 @@ describe("analytics ingest and D1 storage", () => {
       const read = async (path) => {
         const response = await worker.fetch(
           new Request(`https://worker.invalid${path}`, {
-            headers: { cookie: `synara_beta_dash=${token}` },
+            headers: { cookie: `ramspace_beta_dash=${token}` },
           }),
           { DB: legacy, DASHBOARD_SESSION_KEY: "test-session-key" },
         );
@@ -1086,7 +1086,7 @@ describe("analytics ingest and D1 storage", () => {
       new Request(
         `https://worker.invalid/api/product?from=${day}&to=${day}&channel=stable&surface=desktop`,
         {
-          headers: { cookie: `synara_beta_dash=${token}` },
+          headers: { cookie: `ramspace_beta_dash=${token}` },
         },
       ),
       env,
@@ -1187,7 +1187,7 @@ describe("analytics ingest and D1 storage", () => {
     const token = await signSession("test-session-key", Math.floor(Date.now() / 1000) + 3600);
     const dashboard = await worker.fetch(
       new Request(`https://worker.invalid/api/product?from=${day}&to=${day}&channel=remote`, {
-        headers: { cookie: `synara_beta_dash=${token}` },
+        headers: { cookie: `ramspace_beta_dash=${token}` },
       }),
       env,
     );
@@ -1322,7 +1322,7 @@ describe("analytics ingest and D1 storage", () => {
     const token = await signSession("test-session-key", Math.floor(Date.now() / 1000) + 3600);
     const dashboard = await worker.fetch(
       new Request(`https://worker.invalid/api/product?from=${day}&to=${day}`, {
-        headers: { cookie: `synara_beta_dash=${token}` },
+        headers: { cookie: `ramspace_beta_dash=${token}` },
       }),
       env,
     );
@@ -1379,7 +1379,7 @@ describe("analytics ingest and D1 storage", () => {
     const body = await worker
       .fetch(
         new Request(`https://worker.invalid/api/product?from=${day}&to=${day}&channel=remote`, {
-          headers: { cookie: `synara_beta_dash=${token}` },
+          headers: { cookie: `ramspace_beta_dash=${token}` },
         }),
         env,
       )
@@ -1450,7 +1450,7 @@ describe("analytics ingest and D1 storage", () => {
     const token = await signSession("test-session-key", Math.floor(Date.now() / 1000) + 3600);
     const filters = await worker.fetch(
       new Request("https://worker.invalid/api/filters", {
-        headers: { cookie: `synara_beta_dash=${token}` },
+        headers: { cookie: `ramspace_beta_dash=${token}` },
       }),
       env,
     );
@@ -1458,7 +1458,7 @@ describe("analytics ingest and D1 storage", () => {
   });
 
   it("preserves Remote updater reasons from the desktop queue through ingest into D1 aggregates", async () => {
-    const root = mkdtempSync(join(tmpdir(), "synara-updater-reasons-"));
+    const root = mkdtempSync(join(tmpdir(), "ramspace-updater-reasons-"));
     try {
       const events = [];
       for (const [platform, messages] of [
@@ -1574,7 +1574,7 @@ describe("analytics ingest and D1 storage", () => {
         await worker.fetch(
           new Request(
             `https://worker.invalid/api/product?from=${day}&to=${day}&channel=stable&surface=${surface}`,
-            { headers: { cookie: `synara_beta_dash=${token}` } },
+            { headers: { cookie: `ramspace_beta_dash=${token}` } },
           ),
           env,
         )
@@ -1665,7 +1665,7 @@ describe("analytics ingest and D1 storage", () => {
         await worker.fetch(
           new Request(
             `https://worker.invalid/api/product?from=${from}&to=${to}&channel=stable&surface=desktop`,
-            { headers: { cookie: `synara_beta_dash=${token}` } },
+            { headers: { cookie: `ramspace_beta_dash=${token}` } },
           ),
           env,
         )
@@ -1703,7 +1703,7 @@ describe("analytics ingest and D1 storage", () => {
     const token = await signSession("test-session-key", Math.floor(Date.now() / 1000) + 3600);
     const badRange = await worker.fetch(
       new Request("https://worker.invalid/api/product?from=2026-09-01&to=2026-10-05", {
-        headers: { cookie: `synara_beta_dash=${token}` },
+        headers: { cookie: `ramspace_beta_dash=${token}` },
       }),
       env,
     );
@@ -1717,7 +1717,7 @@ describe("analytics ingest and D1 storage", () => {
     const sourceAsset = (
       id,
       downloads,
-      name = "Synara.dmg",
+      name = "Ramspace.dmg",
       createdAt = "2026-01-01T00:00:00Z",
     ) => ({
       id,
@@ -1738,7 +1738,7 @@ describe("analytics ingest and D1 storage", () => {
       const response = await worker.fetch(
         new Request(
           `https://worker.invalid/api/product?from=${date(now - 7 * DAY).slice(0, 10)}&to=${day}${query}`,
-          { headers: { cookie: `synara_beta_dash=${token}` } },
+          { headers: { cookie: `ramspace_beta_dash=${token}` } },
         ),
         env,
       );
@@ -1757,10 +1757,10 @@ describe("analytics ingest and D1 storage", () => {
       await snapshot(at, [
         release("v1.2.3", [
           sourceAsset(1, 100),
-          sourceAsset(2, 50, "Synara.exe"),
+          sourceAsset(2, 50, "Ramspace.exe"),
           sourceAsset(3, 999, "latest.yml"),
         ]),
-        release("v1.2.4-beta.1", [sourceAsset(4, 20, "Synara.AppImage")]),
+        release("v1.2.4-beta.1", [sourceAsset(4, 20, "Ramspace.AppImage")]),
         release("v1.2.4-remote.1", [sourceAsset(5, 5)]),
         release("historic-custom-tag", [sourceAsset(6, 2)]),
       ]);
@@ -1793,7 +1793,7 @@ describe("analytics ingest and D1 storage", () => {
       expect(
         fetch.mock.calls.every(
           ([url, init]) =>
-            url.startsWith("https://api.github.com/repos/Emanuele-web04/synara/releases?") &&
+            url.startsWith("https://api.github.com/repos/aaramsyy/ramspace/releases?") &&
             !new Headers(init.headers).has("Authorization") &&
             init.redirect === "error",
         ),
@@ -1807,7 +1807,7 @@ describe("analytics ingest and D1 storage", () => {
       await snapshot(second, [
         release("v1.2.3", [
           sourceAsset(1, 107),
-          sourceAsset(2, 3, "Synara.exe", date(first + DAY).slice(0, 19) + "Z"),
+          sourceAsset(2, 3, "Ramspace.exe", date(first + DAY).slice(0, 19) + "Z"),
         ]),
       ]);
       expect((await readDownloads()).history).toEqual([
@@ -1818,7 +1818,7 @@ describe("analytics ingest and D1 storage", () => {
       const response = await worker.fetch(
         new Request(
           `https://worker.invalid/api/product?from=${date(first + DAY).slice(0, 10)}&to=${date(first + DAY).slice(0, 10)}`,
-          { headers: { cookie: `synara_beta_dash=${token}` } },
+          { headers: { cookie: `ramspace_beta_dash=${token}` } },
         ),
         env,
       );
@@ -1866,7 +1866,7 @@ describe("analytics ingest and D1 storage", () => {
       fetch
         .mockResolvedValueOnce(Response.json(fullPage))
         .mockResolvedValueOnce(
-          Response.json([release("v1.2.3", [sourceAsset(2, 50, "Synara.exe")])]),
+          Response.json([release("v1.2.3", [sourceAsset(2, 50, "Ramspace.exe")])]),
         );
       await captureInstallerDownloads(db);
       expect(
@@ -2055,7 +2055,7 @@ describe("analytics ingest and D1 storage", () => {
       .prepare("UPDATE product_events SET ts = ? WHERE event_id = ?")
       .run(entry.ts, entry.id);
     const upgraded = await postEvents([entry]);
-    expect(upgraded.headers.get("x-synara-product-cohorts")).toBe("1");
+    expect(upgraded.headers.get("x-ramspace-product-cohorts")).toBe("1");
     expect(await upgraded.json()).toMatchObject({ accepted: 1, cohortAcknowledged: [entry.id] });
     expect(
       await (await postEvents([entry, entry, { ...entry, id: crypto.randomUUID() }])).json(),
@@ -2136,7 +2136,7 @@ describe("analytics ingest and D1 storage", () => {
       return (
         await worker.fetch(
           new Request(`https://worker.invalid/api/product?${scope}`, {
-            headers: { cookie: `synara_beta_dash=${token}` },
+            headers: { cookie: `ramspace_beta_dash=${token}` },
           }),
           env,
         )

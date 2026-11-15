@@ -26,7 +26,7 @@ export interface ReleaseDownloads {
 
 /**
  * Asset-name patterns per target. Linux AppImages are named by architecture
- * (`Synara-<version>-x86_64.AppImage`, `Synara-<version>-arm64.AppImage`), so the
+ * (`Ramspace-<version>-x86_64.AppImage`, `Ramspace-<version>-arm64.AppImage`), so the
  * Intel pattern must not match the ARM build or vice versa.
  */
 export const RELEASE_ASSET_PATTERNS = {

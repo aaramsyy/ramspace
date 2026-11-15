@@ -1,6 +1,6 @@
 import "../../../index.css";
 
-import type { ResolvedKeybindingsConfig } from "@synara/contracts";
+import type { ResolvedKeybindingsConfig } from "@ramspace/contracts";
 import { page } from "vitest/browser";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { render } from "vitest-browser-react";
@@ -50,7 +50,7 @@ beforeEach(() => {
   fixture.remote = false;
   fixture.openInEditor.mockReset().mockResolvedValue(undefined);
   fixture.toast.mockClear();
-  localStorage.setItem("synara:last-editor", JSON.stringify("cursor"));
+  localStorage.setItem("ramspace:last-editor", JSON.stringify("cursor"));
 });
 
 function renderSection(onOpenEditorView = vi.fn()) {
@@ -118,7 +118,7 @@ describe("Environment editor actions", () => {
         description: "The editor could not be started.",
       }),
     );
-    expect(localStorage.getItem("synara:last-editor")).toBe(JSON.stringify("cursor"));
+    expect(localStorage.getItem("ramspace:last-editor")).toBe(JSON.stringify("cursor"));
     await expect
       .element(page.getByRole("button", { name: "Open in Cursor", exact: true }))
       .toBeVisible();

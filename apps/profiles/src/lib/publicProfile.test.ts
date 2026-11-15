@@ -41,7 +41,7 @@ describe("public profile publication", () => {
     const fetch = vi.fn().mockResolvedValue(new Response(null, { status: 404 }));
     vi.stubGlobal("fetch", fetch);
     await fetchPublicProfile("ada");
-    expect(fetch.mock.calls[0]![1].headers["x-synara-viewer-ip"]).toBe("2001:db8::1");
+    expect(fetch.mock.calls[0]![1].headers["x-ramspace-viewer-ip"]).toBe("2001:db8::1");
   });
 
   it("does not forward an untrusted address when the Cloudflare header is absent", async () => {
@@ -49,6 +49,6 @@ describe("public profile publication", () => {
     const fetch = vi.fn().mockResolvedValue(new Response(null, { status: 404 }));
     vi.stubGlobal("fetch", fetch);
     await fetchPublicProfile("ada");
-    expect(fetch.mock.calls[0]![1].headers?.["x-synara-viewer-ip"]).toBeUndefined();
+    expect(fetch.mock.calls[0]![1].headers?.["x-ramspace-viewer-ip"]).toBeUndefined();
   });
 });

@@ -4,13 +4,13 @@ import path from "node:path";
 
 import { afterAll, afterEach, describe, expect, it, vi } from "vitest";
 
-import { EnvironmentId, type AccountMe, type SaveInboxRecapRequest } from "@synara/contracts";
+import { EnvironmentId, type AccountMe, type SaveInboxRecapRequest } from "@ramspace/contracts";
 import {
   AccountApiError,
   createAccountClient,
   OrganizationRequiredError,
   type AccountClient,
-} from "@synara/shared/account";
+} from "@ramspace/shared/account";
 
 import {
   accountCredentialsPath,
@@ -21,8 +21,8 @@ import {
 import { createAccountSession } from "./accountSession.ts";
 import { registerAccountUsageReporterNudge } from "./accountUsageReporterRegistry.ts";
 import { registerRemoteAccessGrantedWake } from "./hostConnectivitySignals.ts";
-import type { AccountBillingStatus } from "@synara/contracts";
-import { SYNARA_PRODUCTION_BUNDLE_ID } from "@synara/shared/desktopIdentity";
+import type { AccountBillingStatus } from "@ramspace/contracts";
+import { RAMSPACE_PRODUCTION_BUNDLE_ID } from "@ramspace/shared/desktopIdentity";
 import { generateAndPersistHostIdentity, readHostIdentity } from "./hostIdentity";
 import { importSPKI, jwtVerify } from "jose";
 
@@ -39,7 +39,7 @@ afterEach(() => {
 const temporaryDirectories: string[] = [];
 
 function makeBaseDir(): string {
-  const value = fs.mkdtempSync(path.join(os.tmpdir(), "synara-account-session-test-"));
+  const value = fs.mkdtempSync(path.join(os.tmpdir(), "ramspace-account-session-test-"));
   temporaryDirectories.push(value);
   return value;
 }
@@ -89,7 +89,7 @@ describe("billing account scope", () => {
   });
 
   it("lifts a registration refusal when access becomes granted, not on every granted read", async () => {
-    vi.stubEnv("SYNARA_REMOTE_CONNECTIONS", "1");
+    vi.stubEnv("RAMSPACE_REMOTE_CONNECTIONS", "1");
     const baseDir = makeBaseDir();
     await writeAccountCredentials(baseDir, credentials({ userId: "user_1" }));
     const registerDevice = vi.fn(() =>
@@ -301,7 +301,7 @@ describe("status", () => {
     });
   });
 
-  // The access token outlives `synara auth` by about five minutes, so the
+  // The access token outlives `ramspace auth` by about five minutes, so the
   // common case for a returning user is an expired one.
   it("refreshes an expired access token and persists the rotated pair", async () => {
     const baseDir = makeBaseDir();
@@ -507,7 +507,7 @@ describe("status", () => {
   });
 
   it("backs off a refused device registration and retries at once for another workspace", async () => {
-    vi.stubEnv("SYNARA_REMOTE_CONNECTIONS", "1");
+    vi.stubEnv("RAMSPACE_REMOTE_CONNECTIONS", "1");
     vi.useFakeTimers({ toFake: ["performance"] });
     try {
       const baseDir = makeBaseDir();
@@ -555,7 +555,7 @@ describe("status", () => {
   });
 
   it("keeps retrying a registration that failed without a refusal", async () => {
-    vi.stubEnv("SYNARA_REMOTE_CONNECTIONS", "1");
+    vi.stubEnv("RAMSPACE_REMOTE_CONNECTIONS", "1");
     const baseDir = makeBaseDir();
     await writeAccountCredentials(baseDir, credentials({ userId: "user_1" }));
     const registerDevice = vi.fn(accountServiceUnavailable);
@@ -574,7 +574,7 @@ describe("status", () => {
 
   // The app reads the status every ten minutes; a transient failure must not wait for that.
   it("retries a failed enrollment in the background, but not a refused one", async () => {
-    vi.stubEnv("SYNARA_REMOTE_CONNECTIONS", "1");
+    vi.stubEnv("RAMSPACE_REMOTE_CONNECTIONS", "1");
     const enroll = async (registerDevice: () => Promise<never>) => {
       const baseDir = makeBaseDir();
       await writeAccountCredentials(baseDir, credentials({ userId: "user_1" }));
@@ -756,7 +756,7 @@ describe("OTP sign-in", () => {
   });
 
   it("logs each sign-in step's duration once, without secrets", async () => {
-    vi.stubEnv("SYNARA_REMOTE_CONNECTIONS", "1");
+    vi.stubEnv("RAMSPACE_REMOTE_CONNECTIONS", "1");
     const baseDir = makeBaseDir();
     const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
     const session = sessionFor(
@@ -829,7 +829,7 @@ describe("OTP sign-in", () => {
   });
 
   it("answers before a stalled enrollment finishes; host reads and status wait for it", async () => {
-    vi.stubEnv("SYNARA_REMOTE_CONNECTIONS", "1");
+    vi.stubEnv("RAMSPACE_REMOTE_CONNECTIONS", "1");
     const baseDir = makeBaseDir();
     const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
     let failRegistration!: (error: Error) => void;
@@ -961,7 +961,7 @@ describe("OTP sign-in", () => {
   ])(
     "detaches the old owner before enrolling after $label",
     async ({ organizationId, expired, flow }) => {
-      vi.stubEnv("SYNARA_REMOTE_CONNECTIONS", "1");
+      vi.stubEnv("RAMSPACE_REMOTE_CONNECTIONS", "1");
       const baseDir = makeBaseDir();
       const identityPath = path.join(baseDir, "userdata", "secrets", "host-identity.json");
       const previousIdentity = await generateAndPersistHostIdentity(identityPath);
@@ -1046,7 +1046,7 @@ describe("OTP sign-in", () => {
   );
 
   it("clears a mismatched host before an enrollment outage can preserve the old owner", async () => {
-    vi.stubEnv("SYNARA_REMOTE_CONNECTIONS", "1");
+    vi.stubEnv("RAMSPACE_REMOTE_CONNECTIONS", "1");
     const baseDir = makeBaseDir();
     const identityPath = path.join(baseDir, "userdata", "secrets", "host-identity.json");
     await generateAndPersistHostIdentity(identityPath);
@@ -1436,10 +1436,10 @@ describe("transient sign-in recovery", () => {
 describe("account profile sync policy", () => {
   it.each([
     { bundleId: undefined, configured: "1" },
-    { bundleId: SYNARA_PRODUCTION_BUNDLE_ID, configured: undefined },
+    { bundleId: RAMSPACE_PRODUCTION_BUNDLE_ID, configured: undefined },
   ])("updates an existing private profile in $bundleId", async ({ bundleId, configured }) => {
-    vi.stubEnv("SYNARA_DESKTOP_BUNDLE_ID", bundleId);
-    vi.stubEnv("SYNARA_ACCOUNT_PROFILE_SYNC", configured);
+    vi.stubEnv("RAMSPACE_DESKTOP_BUNDLE_ID", bundleId);
+    vi.stubEnv("RAMSPACE_ACCOUNT_PROFILE_SYNC", configured);
     const baseDir = makeBaseDir();
     await writeAccountCredentials(baseDir, credentials());
     const profile = { handle: "ada", displayName: "Ada", avatarColor: "#22c55e", public: false };
@@ -1453,7 +1453,7 @@ describe("account profile sync policy", () => {
   it("refuses profile and avatar mutations before contacting the account service", async () => {
     const baseDir = makeBaseDir();
     await writeAccountCredentials(baseDir, credentials());
-    vi.stubEnv("SYNARA_ACCOUNT_PROFILE_SYNC", undefined);
+    vi.stubEnv("RAMSPACE_ACCOUNT_PROFILE_SYNC", undefined);
     const updateProfile = vi.fn();
     const updateOrganization = vi.fn();
     const uploadAvatar = vi.fn();

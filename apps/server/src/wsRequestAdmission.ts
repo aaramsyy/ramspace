@@ -1,19 +1,19 @@
 import * as Crypto from "node:crypto";
 
-import { WsRpcError } from "@synara/contracts";
+import { WsRpcError } from "@ramspace/contracts";
 import {
   classifyWsRequest,
   makeWsRequestCapacityError,
   WS_REQUEST_CLASS_LIMITS,
   type WsRequestClass,
-} from "@synara/shared/wsRequestClass";
+} from "@ramspace/shared/wsRequestClass";
 import { Clock, Effect, Layer, Ref } from "effect";
 import { Headers } from "effect/unstable/http";
 import { RpcMiddleware, RpcSchema } from "effect/unstable/rpc";
 import {
   remoteMethodUnavailable,
   REMOTE_NATIVE_UNAVAILABLE,
-} from "@synara/shared/remoteCapabilities";
+} from "@ramspace/shared/remoteCapabilities";
 import {
   provideWsConnectionSession,
   WS_CONNECTION_SESSION_HEADER,
@@ -178,7 +178,7 @@ export const makeWsRequestAdmission = Effect.gen(function* () {
 });
 
 export class WsRequestAdmissionMiddleware extends RpcMiddleware.Service<WsRequestAdmissionMiddleware>()(
-  "synara/WsRequestAdmissionMiddleware",
+  "ramspace/WsRequestAdmissionMiddleware",
   { error: WsRpcError, requiredForClient: false },
 ) {}
 

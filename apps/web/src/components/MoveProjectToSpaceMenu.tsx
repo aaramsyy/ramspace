@@ -1,7 +1,7 @@
 // FILE: MoveProjectToSpaceMenu.tsx
 // Purpose: Shared Space destination menu for local and remote sidebar projects.
 
-import { SpaceId } from "@synara/contracts";
+import { SpaceId } from "@ramspace/contracts";
 import type { ReactNode } from "react";
 import { useTranslation } from "~/i18n";
 import {

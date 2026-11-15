@@ -1,6 +1,6 @@
-import type { AccountDevicePlatform } from "@synara/contracts";
-import { AccountApiError, type AccountClient } from "@synara/shared/account";
-import { signDeviceRegistration } from "@synara/shared/deviceKey";
+import type { AccountDevicePlatform } from "@ramspace/contracts";
+import { AccountApiError, type AccountClient } from "@ramspace/shared/account";
+import { signDeviceRegistration } from "@ramspace/shared/deviceKey";
 import { Effect, Path as EffectPath } from "effect";
 
 import {

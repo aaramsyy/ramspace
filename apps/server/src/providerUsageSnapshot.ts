@@ -12,7 +12,7 @@ import type {
   ServerGetProviderUsageSnapshotResult,
   ServerProviderUsageLimit,
   ServerProviderUsageLine,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { Effect } from "effect";
 
 import { ServerConfig } from "./config";

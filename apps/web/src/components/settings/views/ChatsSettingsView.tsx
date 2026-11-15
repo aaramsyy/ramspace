@@ -3,7 +3,7 @@
 // Layer: Settings view
 // Exports: ChatsSettingsView
 
-import { type SidechatExpiry } from "@synara/contracts";
+import { type SidechatExpiry } from "@ramspace/contracts";
 import {
   type AppSettingsBinding,
   type FollowUpBehavior,
@@ -39,7 +39,7 @@ const SIDECHAT_EXPIRY_OPTIONS = [
 ] as const satisfies ReadonlyArray<{ value: SidechatExpiry; label: string }>;
 
 const GITHUB_LINK_OPEN_TARGET_LABELS = {
-  app: "settings:inSynara",
+  app: "settings:inRamspace",
   browser: "settings:inAppBrowser",
   external: "settings:externalBrowser",
 } as const satisfies Record<GitHubLinkOpenTarget, string>;

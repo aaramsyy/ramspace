@@ -1,7 +1,7 @@
 import { requestLocalRemoteAccess, saveRemoteInvitation } from "./remotePairing/cli";
 import { accountApiIssuer, accountStateDirectory, readAccountFile } from "./accountAuth";
 import { startRemoteBillingPolicy } from "./remoteBillingPolicy";
-import { DEFAULT_ACCOUNT_URL, resolveConfiguredAccountUrl } from "@synara/shared/account";
+import { DEFAULT_ACCOUNT_URL, resolveConfiguredAccountUrl } from "@ramspace/shared/account";
 import { HostConnectionRegistryService } from "./hostConnections/registry";
 import { observeControllerAccount } from "./hostConnections/accountObserver";
 import { RemoteDeviceTrustRepository } from "./persistence/Services/RemoteDeviceTrust";
@@ -34,18 +34,18 @@ import {
 } from "effect";
 import * as SqlClient from "effect/unstable/sql/SqlClient";
 import { Command, Flag } from "effect/unstable/cli";
-import type { ServerSettings } from "@synara/contracts";
-import { NetService } from "@synara/shared/Net";
+import type { ServerSettings } from "@ramspace/contracts";
+import { NetService } from "@ramspace/shared/Net";
 import {
   MIGRATION_DIVERGENCE_CONSENT_ENV,
   MIGRATION_RUNTIME_SOURCE_DIGEST_ENV,
-} from "@synara/shared/migrationRecovery";
+} from "@ramspace/shared/migrationRecovery";
 import {
   optionalBooleanEnvironmentConfig,
   optionalBooleanFlag,
   resolveBooleanConfig,
   type BooleanFlagInput,
-} from "@synara/shared/cli";
+} from "@ramspace/shared/cli";
 import {
   DEFAULT_PORT,
   deriveServerPaths,
@@ -59,10 +59,10 @@ import {
   type ServerConfigShape,
 } from "./config";
 import {
-  SYNARA_BETA_BUNDLE_ID,
-  SYNARA_REMOTE_BUNDLE_ID,
-  SYNARA_DESKTOP_BUNDLE_ID_ENV,
-} from "@synara/shared/desktopIdentity";
+  RAMSPACE_BETA_BUNDLE_ID,
+  RAMSPACE_REMOTE_BUNDLE_ID,
+  RAMSPACE_DESKTOP_BUNDLE_ID_ENV,
+} from "@ramspace/shared/desktopIdentity";
 import { runBetaImportIfRequested } from "./betaImport";
 import { startBetaUsageSnapshotJob } from "./betaUsageSnapshot";
 import { startHostUsageSnapshotJob } from "./hostUsageSnapshot";
@@ -119,8 +119,8 @@ import { createAccountLiveActivityReporter } from "./accountLiveActivityReporter
 import { createAccountInboxReporter } from "./accountInboxReporter";
 import { RecapStatsQuery } from "./recapStats";
 import { isServerBetaFeatureEnabled } from "./betaFeatureGate";
-import { ACCOUNT_INBOX_BETA_FEATURE } from "@synara/shared/betaFeatures";
-import { fetchSynaraServerStatus, formatSynaraServerStatus } from "./serverStatusCli";
+import { ACCOUNT_INBOX_BETA_FEATURE } from "@ramspace/shared/betaFeatures";
+import { fetchRamspaceServerStatus, formatRamspaceServerStatus } from "./serverStatusCli";
 import {
   embeddedMigrationRuntimeSourceDigest,
   verifyMigrationRuntimeIdentity,
@@ -131,7 +131,7 @@ export class StartupError extends Data.TaggedError("StartupError")<{
   readonly cause?: unknown;
 }> {}
 
-const DESKTOP_SHUTDOWN_TOKEN_ENV_KEY = "SYNARA_DESKTOP_SHUTDOWN_TOKEN";
+const DESKTOP_SHUTDOWN_TOKEN_ENV_KEY = "RAMSPACE_DESKTOP_SHUTDOWN_TOKEN";
 
 function consumeProcessEnvironmentValue(environmentKey: string): string | undefined {
   const matchingKeys =
@@ -152,7 +152,7 @@ interface CliInput {
   readonly mode: Option.Option<RuntimeMode>;
   readonly port: Option.Option<number>;
   readonly host: Option.Option<string>;
-  readonly synaraHome: Option.Option<string>;
+  readonly ramspaceHome: Option.Option<string>;
   readonly devUrl: Option.Option<URL>;
   readonly publicUrl: Option.Option<URL>;
   readonly sshForwardPort: Option.Option<number>;
@@ -188,7 +188,7 @@ export interface CliConfigShape {
  * CliConfig - Service tag for startup CLI/runtime helpers.
  */
 export class CliConfig extends ServiceMap.Service<CliConfig, CliConfigShape>()(
-  "synara/main/CliConfig",
+  "ramspace/main/CliConfig",
 ) {
   static readonly layer = Layer.effect(
     CliConfig,
@@ -208,7 +208,7 @@ export class CliConfig extends ServiceMap.Service<CliConfig, CliConfigShape>()(
 }
 
 const CliEnvConfig = Config.all({
-  mode: Config.string("SYNARA_MODE").pipe(
+  mode: Config.string("RAMSPACE_MODE").pipe(
     Config.option,
     Config.map(
       Option.match<RuntimeMode, string>({
@@ -217,25 +217,31 @@ const CliEnvConfig = Config.all({
       }),
     ),
   ),
-  port: Config.port("SYNARA_PORT").pipe(Config.option, Config.map(Option.getOrUndefined)),
-  host: Config.string("SYNARA_HOST").pipe(Config.option, Config.map(Option.getOrUndefined)),
-  synaraHome: Config.string("SYNARA_HOME").pipe(Config.option, Config.map(Option.getOrUndefined)),
+  port: Config.port("RAMSPACE_PORT").pipe(Config.option, Config.map(Option.getOrUndefined)),
+  host: Config.string("RAMSPACE_HOST").pipe(Config.option, Config.map(Option.getOrUndefined)),
+  ramspaceHome: Config.string("RAMSPACE_HOME").pipe(
+    Config.option,
+    Config.map(Option.getOrUndefined),
+  ),
   devUrl: Config.url("VITE_DEV_SERVER_URL").pipe(Config.option, Config.map(Option.getOrUndefined)),
-  publicUrl: Config.url("SYNARA_PUBLIC_URL").pipe(Config.option, Config.map(Option.getOrUndefined)),
-  sshForwardPort: Config.port("SYNARA_SSH_FORWARD_PORT").pipe(
+  publicUrl: Config.url("RAMSPACE_PUBLIC_URL").pipe(
     Config.option,
     Config.map(Option.getOrUndefined),
   ),
-  allowInsecureRemote: optionalBooleanEnvironmentConfig("SYNARA_ALLOW_INSECURE_REMOTE"),
-  noBrowser: optionalBooleanEnvironmentConfig("SYNARA_NO_BROWSER"),
+  sshForwardPort: Config.port("RAMSPACE_SSH_FORWARD_PORT").pipe(
+    Config.option,
+    Config.map(Option.getOrUndefined),
+  ),
+  allowInsecureRemote: optionalBooleanEnvironmentConfig("RAMSPACE_ALLOW_INSECURE_REMOTE"),
+  noBrowser: optionalBooleanEnvironmentConfig("RAMSPACE_NO_BROWSER"),
   remoteBillingPolicyRequired: optionalBooleanEnvironmentConfig(
-    "SYNARA_REMOTE_BILLING_POLICY_REQUIRED",
+    "RAMSPACE_REMOTE_BILLING_POLICY_REQUIRED",
   ),
-  authToken: Config.string("SYNARA_AUTH_TOKEN").pipe(
+  authToken: Config.string("RAMSPACE_AUTH_TOKEN").pipe(
     Config.option,
     Config.map(Option.getOrUndefined),
   ),
-  desktopShutdownToken: Config.string("SYNARA_DESKTOP_SHUTDOWN_TOKEN").pipe(
+  desktopShutdownToken: Config.string("RAMSPACE_DESKTOP_SHUTDOWN_TOKEN").pipe(
     Config.option,
     Config.map(Option.getOrUndefined),
   ),
@@ -248,14 +254,14 @@ const CliEnvConfig = Config.all({
     Config.map(Option.getOrUndefined),
   ),
   autoBootstrapProjectFromCwd: optionalBooleanEnvironmentConfig(
-    "SYNARA_AUTO_BOOTSTRAP_PROJECT_FROM_CWD",
+    "RAMSPACE_AUTO_BOOTSTRAP_PROJECT_FROM_CWD",
   ),
-  trashDir: Config.string("SYNARA_TRASH_DIR").pipe(
+  trashDir: Config.string("RAMSPACE_TRASH_DIR").pipe(
     Config.option,
     Config.map(Option.getOrUndefined),
   ),
-  logProviderEvents: optionalBooleanEnvironmentConfig("SYNARA_LOG_PROVIDER_EVENTS"),
-  logWebSocketEvents: optionalBooleanEnvironmentConfig("SYNARA_LOG_WS_EVENTS"),
+  logProviderEvents: optionalBooleanEnvironmentConfig("RAMSPACE_LOG_PROVIDER_EVENTS"),
+  logWebSocketEvents: optionalBooleanEnvironmentConfig("RAMSPACE_LOG_WS_EVENTS"),
 });
 
 const ServerConfigLive = (input: CliInput) =>
@@ -322,7 +328,7 @@ const ServerConfigLive = (input: CliInput) =>
       if (configuredPublicUrl && publicUrl === undefined) {
         return yield* new StartupError({
           message:
-            "SYNARA_PUBLIC_URL/--public-url must be an HTTPS root origin without credentials, path, query, or fragment (for example https://synara.example.com).",
+            "RAMSPACE_PUBLIC_URL/--public-url must be an HTTPS root origin without credentials, path, query, or fragment (for example https://ramspace.example.com).",
         });
       }
       const allowInsecureRemote = resolveBooleanConfig(
@@ -330,16 +336,16 @@ const ServerConfigLive = (input: CliInput) =>
         env.allowInsecureRemote,
         false,
       );
-      const configuredHome = Option.getOrUndefined(input.synaraHome) ?? env.synaraHome;
+      const configuredHome = Option.getOrUndefined(input.ramspaceHome) ?? env.ramspaceHome;
       const baseDir = yield* resolveBaseDir(configuredHome);
       const userHomeDir = OS.homedir();
       const derivedPaths = yield* deriveServerPaths(baseDir, devUrl);
       // A "Copy my data to Beta" request from a stable install lands as a
       // marker in this home; it must be consumed before the private state
       // directory (and its database) is created or repaired.
-      // Only Synara Beta consumes the marker, so a stray file in any other
+      // Only Ramspace Beta consumes the marker, so a stray file in any other
       // home can never replace that install's database.
-      if (process.env[SYNARA_DESKTOP_BUNDLE_ID_ENV] === SYNARA_BETA_BUNDLE_ID) {
+      if (process.env[RAMSPACE_DESKTOP_BUNDLE_ID_ENV] === RAMSPACE_BETA_BUNDLE_ID) {
         const importResult = yield* Effect.tryPromise({
           try: () =>
             runBetaImportIfRequested({
@@ -359,7 +365,7 @@ const ServerConfigLive = (input: CliInput) =>
       yield* Effect.try({
         try: () => preparePrivateServerPaths(derivedPaths),
         catch: (cause) =>
-          new StartupError({ message: "Failed to secure Synara's local state directory", cause }),
+          new StartupError({ message: "Failed to secure Ramspace's local state directory", cause }),
       });
       const noBrowser = resolveBooleanConfig(input.noBrowser, env.noBrowser, mode === "desktop");
       const authToken = Option.getOrUndefined(input.authToken) ?? env.authToken;
@@ -553,7 +559,7 @@ const makeServerProgram = (input: CliInput) =>
               remoteTrust,
               authControlPlane,
             }),
-          log: (message, detail) => console.warn(`[synara] ${message}`, detail ?? ""),
+          log: (message, detail) => console.warn(`[ramspace] ${message}`, detail ?? ""),
         }),
       ).pipe(
         Effect.catch((cause) =>
@@ -659,13 +665,16 @@ const makeServerProgram = (input: CliInput) =>
     yield* startHostUsageSnapshotJob(config.baseDir);
     // Beta and Remote: anonymous 24h health counts for diagnostics. The desktop
     // relays them only while sharing is on; failures never break startup.
-    const desktopBundleId = process.env[SYNARA_DESKTOP_BUNDLE_ID_ENV];
-    if (desktopBundleId === SYNARA_BETA_BUNDLE_ID || desktopBundleId === SYNARA_REMOTE_BUNDLE_ID) {
+    const desktopBundleId = process.env[RAMSPACE_DESKTOP_BUNDLE_ID_ENV];
+    if (
+      desktopBundleId === RAMSPACE_BETA_BUNDLE_ID ||
+      desktopBundleId === RAMSPACE_REMOTE_BUNDLE_ID
+    ) {
       yield* startBetaUsageSnapshotJob(config.baseDir);
     }
     // Optional Claude OAuth keepalive. Disabled by default because it touches
     // Claude Code auth data in the background; users can opt in with
-    // SYNARA_CLAUDE_KEEPALIVE=1.
+    // RAMSPACE_CLAUDE_KEEPALIVE=1.
     const claudeKeepalive = createClaudeCredentialKeepaliveController({
       homeDir: config.homeDir,
       log: (message) => Effect.runFork(Effect.logInfo(message)),
@@ -692,14 +701,14 @@ const makeServerProgram = (input: CliInput) =>
       Effect.forkChild,
     );
 
-    yield* Effect.logInfo("Synara running", makeServerStartupLogData(config));
+    yield* Effect.logInfo("Ramspace running", makeServerStartupLogData(config));
     if (startupPairingUrl) {
       if (config.allowInsecureRemote && !config.publicUrl) {
         yield* Effect.logWarning(
           "INSECURE REMOTE ACCESS ENABLED: credentials and session traffic are unencrypted",
           {
             pairingUrl: startupPairingUrl,
-            hint: "Use only on a trusted LAN. Configure SYNARA_PUBLIC_URL behind HTTPS for protected remote access.",
+            hint: "Use only on a trusted LAN. Configure RAMSPACE_PUBLIC_URL behind HTTPS for protected remote access.",
           },
         );
       }
@@ -748,8 +757,8 @@ const hostFlag = Flag.string("host").pipe(
   Flag.withDescription("Host/interface to bind (for example 127.0.0.1, 0.0.0.0, or a Tailnet IP)."),
   Flag.optional,
 );
-const synaraHomeFlag = Flag.string("home-dir").pipe(
-  Flag.withDescription("Base directory for all Synara data (equivalent to SYNARA_HOME)."),
+const ramspaceHomeFlag = Flag.string("home-dir").pipe(
+  Flag.withDescription("Base directory for all Ramspace data (equivalent to RAMSPACE_HOME)."),
   Flag.optional,
 );
 const devUrlFlag = Flag.string("dev-url").pipe(
@@ -760,20 +769,20 @@ const devUrlFlag = Flag.string("dev-url").pipe(
 const publicUrlFlag = Flag.string("public-url").pipe(
   Flag.withSchema(Schema.URLFromString),
   Flag.withDescription(
-    "HTTPS public root origin provided by a TLS-terminating reverse proxy (equivalent to SYNARA_PUBLIC_URL).",
+    "HTTPS public root origin provided by a TLS-terminating reverse proxy (equivalent to RAMSPACE_PUBLIC_URL).",
   ),
   Flag.optional,
 );
 const sshForwardPortFlag = Flag.integer("ssh-forward-port").pipe(
   Flag.withSchema(Schema.Int.check(Schema.isBetween({ minimum: 1, maximum: 65535 }))),
   Flag.withDescription(
-    "Loopback-only credential-gated WebSocket port for SSH forwarding (equivalent to SYNARA_SSH_FORWARD_PORT).",
+    "Loopback-only credential-gated WebSocket port for SSH forwarding (equivalent to RAMSPACE_SSH_FORWARD_PORT).",
   ),
   Flag.optional,
 );
 const allowInsecureRemoteFlag = optionalBooleanFlag("allow-insecure-remote", {
   description:
-    "Explicitly allow unencrypted authenticated remote access on a trusted LAN (equivalent to SYNARA_ALLOW_INSECURE_REMOTE).",
+    "Explicitly allow unencrypted authenticated remote access on a trusted LAN (equivalent to RAMSPACE_ALLOW_INSECURE_REMOTE).",
 });
 const noBrowserFlag = optionalBooleanFlag("no-browser", {
   description: "Disable automatic browser opening.",
@@ -790,11 +799,11 @@ const autoBootstrapProjectFromCwdFlag = optionalBooleanFlag("auto-bootstrap-proj
 });
 const logProviderEventsFlag = optionalBooleanFlag("log-provider-events", {
   description:
-    "Emit native/canonical provider NDJSON logs for debugging (equivalent to SYNARA_LOG_PROVIDER_EVENTS).",
+    "Emit native/canonical provider NDJSON logs for debugging (equivalent to RAMSPACE_LOG_PROVIDER_EVENTS).",
 });
 const logWebSocketEventsFlag = optionalBooleanFlag("log-websocket-events", {
   description:
-    "Emit server-side logs for outbound WebSocket push traffic (equivalent to SYNARA_LOG_WS_EVENTS).",
+    "Emit server-side logs for outbound WebSocket push traffic (equivalent to RAMSPACE_LOG_WS_EVENTS).",
   aliases: ["log-ws-events"],
 });
 
@@ -805,16 +814,16 @@ const mcpIntegrationFlag = Flag.string("integration").pipe(
   Flag.optional,
 );
 
-// Base `synara` command defined before the MCP subcommands so they can yield
-// its parsed input (notably `--home-dir` / `synaraHome`) via Effect's command
+// Base `ramspace` command defined before the MCP subcommands so they can yield
+// its parsed input (notably `--home-dir` / `ramspaceHome`) via Effect's command
 // context. This avoids a duplicate `--home-dir` flag between the root command
 // and its MCP subcommands, which the Effect CLI assigns to the parent and
 // leaves the subcommand flag unset.
-const baseServerCommand = Command.make("synara", {
+const baseServerCommand = Command.make("ramspace", {
   mode: modeFlag,
   port: portFlag,
   host: hostFlag,
-  synaraHome: synaraHomeFlag,
+  ramspaceHome: ramspaceHomeFlag,
   devUrl: devUrlFlag,
   publicUrl: publicUrlFlag,
   sshForwardPort: sshForwardPortFlag,
@@ -824,7 +833,7 @@ const baseServerCommand = Command.make("synara", {
   autoBootstrapProjectFromCwd: autoBootstrapProjectFromCwdFlag,
   logProviderEvents: logProviderEventsFlag,
   logWebSocketEvents: logWebSocketEventsFlag,
-}).pipe(Command.withDescription("Run the Synara server."));
+}).pipe(Command.withDescription("Run the Ramspace server."));
 
 const mcpServeCommand = Command.make(
   "serve",
@@ -832,7 +841,7 @@ const mcpServeCommand = Command.make(
   ({ integration }) =>
     Effect.gen(function* () {
       const parent = yield* baseServerCommand;
-      const baseDir = resolveExternalMcpBaseDir(Option.getOrUndefined(parent.synaraHome));
+      const baseDir = resolveExternalMcpBaseDir(Option.getOrUndefined(parent.ramspaceHome));
       yield* Effect.tryPromise({
         try: () =>
           serveExternalMcpStdio({
@@ -845,7 +854,7 @@ const mcpServeCommand = Command.make(
     }),
 ).pipe(
   Command.withDescription(
-    "Serve the paired Synara external MCP integration over stdio for Codex, Claude, and other MCP clients.",
+    "Serve the paired Ramspace external MCP integration over stdio for Codex, Claude, and other MCP clients.",
   ),
 );
 
@@ -853,13 +862,13 @@ const mcpPairCommand = Command.make(
   "pair",
   {
     code: Flag.string("code").pipe(
-      Flag.withDescription("Short-lived pairing code issued by Synara Settings."),
+      Flag.withDescription("Short-lived pairing code issued by Ramspace Settings."),
     ),
   },
   ({ code }) =>
     Effect.gen(function* () {
       const parent = yield* baseServerCommand;
-      const baseDir = resolveExternalMcpBaseDir(Option.getOrUndefined(parent.synaraHome));
+      const baseDir = resolveExternalMcpBaseDir(Option.getOrUndefined(parent.ramspaceHome));
       const paired = yield* Effect.tryPromise({
         try: () =>
           pairExternalMcpClient({
@@ -869,21 +878,21 @@ const mcpPairCommand = Command.make(
         catch: (cause) => new StartupError({ message: "External MCP pairing failed.", cause }),
       });
       process.stdout.write(
-        `Paired Synara external MCP integration "${paired.paired.name}".\nCredential stored privately at ${paired.storePath}.\nConfigure the MCP client command as: ${externalMcpShellCommand(externalMcpLauncher(["mcp", "serve", "--integration", paired.paired.integrationId, "--home-dir", baseDir]))}\n`,
+        `Paired Ramspace external MCP integration "${paired.paired.name}".\nCredential stored privately at ${paired.storePath}.\nConfigure the MCP client command as: ${externalMcpShellCommand(externalMcpLauncher(["mcp", "serve", "--integration", paired.paired.integrationId, "--home-dir", baseDir]))}\n`,
       );
       if (process.platform === "win32") {
         process.stdout.write(
-          "Windows note: Synara stores this credential under your user profile, but Windows does not expose POSIX 0600 permission checks. Protect the profile and its Synara data directory.\n",
+          "Windows note: Ramspace stores this credential under your user profile, but Windows does not expose POSIX 0600 permission checks. Protect the profile and its Ramspace data directory.\n",
         );
       }
     }),
-).pipe(Command.withDescription("Pair this CLI with a user-approved Synara MCP integration."));
+).pipe(Command.withDescription("Pair this CLI with a user-approved Ramspace MCP integration."));
 
 const serverStatusCommand = Command.make(
   "status",
   {
     url: Flag.string("url").pipe(
-      Flag.withDescription("Synara server base URL to probe."),
+      Flag.withDescription("Ramspace server base URL to probe."),
       Flag.optional,
     ),
     json: Flag.boolean("json").pipe(
@@ -897,7 +906,7 @@ const serverStatusCommand = Command.make(
       const discovered = Option.isSome(url)
         ? { url: url.value }
         : (() => {
-            const baseDir = resolveExternalMcpBaseDir(Option.getOrUndefined(parent.synaraHome));
+            const baseDir = resolveExternalMcpBaseDir(Option.getOrUndefined(parent.ramspaceHome));
             try {
               const runtime = discoverServerRuntime(baseDir);
               return { url: runtime.state.origin, runtime };
@@ -906,7 +915,7 @@ const serverStatusCommand = Command.make(
                 error:
                   cause instanceof Error
                     ? cause.message
-                    : "Failed to discover a running Synara server.",
+                    : "Failed to discover a running Ramspace server.",
               };
             }
           })();
@@ -923,7 +932,7 @@ const serverStatusCommand = Command.make(
                 if ("runtime" in discovered) {
                   await verifyServerRuntime(discovered.runtime, globalThis.fetch);
                 }
-                return await fetchSynaraServerStatus({ url: discovered.url });
+                return await fetchRamspaceServerStatus({ url: discovered.url });
               } catch (cause) {
                 return {
                   reachable: false as const,
@@ -932,31 +941,31 @@ const serverStatusCommand = Command.make(
                   error:
                     cause instanceof Error
                       ? cause.message
-                      : "Failed to verify the discovered Synara server.",
+                      : "Failed to verify the discovered Ramspace server.",
                 };
               }
             });
       process.stdout.write(
-        json ? `${JSON.stringify(result, null, 2)}\n` : `${formatSynaraServerStatus(result)}\n`,
+        json ? `${JSON.stringify(result, null, 2)}\n` : `${formatRamspaceServerStatus(result)}\n`,
       );
       if (!result.ready) {
         process.exitCode = 1;
       }
     }),
-).pipe(Command.withDescription("Check whether a Synara server is reachable and ready."));
+).pipe(Command.withDescription("Check whether a Ramspace server is reachable and ready."));
 
 const serverToolsCommand = Command.make("server").pipe(
-  Command.withDescription("Inspect and manage a running Synara server."),
+  Command.withDescription("Inspect and manage a running Ramspace server."),
   Command.withSubcommands([serverStatusCommand]),
 );
 
 const mcpCommand = Command.make("mcp").pipe(
-  Command.withDescription("Manage Synara's loopback external MCP bridge."),
+  Command.withDescription("Manage Ramspace's loopback external MCP bridge."),
   Command.withSubcommands([mcpServeCommand, mcpPairCommand]),
 );
 
 const accountUrlFlag = Flag.string("account-url").pipe(
-  Flag.withDescription(`Synara account server to talk to (overrides ${ACCOUNT_URL_ENV_NAME}).`),
+  Flag.withDescription(`Ramspace account server to talk to (overrides ${ACCOUNT_URL_ENV_NAME}).`),
   Flag.optional,
 );
 
@@ -984,7 +993,7 @@ const baseAuthCommand = Command.make("auth", {
 const authLogoutCommand = Command.make("logout", {}, () =>
   Effect.gen(function* () {
     const root = yield* baseServerCommand;
-    const baseDir = resolveExternalMcpBaseDir(Option.getOrUndefined(root.synaraHome));
+    const baseDir = resolveExternalMcpBaseDir(Option.getOrUndefined(root.ramspaceHome));
     // No `--account-url` gate: logout uses the URL stored at login, so it must
     // keep working after the ambient env var is unset.
     yield* Effect.tryPromise({
@@ -1002,7 +1011,7 @@ const authCommand = baseAuthCommand.pipe(
   Command.withHandler(({ accountUrl, deviceCode }) =>
     Effect.gen(function* () {
       const root = yield* baseServerCommand;
-      const baseDir = resolveExternalMcpBaseDir(Option.getOrUndefined(root.synaraHome));
+      const baseDir = resolveExternalMcpBaseDir(Option.getOrUndefined(root.ramspaceHome));
       if (deviceCode) {
         const resolved = yield* requireAccountUrl(accountUrl);
         yield* Effect.tryPromise({
@@ -1051,7 +1060,7 @@ const authCommand = baseAuthCommand.pipe(
 const statusCommand = Command.make("status", { accountUrl: accountUrlFlag }, ({ accountUrl }) =>
   Effect.gen(function* () {
     const parent = yield* baseServerCommand;
-    const baseDir = resolveExternalMcpBaseDir(Option.getOrUndefined(parent.synaraHome));
+    const baseDir = resolveExternalMcpBaseDir(Option.getOrUndefined(parent.ramspaceHome));
     yield* Effect.tryPromise({
       try: () =>
         runStatus({
@@ -1072,7 +1081,7 @@ const remoteListCommand = Command.make("list", {}, () =>
     const result = yield* Effect.tryPromise({
       try: () =>
         requestLocalRemoteAccess(
-          resolveExternalMcpBaseDir(Option.getOrUndefined(parent.synaraHome)),
+          resolveExternalMcpBaseDir(Option.getOrUndefined(parent.ramspaceHome)),
           { operation: "list" },
         ),
       catch: (cause) =>
@@ -1094,7 +1103,7 @@ const remoteInviteCommand = Command.make(
       yield* Effect.tryPromise({
         try: async () => {
           const result = await requestLocalRemoteAccess(
-            resolveExternalMcpBaseDir(Option.getOrUndefined(parent.synaraHome)),
+            resolveExternalMcpBaseDir(Option.getOrUndefined(parent.ramspaceHome)),
             { operation: "create-invitation" },
           );
           await saveRemoteInvitation(output, result);
@@ -1116,7 +1125,7 @@ const remoteApproveCommand = Command.make(
       yield* Effect.tryPromise({
         try: () =>
           requestLocalRemoteAccess(
-            resolveExternalMcpBaseDir(Option.getOrUndefined(parent.synaraHome)),
+            resolveExternalMcpBaseDir(Option.getOrUndefined(parent.ramspaceHome)),
             { operation: "approve", inviteId, deviceJkt },
           ),
         catch: (cause) =>
@@ -1134,7 +1143,7 @@ const remoteRejectCommand = Command.make(
       yield* Effect.tryPromise({
         try: () =>
           requestLocalRemoteAccess(
-            resolveExternalMcpBaseDir(Option.getOrUndefined(parent.synaraHome)),
+            resolveExternalMcpBaseDir(Option.getOrUndefined(parent.ramspaceHome)),
             { operation: "cancel-invitation", inviteId },
           ),
         catch: (cause) =>
@@ -1166,4 +1175,4 @@ const serverCommand = baseServerCommand.pipe(
   ]),
 );
 
-export const synaraCli = serverCommand;
+export const ramspaceCli = serverCommand;

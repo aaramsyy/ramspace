@@ -9,7 +9,7 @@ import type {
   StatsGetRecapInput,
   StatsGetUsageAnalyticsInput,
   ThreadId,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { mutationOptions, queryOptions, type QueryClient } from "@tanstack/react-query";
 import { ensureNativeApi } from "~/nativeApi";
 import {
@@ -41,7 +41,7 @@ export const serverQueryKeys = {
   recap: (input: StatsGetRecapInput) =>
     ["server", "recap", input.from, input.to, input.slotBoundaries.join(",")] as const,
   usageAnalytics: (input: StatsGetUsageAnalyticsInput) =>
-    ["server", "usageAnalytics", input.from, input.to, input.scope ?? "synara"] as const,
+    ["server", "usageAnalytics", input.from, input.to, input.scope ?? "ramspace"] as const,
   studioThreadOutputs: (threadId: ThreadId | null) =>
     ["server", "studioThreadOutputs", threadId] as const,
   computerStatus: () => ["server", "computerStatus"] as const,
@@ -364,7 +364,7 @@ export function serverLocalServersQueryOptions(
 }
 
 // Sidebar project badges need a snapshot, but idle Home should not keep shelling out
-// through lsof/ps; active Synara-owned runs still poll for responsive status.
+// through lsof/ps; active Ramspace-owned runs still poll for responsive status.
 export function sidebarLocalServersQueryOptions(input: {
   hasActiveProjectRun: boolean;
   hasProjects: boolean;
@@ -460,7 +460,7 @@ export async function invalidateProviderUsageQueries(queryClient: QueryClient): 
 }
 
 // Local profile + shareable-card core statistics. The client passes its own fixed
-// UTC offset; all metrics are computed from Synara's local DB projections.
+// UTC offset; all metrics are computed from Ramspace's local DB projections.
 export function serverProfileStatsQueryOptions(input: { enabled?: boolean } = {}) {
   const utcOffsetMinutes = -new Date().getTimezoneOffset();
   return queryOptions({
@@ -497,7 +497,7 @@ export function serverProfileTokenStatsQueryOptions(input: { enabled?: boolean }
   });
 }
 
-// Inbox recap of one window (a working day and its slots), from Synara's local DB. A recap
+// Inbox recap of one window (a working day and its slots), from Ramspace's local DB. A recap
 // generated after its window ended is final and stays fresh. Anything earlier is refetched,
 // including yesterday's entry when it is the one "today" left behind after the day rolled
 // over (same window, same key). The current window refreshes while the Inbox is open.

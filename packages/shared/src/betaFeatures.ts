@@ -3,14 +3,14 @@
 // Layer: Shared contracts (consumed by desktop main, server, and web UI)
 
 import {
-  SYNARA_BETA_BUNDLE_ID,
-  SYNARA_CANARY_BUNDLE_ID,
-  SYNARA_CUA_BUNDLE_ID,
-  SYNARA_DEVELOPMENT_BUNDLE_ID,
-  SYNARA_PRODUCTION_BUNDLE_ID,
-  SYNARA_REMOTE_BUNDLE_ID,
-  type SynaraDesktopFlavor,
-} from "@synara/shared/desktopIdentity";
+  RAMSPACE_BETA_BUNDLE_ID,
+  RAMSPACE_CANARY_BUNDLE_ID,
+  RAMSPACE_CUA_BUNDLE_ID,
+  RAMSPACE_DEVELOPMENT_BUNDLE_ID,
+  RAMSPACE_PRODUCTION_BUNDLE_ID,
+  RAMSPACE_REMOTE_BUNDLE_ID,
+  type RamspaceDesktopFlavor,
+} from "@ramspace/shared/desktopIdentity";
 
 /**
  * Features that ship only in non-Stable builds. Keep a feature out of Stable
@@ -41,7 +41,7 @@ export const AUDIO_TRAIL_BETA_FEATURE = "audio-trail";
 export const PULL_REQUEST_AUTO_FIX_BETA_FEATURE = "pull-request-auto-fix";
 
 /**
- * Inline visuals (Stable and Beta): the `synara_show_visual` agent tool,
+ * Inline visuals (Stable and Beta): the `ramspace_show_visual` agent tool,
  * component-spec and sandboxed HTML transcript rows, and the document read.
  */
 export const INLINE_VISUALS_BETA_FEATURE = "inline-visuals";
@@ -67,7 +67,7 @@ export const BETA_ONLY_FEATURES: readonly BetaOnlyFeature[] = [];
  */
 export function isBetaFeatureEnabled(
   feature: BetaOnlyFeature,
-  flavor: SynaraDesktopFlavor | "unknown",
+  flavor: RamspaceDesktopFlavor | "unknown",
 ): boolean {
   return !BETA_ONLY_FEATURES.includes(feature) || flavor !== "production";
 }
@@ -75,19 +75,19 @@ export function isBetaFeatureEnabled(
 /** Maps a desktop bundle id to its flavor; blank or unrecognized -> "unknown". */
 export function desktopFlavorFromBundleId(
   bundleId: string | undefined,
-): SynaraDesktopFlavor | "unknown" {
+): RamspaceDesktopFlavor | "unknown" {
   switch (bundleId?.trim()) {
-    case SYNARA_PRODUCTION_BUNDLE_ID:
+    case RAMSPACE_PRODUCTION_BUNDLE_ID:
       return "production";
-    case SYNARA_DEVELOPMENT_BUNDLE_ID:
+    case RAMSPACE_DEVELOPMENT_BUNDLE_ID:
       return "development";
-    case SYNARA_CANARY_BUNDLE_ID:
+    case RAMSPACE_CANARY_BUNDLE_ID:
       return "canary";
-    case SYNARA_CUA_BUNDLE_ID:
+    case RAMSPACE_CUA_BUNDLE_ID:
       return "cua";
-    case SYNARA_REMOTE_BUNDLE_ID:
+    case RAMSPACE_REMOTE_BUNDLE_ID:
       return "remote";
-    case SYNARA_BETA_BUNDLE_ID:
+    case RAMSPACE_BETA_BUNDLE_ID:
       return "beta";
     default:
       return "unknown";
@@ -96,24 +96,24 @@ export function desktopFlavorFromBundleId(
 
 /**
  * Maps the web app's own URL scheme to the hosting desktop's flavor. A Stable
- * build serves `synara:` pages; a development build serves the same scheme, so
+ * build serves `ramspace:` pages; a development build serves the same scheme, so
  * the caller passes whether this is a dev build. Anything else (http, missing
  * window) is "unknown".
  */
 export function desktopFlavorFromProtocol(
   protocol: string | undefined,
   isDevBuild: boolean,
-): SynaraDesktopFlavor | "unknown" {
+): RamspaceDesktopFlavor | "unknown" {
   switch (protocol) {
-    case "synara-remote:":
+    case "ramspace-remote:":
       return "remote";
-    case "synara-beta:":
+    case "ramspace-beta:":
       return "beta";
-    case "synara-canary:":
+    case "ramspace-canary:":
       return "canary";
-    case "synara-cua:":
+    case "ramspace-cua:":
       return "cua";
-    case "synara:":
+    case "ramspace:":
       return isDevBuild ? "development" : "production";
     default:
       return "unknown";

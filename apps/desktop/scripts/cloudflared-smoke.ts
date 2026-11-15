@@ -5,11 +5,11 @@ import { mkdtempSync } from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { setTimeout as delay } from "node:timers/promises";
-import { CLOUDFLARED_VERSION } from "@synara/shared/cloudflared";
-import { spawnProcess, spawnProcessSync } from "@synara/shared/processRuntime";
+import { CLOUDFLARED_VERSION } from "@ramspace/shared/cloudflared";
+import { spawnProcess, spawnProcessSync } from "@ramspace/shared/processRuntime";
 import { teardownChildProcessTree } from "../../server/src/platform/supervisedProcessTeardown";
 
-const directory = mkdtempSync(path.join(os.tmpdir(), "synara-connector-electron-"));
+const directory = mkdtempSync(path.join(os.tmpdir(), "ramspace-connector-electron-"));
 app.setPath("userData", path.join(directory, "profile"));
 async function smoke() {
   try {

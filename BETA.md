@@ -1,10 +1,10 @@
-# Synara Beta
+# Ramspace Beta
 
-Synara Beta is a packaged prerelease flavor of the desktop app. It is a separate
-application that installs and updates side-by-side with stable Synara, and it never
+Ramspace Beta is a packaged prerelease flavor of the desktop app. It is a separate
+application that installs and updates side-by-side with stable Ramspace, and it never
 shares stable's data directory or update feed.
 
-## Synara Remote early access
+## Ramspace Remote early access
 
 Remote .39 fixes photo/file transfers from a controlling desktop to a connected computer. Uploads and cancellation retain their original owner; image previews, fullscreen and downloads use the authenticated controlling window. Expired or lost image grants recover once without changing row geometry; persistent failures keep Retry. This desktop update preserves data and pairings and requires no hosted API or companion release.
 
@@ -14,24 +14,24 @@ Remote .36 shows each subagent's existing provider model and explicitly selected
 
 Remote .35 retains eligible local Markdown images privately with completed replies and adds Retry for failed previews. The host resolves relative paths and registered worktrees; file grants remain confined to the requested file. An image missing before it could be retained still needs the original file restored. Universal TestFlight build 159 includes the matching image recovery and SVG retry fixes, and removes an unsupported prewarm request that could disconnect hosts. Update desktop and mobile separately.
 
-Remote .35 bundles cloudflared 2026.10.3 for the [eMudhra certificate trust fix](https://blog.cloudflare.com/emudhra-certificate-compromise/). Updating Homebrew alone does not replace the helper inside Synara Remote. The app's declared minimum remains macOS 13; the vendor connector executable declares macOS 15, as the previous bundled version also did. Connector operation on macOS 13–14 remains unqualified; do not disable TLS verification or lower the executable's metadata to work around this.
+Remote .35 bundles cloudflared 2026.10.3 for the [eMudhra certificate trust fix](https://blog.cloudflare.com/emudhra-certificate-compromise/). Updating Homebrew alone does not replace the helper inside Ramspace Remote. The app's declared minimum remains macOS 13; the vendor connector executable declares macOS 15, as the previous bundled version also did. Connector operation on macOS 13–14 remains unqualified; do not disable TLS verification or lower the executable's metadata to work around this.
 
 Remote .32 adds guarded recovery for blocked Claude deliveries. Use Stop before Unblock when the runtime still needs to retire; a Stop request alone does not confirm cleanup. Restarted hosts distinguish inherited deliveries from locally adopted runtimes. Uncertain messages are never automatically replayed. The matching iPhone/iPad recovery controls require TestFlight build 156 or newer; update each app separately.
 
 Remote .20 and universal iOS/iPadOS build 141 align resource validation with phone-created thread identifiers. Update both ends for attachment and voice transfers; old hosts reject those identifiers. Existing pairing, authorization and upload-size limits remain in force.
 
-**Synara Remote** is a separate tester app, not a rename of Synara Beta.
-Its `remote` flavor uses `com.emanueledipietro.synara.remote`, the
-`synara-remote://app` renderer, `~/.synara-remote` data and the `synara-remote`
-Electron profile. An explicit `SYNARA_REMOTE_HOME` may override its home;
-inherited `SYNARA_HOME` and `SYNARA_BETA_HOME` cannot redirect it.
+**Ramspace Remote** is a separate tester app, not a rename of Ramspace Beta.
+Its `remote` flavor uses `com.aaramsyy.ramspace.remote`, the
+`ramspace-remote://app` renderer, `~/.ramspace-remote` data and the `ramspace-remote`
+Electron profile. An explicit `RAMSPACE_REMOTE_HOME` may override its home;
+inherited `RAMSPACE_HOME` and `RAMSPACE_BETA_HOME` cannot redirect it.
 
 `vX.Y.Z-remote.N` selects the `remote` updater lane. Remote accepts only Remote
 updates, never replaces Stable/Beta, never becomes GitHub Latest and does not
 publish the CLI. From Remote .14, distribution targets macOS Apple Silicon,
 Windows x64 and Linux x64. Windows has its own NSIS registration, and Linux
-uses `synara-remote` for its executable and window class. It uses
-the existing Synara artwork; Beta's blue artwork remains specific to Beta.
+uses `ramspace-remote` for its executable and window class. It uses
+the existing Ramspace artwork; Beta's blue artwork remains specific to Beta.
 Remote enables the existing non-Stable feature gates and runs diagnostics with
 `flavor: "remote"`, without raw crash dumps. It starts with its own local data:
 no Stable/Beta import or Try Beta installation/removal action runs from Remote.
@@ -39,7 +39,7 @@ Signing in to the same account preserves access to account-owned cloud data and 
 local conversations remain owned by their original app home.
 
 Remote .14 also supplies its hosted account API on a normal launch; no shell
-environment setup is needed. An explicit `SYNARA_ACCOUNT_URL` still overrides
+environment setup is needed. An explicit `RAMSPACE_ACCOUNT_URL` still overrides
 that default. Saved account sessions retain their original issuer. The release
 qualifies startup without inheriting the operator's account URL. The hosted API's
 `REMOTE_BETA_ACCESS_ENABLED=true` setting opens beta enrollment to all authenticated
@@ -51,7 +51,7 @@ configured in the hosted WorkOS Production environment. The provider configurati
 and Chromium sign-in UI tests pass; the real production GitHub consent/callback
 has not been verified. Remote also
 enables the profile/usage sync path without an operator flag; an explicit
-`SYNARA_ACCOUNT_PROFILE_SYNC=0` still disables it. Stable was blocked at that
+`RAMSPACE_ACCOUNT_PROFILE_SYNC=0` still disables it. Stable was blocked at that
 release; its later profile promotion is described below. Generic/Beta builds
 retain their existing opt-in. Product analytics were
 separate and off by default in Remote .15; the later Remote default is described
@@ -71,16 +71,16 @@ is not implemented; do not use account switching as local history isolation.
 
 - **One branch.** Every PR merges into `main` as usual. There is no Beta branch.
   The release tag decides which app gets built from `main`:
-  - `vX.Y.Z` builds **Synara** (Stable).
-  - `vX.Y.Z-beta.N` builds **Synara Beta**.
+  - `vX.Y.Z` builds **Ramspace** (Stable).
+  - `vX.Y.Z-beta.N` builds **Ramspace Beta**.
 - **Beta is named after the next Stable.** After `v0.9.2` ships, the next Beta is
   `v0.9.3-beta.1`, then `v0.9.3-beta.2`, and so on until `v0.9.3` ships. Never tag
   `v0.9.2-beta.1` after `v0.9.2`: it sorts older than the Stable it follows.
-- **Two separate apps.** Synara and Synara Beta install side by side, with separate
-  data (`~/.synara` and `~/.synara-beta`) and separate update feeds. A Beta update is
+- **Two separate apps.** Ramspace and Ramspace Beta install side by side, with separate
+  data (`~/.ramspace` and `~/.ramspace-beta`) and separate update feeds. A Beta update is
   never offered to Stable, and the other way round.
 - **Data only copies Stable → Beta.** Settings > Try Beta copies the user's Stable
-  data into Beta. Nothing is ever copied back: "Switch back to Synara" reopens
+  data into Beta. Nothing is ever copied back: "Switch back to Ramspace" reopens
   Stable with the data it already had.
 - **Beta-only features** stay out of Stable through one list,
   `BETA_ONLY_FEATURES` in `packages/shared/src/betaFeatures.ts`. The code ships in
@@ -96,11 +96,11 @@ is not implemented; do not use account switching as local history isolation.
 
 1. Merge the PRs for the release into `main`.
 2. If Windows is shipping unsigned, set the repo variable
-   `SYNARA_ALLOW_UNSIGNED_WINDOWS_RELEASE` to the Stable version (for example
+   `RAMSPACE_ALLOW_UNSIGNED_WINDOWS_RELEASE` to the Stable version (for example
    `0.9.2`), then tag and publish `v0.9.2`.
 3. Set the variable to the Beta version (`0.9.3-beta.1`), prepare its version
    commit on top of the Stable commit, then tag and publish `v0.9.3-beta.1`.
-   With `SYNARA_AUTO_BETA=1` this version commit and tag are created automatically
+   With `RAMSPACE_AUTO_BETA=1` this version commit and tag are created automatically
    after the Stable publish. Do not push Beta package versions onto `main`.
 4. More Betas (`beta.2`, `beta.3`, …) can follow from newer `main` commits at any
    time. Stable only moves when a `vX.Y.Z` tag is cut.
@@ -109,12 +109,12 @@ The rest of this file is the detailed reference.
 
 ## Identity
 
-- App name: `Synara Beta`
-- Bundle ID: `com.emanueledipietro.synara.beta`
-- Desktop origin: `synara-beta://app`
-- Synara data: `~/.synara-beta`
-- Electron profile: `synara-beta`
-- Executable: `synara-beta` (Linux AppImage bundle), `Synara Beta.app`, `Synara Beta.exe`
+- App name: `Ramspace Beta`
+- Bundle ID: `com.aaramsyy.ramspace.beta`
+- Desktop origin: `ramspace-beta://app`
+- Ramspace data: `~/.ramspace-beta`
+- Electron profile: `ramspace-beta`
+- Executable: `ramspace-beta` (Linux AppImage bundle), `Ramspace Beta.app`, `Ramspace Beta.exe`
 - Windows installer GUID: `a8e63b48-d4f3-4db5-9e12-368107afe65d` (separate Add/Remove
   Programs entry; the stable GUID is unchanged)
 
@@ -122,7 +122,7 @@ The rest of this file is the detailed reference.
 
 **Settings → Appearance → App icon** offers Default, Icon, Dark, and Beta on
 macOS. Windows and Linux offer Default, Icon, and Beta; Dark is macOS-only.
-Default is the white Synara artwork, Dark is black, Icon is the landscape artwork,
+Default is the white Ramspace artwork, Dark is black, Icon is the landscape artwork,
 and Beta is the blue Beta artwork. A fresh Beta profile and Reset to defaults use
 Beta; a saved choice is preserved.
 
@@ -141,7 +141,7 @@ published by the same release workflow as stable, and it updates through
 
 ## Update channel isolation
 
-- Stable builds follow the `synara` updater channel with `allowPrerelease=false` and
+- Stable builds follow the `ramspace` updater channel with `allowPrerelease=false` and
   only ever read the repository's GitHub Latest release.
 - Beta builds follow the `beta` updater channel with `allowPrerelease=true`.
   electron-updater's GitHub provider reads the releases atom feed and takes the
@@ -164,7 +164,7 @@ published by the same release workflow as stable, and it updates through
   always happens by installing the other app, never by update.
 - `allowDowngrade` stays `false` on both trains; moving back to stable happens
   by opening the stable app (see [Leaving beta](#leaving-beta)), never by update.
-- Pending-update caches are scoped per flavor (`~/Library/Caches/synara-desktop-beta-updater`
+- Pending-update caches are scoped per flavor (`~/Library/Caches/ramspace-desktop-beta-updater`
   on macOS), so a downloaded beta update never collides with stable's pending
   update state.
 
@@ -173,7 +173,7 @@ published by the same release workflow as stable, and it updates through
 Beta releases ride the same `release.yml` workflow. The lane is selected entirely by
 the tag shape: a version whose first prerelease identifier is `beta` resolves to the
 beta channel and the beta desktop flavor. The `remote` identifier selects
-Synara Remote as described above; other suffixes keep today's behavior.
+Ramspace Remote as described above; other suffixes keep today's behavior.
 
 1. Select the target `main` commit and inspect its CI results. Finalize the release
    notes and documentation, then prepare the Beta version on top of that commit
@@ -200,7 +200,7 @@ Synara Remote as described above; other suffixes keep today's behavior.
      quality/server-test gates once preflight and prepared inputs pass. GitHub
      and npm publication depend directly on all quality/server-test gates and
      native success; Beta still never publishes npm `latest`.
-3. The workflow publishes a GitHub **prerelease** named `Synara vX.Y.Z-beta.N` with
+3. The workflow publishes a GitHub **prerelease** named `Ramspace vX.Y.Z-beta.N` with
    beta installers, `beta-*.yml` manifests, and blockmaps. It is never marked Latest,
    never bumps package versions on `main`, and never publishes the npm `latest`
    dist-tag.
@@ -221,7 +221,7 @@ Synara Remote as described above; other suffixes keep today's behavior.
 5. Always cut a new beta right after each stable release. The GitHub provider
    picks the newest non-custom-channel release in the feed, so a newer stable
    tag shadows every older beta until a fresh beta prerelease out-sorts it.
-   With the repository variable `SYNARA_AUTO_BETA=1`, the release workflow does
+   With the repository variable `RAMSPACE_AUTO_BETA=1`, the release workflow does
    this automatically after each stable publish: it tags a version commit made
    on top of the stable commit as `vX.Y.(Z+1)-beta.1` (skipped when any beta
    for that base already exists, or when the release just published is not the
@@ -232,7 +232,7 @@ Synara Remote as described above; other suffixes keep today's behavior.
 
 Beta builds use the same signing setup as stable. Publishing requires the macOS
 signing/notarization secrets, and Windows uses Azure Trusted Signing or the same
-version-scoped unsigned exception (`SYNARA_ALLOW_UNSIGNED_WINDOWS_RELEASE` set to the
+version-scoped unsigned exception (`RAMSPACE_ALLOW_UNSIGNED_WINDOWS_RELEASE` set to the
 exact `X.Y.Z-beta.N` version without the `v`). The exception matches one exact
 version, so the automatic post-stable beta needs Azure signing or the variable
 set to that beta version, otherwise its Windows build blocks publication.
@@ -244,25 +244,25 @@ bun run dist:desktop:artifact -- --platform mac --target dmg --arch arm64 --flav
 ```
 
 `--flavor` accepts `production` (default), `canary`, `cua`, `beta`, or `remote`, and the
-`SYNARA_DESKTOP_FLAVOR` env var is equivalent. The packaged `package.json` embeds the
-resolved flavor (`synaraDesktopFlavor`), so a packaged build cannot silently lose its
+`RAMSPACE_DESKTOP_FLAVOR` env var is equivalent. The packaged `package.json` embeds the
+resolved flavor (`ramspaceDesktopFlavor`), so a packaged build cannot silently lose its
 identity at runtime; on packaged builds the embedded value wins over the env var.
 
 ## Joining beta from stable
 
-The stable app offers a one-click handoff under **Settings → General → Synara Beta**:
+The stable app offers a one-click handoff under **Settings → General → Ramspace Beta**:
 
-- **Install Synara Beta** (macOS) downloads the newest `v*-beta.N` release's
+- **Install Ramspace Beta** (macOS) downloads the newest `v*-beta.N` release's
   `beta-mac.yml`, picks the zip for the current architecture, verifies its
   sha512, unpacks it with `ditto`, checks the bundle id is
-  `com.emanueledipietro.synara.beta`, and verifies the code signature is valid
+  `com.aaramsyy.ramspace.beta`, and verifies the code signature is valid
   and signed by the same team id as the running app (`codesign --verify
 --deep --strict` plus a `TeamIdentifier` match; skipped when the running
-  build is itself unsigned). Only then is `Synara Beta.app` moved into
+  build is itself unsigned). Only then is `Ramspace Beta.app` moved into
   `/Applications` — then opened. On other platforms the card opens the public
   download page instead.
 - **Copy my data and open** installs first when needed, then writes a marker at
-  `~/.synara-beta/import-requested.json` and launches the beta app. On its next
+  `~/.ramspace-beta/import-requested.json` and launches the beta app. On its next
   startup the beta server consumes the marker, snapshots stable's database,
   copies settings and provider secrets, then deletes the marker. The button
   first confirms that this replaces existing Beta chats, projects, and settings;
@@ -273,16 +273,16 @@ The stable app offers a one-click handoff under **Settings → General → Synar
   checkpoint or WAL restart landed mid-copy (it fails rather than import a torn
   pair), and vacuums that staged copy into a checkpointed snapshot. Either way
   the result is a consistent point-in-time copy and the outcome is written to
-  `~/.synara-beta/import-result.json` so the stable settings card can report
+  `~/.ramspace-beta/import-result.json` so the stable settings card can report
   success or the failure reason. The importer stages every file first, rejects
   symbolic links in copied state, and rolls back normal filesystem commit errors
   rather than reporting success with only part of the state copied.
-- Only a packaged beta (`SYNARA_DESKTOP_BUNDLE_ID` is the beta bundle id)
-  consumes the marker, and only from stable's data folder (`SYNARA_STABLE_HOME`
-  handed over by stable, else `~/.synara`). A stray marker in any other home
+- Only a packaged beta (`RAMSPACE_DESKTOP_BUNDLE_ID` is the beta bundle id)
+  consumes the marker, and only from stable's data folder (`RAMSPACE_STABLE_HOME`
+  handed over by stable, else `~/.ramspace`). A stray marker in any other home
   is ignored.
 - If stable's database has migrations newer than the installed beta knows, the
-  import fails with "Update Synara Beta" instead of leaving beta unable to
+  import fails with "Update Ramspace Beta" instead of leaving beta unable to
   start. Any leftover beta `state.sqlite-wal`/`-shm`/`-journal` is removed
   before the snapshot is swapped in, so an old WAL cannot replay over it.
 - **Open Beta** launches the installed beta app without touching data.
@@ -290,10 +290,10 @@ The stable app offers a one-click handoff under **Settings → General → Synar
   beta never reads a half-written snapshot; quit beta first, then import.
 - Launch/import are refused unless the running app is a production-flavor build.
 - On macOS the beta app is spawned by executable path
-  (`Synara Beta.app/Contents/MacOS/Synara Beta`) with a sanitized environment:
-  stable's `SYNARA_HOME`, `SYNARA_DESKTOP_SMOKE_USER_DATA`, and server auth
-  variables are stripped, and beta gets `SYNARA_BETA_HOME` (plus
-  `SYNARA_DESKTOP_SMOKE_USER_DATA` when `SYNARA_BETA_USER_DATA` is set).
+  (`Ramspace Beta.app/Contents/MacOS/Ramspace Beta`) with a sanitized environment:
+  stable's `RAMSPACE_HOME`, `RAMSPACE_DESKTOP_SMOKE_USER_DATA`, and server auth
+  variables are stripped, and beta gets `RAMSPACE_BETA_HOME` (plus
+  `RAMSPACE_DESKTOP_SMOKE_USER_DATA` when `RAMSPACE_BETA_USER_DATA` is set).
 
 The marker format lives in `packages/shared/src/betaChannel.ts`
 (`BetaImportRequest`, `BetaImportResult`); the desktop side is
@@ -304,20 +304,20 @@ The marker format lives in `packages/shared/src/betaChannel.ts`
 ### Local demo
 
 Everything about the install location and data home can be redirected with
-environment variables, so a demo never touches a real `~/.synara`,
-`~/Library/Application Support/synara`, or `/Applications`:
+environment variables, so a demo never touches a real `~/.ramspace`,
+`~/Library/Application Support/ramspace`, or `/Applications`:
 
-- `SYNARA_BETA_FEED_URL` — base URL serving `beta-mac.yml` and the files it
+- `RAMSPACE_BETA_FEED_URL` — base URL serving `beta-mac.yml` and the files it
   lists (for example a local static server). Without it, the newest GitHub
   `v*-beta.N` release is used.
-- `SYNARA_BETA_INSTALL_DIR` — directory the app bundle is moved into and
+- `RAMSPACE_BETA_INSTALL_DIR` — directory the app bundle is moved into and
   probed in first (default `/Applications`).
-- `SYNARA_BETA_HOME` — overrides `~/.synara-beta` everywhere it is resolved:
+- `RAMSPACE_BETA_HOME` — overrides `~/.ramspace-beta` everywhere it is resolved:
   stable's import marker path, the beta app's own base dir, and the
   running-server probe.
-- `SYNARA_BETA_USER_DATA` — Electron `userData` dir handed to the launched
+- `RAMSPACE_BETA_USER_DATA` — Electron `userData` dir handed to the launched
   beta (only honored on the beta and cua flavors and source builds).
-- `SYNARA_HOME` / `HOME` — stable's data dir (beta ignores `SYNARA_HOME`, so a
+- `RAMSPACE_HOME` / `HOME` — stable's data dir (beta ignores `RAMSPACE_HOME`, so a
   globally exported value can never point beta at stable's data) and the
   `userData` base, respectively; overriding `HOME` isolates the Electron profile exactly like
   `scripts/verify-packaged-desktop-startup.ts` does.
@@ -331,25 +331,25 @@ marker and the result both live in the beta home.
 
 ## Leaving beta
 
-Beta shows **Switch back to Synara** under **Settings → General**. It opens
-stable and quits beta; on macOS it can also move `Synara Beta.app` to the Trash
+Beta shows **Switch back to Ramspace** under **Settings → General**. It opens
+stable and quits beta; on macOS it can also move `Ramspace Beta.app` to the Trash
 (checked by default). Stable was never changed by the switch, so it opens with
 the chats and settings it had before.
 
 - Beta data is never copied back. Beta can carry database migrations and data
   for features stable does not have yet, so a copy could fail or corrupt
-  stable's `state.sqlite`. The dialog says so plainly. `~/.synara-beta` is
+  stable's `state.sqlite`. The dialog says so plainly. `~/.ramspace-beta` is
   kept, so reinstalling beta picks up where the user left off.
-- Stable is found through `SYNARA_STABLE_EXECUTABLE`, which stable sets on the
-  beta it launches (with `SYNARA_STABLE_HOME` for its data dir), then through
-  `/Applications/Synara.app`, `~/Applications/Synara.app`, or the stable NSIS
+- Stable is found through `RAMSPACE_STABLE_EXECUTABLE`, which stable sets on the
+  beta it launches (with `RAMSPACE_STABLE_HOME` for its data dir), then through
+  `/Applications/Ramspace.app`, `~/Applications/Ramspace.app`, or the stable NSIS
   uninstall key on Windows. When none is found the card offers the stable
   download page instead.
 - Stable is spawned with beta's per-process overrides stripped
-  (`SYNARA_DESKTOP_SMOKE_USER_DATA`, server auth variables) and `SYNARA_HOME`
-  restored from `SYNARA_STABLE_HOME` when stable handed one over. An already
+  (`RAMSPACE_DESKTOP_SMOKE_USER_DATA`, server auth variables) and `RAMSPACE_HOME`
+  restored from `RAMSPACE_STABLE_HOME` when stable handed one over. An already
   running stable just comes to the front through its single-instance lock.
-- The Trash step only runs for a packaged bundle named `Synara Beta.app`, so a
+- The Trash step only runs for a packaged bundle named `Ramspace Beta.app`, so a
   source or dev build can never trash Electron itself.
 
 ## Beta-only features
@@ -363,7 +363,7 @@ To put a feature behind the list:
 
 - Add its key to `BETA_ONLY_FEATURES`.
 - Gate it on the server, which is authoritative: resolve the host flavor with
-  `desktopFlavorFromBundleId(process.env[SYNARA_DESKTOP_BUNDLE_ID_ENV])` and
+  `desktopFlavorFromBundleId(process.env[RAMSPACE_DESKTOP_BUNDLE_ID_ENV])` and
   refuse the capability there, not just in the UI.
 - Hide it on the web with a constant built from
   `desktopFlavorFromProtocol(window.location.protocol, import.meta.env.DEV)` —
@@ -397,7 +397,7 @@ their separate runtime activation policy.
 
 Diagnostics follow their separate [sender policy](#diagnostics).
 Inline visuals are available in Stable and Beta:
-the `synara_show_visual` agent tool, its transcript rows, and the `orchestration.getInlineVisual`
+the `ramspace_show_visual` agent tool, its transcript rows, and the `orchestration.getInlineVisual`
 read all use the shared policy. Both native component specs and sandboxed HTML retain their
 existing rendering and interactions. Nothing is migrated; each app keeps visual documents
 under its own attachments directory, without importing Beta data into Stable.
@@ -431,8 +431,8 @@ Save can restore it. This history is separate from public profile publication
 and aggregate usage sync.
 
 Stable and Remote enable account profiles and aggregate usage sync for signed-in
-accounts by default; `SYNARA_ACCOUNT_PROFILE_SYNC=0` disables the feature. Beta and
-generic builds retain the server opt-in `SYNARA_ACCOUNT_PROFILE_SYNC=1`. The UI reads
+accounts by default; `RAMSPACE_ACCOUNT_PROFILE_SYNC=0` disables the feature. Beta and
+generic builds retain the server opt-in `RAMSPACE_ACCOUNT_PROFILE_SYNC=1`. The UI reads
 the server capability. New profiles remain private; publication is a separate
 explicit choice and the account API enforces Alto access when configured.
 See the [profiles trial guide](apps/profiles/README.md).
@@ -457,7 +457,7 @@ health counts (projects and active threads) — while stable
 builds never enable the Beta diagnostics sender. Stable and Beta separately offer
 default-off product analytics through Settings → General → Privacy.
 
-Synara Remote shares usage and diagnostics by default: the same technical-only diagnostic events
+Ramspace Remote shares usage and diagnostics by default: the same technical-only diagnostic events
 and product events such as daily activity, feature use,
 connection, pairing and turn outcomes with a fixed failure category. **Share usage
 and diagnostics** in Settings → General → Privacy turns both off and clears unsent
@@ -469,8 +469,8 @@ counters exclude, and how the Cloudflare ingest works.
 
 ## Data
 
-Without an explicit import, beta starts with an empty `~/.synara-beta` home. It
-does not copy, share, or migrate stable (`~/.synara`) or Canary
-(`~/.synara-canary`) data on its own. Both apps can run at the same time: the
+Without an explicit import, beta starts with an empty `~/.ramspace-beta` home. It
+does not copy, share, or migrate stable (`~/.ramspace`) or Canary
+(`~/.ramspace-canary`) data on its own. Both apps can run at the same time: the
 server binds an ephemeral port, single-instance locks are scoped per Electron
 `userData`, and provider secrets are file-scoped inside each home.

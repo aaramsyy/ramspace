@@ -8,7 +8,7 @@
 // Depends on: jose (JWKS + JWT verification), WorkOS User Management REST API,
 // interfaces.ts (the seam), orgProvisioning.ts (org resolution + cache).
 
-import type { AccountSsoProvider } from "@synara/contracts";
+import type { AccountSsoProvider } from "@ramspace/contracts";
 import { createRemoteJWKSet, errors as joseErrors, jwtVerify, type JWTVerifyGetKey } from "jose";
 import type { WorkosApiConfig } from "../config";
 import {
@@ -275,9 +275,9 @@ export function classifyMagicAuthFailure(raw: unknown): AuthFailureReason | unde
 }
 
 /**
- * Synara's provider vocabulary → WorkOS's `provider` parameter on
+ * Ramspace's provider vocabulary → WorkOS's `provider` parameter on
  * `GET /user_management/authorize`. The only place the WorkOS spellings
- * exist; the wire and the seam speak Synara's own names.
+ * exist; the wire and the seam speak Ramspace's own names.
  */
 const WORKOS_AUTHORIZE_PROVIDERS: Record<AccountSsoProvider, string> = {
   google: "GoogleOAuth",
@@ -369,17 +369,19 @@ export function createWorkosIdentityProvider(config: WorkosApiConfig): {
   // still use Production IDs and all tokens still require its exact client/issuer.
   const usersToWorkos = new Map(Object.entries(config.workosIdentityMap?.users ?? {}));
   const orgsToWorkos = new Map(Object.entries(config.workosIdentityMap?.organizations ?? {}));
-  const usersToSynara = new Map(
+  const usersToRamspace = new Map(
     [...usersToWorkos].map(([previous, current]) => [current, previous]),
   );
-  const orgsToSynara = new Map([...orgsToWorkos].map(([previous, current]) => [current, previous]));
+  const orgsToRamspace = new Map(
+    [...orgsToWorkos].map(([previous, current]) => [current, previous]),
+  );
   const workosUser = (id: string) => usersToWorkos.get(id) ?? id;
   const workosOrg = (id: string) => orgsToWorkos.get(id) ?? id;
-  const synaraUser = (id: string) => usersToSynara.get(id) ?? id;
-  const synaraOrg = (id: string) => orgsToSynara.get(id) ?? id;
-  const synaraTokens = (raw: unknown): AuthTokens => {
+  const ramspaceUser = (id: string) => usersToRamspace.get(id) ?? id;
+  const ramspaceOrg = (id: string) => orgsToRamspace.get(id) ?? id;
+  const ramspaceTokens = (raw: unknown): AuthTokens => {
     const tokens = toAuthTokens(raw);
-    return { ...tokens, user: { ...tokens.user, id: synaraUser(tokens.user.id) } };
+    return { ...tokens, user: { ...tokens.user, id: ramspaceUser(tokens.user.id) } };
   };
   /**
    * Resolved on first verification and kept for the process lifetime. The
@@ -485,12 +487,12 @@ export function createWorkosIdentityProvider(config: WorkosApiConfig): {
       if (response.ok) {
         // The fetch signal also bounds response-body reads.
         const raw: unknown = await response.json();
-        const tokens = synaraTokens(raw);
+        const tokens = ramspaceTokens(raw);
         const echoed = (raw as Record<string, unknown>).organization_id;
         return {
           ...tokens,
           ...(typeof echoed === "string" && echoed.length > 0
-            ? { organizationId: synaraOrg(echoed) }
+            ? { organizationId: ramspaceOrg(echoed) }
             : {}),
         };
       }
@@ -622,7 +624,7 @@ export function createWorkosIdentityProvider(config: WorkosApiConfig): {
       memberships.push(
         ...response.data.map((entry) => {
           const organization = toOrganization(entry);
-          return { ...organization, orgId: synaraOrg(organization.orgId) };
+          return { ...organization, orgId: ramspaceOrg(organization.orgId) };
         }),
       );
       const metadata = response.list_metadata;
@@ -726,9 +728,9 @@ export function createWorkosIdentityProvider(config: WorkosApiConfig): {
       // `org_id` is genuinely optional — a device-grant token has none — so its
       // absence is a routing fact for the caller, not a verification failure.
       return {
-        userId: synaraUser(sub),
+        userId: ramspaceUser(sub),
         sessionId: sid,
-        ...(typeof orgId === "string" ? { orgId: synaraOrg(orgId) } : {}),
+        ...(typeof orgId === "string" ? { orgId: ramspaceOrg(orgId) } : {}),
       };
     },
 
@@ -738,7 +740,7 @@ export function createWorkosIdentityProvider(config: WorkosApiConfig): {
       )) as WorkosUserResponse;
       const name = fullName(user);
       return {
-        id: synaraUser(user.id),
+        id: ramspaceUser(user.id),
         email: user.email,
         ...(name ? { name } : {}),
         ...(user.profile_picture_url ? { avatarUrl: user.profile_picture_url } : {}),
@@ -836,7 +838,7 @@ export function createWorkosIdentityProvider(config: WorkosApiConfig): {
         // Grant-consuming: the emailed code is single-use.
         grantTimeoutMs,
       );
-      return synaraTokens(raw);
+      return ramspaceTokens(raw);
     },
 
     buildAuthorizeUrl({ provider, redirectUri, codeChallenge, state }) {
@@ -873,12 +875,12 @@ export function createWorkosIdentityProvider(config: WorkosApiConfig): {
         // Grant-consuming: the authorization code is single-use.
         grantTimeoutMs,
       );
-      return synaraTokens(raw);
+      return ramspaceTokens(raw);
     },
 
     describeInstanceAuth() {
       // Deprecated-but-present: every provider call is proxied now, and
-      // Synara's own clients ignore these — only clients from before the
+      // Ramspace's own clients ignore these — only clients from before the
       // proxy cutover still poll WorkOS directly with them.
       return {
         authMode: "workos",
@@ -943,7 +945,7 @@ export function createWorkosIdentityProvider(config: WorkosApiConfig): {
       // moment the rename lands — including the one this request populated.
       invalidateOrgCacheForOrganization(orgId);
       return {
-        orgId: synaraOrg(response.id),
+        orgId: ramspaceOrg(response.id),
         orgName: typeof response.name === "string" && response.name ? response.name : name,
       };
     },

@@ -18,9 +18,10 @@ import {
   RELIABILITY_MAX_EVENTS_PER_POST,
   RELIABILITY_MAX_RECORD_AGE_DAYS,
   type ProductAnalyticsChannel,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 
-const ENDPOINT = "https://synara-beta-diagnostics.synara-orgs.workers.dev/v1/reliability-events";
+const ENDPOINT =
+  "https://ramspace-beta-diagnostics.ramspace-orgs.workers.dev/v1/reliability-events";
 const MAX_RECORDS = 500;
 const RETRY_WINDOW_MS = RELIABILITY_MAX_RECORD_AGE_DAYS * 24 * 60 * 60 * 1000;
 const decodeRecord = Schema.decodeUnknownSync(ReliabilityRecord);

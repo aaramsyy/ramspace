@@ -5,7 +5,7 @@ import type {
   AccountBillingEnvironment,
   AccountBillingInterval,
   AccountBillingStatus,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { assertPolarBillingConfig, type PolarBillingConfig } from "../config";
 
 // Only a documented checkout-request validation refusal proves no session was created.
@@ -155,7 +155,7 @@ export function createPolarBillingProvider(config: PolarBillingConfig): BillingP
       !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(checkout.id) ||
       checkout.organization_id !== config.organizationId ||
       checkout.external_customer_id !== userId ||
-      checkout.metadata.synara_checkout_attempt_id !== attemptId ||
+      checkout.metadata.ramspace_checkout_attempt_id !== attemptId ||
       checkout.products.length !== 1 ||
       checkout.products[0]?.id !== expectedProductId ||
       (checkout.product_id !== null && checkout.product_id !== expectedProductId)
@@ -248,7 +248,7 @@ export function createPolarBillingProvider(config: PolarBillingConfig): BillingP
         // Checkout metadata is copied to its subscription. A started subscription
         // settles only that exact purchase, even if it ended before our first sync.
         settledCheckoutAttempts: all.flatMap((item) => {
-          const attemptId = item.metadata.synara_checkout_attempt_id;
+          const attemptId = item.metadata.ramspace_checkout_attempt_id;
           return item.customer.id === customer.id &&
             typeof item.started_at === "string" &&
             Number.isFinite(Date.parse(item.started_at)) &&
@@ -279,7 +279,7 @@ export function createPolarBillingProvider(config: PolarBillingConfig): BillingP
       // absent before the first confirmation. Authority remains the exact attempt.
       const candidates = await listCheckouts([expectedProductId]);
       const found = candidates.items.filter(
-        (item) => item.metadata.synara_checkout_attempt_id === attemptId,
+        (item) => item.metadata.ramspace_checkout_attempt_id === attemptId,
       );
       if (found.length > 1) throw new Error("Ambiguous Polar checkout attempt");
       if (found[0]) return checkoutResult(found[0], userId, attemptId, expectedProductId);
@@ -304,7 +304,7 @@ export function createPolarBillingProvider(config: PolarBillingConfig): BillingP
           products: [productId(interval)],
           external_customer_id: userId,
           customer_email: email,
-          metadata: { synara_checkout_attempt_id: attemptId },
+          metadata: { ramspace_checkout_attempt_id: attemptId },
           ...(ip ? { customer_ip_address: ip } : {}),
           success_url: config.checkoutSuccessUrl,
           return_url: config.portalReturnUrl,

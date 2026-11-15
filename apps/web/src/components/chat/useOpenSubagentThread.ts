@@ -5,7 +5,7 @@
 // Layer: Chat hooks
 // Exports: useOpenSubagentThread
 
-import type { ThreadId } from "@synara/contracts";
+import type { ThreadId } from "@ramspace/contracts";
 import { useNavigate } from "@tanstack/react-router";
 import { startTransition, useCallback } from "react";
 

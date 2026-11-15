@@ -21,13 +21,13 @@ describe("owner-only read admission", () => {
 });
 
 it("keeps external provider session analytics owner-only", async () => {
-  const check = (scope: "mac" | "synara" | undefined, role: "owner" | "client") =>
+  const check = (scope: "mac" | "ramspace" | undefined, role: "owner" | "client") =>
     Effect.runPromise(
       requireUsageAnalyticsAccess(scope).pipe(Effect.provideService(CurrentWsSessionRole, role)),
     );
 
   await expect(check("mac", "client")).rejects.toThrow("Owner authorization");
   await expect(check("mac", "owner")).resolves.toBeUndefined();
-  await expect(check("synara", "client")).resolves.toBeUndefined();
+  await expect(check("ramspace", "client")).resolves.toBeUndefined();
   await expect(check(undefined, "client")).resolves.toBeUndefined();
 });

@@ -11,9 +11,9 @@ import {
   type ExternalMcpCapability,
   type ProviderKind,
   type ServerProviderStatus,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { Effect, Layer, Option, Schema } from "effect";
-import { deriveProviderInstances, isProviderKind } from "@synara/shared/providerInstances";
+import { deriveProviderInstances, isProviderKind } from "@ramspace/shared/providerInstances";
 
 import { GitCore } from "../../git/Services/GitCore.ts";
 import { ServerConfig } from "../../config.ts";
@@ -90,7 +90,7 @@ import {
 } from "../Services/ExternalMcpGateway.ts";
 
 const EXTERNAL_MCP_INSTRUCTIONS =
-  "This is Synara's loopback-only external integration. Call synara_overview first to discover the allowed projects (with on-disk paths), provider availability, and granted scopes. Call synara_capabilities with a projectId to choose an exact provider instanceId and model from the advertised catalog. Tools are restricted to the integration's allowed projects and scopes. Task creation is one task per stable requestId and defaults to a managed worktree with approval-required execution.";
+  "This is Ramspace's loopback-only external integration. Call ramspace_overview first to discover the allowed projects (with on-disk paths), provider availability, and granted scopes. Call ramspace_capabilities with a projectId to choose an exact provider instanceId and model from the advertised catalog. Tools are restricted to the integration's allowed projects and scopes. Task creation is one task per stable requestId and defaults to a managed worktree with approval-required execution.";
 const MCP_MAX_BATCH_MESSAGES = 50;
 
 const providerInstanceAvailability = (
@@ -148,8 +148,9 @@ function readAuditMetadata(tool: string, args: Record<string, unknown>) {
     requestId: stringOrNull("requestId"),
     projectId: stringOrNull("projectId"),
     runtimeMode:
-      stringOrNull("runtimeMode") ?? (tool === "synara_create_task" ? "approval-required" : null),
-    environment: stringOrNull("environment") ?? (tool === "synara_create_task" ? "worktree" : null),
+      stringOrNull("runtimeMode") ?? (tool === "ramspace_create_task" ? "approval-required" : null),
+    environment:
+      stringOrNull("environment") ?? (tool === "ramspace_create_task" ? "worktree" : null),
   };
 }
 
@@ -267,7 +268,7 @@ export const makeExternalMcpGateway = Effect.gen(function* () {
   const capabilitiesTool: ExternalTool = {
     requiredCapability: "projects:read",
     definition: {
-      name: "synara_capabilities",
+      name: "ramspace_capabilities",
       description:
         "Describe this integration's granted scopes, safe runtime defaults, provider/model targets, and limits for an explicitly allowed project.",
       inputSchema: {
@@ -277,7 +278,7 @@ export const makeExternalMcpGateway = Effect.gen(function* () {
         additionalProperties: false,
       },
       annotations: {
-        title: "Synara integration capabilities",
+        title: "Ramspace integration capabilities",
         ...READ_ONLY_TOOL_ANNOTATIONS,
       },
     },
@@ -345,15 +346,15 @@ export const makeExternalMcpGateway = Effect.gen(function* () {
   const projectsTool: ExternalTool = {
     requiredCapability: "projects:read",
     definition: {
-      name: "synara_list_allowed_projects",
-      description: "List only the Synara projects explicitly granted to this integration.",
+      name: "ramspace_list_allowed_projects",
+      description: "List only the Ramspace projects explicitly granted to this integration.",
       inputSchema: {
         type: "object",
         properties: {},
         additionalProperties: false,
       },
       annotations: {
-        title: "List allowed Synara projects",
+        title: "List allowed Ramspace projects",
         ...READ_ONLY_TOOL_ANNOTATIONS,
       },
     },
@@ -376,15 +377,15 @@ export const makeExternalMcpGateway = Effect.gen(function* () {
   const overviewTool: ExternalTool = {
     requiredCapability: "projects:read",
     definition: {
-      name: "synara_overview",
+      name: "ramspace_overview",
       description:
-        "Discover everything this integration can use in one call: every allowed Synara project with its on-disk path and activity, provider availability, granted scopes, and safe defaults. Call this first to orient yourself.",
+        "Discover everything this integration can use in one call: every allowed Ramspace project with its on-disk path and activity, provider availability, granted scopes, and safe defaults. Call this first to orient yourself.",
       inputSchema: {
         type: "object",
         properties: {},
         additionalProperties: false,
       },
-      annotations: { title: "Synara overview", ...READ_ONLY_TOOL_ANNOTATIONS },
+      annotations: { title: "Ramspace overview", ...READ_ONLY_TOOL_ANNOTATIONS },
     },
     handler: (_args, context) =>
       Effect.gen(function* () {
@@ -432,9 +433,9 @@ export const makeExternalMcpGateway = Effect.gen(function* () {
   const createTaskTool: ExternalTool = {
     requiredCapability: "tasks:create",
     definition: {
-      name: "synara_create_task",
+      name: "ramspace_create_task",
       description:
-        "Create exactly one Synara task in an explicitly allowed project. requestId is a stable idempotency key and cannot be reused with a different plan. Defaults to a managed worktree and approval-required runtime.",
+        "Create exactly one Ramspace task in an explicitly allowed project. requestId is a stable idempotency key and cannot be reused with a different plan. Defaults to a managed worktree and approval-required runtime.",
       inputSchema: {
         type: "object",
         properties: {
@@ -444,7 +445,7 @@ export const makeExternalMcpGateway = Effect.gen(function* () {
           instanceId: {
             type: "string",
             description:
-              "Exact provider instance ID from synara_capabilities providers[].instances[].instanceId. Omit to use the provider's default instance.",
+              "Exact provider instance ID from ramspace_capabilities providers[].instances[].instanceId. Omit to use the provider's default instance.",
           },
           model: { type: "string" },
           options: {
@@ -469,7 +470,7 @@ export const makeExternalMcpGateway = Effect.gen(function* () {
         additionalProperties: false,
       },
       annotations: {
-        title: "Create one Synara task",
+        title: "Create one Ramspace task",
         readOnlyHint: false,
         destructiveHint: true,
         idempotentHint: true,
@@ -547,7 +548,7 @@ export const makeExternalMcpGateway = Effect.gen(function* () {
   const readTaskTool: ExternalTool = {
     requiredCapability: "tasks:read",
     definition: {
-      name: "synara_read_task",
+      name: "ramspace_read_task",
       description:
         "Read one task created by this integration, or an allowed-project task when tasks:read-project was explicitly granted. To read one settled long message losslessly, pass the summary's index, messageId, and messageVersion with messageOffsetChars 0, then follow messagePage.nextOffsetChars with the same identity and version.",
       inputSchema: {
@@ -589,7 +590,7 @@ export const makeExternalMcpGateway = Effect.gen(function* () {
         additionalProperties: false,
       },
       annotations: {
-        title: "Read a permitted Synara task",
+        title: "Read a permitted Ramspace task",
         ...READ_ONLY_TOOL_ANNOTATIONS,
       },
     },
@@ -626,7 +627,7 @@ export const makeExternalMcpGateway = Effect.gen(function* () {
   const waitTaskTool: ExternalTool = {
     requiredCapability: "tasks:wait",
     definition: {
-      name: "synara_wait_for_task",
+      name: "ramspace_wait_for_task",
       description:
         "Long-poll one permitted task. The wait never retries, replaces, cancels, or creates work.",
       inputSchema: {
@@ -644,7 +645,7 @@ export const makeExternalMcpGateway = Effect.gen(function* () {
         additionalProperties: false,
       },
       annotations: {
-        title: "Wait for a permitted Synara task",
+        title: "Wait for a permitted Ramspace task",
         ...READ_ONLY_TOOL_ANNOTATIONS,
       },
     },
@@ -709,7 +710,7 @@ export const makeExternalMcpGateway = Effect.gen(function* () {
           summaryTruncated,
           error: failure,
           readTask: {
-            tool: "synara_read_task",
+            tool: "ramspace_read_task",
             arguments: { threadId: input.threadId },
           },
         });
@@ -833,7 +834,7 @@ export const makeExternalMcpGateway = Effect.gen(function* () {
       yield* auditCompletion.complete({
         auditId,
         outcome: result.isError ? "error" : "success",
-        createdTaskIds: toolName === "synara_create_task" ? createdThreadIds(result) : [],
+        createdTaskIds: toolName === "ramspace_create_task" ? createdThreadIds(result) : [],
         ...(result.isError ? { detail: "Tool call returned an MCP error." } : {}),
       });
       return jsonRpcResult(request.id, result);

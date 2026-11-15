@@ -86,7 +86,7 @@ describe("localServerMonitor", () => {
     );
   });
 
-  it("keeps dev servers and ignores Electron/Synara-style application listeners", () => {
+  it("keeps dev servers and ignores Electron/Ramspace-style application listeners", () => {
     expect(
       detectDevServerKindFromText({
         command: "node",
@@ -97,21 +97,21 @@ describe("localServerMonitor", () => {
     expect(
       isIgnoredLocalServerProcess({
         command: "Electron",
-        args: "/Applications/Synara.app/Contents/MacOS/Synara",
+        args: "/Applications/Ramspace.app/Contents/MacOS/Ramspace",
         ports: [61449],
       }),
     ).toBe(true);
     expect(
       isIgnoredLocalServerProcess({
-        command: "Synara",
-        args: "/Applications/Synara.app/Contents/MacOS/Synara",
+        command: "Ramspace",
+        args: "/Applications/Ramspace.app/Contents/MacOS/Ramspace",
         ports: [61449],
       }),
     ).toBe(true);
     expect(
       detectDevServerKindFromText({
         command: "node",
-        args: "node /Users/emanueledipietro/Developer/synara/apps/web/node_modules/.bin/vite",
+        args: "node /Users/aaramsyy/Developer/ramspace/apps/web/node_modules/.bin/vite",
         ports: [5733],
       }),
     ).toBe("Vite");
@@ -231,8 +231,7 @@ describe("localServerMonitor", () => {
         12094,
         {
           ppid: 12064,
-          commandLine:
-            "node /Users/emanueledipietro/Developer/synara-website/node_modules/.bin/next dev",
+          commandLine: "node /Users/aaramsyy/Developer/ramspace-website/node_modules/.bin/next dev",
         },
       ],
       [

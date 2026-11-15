@@ -10,7 +10,7 @@ import { ensureHostsApi } from "../hosts/api";
 import { projectCatalogKey } from "./storage";
 import type { CatalogCheckout } from "./model";
 
-export const CATALOG_OPEN_EVENT = "synara:open-catalog-checkout";
+export const CATALOG_OPEN_EVENT = "ramspace:open-catalog-checkout";
 export async function openCatalogCheckout(checkout: CatalogCheckout): Promise<void> {
   const context = readExecutionContext();
   const catalogKey = projectCatalogKey();

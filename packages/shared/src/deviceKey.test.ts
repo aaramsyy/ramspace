@@ -8,8 +8,8 @@ import {
   MINT_REQUEST_JWT_TYP,
   MINT_REQUEST_MAX_AGE_SECONDS,
   MintRequestClaims,
-  SYNARA_DEVICE_ISSUER,
-} from "@synara/contracts";
+  RAMSPACE_DEVICE_ISSUER,
+} from "@ramspace/contracts";
 import { Schema } from "effect";
 import {
   base64url,
@@ -34,7 +34,7 @@ import {
   signMintRequest,
 } from "./deviceKey";
 
-const API_ISSUER = "https://api.synara.example";
+const API_ISSUER = "https://api.ramspace.example";
 const USER_ID = "user_01J8ZQ";
 const ENVIRONMENT_ID = "env-1";
 
@@ -102,7 +102,7 @@ describe("signDeviceRegistration", () => {
     });
 
     const claims = Schema.decodeUnknownSync(DeviceRegisterClaims)(decodeJwt(proof));
-    expect(claims.iss).toBe(SYNARA_DEVICE_ISSUER);
+    expect(claims.iss).toBe(RAMSPACE_DEVICE_ISSUER);
     expect(claims.sub).toBe(USER_ID);
     expect(claims.aud).toBe(API_ISSUER);
     expect(claims.publicKeyJwk).toEqual(publicJwk);
@@ -254,10 +254,10 @@ describe("signMintRequest", () => {
     });
 
     const claims = Schema.decodeUnknownSync(MintRequestClaims)(decodeJwt(request));
-    expect(claims.iss).toBe(SYNARA_DEVICE_ISSUER);
+    expect(claims.iss).toBe(RAMSPACE_DEVICE_ISSUER);
     expect(claims.sub).toBe(USER_ID);
     expect(claims.aud).toBe(hostAudience(ENVIRONMENT_ID));
-    expect(claims.aud).toBe("synara-host:env-1");
+    expect(claims.aud).toBe("ramspace-host:env-1");
     expect(claims.grant).toBe(GRANT);
     expect(claims.publicKeyJwk).toEqual(publicJwk);
   });

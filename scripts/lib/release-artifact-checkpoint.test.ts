@@ -19,14 +19,14 @@ function checkpoint(
   flavor: "production" | "beta" | "remote" = "production",
   archOverride?: "arm64" | "x64",
 ) {
-  const assetsDirectory = mkdtempSync(join(tmpdir(), "synara-checkpoint-"));
+  const assetsDirectory = mkdtempSync(join(tmpdir(), "ramspace-checkpoint-"));
   roots.push(assetsDirectory);
   const version = flavor === "production" ? "1.2.3" : `1.2.3-${flavor}.1`;
   const arch = archOverride ?? (flavor === "remote" && platform === "mac" ? "arm64" : "x64");
   // Electron Builder's AppImage target emits x86_64 for Intel while provenance
   // records the matrix spelling; other targets keep the matrix spelling.
   const nativeFileArch = platform === "linux" && arch === "x64" ? "x86_64" : arch;
-  const productName = { production: "Synara", beta: "Synara-Beta", remote: "Synara-Remote" }[
+  const productName = { production: "Ramspace", beta: "Ramspace-Beta", remote: "Ramspace-Remote" }[
     flavor
   ];
   const stem = `${productName}-${version}-${nativeFileArch}`;
@@ -116,7 +116,7 @@ function signedWindowsCheckpoint() {
       scheme: "windows-authenticode",
       identity: [
         {
-          fileName: "Synara-1.2.3-x64.exe",
+          fileName: "Ramspace-1.2.3-x64.exe",
           publisher: "Acme",
           subject: "O=Acme Software, CN=Acme, C=IT",
           thumbprint: "C".repeat(40),
@@ -172,7 +172,7 @@ describe("same-run release artifact checkpoint", () => {
 
   it("rejects a Linux AppImage using the manifest architecture alias", async () => {
     const { input, payloadPath, changeManifest } = checkpoint();
-    const incorrectFileName = "Synara-1.2.3-x64.AppImage";
+    const incorrectFileName = "Ramspace-1.2.3-x64.AppImage";
     renameSync(payloadPath, join(input.assetsDirectory, incorrectFileName));
     changeManifest((manifest) => {
       manifest.artifacts[0].fileName = incorrectFileName;
@@ -193,10 +193,10 @@ describe("same-run release artifact checkpoint", () => {
     const aliased = checkpoint("linux", "production", "arm64");
     renameSync(
       aliased.payloadPath,
-      join(aliased.input.assetsDirectory, "Synara-1.2.3-x86_64.AppImage"),
+      join(aliased.input.assetsDirectory, "Ramspace-1.2.3-x86_64.AppImage"),
     );
     aliased.changeManifest((manifest) => {
-      manifest.artifacts[0].fileName = "Synara-1.2.3-x86_64.AppImage";
+      manifest.artifacts[0].fileName = "Ramspace-1.2.3-x86_64.AppImage";
     });
     await expect(verifyReleaseArtifactCheckpoint(aliased.input)).rejects.toThrow(
       "unexpected or duplicate artifact name",

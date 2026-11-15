@@ -2,8 +2,8 @@ import {
   accountProfileSyncUnavailableReason,
   remoteConnectionsUnavailableReason,
 } from "../../remoteFeaturePolicy";
-import { desktopFlavorFromBundleId } from "@synara/shared/betaFeatures";
-import { EnvironmentId, type ExecutionEnvironmentDescriptor } from "@synara/contracts";
+import { desktopFlavorFromBundleId } from "@ramspace/shared/betaFeatures";
+import { EnvironmentId, type ExecutionEnvironmentDescriptor } from "@ramspace/contracts";
 import { Effect, FileSystem, Layer, Path, Random } from "effect";
 
 import packageJson from "../../../package.json" with { type: "json" };
@@ -59,7 +59,7 @@ export const makeServerEnvironment = Effect.fn(function* () {
     const persisted = yield* readPersistedEnvironmentId;
     if (persisted) return persisted;
 
-    // Exclusive create: `synara auth` can race first startup on the same
+    // Exclusive create: `ramspace auth` can race first startup on the same
     // file, and both minting different UUIDs would leave one process
     // registered under an id that was never persisted. The loser reads the
     // winner's id instead.
@@ -82,7 +82,7 @@ export const makeServerEnvironment = Effect.fn(function* () {
   const environmentId = EnvironmentId.makeUnsafe(environmentIdRaw);
   const machineId = yield* Effect.promise(() => readMachineId());
   const remoteUnavailableReason = remoteConnectionsUnavailableReason(serverConfig.stateDir);
-  const flavor = desktopFlavorFromBundleId(process.env.SYNARA_DESKTOP_BUNDLE_ID);
+  const flavor = desktopFlavorFromBundleId(process.env.RAMSPACE_DESKTOP_BUNDLE_ID);
   const descriptor: ExecutionEnvironmentDescriptor = {
     channel:
       flavor === "production"

@@ -7,13 +7,13 @@ import {
   deriveLiteralCommand,
   deriveReadableCommandDisplay,
   deriveReadableToolTitle,
-  deriveSynaraMcpToolTitle,
+  deriveRamspaceMcpToolTitle,
   extractMcpServerName,
   extractWebFetchUrl,
-  isSynaraBrowserToolCall,
+  isRamspaceBrowserToolCall,
   normalizeCompactToolLabel,
   resolveCommandVisualKind,
-  sanitizeSynaraMcpToolPreview,
+  sanitizeRamspaceMcpToolPreview,
 } from "./toolCallLabel";
 
 describe("tool presentation", () => {
@@ -27,28 +27,33 @@ describe("tool presentation", () => {
       isRunning: true,
     } as const;
     const computer = { fallbackLabel: "Tool", payload: { name: "computer_click" } };
-    const synara = { toolName: "synara_read_thread", status: "running" } as const;
+    const ramspace = { toolName: "ramspace_read_thread", status: "running" } as const;
     expect(deriveReadableToolTitle(read, sourceTranslate)).toBe("Read");
     expect(deriveReadableToolTitle(command, sourceTranslate)).toBe("Reading");
     expect(deriveReadableToolTitle(computer, sourceTranslate)).toBe("Click");
-    expect(deriveSynaraMcpToolTitle(synara, sourceTranslate)).toBe("Synara is reading a thread");
+    expect(deriveRamspaceMcpToolTitle(ramspace, sourceTranslate)).toBe(
+      "Ramspace is reading a thread",
+    );
     expect(deriveReadableCommandDisplay("rg Settings .", true, sourceTranslate)).toEqual({
       verb: "Searching",
       target: "for Settings in current directory",
       fullCommand: "rg Settings .",
     });
     expect(
-      deriveSynaraMcpToolTitle({ toolName: "synara_settings", status: "running" }, sourceTranslate),
-    ).toBe("Synara is handling settings");
+      deriveRamspaceMcpToolTitle(
+        { toolName: "ramspace_settings", status: "running" },
+        sourceTranslate,
+      ),
+    ).toBe("Ramspace is handling settings");
   });
 
   it("translates known command verbs and preserves commands and arbitrary tool titles", () => {
     expect(deriveReadableToolTitle({ title: "Settings", fallbackLabel: "Tool" })).toBe("Settings");
     expect(deriveLiteralCommand("cat Settings")).toBe("cat Settings");
     expect(deriveReadableCommandDisplay("cat Settings", true).verb).toBe("Reading");
-    expect(deriveSynaraMcpToolTitle({ toolName: "synara_read_thread", status: "running" })).toBe(
-      "Synara is reading a thread",
-    );
+    expect(
+      deriveRamspaceMcpToolTitle({ toolName: "ramspace_read_thread", status: "running" }),
+    ).toBe("Ramspace is reading a thread");
   });
 });
 
@@ -132,124 +137,124 @@ describe("normalizeCompactToolLabel", () => {
   });
 });
 
-describe("deriveSynaraMcpToolTitle", () => {
+describe("deriveRamspaceMcpToolTitle", () => {
   it.each([["browser_run", "Run browser actions"]])(
     "keeps current and historical %s messages readable",
     (toolName, title) => {
-      expect(deriveSynaraMcpToolTitle({ toolName, status: "completed" })).toBe(title);
-      expect(isSynaraBrowserToolCall({ title })).toBe(true);
+      expect(deriveRamspaceMcpToolTitle({ toolName, status: "completed" })).toBe(title);
+      expect(isRamspaceBrowserToolCall({ title })).toBe(true);
     },
   );
 
-  it("uses stable action-first names for Synara browser tools", () => {
+  it("uses stable action-first names for Ramspace browser tools", () => {
     for (const status of ["running", "completed", "failed"] as const) {
       expect(
-        deriveSynaraMcpToolTitle({
-          toolName: "mcp__synara__browser_open",
+        deriveRamspaceMcpToolTitle({
+          toolName: "mcp__ramspace__browser_open",
           status,
         }),
       ).toBe("Open browser tab");
     }
 
     expect(
-      deriveSynaraMcpToolTitle({
-        title: "Synara: Browser Snapshot",
+      deriveRamspaceMcpToolTitle({
+        title: "Ramspace: Browser Snapshot",
         status: "completed",
       }),
     ).toBe("Snapshot browser page");
   });
 
-  it("recognizes bare and already-humanized Synara tool names", () => {
-    expect(deriveSynaraMcpToolTitle({ toolName: "synara_send_message", status: "running" })).toBe(
-      "Synara is sending a message",
-    );
+  it("recognizes bare and already-humanized Ramspace tool names", () => {
     expect(
-      deriveSynaraMcpToolTitle({ title: "Synara: Synara List Threads", status: "completed" }),
-    ).toBe("Synara listed threads");
+      deriveRamspaceMcpToolTitle({ toolName: "ramspace_send_message", status: "running" }),
+    ).toBe("Ramspace is sending a message");
     expect(
-      deriveSynaraMcpToolTitle({ toolName: "synara_create_thread", status: "cancelled" }),
-    ).toBe("Synara stopped creating a thread");
+      deriveRamspaceMcpToolTitle({ title: "Ramspace: Ramspace List Threads", status: "completed" }),
+    ).toBe("Ramspace listed threads");
+    expect(
+      deriveRamspaceMcpToolTitle({ toolName: "ramspace_create_thread", status: "cancelled" }),
+    ).toBe("Ramspace stopped creating a thread");
   });
 
   it("ignores tools from other MCP servers", () => {
     expect(
-      deriveSynaraMcpToolTitle({
+      deriveRamspaceMcpToolTitle({
         toolName: "mcp__codex_apps__github_fetch_pr",
         status: "running",
       }),
     ).toBeNull();
   });
 
-  it("keeps future Synara actions branded without exposing raw identifiers", () => {
+  it("keeps future Ramspace actions branded without exposing raw identifiers", () => {
     expect(
-      deriveSynaraMcpToolTitle({
-        toolName: "mcp__synara__synara_delete_project",
+      deriveRamspaceMcpToolTitle({
+        toolName: "mcp__ramspace__ramspace_delete_project",
         status: "running",
       }),
-    ).toBe("Synara is handling delete project");
+    ).toBe("Ramspace is handling delete project");
     expect(
-      deriveSynaraMcpToolTitle({
-        toolName: "Synara__synara_delete_project",
+      deriveRamspaceMcpToolTitle({
+        toolName: "Ramspace__ramspace_delete_project",
         status: "completed",
       }),
-    ).toBe("Synara handled delete project");
+    ).toBe("Ramspace handled delete project");
     expect(
-      deriveSynaraMcpToolTitle({
-        toolName: "synara_is_handling_delete_project",
+      deriveRamspaceMcpToolTitle({
+        toolName: "ramspace_is_handling_delete_project",
         status: "completed",
       }),
-    ).toBe("Synara handled delete project");
+    ).toBe("Ramspace handled delete project");
   });
 
   it("does not reinterpret free text beginning with fallback status copy", () => {
     expect(
-      deriveSynaraMcpToolTitle({
-        title: "Synara is handling delete project after recovery",
+      deriveRamspaceMcpToolTitle({
+        title: "Ramspace is handling delete project after recovery",
         status: "completed",
       }),
     ).toBeNull();
     expect(
-      deriveSynaraMcpToolTitle({
-        title: "Synara handled delete project after recovery",
+      deriveRamspaceMcpToolTitle({
+        title: "Ramspace handled delete project after recovery",
         status: "running",
       }),
     ).toBeNull();
     expect(
-      deriveSynaraMcpToolTitle({
-        title: "Synara couldn't handle delete project after recovery",
+      deriveRamspaceMcpToolTitle({
+        title: "Ramspace couldn't handle delete project after recovery",
         status: "failed",
       }),
     ).toBeNull();
   });
 
-  it("removes transport identifiers without hiding meaningful Synara details", () => {
+  it("removes transport identifiers without hiding meaningful Ramspace details", () => {
     expect(
-      sanitizeSynaraMcpToolPreview({
-        preview: "Synara__synara_create_threads",
-        heading: "Synara created threads",
+      sanitizeRamspaceMcpToolPreview({
+        preview: "Ramspace__ramspace_create_threads",
+        heading: "Ramspace created threads",
         status: "completed",
       }),
     ).toBeNull();
     expect(
-      sanitizeSynaraMcpToolPreview({
+      sanitizeRamspaceMcpToolPreview({
         preview: 'Unexpected key "reasoningEffort" for Claude Agent',
-        heading: "Synara couldn't create threads",
+        heading: "Ramspace couldn't create threads",
         status: "failed",
       }),
     ).toBe('Unexpected key "reasoningEffort" for Claude Agent');
   });
 });
 
-describe("isSynaraBrowserToolCall", () => {
+describe("isRamspaceBrowserToolCall", () => {
   it("recognizes canonical presentation titles without a tool identifier", () => {
-    expect(isSynaraBrowserToolCall({ title: "Open browser tab" })).toBe(true);
-    expect(isSynaraBrowserToolCall({ fallbackLabel: "Snapshot browser page" })).toBe(true);
-    expect(isSynaraBrowserToolCall({ title: "Synara listed threads" })).toBe(false);
+    expect(isRamspaceBrowserToolCall({ title: "Open browser tab" })).toBe(true);
+    expect(isRamspaceBrowserToolCall({ fallbackLabel: "Snapshot browser page" })).toBe(true);
+    expect(isRamspaceBrowserToolCall({ title: "Ramspace listed threads" })).toBe(false);
   });
 });
 
 describe("deriveReadableToolTitle", () => {
-  it.each([["mcp__synara__computer_activate_window", "Activate a window"]])(
+  it.each([["mcp__ramspace__computer_activate_window", "Activate a window"]])(
     "uses the curated Computer label for %s",
     (toolName, expected) => {
       expect(
@@ -373,13 +378,13 @@ describe("deriveReadableCommandDisplay", () => {
   it("removes env and timeout wrappers from inline command summaries", () => {
     expect(
       deriveReadableCommandDisplay(
-        "env -u SYNARA_AUTH_TOKEN SYNARA_PORT_OFFSET=3158 timeout 180s bun run dev",
+        "env -u RAMSPACE_AUTH_TOKEN RAMSPACE_PORT_OFFSET=3158 timeout 180s bun run dev",
         true,
       ),
     ).toEqual({
       verb: "Running",
       target: "bun run dev",
-      fullCommand: "env -u SYNARA_AUTH_TOKEN SYNARA_PORT_OFFSET=3158 timeout 180s bun run dev",
+      fullCommand: "env -u RAMSPACE_AUTH_TOKEN RAMSPACE_PORT_OFFSET=3158 timeout 180s bun run dev",
     });
   });
 

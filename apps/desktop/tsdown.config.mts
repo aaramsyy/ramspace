@@ -10,10 +10,10 @@ import { fileURLToPath } from "node:url";
 
 import { defineConfig } from "tsdown";
 
-const sourcemapEnv = process.env.SYNARA_DESKTOP_SOURCEMAP?.trim().toLowerCase();
+const sourcemapEnv = process.env.RAMSPACE_DESKTOP_SOURCEMAP?.trim().toLowerCase();
 const buildSourcemap = sourcemapEnv === "1" || sourcemapEnv === "true";
 const windowsUpdaterPublisher = process.env.AZURE_TRUSTED_SIGNING_SUBJECT_DN?.trim() ?? "";
-const configuredStableAccountUrl = process.env.SYNARA_STABLE_ACCOUNT_URL?.trim();
+const configuredStableAccountUrl = process.env.RAMSPACE_STABLE_ACCOUNT_URL?.trim();
 const stableAccountUrl = configuredStableAccountUrl ? URL.parse(configuredStableAccountUrl) : null;
 if (
   configuredStableAccountUrl &&
@@ -25,7 +25,7 @@ if (
     stableAccountUrl.search ||
     stableAccountUrl.hash)
 ) {
-  throw new Error("SYNARA_STABLE_ACCOUNT_URL must be an HTTPS account API origin.");
+  throw new Error("RAMSPACE_STABLE_ACCOUNT_URL must be an HTTPS account API origin.");
 }
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 const migrationRuntimeSource = fs.readFileSync(
@@ -52,11 +52,11 @@ export default defineConfig([
     // asking Rolldown to resolve a package that intentionally does not exist.
     external: ["original-fs"],
     define: {
-      __SYNARA_WINDOWS_UPDATER_PUBLISHER__: JSON.stringify(windowsUpdaterPublisher),
-      __SYNARA_STABLE_ACCOUNT_URL__: JSON.stringify(stableAccountUrl?.origin ?? ""),
-      __SYNARA_MIGRATION_RUNTIME_SOURCE_DIGEST__: JSON.stringify(migrationRuntimeSourceDigest),
+      __RAMSPACE_WINDOWS_UPDATER_PUBLISHER__: JSON.stringify(windowsUpdaterPublisher),
+      __RAMSPACE_STABLE_ACCOUNT_URL__: JSON.stringify(stableAccountUrl?.origin ?? ""),
+      __RAMSPACE_MIGRATION_RUNTIME_SOURCE_DIGEST__: JSON.stringify(migrationRuntimeSourceDigest),
     },
-    noExternal: (id) => id.startsWith("@synara/"),
+    noExternal: (id) => id.startsWith("@ramspace/"),
   },
   {
     ...shared,
@@ -72,6 +72,6 @@ export default defineConfig([
     // `node dist-electron/cuaDriverHostStandalone.js --driver <path>`. It
     // must bundle the shared protocol (no node_modules on the target).
     entry: ["src/cuaDriverHostStandalone.ts"],
-    noExternal: (id) => id.startsWith("@synara/"),
+    noExternal: (id) => id.startsWith("@ramspace/"),
   },
 ]);

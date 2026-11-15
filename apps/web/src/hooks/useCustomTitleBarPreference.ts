@@ -31,9 +31,9 @@ export function useCustomTitleBarPreference({
     toastManager.add({
       type: "warning",
       title: t("settings:restartToApplyTitleBar"),
-      description: t("settings:theWindowFrameUpdatesTheNextTimeSynaraLaunches"),
+      description: t("settings:theWindowFrameUpdatesTheNextTimeRamspaceLaunches"),
       actionProps: {
-        "aria-label": t("settings:restartSynara"),
+        "aria-label": t("settings:restartRamspace"),
         children: t("settings:restartAction"),
         onClick: () => {
           void window.desktopBridge?.customTitleBar?.relaunch();

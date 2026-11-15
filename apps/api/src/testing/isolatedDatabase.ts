@@ -5,7 +5,7 @@ import { runMigrations } from "../db/migrate";
 
 export async function createIsolatedTestDatabase(sourceUrl: string) {
   const admin = new pg.Pool({ connectionString: sourceUrl });
-  const name = `synara_billing_test_${randomUUID().replaceAll("-", "")}`;
+  const name = `ramspace_billing_test_${randomUUID().replaceAll("-", "")}`;
   const target = new URL(sourceUrl);
   target.pathname = `/${name}`;
   try {

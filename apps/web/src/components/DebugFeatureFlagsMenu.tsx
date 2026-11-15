@@ -26,7 +26,7 @@ import { t, useTranslation } from "~/i18n";
 // Triggers local-only toast scenarios that are awkward to reproduce through real Git failures.
 function triggerActionFailedToasts(values: Record<ToggleFeatureFlagId, boolean>): void {
   const copyText =
-    "Error: Git command failed in /Users/ibrahime/Documents/Projects/synara\n\n" +
+    "Error: Git command failed in /Users/ibrahime/Documents/Projects/ramspace\n\n" +
     "Command: git push upstream main\n" +
     "fatal: unable to access upstream remote for local debug toast preview";
   const toastData = {

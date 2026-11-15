@@ -4,7 +4,7 @@ import { Effect } from "effect";
 
 import { compactSqliteDatabase } from "./persistence/SqliteCompaction.ts";
 
-const USAGE = "Usage: synara-compact-database <absolute-database-path>";
+const USAGE = "Usage: ramspace-compact-database <absolute-database-path>";
 
 export async function runCompactDatabaseCli(
   args: ReadonlyArray<string>,
@@ -17,7 +17,7 @@ export async function runCompactDatabaseCli(
     );
     return 1;
   }
-  output.warn("WARNING: Stop every Synara process and other database client before compacting.");
+  output.warn("WARNING: Stop every Ramspace process and other database client before compacting.");
   if (args.length !== 1 || !args[0] || !path.isAbsolute(args[0])) {
     output.error(USAGE);
     return 2;
@@ -38,7 +38,7 @@ const entryPointNames = new Set([
   "compactDatabase.ts",
   "compactDatabase.mjs",
   "compactDatabase.cjs",
-  "synara-compact-database",
+  "ramspace-compact-database",
 ]);
 
 if (process.argv[1] && entryPointNames.has(path.basename(process.argv[1]))) {

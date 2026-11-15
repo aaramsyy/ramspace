@@ -4,9 +4,9 @@ import "./globals.css";
 
 export function generateMetadata(): Metadata {
   return {
-    metadataBase: new URL(process.env.PROFILES_PUBLIC_ORIGIN ?? "https://trysynara.com"),
-    title: "Synara",
-    description: "Public Synara profiles",
+    metadataBase: new URL(process.env.PROFILES_PUBLIC_ORIGIN ?? "https://tryramspace.com"),
+    title: "Ramspace",
+    description: "Public Ramspace profiles",
     icons: {
       icon: `${process.env.PROFILES_ASSET_PREFIX ?? ""}/favicon.ico`,
     },
@@ -14,13 +14,13 @@ export function generateMetadata(): Metadata {
 }
 
 /**
- * Applies `.dark` before first paint from the `synara-theme` localStorage
+ * Applies `.dark` before first paint from the `ramspace-theme` localStorage
  * key. The marketing site currently persists its toggle under a legacy key,
  * so cross-surface carryover resumes once it migrates to this one; until
  * then each surface remembers its own choice. No stored value falls back to
  * the system scheme and tracks live preference changes.
  */
-const THEME_INIT = `(function(){try{var d=document.documentElement;var K="synara-theme";function stored(){try{return localStorage.getItem(K)}catch(e){return null}}function apply(){var t=stored();if(t==="dark"){d.classList.add("dark");return}if(t==="light"){d.classList.remove("dark");return}window.matchMedia("(prefers-color-scheme: dark)").matches?d.classList.add("dark"):d.classList.remove("dark")}apply();window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change",function(){if(!stored())apply()})}catch(e){}})()`;
+const THEME_INIT = `(function(){try{var d=document.documentElement;var K="ramspace-theme";function stored(){try{return localStorage.getItem(K)}catch(e){return null}}function apply(){var t=stored();if(t==="dark"){d.classList.add("dark");return}if(t==="light"){d.classList.remove("dark");return}window.matchMedia("(prefers-color-scheme: dark)").matches?d.classList.add("dark"):d.classList.remove("dark")}apply();window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change",function(){if(!stored())apply()})}catch(e){}})()`;
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (

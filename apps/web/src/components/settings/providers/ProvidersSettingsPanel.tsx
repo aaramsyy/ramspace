@@ -10,7 +10,7 @@ import {
   type ProviderInstanceId,
   type ProviderKind,
   type ServerProviderStatus,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import {
   closestCenter,
   DndContext,
@@ -514,14 +514,14 @@ export function ProvidersSettingsPanel({
 
       <SettingsSection title="settings:performance">
         <SettingsRow
-          id="setting-keep-synara-responsive"
-          title="settings:keepSynaraResponsive"
+          id="setting-keep-ramspace-responsive"
+          title="settings:keepRamspaceResponsive"
           description="settings:giveAgentProcessesAndTheirCommandsAModeratelyLower"
           status="Applies to newly launched agent processes. Restart existing sessions to apply consistently."
           resetAction={
             settings.lowerProviderProcessPriority !== defaults.lowerProviderProcessPriority ? (
               <SettingResetButton
-                label={t("settings:keepSynaraResponsive")}
+                label={t("settings:keepRamspaceResponsive")}
                 onClick={() =>
                   updateSettings({
                     lowerProviderProcessPriority: defaults.lowerProviderProcessPriority,
@@ -536,7 +536,7 @@ export function ProvidersSettingsPanel({
               onCheckedChange={(checked) =>
                 updateSettings({ lowerProviderProcessPriority: Boolean(checked) })
               }
-              aria-label={t("settings:keepSynaraResponsive")}
+              aria-label={t("settings:keepRamspaceResponsive")}
             />
           }
         />
@@ -574,7 +574,7 @@ export function ProvidersSettingsPanel({
           <SettingsRow
             id="setting-provider-updates"
             title="settings:providerUpdates_providerUpdates"
-            description="settings:reviewInstalledProviderToolsThatSynaraCanSafelyUpdate"
+            description="settings:reviewInstalledProviderToolsThatRamspaceCanSafelyUpdate"
             status={
               !settings.enableProviderUpdateChecks
                 ? "Automatic checks off"

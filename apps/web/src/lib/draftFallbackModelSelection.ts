@@ -4,8 +4,8 @@
 // Layer: Web model-selection helper
 // Exports: resolveDraftFallbackModelSelection
 
-import { DEFAULT_MODEL_BY_PROVIDER, type ModelSelection } from "@synara/contracts";
-import { getDefaultModel } from "@synara/shared/model";
+import { DEFAULT_MODEL_BY_PROVIDER, type ModelSelection } from "@ramspace/contracts";
+import { getDefaultModel } from "@ramspace/shared/model";
 
 import { newChatDefaultInstanceIdFor, type NewChatDefault } from "../appSettings";
 import { buildModelSelection } from "../providerModelOptions";

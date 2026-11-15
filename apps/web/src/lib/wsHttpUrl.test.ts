@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { EnvironmentId, type RemoteResource } from "@synara/contracts";
+import { EnvironmentId, type RemoteResource } from "@ramspace/contracts";
 
 import { readExecutionContext, type WindowExecutionContext } from "./hosts/executionContext";
 import { readWorkspaceFrame } from "./hosts/workspaceFrame";
@@ -47,7 +47,7 @@ describe("resolveWsHttpUrl", () => {
   it("does not forward the websocket token to an absolute external URL", () => {
     vi.stubGlobal("window", {
       desktopBridge: {
-        getWsUrl: () => "wss://synara.test/ws?token=legacy-secret",
+        getWsUrl: () => "wss://ramspace.test/ws?token=legacy-secret",
       },
       location: { origin: "https://fallback.test" },
     });
@@ -57,35 +57,35 @@ describe("resolveWsHttpUrl", () => {
     );
   });
 
-  it.each([null, "not-a-url", "file:///tmp/backend", "synara-remote://app"])(
+  it.each([null, "not-a-url", "file:///tmp/backend", "ramspace-remote://app"])(
     "refuses mutations without a network desktop backend (%s), without breaking GET rendering",
     (backend) => {
       vi.stubGlobal("window", {
         desktopBridge: { getWsUrl: () => backend },
-        location: { origin: "synara-remote://app" },
+        location: { origin: "ramspace-remote://app" },
       });
 
       expect(() => resolveWsHttpUrl("/api/attachments/upload", { requireBackend: true })).toThrow(
         "The desktop connection is unavailable. Reconnect and try again.",
       );
       expect(resolveWsHttpUrl("/api/project-favicon")).toBe(
-        "synara-remote://app/api/project-favicon",
+        "ramspace-remote://app/api/project-favicon",
       );
     },
   );
 
   it("keeps same-origin browser mutations working without a WebSocket override", () => {
-    vi.stubGlobal("window", { location: { origin: "https://synara.test" } });
+    vi.stubGlobal("window", { location: { origin: "https://ramspace.test" } });
 
     expect(resolveWsHttpUrl("/api/attachments/upload", { requireBackend: true })).toBe(
-      "https://synara.test/api/attachments/upload",
+      "https://ramspace.test/api/attachments/upload",
     );
   });
 
   it("keeps explicit external network URLs independent of a missing desktop backend", () => {
     vi.stubGlobal("window", {
       desktopBridge: { getWsUrl: () => null },
-      location: { origin: "synara-remote://app" },
+      location: { origin: "ramspace-remote://app" },
     });
 
     expect(resolveWsHttpUrl("https://example.test/image.png", { requireBackend: true })).toBe(
@@ -124,7 +124,7 @@ describe("typed execution resource routing", () => {
   };
   const inDesktopFrame = (requestResource = vi.fn(async () => new Response("image"))) => {
     vi.mocked(readExecutionContext).mockReturnValue(remoteContext);
-    vi.stubGlobal("window", { location: { origin: "synara-remote://app" } });
+    vi.stubGlobal("window", { location: { origin: "ramspace-remote://app" } });
     const frame = {
       host: { hostId: "host-mini", executionScope: remoteContext.remote },
       controller: { desktop: true, requestResource },
@@ -147,7 +147,7 @@ describe("typed execution resource routing", () => {
     });
     vi.stubGlobal("window", {
       desktopBridge: { getWsUrl: () => null },
-      location: { origin: "synara-remote://app" },
+      location: { origin: "ramspace-remote://app" },
     });
 
     expect(() => resolveExecutionResource(upload)).toThrow(
@@ -158,20 +158,20 @@ describe("typed execution resource routing", () => {
   it("routes remote uploads and previews through their selected host, never the local backend", () => {
     vi.mocked(readExecutionContext).mockReturnValue(remoteContext);
     const getWsUrl = vi.fn(() => "ws://127.0.0.1:4111/ws?token=local-only");
-    const remoteResourceUrl = vi.fn(() => "synara-resource://broker/fixture-handle");
+    const remoteResourceUrl = vi.fn(() => "ramspace-resource://broker/fixture-handle");
     vi.stubGlobal("window", {
       desktopBridge: { getWsUrl, remoteResourceUrl },
-      location: { origin: "synara-remote://app" },
+      location: { origin: "ramspace-remote://app" },
     });
 
-    expect(resolveExecutionResource(upload)).toBe("synara-resource://broker/fixture-handle");
+    expect(resolveExecutionResource(upload)).toBe("ramspace-resource://broker/fixture-handle");
     expect(remoteResourceUrl).toHaveBeenNthCalledWith(1, "host-mini", {
       environmentId: execution.environmentId,
       resource: upload,
     });
     const attachmentId = "att_v2_11111111111111111111111111111111";
     expect(toAttachmentPreviewUrl(`/attachments/${attachmentId}`)).toBe(
-      "synara-resource://broker/fixture-handle",
+      "ramspace-resource://broker/fixture-handle",
     );
     expect(remoteResourceUrl).toHaveBeenNthCalledWith(2, "host-mini", {
       environmentId: execution.environmentId,
@@ -185,7 +185,7 @@ describe("typed execution resource routing", () => {
     const getWsUrl = vi.fn(() => "ws://127.0.0.1:4111/ws?token=local-only");
     vi.stubGlobal("window", {
       desktopBridge: { getWsUrl },
-      location: { origin: "synara-remote://app" },
+      location: { origin: "ramspace-remote://app" },
     });
 
     expect(() => resolveExecutionResource(upload)).toThrow(
@@ -319,7 +319,7 @@ describe("typed execution resource routing", () => {
   it("refuses an orphan remote child's POST without trying a local URL", async () => {
     inDesktopFrame();
     vi.mocked(readWorkspaceFrame).mockReturnValue(undefined);
-    vi.stubGlobal("window", { parent: {}, location: { origin: "synara-remote://app" } });
+    vi.stubGlobal("window", { parent: {}, location: { origin: "ramspace-remote://app" } });
     await expect(
       captureExecutionResourceRequester()(upload, { body: new Blob(["image"]) }),
     ).rejects.toThrow("ownership changed");

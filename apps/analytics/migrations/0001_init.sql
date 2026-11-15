@@ -1,4 +1,4 @@
--- Synara Beta diagnostics event store.
+-- Ramspace Beta diagnostics event store.
 -- Columns match the allowlist in worker.ts normalizeEvent; free-text columns
 -- (message, stack, log_tail) hold already-redacted text.
 CREATE TABLE IF NOT EXISTS events (
@@ -29,7 +29,7 @@ CREATE INDEX IF NOT EXISTS idx_events_event ON events (event);
 CREATE INDEX IF NOT EXISTS idx_events_fingerprint ON events (fingerprint);
 CREATE INDEX IF NOT EXISTS idx_events_app_version ON events (app_version);
 
--- Index of minidumps stored in the synara-beta-crash-dumps R2 bucket.
+-- Index of minidumps stored in the ramspace-beta-crash-dumps R2 bucket.
 CREATE TABLE IF NOT EXISTS crash_dumps (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   r2_key TEXT NOT NULL,

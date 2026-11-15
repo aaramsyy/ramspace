@@ -1,4 +1,4 @@
-import type { OrchestrationCommand } from "@synara/contracts";
+import type { OrchestrationCommand } from "@ramspace/contracts";
 
 export const ORCHESTRATION_COMMAND_QUEUE_CAPACITY = 256;
 export const ORCHESTRATION_COMMAND_CONTROL_RESERVE = 32;

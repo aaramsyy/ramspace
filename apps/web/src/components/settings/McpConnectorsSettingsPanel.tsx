@@ -4,7 +4,7 @@
 // Layer: Settings UI components
 // Exports: McpConnectorsSettingsPanel
 
-import type { McpConnector } from "@synara/contracts";
+import type { McpConnector } from "@ramspace/contracts";
 import {
   defaultMcpConnectorName,
   MCP_CONNECTOR_CATEGORIES,
@@ -13,7 +13,7 @@ import {
   type McpConnectorPreset,
   type McpConnectorUrlReasonCode,
   normalizeMcpConnectorUrl,
-} from "@synara/shared/mcpConnectors";
+} from "@ramspace/shared/mcpConnectors";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   type FormEvent,
@@ -324,7 +324,7 @@ function AddCustomConnectorDialog(props: {
         <DialogHeader>
           <DialogTitle>{t("settings:addCustomConnector")}</DialogTitle>
           <DialogDescription>
-            A public HTTPS or loopback HTTP MCP server. Synara signs in with OAuth when the server
+            A public HTTPS or loopback HTTP MCP server. Ramspace signs in with OAuth when the server
             asks for it.
           </DialogDescription>
         </DialogHeader>

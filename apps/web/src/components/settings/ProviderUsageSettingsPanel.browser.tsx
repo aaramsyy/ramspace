@@ -1,6 +1,6 @@
 import "../../index.css";
 
-import { DEFAULT_SERVER_SETTINGS } from "@synara/contracts";
+import { DEFAULT_SERVER_SETTINGS } from "@ramspace/contracts";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { page } from "vitest/browser";
 import { expect, it, vi } from "vitest";
@@ -40,7 +40,7 @@ it("keeps disabled sidebar preferences when selecting another provider", async (
 });
 
 it("shows remote provider usage without editing this app's usage preferences", async () => {
-  const frame = Object.assign(document.createElement("iframe"), { synaraWorkspace: {} });
+  const frame = Object.assign(document.createElement("iframe"), { ramspaceWorkspace: {} });
   const frameElement = vi.spyOn(window, "frameElement", "get").mockReturnValue(frame);
   const client = new QueryClient({ defaultOptions: { queries: { retry: false, enabled: false } } });
   client.setQueryData(serverQueryKeys.settings(), DEFAULT_SERVER_SETTINGS);

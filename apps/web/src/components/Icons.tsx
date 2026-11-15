@@ -19,7 +19,7 @@ import {
 
 export type Icon = React.FC<SVGProps<SVGSVGElement>>;
 
-// Provider brand glyphs live in @synara/profile-ui (shared with the public profile
+// Provider brand glyphs live in @ramspace/profile-ui (shared with the public profile
 // page); re-exported here under their historical names so call sites keep working.
 export {
   AntigravityIcon,
@@ -32,7 +32,7 @@ export {
   OpenCodeIcon,
   PiIcon,
   OmpIcon,
-} from "@synara/profile-ui/provider-icon";
+} from "@ramspace/profile-ui/provider-icon";
 
 // Adapts Simple Icons components to the app's SVG icon shape without changing call sites.
 function adaptSimpleIcon(Component: IconType): Icon {

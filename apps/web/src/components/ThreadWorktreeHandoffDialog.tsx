@@ -91,7 +91,7 @@ export function ThreadWorktreeHandoffDialog({
                     onOpenChange(false);
                   }
                 }}
-                placeholder={t("common:synaraFeatureName")}
+                placeholder={t("common:ramspaceFeatureName")}
               />
             </label>
           </form>

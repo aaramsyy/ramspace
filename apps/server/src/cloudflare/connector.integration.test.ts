@@ -5,7 +5,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import { spawnParentBoundProcess } from "@synara/shared/parentBoundProcess";
+import { spawnParentBoundProcess } from "@ramspace/shared/parentBoundProcess";
 import { isProcessRunning } from "../platform/processTreeController";
 
 async function waitFor<T>(
@@ -43,7 +43,7 @@ describe.skipIf(process.platform === "win32")("Cloudflare connector owner lifeti
   let directory: string;
   let ownerBundle: string;
   beforeAll(async () => {
-    directory = await fsp.mkdtemp(join(tmpdir(), "synara-connector-fixture-"));
+    directory = await fsp.mkdtemp(join(tmpdir(), "ramspace-connector-fixture-"));
     ownerBundle = join(directory, "owner.mjs");
     const fixture = fileURLToPath(
       new URL("../fixtures/cloudflareConnectorOwner.ts", import.meta.url),

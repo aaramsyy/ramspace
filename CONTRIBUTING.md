@@ -4,7 +4,7 @@
 
 We are accepting focused contributions, especially small bug fixes, reliability fixes, performance improvements, and maintenance work.
 
-You can open an issue or PR, but please do so knowing that Synara is still early and we are keeping scope, quality, and direction tight.
+You can open an issue or PR, but please do so knowing that Ramspace is still early and we are keeping scope, quality, and direction tight.
 
 Large, unfocused, or direction-changing PRs may still be closed quickly.
 
@@ -86,8 +86,8 @@ use its existing hooks directory:
 git config --local core.hooksPath "$(git rev-parse --path-format=absolute --git-path hooks)"
 ```
 
-If Synara already installed a launcher, remove that file from the configured
-directory. It contains the comment `Installed by Synara`.
+If Ramspace already installed a launcher, remove that file from the configured
+directory. It contains the comment `Installed by Ramspace`.
 
 The hook is a POSIX `sh` script and also runs under Git for Windows (Git Bash).
 

@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { EnvironmentId, ProjectId, ThreadId, type RemoteExecutionScope } from "@synara/contracts";
+import { EnvironmentId, ProjectId, ThreadId, type RemoteExecutionScope } from "@ramspace/contracts";
 
 function memoryStorage(): Storage {
   const data = new Map<string, string>();

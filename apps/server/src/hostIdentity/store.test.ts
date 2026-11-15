@@ -8,7 +8,7 @@ import { generateAndPersistHostIdentity, hostIdentityPath, readHostIdentity } fr
 
 describe("host identity persistence", () => {
   it("persists a reloadable Ed25519 PKCS8/SPKI keypair with owner-only permissions", async () => {
-    const root = await fs.mkdtemp(path.join(os.tmpdir(), "synara-host-identity-"));
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), "ramspace-host-identity-"));
     const filePath = hostIdentityPath(path.join(root, "secrets"));
 
     try {
@@ -27,7 +27,7 @@ describe("host identity persistence", () => {
   });
 
   it("re-link atomically replaces the complete document with a fresh keypair", async () => {
-    const root = await fs.mkdtemp(path.join(os.tmpdir(), "synara-host-identity-relink-"));
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), "ramspace-host-identity-relink-"));
     const filePath = hostIdentityPath(path.join(root, "secrets"));
 
     try {
@@ -49,7 +49,7 @@ describe("host identity persistence", () => {
   });
 
   it("refuses malformed or mismatched key documents", async () => {
-    const root = await fs.mkdtemp(path.join(os.tmpdir(), "synara-host-identity-invalid-"));
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), "ramspace-host-identity-invalid-"));
     const filePath = hostIdentityPath(path.join(root, "secrets"));
     await fs.mkdir(path.dirname(filePath), { recursive: true });
     await fs.writeFile(

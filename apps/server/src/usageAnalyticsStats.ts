@@ -1,11 +1,11 @@
 // FILE: usageAnalyticsStats.ts
-// Purpose: Usage analytics for Settings → Usage → Analytics from Synara's local
+// Purpose: Usage analytics for Settings → Usage → Analytics from Ramspace's local
 // projection DB: token deltas, turns, and cost at API rates as UTC-hour rows by
 // provider, model, project, and origin. Cost is the provider's own figure when it
 // reports one (Claude's SDK, Cursor, OpenCode); otherwise (Codex) the tokens are
 // priced at API list prices (usagePricing.ts). The "This Mac" scope reads Claude
 // Code and Codex from their own session files instead (transcriptUsage.ts), so
-// sessions run outside Synara count too. The client buckets the rows into its
+// sessions run outside Ramspace count too. The client buckets the rows into its
 // own local days and hours. Shares the token SQL with profileStats.ts and the
 // model naming with recapStats.ts. Available in Stable and Beta.
 // Layer: server stats query service (SqlClient).
@@ -22,7 +22,7 @@ import {
   type StatsUsageAnalyticsTokenRow,
   type StatsUsageAnalyticsTurnRow,
   WsRpcError,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { Effect, Layer, ServiceMap } from "effect";
 import * as SqlClient from "effect/unstable/sql/SqlClient";
 
@@ -239,7 +239,7 @@ export function buildUsageAnalytics(input: {
     );
 
   const reporting = reportingProviders(input.costRows);
-  // Providers read from session files are left out of Synara's rows, which
+  // Providers read from session files are left out of Ramspace's rows, which
   // would count the same sessions again.
   const fromFiles = new Set<string>(files?.providers ?? []);
 
@@ -349,7 +349,7 @@ export function buildUsageAnalytics(input: {
     turns: [...turns.values(), ...(files?.turns ?? [])],
     costs: [...costs.values(), ...(files?.costs ?? [])],
     pricing: { status: input.prices.status, fetchedAt: input.prices.fetchedAt },
-    scope: input.scope ?? "synara",
+    scope: input.scope ?? "ramspace",
     sessionFileProviders: [...(files?.providers ?? [])].toSorted(),
     projects: [
       ...new Map(
@@ -367,7 +367,7 @@ export function buildUsageAnalytics(input: {
 
 // ── Session files (the "This Mac" scope) ─────────────────────────────
 
-/** A folder Synara knows: a real project (id and title) or a chat container (null). */
+/** A folder Ramspace knows: a real project (id and title) or a chat container (null). */
 export interface ProjectRoot {
   readonly path: string;
   readonly project: StatsUsageAnalyticsProject | null;
@@ -525,7 +525,7 @@ export function buildTranscriptRows(input: {
 
   // An error can land in an hour whose prompt was in the hour before.
   for (const row of turns.values()) row.turns = Math.max(row.turns, row.failedTurns);
-  // An empty or unreadable transcript directory cannot replace Synara's data.
+  // An empty or unreadable transcript directory cannot replace Ramspace's data.
   const providers = new Set<ProviderKind>();
   for (const rows of [tokens.values(), turns.values()]) {
     for (const row of rows) if (row.provider !== "unknown") providers.add(row.provider);
@@ -557,7 +557,7 @@ export interface UsageAnalyticsQueryShape {
 export class UsageAnalyticsQuery extends ServiceMap.Service<
   UsageAnalyticsQuery,
   UsageAnalyticsQueryShape
->()("synara/usageAnalyticsStats/UsageAnalyticsQuery") {}
+>()("ramspace/usageAnalyticsStats/UsageAnalyticsQuery") {}
 
 const NOT_NEEDED: PriceTable = { table: new Map(), status: "unavailable", fetchedAt: null };
 const NO_PRICES: UsagePricingSource = { load: async () => NOT_NEEDED };
@@ -579,7 +579,7 @@ export const makeUsageAnalyticsQuery = (
     const pricing = options.pricing ?? NO_PRICES;
     const sessionFiles = options.sessionFiles ?? NO_SESSION_FILES;
 
-    // Folders Synara knows, to put session-file usage under its projects.
+    // Folders Ramspace knows, to put session-file usage under its projects.
     const queryProjectRoots = () => sql<{
       readonly path: string | null;
       readonly projectId: string;
@@ -855,7 +855,7 @@ export const makeUsageAnalyticsQuery = (
     const getUsageAnalytics: UsageAnalyticsQueryShape["getUsageAnalytics"] = (input) =>
       Effect.gen(function* () {
         const window = resolveUsageAnalyticsWindow(input);
-        const scope = input.scope ?? "synara";
+        const scope = input.scope ?? "ramspace";
         if ("error" in window) {
           return yield* Effect.fail(
             new WsRpcError({ message: window.error, code: "INVALID_INPUT", retryable: false }),

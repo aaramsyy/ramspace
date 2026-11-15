@@ -2,7 +2,7 @@
 // Purpose: Verifies Kanban delegates active-thread archive/delete to shared owners.
 // Layer: Web Kanban hook tests
 
-import { ProjectId, ThreadId } from "@synara/contracts";
+import { ProjectId, ThreadId } from "@ramspace/contracts";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 // This fixture invokes the hook directly without a mounted React context.

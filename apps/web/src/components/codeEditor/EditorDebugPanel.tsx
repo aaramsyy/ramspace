@@ -8,7 +8,7 @@ import { useTranslation } from "~/i18n";
 //             header-control primitives.
 
 import { useEffect, useId, useState } from "react";
-import type { EditorDebugActionResult, EditorDebugFrame } from "@synara/contracts";
+import type { EditorDebugActionResult, EditorDebugFrame } from "@ramspace/contracts";
 
 import {
   ArrowDownIcon,

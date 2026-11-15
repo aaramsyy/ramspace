@@ -15,7 +15,7 @@ import {
   type ProductAnalyticsEnvelope,
   type ProductAnalyticsInput,
   PRODUCT_TURN_FAILURES,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 
 import { HostUsageRelay } from "./hostUsageRelay";
 import { ReliabilityReporter } from "./reliabilityReporter";
@@ -31,7 +31,7 @@ type QueuedEvent =
 // Stable retries identify only a stage of this random installation, never an account.
 function cohortEventId(installId: string, day: string, stage: ProductAnalyticsCohortStage): string {
   const bytes = createHash("sha256")
-    .update(`synara-cohort-v1:${installId.toLowerCase()}:${day}:${stage}`)
+    .update(`ramspace-cohort-v1:${installId.toLowerCase()}:${day}:${stage}`)
     .digest();
   bytes[6] = (bytes[6]! & 15) | 128;
   bytes[8] = (bytes[8]! & 63) | 128;
@@ -39,7 +39,7 @@ function cohortEventId(installId: string, day: string, stage: ProductAnalyticsCo
   return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`;
 }
 
-const ENDPOINT = "https://synara-beta-diagnostics.synara-orgs.workers.dev/v1/product-events";
+const ENDPOINT = "https://ramspace-beta-diagnostics.ramspace-orgs.workers.dev/v1/product-events";
 const IDENTITY_VERSION = "2";
 const MAX_QUEUE = 500;
 const MAX_BATCH_EVENTS = 50;
@@ -423,7 +423,7 @@ export class ProductAnalytics {
         const receipt = (await response.json()) as { stored?: unknown };
         if (receipt.stored !== true) throw new Error("Anonymous product receipt missing");
       } else {
-        this.cohortSupported = response.headers.get("x-synara-product-cohorts") === "1";
+        this.cohortSupported = response.headers.get("x-ramspace-product-cohorts") === "1";
         if (this.cohortSupported && batch.some((event) => event.cohortStage)) {
           const receipt = (await response.json()) as { cohortAcknowledged?: unknown };
           if (Array.isArray(receipt.cohortAcknowledged))

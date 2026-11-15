@@ -33,8 +33,8 @@ import {
   type PushUsageRequest,
   type UsageModelBucket,
   type UsageSkillBucket,
-} from "@synara/contracts";
-import { resolveAccountUrl, type AccountClient } from "@synara/shared/account";
+} from "@ramspace/contracts";
+import { resolveAccountUrl, type AccountClient } from "@ramspace/shared/account";
 import { createServerAccountClient } from "./accountHttp";
 
 import {

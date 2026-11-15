@@ -31,7 +31,7 @@ import type {
   ProviderRuntimeEvent,
   ProviderSession,
   ServerSettings,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import {
   ApprovalRequestId,
   CheckpointRef,
@@ -47,14 +47,14 @@ import {
   ServerSettingsError,
   ThreadId,
   TurnId,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import {
   formatProviderDeliveryBlockDetail,
   isProviderDeliveryBlockDetail,
   PROVIDER_DELIVERY_BLOCK_SUMMARY,
-} from "@synara/shared/providerDeliveryBlock";
-import type { DeepPartial } from "@synara/shared/Struct";
-import { SIDECHAT_INACTIVITY_EXPIRY_MS } from "@synara/shared/sidechatExpiry";
+} from "@ramspace/shared/providerDeliveryBlock";
+import type { DeepPartial } from "@ramspace/shared/Struct";
+import { SIDECHAT_INACTIVITY_EXPIRY_MS } from "@ramspace/shared/sidechatExpiry";
 import {
   Clock,
   Duration,
@@ -457,7 +457,7 @@ function createRetainingRestartProviderServiceLayer(options?: {
   const settingsLayer = Layer.unwrap(
     Effect.gen(function* () {
       const fixtureRoot = yield* Effect.acquireRelease(
-        Effect.sync(() => fs.mkdtempSync(path.join(os.tmpdir(), "synara-reactor-provider-"))),
+        Effect.sync(() => fs.mkdtempSync(path.join(os.tmpdir(), "ramspace-reactor-provider-"))),
         (root) => Effect.sync(() => fs.rmSync(root, { recursive: true, force: true })),
       );
       const codexHomePath = path.join(fixtureRoot, "codex");
@@ -468,7 +468,7 @@ function createRetainingRestartProviderServiceLayer(options?: {
             driver: "codex",
             config: { homePath: codexHomePath },
             environment: [
-              { name: "SYNARA_HOME", value: path.join(fixtureRoot, "runtime"), sensitive: false },
+              { name: "RAMSPACE_HOME", value: path.join(fixtureRoot, "runtime"), sensitive: false },
             ],
           },
         },
@@ -536,7 +536,7 @@ describe("ProviderCommandReactor", () => {
   ] as const)("bounds the operator baseline budget %s to %s ms", (raw, expected) => {
     expect(
       resolvePreTurnBaselineTimeoutMs(
-        raw === undefined ? {} : { SYNARA_PRE_TURN_BASELINE_TIMEOUT_MS: raw },
+        raw === undefined ? {} : { RAMSPACE_PRE_TURN_BASELINE_TIMEOUT_MS: raw },
       ),
     ).toBe(expected);
   });
@@ -614,7 +614,7 @@ describe("ProviderCommandReactor", () => {
     readonly listRetainedSessions?: NonNullable<ProviderServiceShape["listRetainedSessions"]>;
   }) {
     const now = new Date().toISOString();
-    const baseDir = input?.baseDir ?? fs.mkdtempSync(path.join(os.tmpdir(), "synara-reactor-"));
+    const baseDir = input?.baseDir ?? fs.mkdtempSync(path.join(os.tmpdir(), "ramspace-reactor-"));
     createdBaseDirs.add(baseDir);
     const { stateDir } = deriveServerPathsSync(baseDir, undefined);
     createdStateDirs.add(stateDir);
@@ -1221,7 +1221,7 @@ describe("ProviderCommandReactor", () => {
         worktreePath: null,
         ...(input?.gatewayOperationId
           ? {
-              creationSource: "synara_mcp" as const,
+              creationSource: "ramspace_mcp" as const,
               gatewayOperationId: input.gatewayOperationId,
               gatewayOperationIndex: 0,
             }
@@ -2814,7 +2814,7 @@ describe("ProviderCommandReactor", () => {
         requireUnarchived: true,
         activity: {
           id: EventId.makeUnsafe("passive-result"),
-          kind: "synara.task.completed",
+          kind: "ramspace.task.completed",
           tone: "info",
           summary: "Delegated task completed",
           payload: { detail: "delegated result" },
@@ -2972,7 +2972,7 @@ describe("ProviderCommandReactor", () => {
           commandId: CommandId.makeUnsafe("multi-folder-worktree-mode"),
           threadId: ThreadId.makeUnsafe("thread-1"),
           envMode: "worktree",
-          branch: "synara/multi-folder",
+          branch: "ramspace/multi-folder",
           worktreePath: "/tmp/provider-project/.worktrees/multi-folder",
         }),
       );
@@ -12234,7 +12234,7 @@ describe("ProviderCommandReactor", () => {
       await harness.drain();
       expect(harness.sendTurn).toHaveBeenCalledTimes(1);
       const providerInput = harness.sendTurn.mock.calls[0]?.[0].input;
-      expect(providerInput).toContain("<synara_goal>");
+      expect(providerInput).toContain("<ramspace_goal>");
       expect(providerInput).toContain(objective);
       expect(providerInput).toContain("Continue working toward the active thread goal");
       const messages = (await readHarnessThread(harness))?.messages;
@@ -12324,7 +12324,7 @@ describe("ProviderCommandReactor", () => {
         type: "thread.meta.update",
         commandId: CommandId.makeUnsafe("cmd-goal-before-reactor-restart"),
         threadId: ThreadId.makeUnsafe("thread-1"),
-        goal: "Resume after Synara restarts",
+        goal: "Resume after Ramspace restarts",
         goalStartBehavior: "defer",
       }),
     );
@@ -12970,11 +12970,11 @@ describe("ProviderCommandReactor", () => {
         threadId,
         title: "New thread",
         envMode: "worktree",
-        branch: "synara/deadbeef",
+        branch: "ramspace/deadbeef",
         worktreePath: "/tmp/provider-project/.worktrees/deadbeef",
         associatedWorktreePath: "/tmp/provider-project/.worktrees/deadbeef",
-        associatedWorktreeBranch: "synara/deadbeef",
-        associatedWorktreeRef: "synara/deadbeef",
+        associatedWorktreeBranch: "ramspace/deadbeef",
+        associatedWorktreeRef: "ramspace/deadbeef",
       }),
     );
     const attachmentPath = await harness.stageAttachment(image);
@@ -15187,7 +15187,7 @@ describe("ProviderCommandReactor", () => {
   );
 
   it("retains a discoverable file recovery snapshot across edit replay and store restart", async () => {
-    const cwd = fs.mkdtempSync(path.join(os.tmpdir(), "synara-edit-replay-recovery-"));
+    const cwd = fs.mkdtempSync(path.join(os.tmpdir(), "ramspace-edit-replay-recovery-"));
     createdBaseDirs.add(cwd);
     const git = (args: string[]) => execFileSync("git", args, { cwd, encoding: "utf8" });
     git(["init", "--initial-branch=main"]);
@@ -15200,7 +15200,7 @@ describe("ProviderCommandReactor", () => {
     const storeLayer = CheckpointStoreLive.pipe(
       Layer.provide(
         GitCoreLive.pipe(
-          Layer.provide(ServerConfig.layerTest(cwd, { prefix: "synara-edit-replay-recovery-" })),
+          Layer.provide(ServerConfig.layerTest(cwd, { prefix: "ramspace-edit-replay-recovery-" })),
         ),
       ),
       Layer.provide(NodeServices.layer),
@@ -15247,7 +15247,7 @@ describe("ProviderCommandReactor", () => {
         refsBeforeRollback = git([
           "for-each-ref",
           "--format=%(refname)",
-          "refs/synara/checkpoints",
+          "refs/ramspace/checkpoints",
         ]);
       }),
     );
@@ -15268,7 +15268,7 @@ describe("ProviderCommandReactor", () => {
     expect(refsBeforeRollback).toContain("/revert-rescue/");
     expect(fs.readFileSync(path.join(cwd, "tracked.txt"), "utf8")).toBe("baseline\n");
     expect(fs.existsSync(path.join(cwd, "untracked.txt"))).toBe(false);
-    const rescueRefs = git(["for-each-ref", "--format=%(refname)", "refs/synara/checkpoints"])
+    const rescueRefs = git(["for-each-ref", "--format=%(refname)", "refs/ramspace/checkpoints"])
       .trim()
       .split("\n")
       .filter(
@@ -16285,9 +16285,9 @@ describe("ProviderCommandReactor", () => {
       runtimeMode: "approval-required",
     });
     const providerInput = harness.sendTurn.mock.calls[0]?.[0].input;
-    expect(providerInput).toContain("<synara_goal>");
+    expect(providerInput).toContain("<ramspace_goal>");
     expect(providerInput).toContain("Deliver &lt;all&gt; providers safely");
-    expect(providerInput).toContain("</synara_goal>\n\nhello reactor");
+    expect(providerInput).toContain("</ramspace_goal>\n\nhello reactor");
 
     const thread = await readHarnessThread(harness);
     expect(thread?.session?.threadId).toBe("thread-1");
@@ -16464,9 +16464,9 @@ describe("ProviderCommandReactor", () => {
 
     await waitFor(() => harness.steerSubagent.mock.calls.length === 1);
     const steerInput = harness.steerSubagent.mock.calls[0]?.[0].input;
-    expect(steerInput).toContain("<synara_goal>");
+    expect(steerInput).toContain("<ramspace_goal>");
     expect(steerInput).toContain("Finish &lt;all&gt; tests");
-    expect(steerInput).toContain("</synara_goal>\n\ncontinue");
+    expect(steerInput).toContain("</ramspace_goal>\n\ncontinue");
   });
 
   it.each([
@@ -17374,7 +17374,7 @@ describe("ProviderCommandReactor", () => {
           ),
         ),
       );
-      vi.stubEnv("SYNARA_PRE_TURN_BASELINE_TIMEOUT_MS", "15000");
+      vi.stubEnv("RAMSPACE_PRE_TURN_BASELINE_TIMEOUT_MS", "15000");
       const harness = await createHarness({
         preTurnBaselineTimeout: Duration.millis(30),
         hubOutputReactor: {
@@ -18430,11 +18430,11 @@ describe("ProviderCommandReactor", () => {
         commandId: CommandId.makeUnsafe("cmd-thread-worktree-bootstrap"),
         threadId: ThreadId.makeUnsafe("thread-1"),
         envMode: "worktree",
-        branch: "synara/cb661f0d",
+        branch: "ramspace/cb661f0d",
         worktreePath: "/tmp/provider-project/.worktrees/cb661f0d",
         associatedWorktreePath: "/tmp/provider-project/.worktrees/cb661f0d",
-        associatedWorktreeBranch: "synara/cb661f0d",
-        associatedWorktreeRef: "synara/cb661f0d",
+        associatedWorktreeBranch: "ramspace/cb661f0d",
+        associatedWorktreeRef: "ramspace/cb661f0d",
       }),
     );
 
@@ -18469,19 +18469,19 @@ describe("ProviderCommandReactor", () => {
     await waitFor(async () => {
       const thread = await readHarnessThread(harness);
       return (
-        thread?.branch === "synara/app-startup-crash" &&
-        thread.associatedWorktreeBranch === "synara/app-startup-crash" &&
-        thread.associatedWorktreeRef === "synara/app-startup-crash"
+        thread?.branch === "ramspace/app-startup-crash" &&
+        thread.associatedWorktreeBranch === "ramspace/app-startup-crash" &&
+        thread.associatedWorktreeRef === "ramspace/app-startup-crash"
       );
     });
 
     const thread = await readHarnessThread(harness);
     expect(thread).toMatchObject({
-      branch: "synara/app-startup-crash",
+      branch: "ramspace/app-startup-crash",
       worktreePath: "/tmp/provider-project/.worktrees/cb661f0d",
       associatedWorktreePath: "/tmp/provider-project/.worktrees/cb661f0d",
-      associatedWorktreeBranch: "synara/app-startup-crash",
-      associatedWorktreeRef: "synara/app-startup-crash",
+      associatedWorktreeBranch: "ramspace/app-startup-crash",
+      associatedWorktreeRef: "ramspace/app-startup-crash",
     });
   });
 
@@ -18510,14 +18510,14 @@ describe("ProviderCommandReactor", () => {
         runtimeMode: "approval-required",
         branch: null,
         worktreePath: null,
-        creationSource: "synara_mcp",
+        creationSource: "ramspace_mcp",
         gatewayOperationId: operationId,
         gatewayOperationIndex: 1,
         createdAt,
       }),
     );
     for (const [index, threadId] of [ThreadId.makeUnsafe("thread-1"), other].entries()) {
-      const branch = index === 0 ? "synara/cb661f0d" : "synara/cb661f0e";
+      const branch = index === 0 ? "ramspace/cb661f0d" : "ramspace/cb661f0e";
       const cwd = `/tmp/provider-project/.worktrees/${branch.slice(7)}`;
       await Effect.runPromise(
         harness.engine.dispatch({
@@ -18580,7 +18580,7 @@ describe("ProviderCommandReactor", () => {
             modelSelection: { provider: "codex", model: "gpt-5-codex" },
             interactionMode: DEFAULT_PROVIDER_INTERACTION_MODE,
             runtimeMode: "approval-required",
-            creationSource: "synara_mcp",
+            creationSource: "ramspace_mcp",
             gatewayOperationId: operationId,
             gatewayOperationIndex: index,
             branch: null,
@@ -18588,7 +18588,7 @@ describe("ProviderCommandReactor", () => {
             createdAt,
           }),
         );
-      const branch = index === 0 ? "synara/cb661f0d" : "synara/cb661f0e";
+      const branch = index === 0 ? "ramspace/cb661f0d" : "ramspace/cb661f0e";
       const cwd = `/tmp/provider-project/.worktrees/${branch.slice(7)}`;
       await Effect.runPromise(
         harness.engine.dispatch({
@@ -18627,12 +18627,12 @@ describe("ProviderCommandReactor", () => {
       await waitFor(
         async () =>
           (await readHarnessThread(harness, ThreadId.makeUnsafe("gateway-retry-child")))?.branch ===
-          "synara/retry-after-completion",
+          "ramspace/retry-after-completion",
         500,
       );
       expect(
         (await readHarnessThread(harness, ThreadId.makeUnsafe("gateway-retry-child")))?.branch,
-      ).toBe("synara/retry-after-completion");
+      ).toBe("ramspace/retry-after-completion");
       expect(
         messages.filter((message) =>
           message.includes("timed out waiting for creating gateway operation"),
@@ -18675,7 +18675,7 @@ describe("ProviderCommandReactor", () => {
         commandId: CommandId.makeUnsafe("cmd-slow-publication-bootstrap"),
         threadId: ThreadId.makeUnsafe("thread-1"),
         envMode: "worktree",
-        branch: "synara/cb661f0d",
+        branch: "ramspace/cb661f0d",
         worktreePath: "/tmp/provider-project/.worktrees/slow",
       }),
     );
@@ -18710,8 +18710,8 @@ describe("ProviderCommandReactor", () => {
       await waitFor(async () => {
         const thread = await readHarnessThread(harness);
         return (
-          thread?.branch === "synara/slow-publication" &&
-          thread.associatedWorktreeBranch === "synara/slow-publication"
+          thread?.branch === "ramspace/slow-publication" &&
+          thread.associatedWorktreeBranch === "ramspace/slow-publication"
         );
       });
       expect(publicationSettled).toBe(false);
@@ -18720,7 +18720,7 @@ describe("ProviderCommandReactor", () => {
       await localMutation;
     }
     await waitFor(() => publicationSettled);
-    expect((await readHarnessThread(harness))?.branch).toBe("synara/slow-publication");
+    expect((await readHarnessThread(harness))?.branch).toBe("ramspace/slow-publication");
   });
 
   it("waits for gateway operation completion before renaming its temporary branch", async () => {
@@ -18739,11 +18739,11 @@ describe("ProviderCommandReactor", () => {
         commandId: CommandId.makeUnsafe("cmd-gateway-worktree-bootstrap"),
         threadId: ThreadId.makeUnsafe("thread-1"),
         envMode: "worktree",
-        branch: "synara/cb661f0d",
+        branch: "ramspace/cb661f0d",
         worktreePath: "/tmp/provider-project/.worktrees/cb661f0d",
         associatedWorktreePath: "/tmp/provider-project/.worktrees/cb661f0d",
-        associatedWorktreeBranch: "synara/cb661f0d",
-        associatedWorktreeRef: "synara/cb661f0d",
+        associatedWorktreeBranch: "ramspace/cb661f0d",
+        associatedWorktreeRef: "ramspace/cb661f0d",
       }),
     );
     await Effect.runPromise(
@@ -18784,11 +18784,11 @@ describe("ProviderCommandReactor", () => {
         commandId: CommandId.makeUnsafe("cmd-missing-gateway-worktree-bootstrap"),
         threadId: ThreadId.makeUnsafe("thread-1"),
         envMode: "worktree",
-        branch: "synara/cb661f0d",
+        branch: "ramspace/cb661f0d",
         worktreePath: "/tmp/provider-project/.worktrees/cb661f0d",
         associatedWorktreePath: "/tmp/provider-project/.worktrees/cb661f0d",
-        associatedWorktreeBranch: "synara/cb661f0d",
-        associatedWorktreeRef: "synara/cb661f0d",
+        associatedWorktreeBranch: "ramspace/cb661f0d",
+        associatedWorktreeRef: "ramspace/cb661f0d",
       }),
     );
     await Effect.runPromise(
@@ -18842,11 +18842,11 @@ describe("ProviderCommandReactor", () => {
         commandId: CommandId.makeUnsafe("cmd-thread-worktree-keep-temporary"),
         threadId: ThreadId.makeUnsafe("thread-1"),
         envMode: "worktree",
-        branch: "synara/cb661f0d",
+        branch: "ramspace/cb661f0d",
         worktreePath: "/tmp/provider-project/.worktrees/cb661f0d",
         associatedWorktreePath: "/tmp/provider-project/.worktrees/cb661f0d",
-        associatedWorktreeBranch: "synara/cb661f0d",
-        associatedWorktreeRef: "synara/cb661f0d",
+        associatedWorktreeBranch: "ramspace/cb661f0d",
+        associatedWorktreeRef: "ramspace/cb661f0d",
       }),
     );
 
@@ -18878,9 +18878,9 @@ describe("ProviderCommandReactor", () => {
 
     const thread = await readHarnessThread(harness);
     expect(thread).toMatchObject({
-      branch: "synara/cb661f0d",
-      associatedWorktreeBranch: "synara/cb661f0d",
-      associatedWorktreeRef: "synara/cb661f0d",
+      branch: "ramspace/cb661f0d",
+      associatedWorktreeBranch: "ramspace/cb661f0d",
+      associatedWorktreeRef: "ramspace/cb661f0d",
     });
   });
 
@@ -22601,7 +22601,7 @@ describe("ProviderCommandReactor", () => {
       expected: false,
     },
   ])(
-    "pre-approves Synara group tools only for an active coordinator session ($label: $expected)",
+    "pre-approves Ramspace group tools only for an active coordinator session ($label: $expected)",
     async ({ coordinatorThreadIds, coordinatorConfigState, label, expected, groupsEnabled }) => {
       vi.spyOn(groupsBetaGate, "isServerGroupsEnabled").mockReturnValue(groupsEnabled ?? true);
       const harness = await createHarness({ coordinatorThreadIds, coordinatorConfigState });
@@ -22628,9 +22628,9 @@ describe("ProviderCommandReactor", () => {
       await waitFor(() => harness.sendTurn.mock.calls.length === 1);
       const startInput = harness.startSession.mock.calls[0]?.[1];
       if (expected) {
-        expect(startInput).toMatchObject({ autoApproveSynaraTools: true });
+        expect(startInput).toMatchObject({ autoApproveRamspaceTools: true });
       } else {
-        expect(startInput).not.toHaveProperty("autoApproveSynaraTools");
+        expect(startInput).not.toHaveProperty("autoApproveRamspaceTools");
       }
       // File edits and shell still ask: the flag must never widen into
       // blanket approval, so it travels as a dedicated start option and not
@@ -22670,12 +22670,12 @@ describe("ProviderCommandReactor", () => {
     await waitFor(() => harness.startSession.mock.calls.length === 1);
     await waitFor(() => harness.sendTurn.mock.calls.length === 1);
     expect(harness.startSession.mock.calls[0]?.[1]).toMatchObject({
-      autoApproveSynaraTools: true,
+      autoApproveRamspaceTools: true,
     });
 
     // The group is paused between turns: the running session was provisioned
     // with the flag, so the next turn must restart it rather than keep a
-    // runtime that silently still pre-approves the Synara tools.
+    // runtime that silently still pre-approves the Ramspace tools.
     coordinatorConfigState.pausedAt = new Date(0).toISOString();
     await Effect.runPromise(
       harness.engine.dispatch({
@@ -22696,7 +22696,7 @@ describe("ProviderCommandReactor", () => {
 
     await waitFor(() => harness.startSession.mock.calls.length === 2);
     await waitFor(() => harness.sendTurn.mock.calls.length === 2);
-    expect(harness.startSession.mock.calls[1]?.[1]).not.toHaveProperty("autoApproveSynaraTools");
+    expect(harness.startSession.mock.calls[1]?.[1]).not.toHaveProperty("autoApproveRamspaceTools");
   });
 
   it("rebinds the session to a stored provider change and keeps the transcript bootstrap", async () => {
@@ -23625,7 +23625,7 @@ describe("ProviderCommandReactor", () => {
       expect((handoffActivity?.payload as { contextText: string }).contextText).toContain(
         "first turn on grok",
       );
-      // Same Synara thread: id, transcript, project, and workspace survive.
+      // Same Ramspace thread: id, transcript, project, and workspace survive.
       expect(after?.id).toBe(threadId);
       expect(after?.projectId).toBe(before?.projectId);
       expect(after?.worktreePath).toBe(before?.worktreePath);

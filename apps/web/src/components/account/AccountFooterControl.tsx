@@ -20,7 +20,7 @@ import {
 } from "~/components/sidebarContextMenuStyles";
 import { SidebarIconButton } from "~/components/SidebarIconButton";
 import { appRailButtonClassName } from "~/components/AppRail";
-import { ProfileAvatar } from "@synara/profile-ui/avatar";
+import { ProfileAvatar } from "@ramspace/profile-ui/avatar";
 import { ExternalLinkIcon, GlobeIcon, SettingsIcon, UsageGaugeIcon, UserIcon } from "~/lib/icons";
 import { openExternalLink } from "~/lib/linkChips";
 import { isMacPlatform } from "~/lib/utils";

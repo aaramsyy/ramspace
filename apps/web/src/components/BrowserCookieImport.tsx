@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import type { BrowserCookieImportResult, BrowserVaultMethods, ThreadId } from "@synara/contracts";
+import type { BrowserCookieImportResult, BrowserVaultMethods, ThreadId } from "@ramspace/contracts";
 import { Button } from "./ui/button";
 import { DisclosureRegion } from "./ui/DisclosureRegion";
 import { useTranslation } from "~/i18n";
@@ -17,9 +17,9 @@ function importFailure(
 ): string {
   if (result.code === "permission_denied") {
     if (result.platform === "macos" && browser === "safari")
-      return "macOS denied access to Safari's cookie files. Allow Synara in System Settings > Privacy & Security > Full Disk Access, then quit and reopen Synara before retrying. Revisit Safari import setup in Synara Settings > General for the correct app. You can sign in directly instead.";
+      return "macOS denied access to Safari's cookie files. Allow Ramspace in System Settings > Privacy & Security > Full Disk Access, then quit and reopen Ramspace before retrying. Revisit Safari import setup in Ramspace Settings > General for the correct app. You can sign in directly instead.";
     if (result.platform === "macos")
-      return "macOS denied access to this browser's cookie data. Review Synara's file access in Privacy & Security and any Keychain prompt, then retry.";
+      return "macOS denied access to this browser's cookie data. Review Ramspace's file access in Privacy & Security and any Keychain prompt, then retry.";
     return "The operating system denied access to this browser's cookie data. Review its access permissions or sign in directly.";
   }
   if (result.code === "timed_out")
@@ -27,11 +27,11 @@ function importFailure(
   if (result.code === "source_missing")
     return "The selected profile is no longer available. Choose another profile or open the source browser first.";
   if (result.code === "reader_unavailable")
-    return "The native cookie reader is unavailable. Reinstall Synara with its optional native dependencies, or sign in directly.";
+    return "The native cookie reader is unavailable. Reinstall Ramspace with its optional native dependencies, or sign in directly.";
   if (result.code === "persistence_failed")
     return "Cookies were imported, but secure storage could not save their session state for future launches. Existing sessions may have changed.";
   if (result.code === "reader_failed" && result.stage === "acquisition")
-    return "The native reader could not open or acquire the source cookie store. A permission denial was not confirmed. Check that the source profile is available and Synara has access to it.";
+    return "The native reader could not open or acquire the source cookie store. A permission denial was not confirmed. Check that the source profile is available and Ramspace has access to it.";
   if (result.code === "reader_failed" && (result.stage === "parse" || result.stage === "decode"))
     return "The native reader could not decode this profile's cookie data. This is a cookie-format failure, not a confirmed permission denial.";
   if (result.code === "reader_failed" && result.stage === "decrypt")
@@ -244,7 +244,7 @@ export function BrowserCookieImport({
                 disabled={busy}
                 onChange={(event) => setConfirmed(event.target.checked)}
               />
-              <span>{t("computer:iAllowSynaraAndItsAgentsToUseAll")}</span>
+              <span>{t("computer:iAllowRamspaceAndItsAgentsToUseAll")}</span>
             </label>
           </DisclosureRegion>
           {status ? (

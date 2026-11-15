@@ -5,7 +5,7 @@ import {
   GRANT_MAX_AGE_SECONDS,
   GrantClaims,
   type HostPublicKeyJwk,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { and, eq, inArray } from "drizzle-orm";
 import { Schema } from "effect";
 import { Hono } from "hono";
@@ -149,8 +149,8 @@ describe.skipIf(!TEST_DATABASE_URL)("Slice A host account API", () => {
       platform: "darwin",
       ...overrides,
     })
-      .setProtectedHeader({ alg: "EdDSA", typ: "synara-host-link+jwt" })
-      .setIssuer(`synara-host:${environmentId}`)
+      .setProtectedHeader({ alg: "EdDSA", typ: "ramspace-host-link+jwt" })
+      .setIssuer(`ramspace-host:${environmentId}`)
       .setSubject(environmentId)
       .setAudience(config.apiPublicUrl)
       .setIssuedAt(now)
@@ -171,8 +171,8 @@ describe.skipIf(!TEST_DATABASE_URL)("Slice A host account API", () => {
   ): Promise<string> {
     const now = Math.floor(Date.now() / 1000);
     return new SignJWT({ keyGeneration: overrides.keyGeneration ?? host.keyGeneration })
-      .setProtectedHeader({ alg: "EdDSA", typ: "synara-host-proof+jwt" })
-      .setIssuer(`synara-host:${host.environmentId}`)
+      .setProtectedHeader({ alg: "EdDSA", typ: "ramspace-host-proof+jwt" })
+      .setIssuer(`ramspace-host:${host.environmentId}`)
       .setSubject(host.id)
       .setAudience(overrides.audience ?? config.apiPublicUrl)
       .setIssuedAt(overrides.issuedAt ?? now)
@@ -259,9 +259,9 @@ describe.skipIf(!TEST_DATABASE_URL)("Slice A host account API", () => {
     })
       .setProtectedHeader({
         alg: publicKeyJwk.kty === "EC" ? "ES256" : "EdDSA",
-        typ: "synara-device-register+jwt",
+        typ: "ramspace-device-register+jwt",
       })
-      .setIssuer("synara-device")
+      .setIssuer("ramspace-device")
       .setSubject(userId)
       .setAudience(config.apiPublicUrl)
       .setIssuedAt(now)
@@ -951,8 +951,8 @@ describe.skipIf(!TEST_DATABASE_URL)("Slice A host account API", () => {
       });
       expect((await app.request(`/api/v1/hosts/${host.id}/authorization`)).status).toBe(401);
       const malformedSubject = await new SignJWT({ keyGeneration: host.keyGeneration })
-        .setProtectedHeader({ alg: "EdDSA", typ: "synara-host-proof+jwt" })
-        .setIssuer(`synara-host:${host.environmentId}`)
+        .setProtectedHeader({ alg: "EdDSA", typ: "ramspace-host-proof+jwt" })
+        .setIssuer(`ramspace-host:${host.environmentId}`)
         .setSubject("not-a-uuid")
         .setAudience(config.apiPublicUrl)
         .setIssuedAt()
@@ -1226,7 +1226,7 @@ describe.skipIf(!TEST_DATABASE_URL)("Slice A host account API", () => {
         const { grant } = (await response.json()) as { grant: string };
         const payload = await signing.verify(grant, {
           typ: GRANT_JWT_TYP,
-          audience: "synara-relay",
+          audience: "ramspace-relay",
           maxAgeSeconds: GRANT_MAX_AGE_SECONDS,
         });
         expect(Schema.decodeUnknownSync(GrantClaims)(payload).cnf.jkt).toBe(device.jkt);
@@ -1560,7 +1560,7 @@ describe.skipIf(!TEST_DATABASE_URL)("Slice A host account API", () => {
           expect(authorization.status).toBe(403);
           expect(await authorization.json()).toMatchObject({
             error: "subscription_required",
-            message: "Remote access requires an active Synara Alto subscription",
+            message: "Remote access requires an active Ramspace Alto subscription",
           });
           const grant = await app.request(`/api/v1/hosts/${host.id}/grant`, {
             method: "POST",
@@ -1597,7 +1597,7 @@ describe.skipIf(!TEST_DATABASE_URL)("Slice A host account API", () => {
         const { grant } = (await response.json()) as { grant: string };
         const payload = await signing.verify(grant, {
           typ: GRANT_JWT_TYP,
-          audience: "synara-relay",
+          audience: "ramspace-relay",
           maxAgeSeconds: GRANT_MAX_AGE_SECONDS,
         });
         expect(Schema.decodeUnknownSync(GrantClaims)(payload)).toMatchObject({
@@ -1966,8 +1966,8 @@ describe.skipIf(!TEST_DATABASE_URL)("Slice A host account API", () => {
         expect(invitation.status).toBe(200);
         const { code } = (await invitation.json()) as { code: string };
         const proof = await new SignJWT({ code })
-          .setProtectedHeader({ alg: "ES256", typ: "synara-pairing-code+jwt" })
-          .setIssuer("synara-device")
+          .setProtectedHeader({ alg: "ES256", typ: "ramspace-pairing-code+jwt" })
+          .setIssuer("ramspace-device")
           .setSubject(owner.userId)
           .setAudience(config.apiPublicUrl)
           .setIssuedAt()
@@ -2054,8 +2054,8 @@ describe.skipIf(!TEST_DATABASE_URL)("Slice A host account API", () => {
         if (!beta) return;
         const { code } = (await published.json()) as { code: string };
         const proof = await new SignJWT({ code })
-          .setProtectedHeader({ alg: "ES256", typ: "synara-pairing-code+jwt" })
-          .setIssuer("synara-device")
+          .setProtectedHeader({ alg: "ES256", typ: "ramspace-pairing-code+jwt" })
+          .setIssuer("ramspace-device")
           .setSubject(owner.userId)
           .setAudience(config.apiPublicUrl)
           .setIssuedAt()

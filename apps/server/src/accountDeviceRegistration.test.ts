@@ -2,12 +2,12 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 
-import type { AccountDevice, DevicePublicKeyJwk } from "@synara/contracts";
+import type { AccountDevice, DevicePublicKeyJwk } from "@ramspace/contracts";
 import { createAccountSession } from "./accountSession";
-import { AccountApiError, type AccountClient } from "@synara/shared/account";
-import { deviceThumbprint } from "@synara/shared/deviceKey";
+import { AccountApiError, type AccountClient } from "@ramspace/shared/account";
+import { deviceThumbprint } from "@ramspace/shared/deviceKey";
 import { decodeJwt } from "jose";
-import { generatePairingKeyPair, generateSyncKey } from "@synara/shared/hostSecrets";
+import { generatePairingKeyPair, generateSyncKey } from "@ramspace/shared/hostSecrets";
 import * as remoteFeaturePolicy from "./remoteFeaturePolicy";
 import * as syncKeyStore from "./hostSecrets/syncKeyStore";
 import { afterEach, describe, expect, it, vi } from "vitest";
@@ -38,7 +38,7 @@ afterEach(async () => {
 });
 
 async function harness() {
-  const baseDir = await fs.mkdtemp(path.join(os.tmpdir(), "synara-device-registration-"));
+  const baseDir = await fs.mkdtemp(path.join(os.tmpdir(), "ramspace-device-registration-"));
   directories.push(baseDir);
   const credentials = {
     ...scope,

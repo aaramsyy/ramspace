@@ -8,7 +8,7 @@ import type {
   ProfileStats,
   ProfileTokenStats,
   ProviderKind,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import type { AccountUsageView } from "~/lib/accountUsageAdapter";
 
 export interface ProfileHeatmapSelection {

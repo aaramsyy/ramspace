@@ -1,5 +1,5 @@
-import type { ApiJwks, ApiSigningPublicJwk, DevicePublicKeyJwk } from "@synara/contracts";
-import { JWT_CLOCK_TOLERANCE_SECONDS } from "@synara/contracts";
+import type { ApiJwks, ApiSigningPublicJwk, DevicePublicKeyJwk } from "@ramspace/contracts";
+import { JWT_CLOCK_TOLERANCE_SECONDS } from "@ramspace/contracts";
 import {
   calculateJwkThumbprint,
   createLocalJWKSet,

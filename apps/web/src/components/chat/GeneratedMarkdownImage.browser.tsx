@@ -1,7 +1,7 @@
 import "../../index.css";
 
-import { EnvironmentId, type NativeApi } from "@synara/contracts";
-import { remoteResourceRoute } from "@synara/shared/remoteResources";
+import { EnvironmentId, type NativeApi } from "@ramspace/contracts";
+import { remoteResourceRoute } from "@ramspace/shared/remoteResources";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { HttpResponse, http } from "msw";
 import { setupWorker } from "msw/browser";

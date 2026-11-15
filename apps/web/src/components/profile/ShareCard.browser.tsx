@@ -1,7 +1,7 @@
 import { selectDeviceShareCardStats } from "./profileSelectors";
 import "../../index.css";
 
-import type { ProviderKind } from "@synara/contracts";
+import type { ProviderKind } from "@ramspace/contracts";
 import { expect, it } from "vitest";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-react";
@@ -36,8 +36,8 @@ it("keeps the full missing-token disclosure inside the exported card", async () 
         unavailableProviders,
       })}
       initials="S"
-      displayName="Synara"
-      handle="@synara"
+      displayName="Ramspace"
+      handle="@ramspace"
       avatarColor="#2563eb"
       avatarImage={null}
     />,

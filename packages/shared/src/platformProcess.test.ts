@@ -16,7 +16,7 @@ import os from "node:os";
 let root: string;
 
 beforeEach(() => {
-  root = mkdtempSync(path.join(tmpdir(), "synara-platform-process-"));
+  root = mkdtempSync(path.join(tmpdir(), "ramspace-platform-process-"));
 });
 
 afterEach(() => {
@@ -67,7 +67,12 @@ describe("prepareProcess", () => {
       vi.spyOn(os, "getPriority").mockReturnValue(15);
       const plan = prepareProcess("agent", ["literal $arg"], { platform, lowerPriority: true });
       expect(plan).toMatchObject({ command: "/bin/sh", resolvedCommand: "agent" });
-      expect(plan.args.slice(2)).toEqual(["synara-agent-priority", "15", "agent", "literal $arg"]);
+      expect(plan.args.slice(2)).toEqual([
+        "ramspace-agent-priority",
+        "15",
+        "agent",
+        "literal $arg",
+      ]);
     },
   );
 
@@ -79,7 +84,7 @@ describe("prepareProcess", () => {
     const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
     expect(
       prepareProcess("agent", [], { platform: "linux", lowerPriority: true }).args.slice(2),
-    ).toEqual(["synara-agent-priority", "5", "agent"]);
+    ).toEqual(["ramspace-agent-priority", "5", "agent"]);
     expect(warn).toHaveBeenCalledWith(
       expect.stringContaining("inherited agent process priority"),
       expect.any(Error),
@@ -146,7 +151,7 @@ describe("prepareProcess", () => {
         args: ["a b", "quote'\"$", "--flag"],
       });
       if (reniceFails)
-        expect(stderr).toBe("Synara: failed to lower agent process priority; continuing\n");
+        expect(stderr).toBe("Ramspace: failed to lower agent process priority; continuing\n");
     },
   );
   it.skipIf(process.platform === "win32")(

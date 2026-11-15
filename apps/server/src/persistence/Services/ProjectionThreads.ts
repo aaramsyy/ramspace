@@ -28,7 +28,7 @@ import {
   UsageLimitRecovery,
   UsageLimitRecoverySource,
   TurnId,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { Option, Schema, ServiceMap } from "effect";
 import type { Effect } from "effect";
 
@@ -183,4 +183,4 @@ export interface ProjectionThreadRepositoryShape {
 export class ProjectionThreadRepository extends ServiceMap.Service<
   ProjectionThreadRepository,
   ProjectionThreadRepositoryShape
->()("synara/persistence/Services/ProjectionThreads/ProjectionThreadRepository") {}
+>()("ramspace/persistence/Services/ProjectionThreads/ProjectionThreadRepository") {}

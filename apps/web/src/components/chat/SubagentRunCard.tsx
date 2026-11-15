@@ -9,7 +9,7 @@
 // Layer: Chat transcript UI
 // Exports: SubagentRunCard, SubagentIdentityLine
 
-import { ThreadId } from "@synara/contracts";
+import { ThreadId } from "@ramspace/contracts";
 import { pluralize } from "~/i18n/pluralize";
 import { Fragment, useEffect, useMemo, useRef, useState } from "react";
 

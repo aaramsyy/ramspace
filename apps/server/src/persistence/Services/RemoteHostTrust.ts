@@ -1,4 +1,4 @@
-import type { RemotePairingBundle } from "@synara/contracts";
+import type { RemotePairingBundle } from "@ramspace/contracts";
 import { ServiceMap, type Effect } from "effect";
 import type { PersistenceSqlError } from "../Errors";
 
@@ -51,4 +51,4 @@ export interface RemoteHostTrustRepositoryShape {
 export class RemoteHostTrustRepository extends ServiceMap.Service<
   RemoteHostTrustRepository,
   RemoteHostTrustRepositoryShape
->()("synara/persistence/RemoteHostTrust") {}
+>()("ramspace/persistence/RemoteHostTrust") {}

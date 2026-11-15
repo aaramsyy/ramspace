@@ -2,10 +2,10 @@ import {
   BROWSER_TOOL_NAMES,
   type ProviderInteractionMode,
   type RuntimeMode,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 
-/** Exact tool names owned by Synara's capability-gated Computer gateway. */
-export const SYNARA_COMPUTER_TOOL_NAMES = [
+/** Exact tool names owned by Ramspace's capability-gated Computer gateway. */
+export const RAMSPACE_COMPUTER_TOOL_NAMES = [
   "computer_activate_window",
   "computer_click",
   "computer_drag",
@@ -56,9 +56,9 @@ export const SYNARA_COMPUTER_TOOL_NAMES = [
   "computer_browser_press",
 ] as const;
 
-export type SynaraComputerToolName = (typeof SYNARA_COMPUTER_TOOL_NAMES)[number];
+export type RamspaceComputerToolName = (typeof RAMSPACE_COMPUTER_TOOL_NAMES)[number];
 
-const SYNARA_COMPUTER_TOOL_NAME_SET = new Set<string>(SYNARA_COMPUTER_TOOL_NAMES);
+const RAMSPACE_COMPUTER_TOOL_NAME_SET = new Set<string>(RAMSPACE_COMPUTER_TOOL_NAMES);
 
 function recordString(value: unknown, key: string): string | undefined {
   if (value === null || typeof value !== "object" || Array.isArray(value)) return undefined;
@@ -68,38 +68,38 @@ function recordString(value: unknown, key: string): string | undefined {
 
 /**
  * Accept only the canonical gateway name or the exact provider qualifications
- * used for Synara's reserved MCP server. A similarly named tool from another
+ * used for Ramspace's reserved MCP server. A similarly named tool from another
  * MCP server must continue through the provider's ordinary permission policy.
  */
-export function canonicalSynaraComputerToolName(
+export function canonicalRamspaceComputerToolName(
   value: unknown,
-): SynaraComputerToolName | undefined {
+): RamspaceComputerToolName | undefined {
   if (typeof value !== "string") return undefined;
   const normalized = value.trim().toLowerCase();
-  const canonical = normalized.startsWith("mcp__synara__")
-    ? normalized.slice("mcp__synara__".length)
-    : normalized.startsWith("synara_")
-      ? normalized.slice("synara_".length)
+  const canonical = normalized.startsWith("mcp__ramspace__")
+    ? normalized.slice("mcp__ramspace__".length)
+    : normalized.startsWith("ramspace_")
+      ? normalized.slice("ramspace_".length)
       : normalized;
-  return SYNARA_COMPUTER_TOOL_NAME_SET.has(canonical)
-    ? (canonical as SynaraComputerToolName)
+  return RAMSPACE_COMPUTER_TOOL_NAME_SET.has(canonical)
+    ? (canonical as RamspaceComputerToolName)
     : undefined;
 }
 
 /**
- * Provider callbacks must carry Synara's namespace themselves. Bare canonical
+ * Provider callbacks must carry Ramspace's namespace themselves. Bare canonical
  * names are safe only after a separate protocol field has proved the server
  * identity (for example Codex's `serverName`).
  */
-export function qualifiedSynaraComputerToolName(
+export function qualifiedRamspaceComputerToolName(
   value: unknown,
-): SynaraComputerToolName | undefined {
+): RamspaceComputerToolName | undefined {
   if (typeof value !== "string") return undefined;
   const normalized = value.trim().toLowerCase();
-  if (!normalized.startsWith("mcp__synara__") && !normalized.startsWith("synara_")) {
+  if (!normalized.startsWith("mcp__ramspace__") && !normalized.startsWith("ramspace_")) {
     return undefined;
   }
-  return canonicalSynaraComputerToolName(normalized);
+  return canonicalRamspaceComputerToolName(normalized);
 }
 
 /**
@@ -116,7 +116,7 @@ export function qualifiedSynaraComputerToolName(
  * `apps/server/src/agentGateway/Layers/AgentGateway.ts` as the catalog
  * membership test OR this family matcher, so a prefixed spelling from a
  * session that never saw the catalog —
- * `synara_computer_click`, `mcp__synara__computer_click` — still reaches
+ * `ramspace_computer_click`, `mcp__ramspace__computer_click` — still reaches
  * the denial hook and the card.
  *
  * Pi's native projection adds specialist forwarders only when its leased
@@ -130,8 +130,8 @@ export function qualifiedSynaraComputerToolName(
  * permission policy — so this matcher accepts only exact owned names in any
  * of the three spellings, never prose around them.
  */
-export function isSynaraComputerToolFamilyName(value: unknown): boolean {
-  return canonicalSynaraComputerToolName(value) !== undefined;
+export function isRamspaceComputerToolFamilyName(value: unknown): boolean {
+  return canonicalRamspaceComputerToolName(value) !== undefined;
 }
 
 function firstRecordString(value: unknown, keys: ReadonlyArray<string>): string | undefined {
@@ -147,92 +147,92 @@ export function computerToolNameFromProviderPermission(input: {
   readonly title?: unknown;
   readonly rawInput?: unknown;
   readonly metadata?: unknown;
-}): SynaraComputerToolName | undefined {
+}): RamspaceComputerToolName | undefined {
   const explicitName = typeof input.name === "string" ? input.name : undefined;
-  if (explicitName !== undefined) return qualifiedSynaraComputerToolName(explicitName);
+  if (explicitName !== undefined) return qualifiedRamspaceComputerToolName(explicitName);
 
   const rawToolName = firstRecordString(input.rawInput, ["_toolName", "toolName", "tool_name"]);
-  if (rawToolName !== undefined) return qualifiedSynaraComputerToolName(rawToolName);
+  if (rawToolName !== undefined) return qualifiedRamspaceComputerToolName(rawToolName);
 
   const metadataToolName = firstRecordString(input.metadata, [
     "_toolName",
     "toolName",
     "tool_name",
   ]);
-  if (metadataToolName !== undefined) return qualifiedSynaraComputerToolName(metadataToolName);
+  if (metadataToolName !== undefined) return qualifiedRamspaceComputerToolName(metadataToolName);
 
   // The display `title` is provider-composed text, not a tool name — a
-  // request that only *renders* as a Synara computer call names no such tool
+  // request that only *renders* as a Ramspace computer call names no such tool
   // and must keep the ordinary permission path.
   return undefined;
 }
 
 /**
- * The `synara_*` catalog served by Synara's agent gateway: thread read/write,
+ * The `ramspace_*` catalog served by Ramspace's agent gateway: thread read/write,
  * project agent, automation, diagnostics, and review tools. Kept exact — a
- * look-alike MCP server (`synara_fs`, `synara_tools`) must never inherit the
- * auto-approve path the reserved `synara` server gets.
+ * look-alike MCP server (`ramspace_fs`, `ramspace_tools`) must never inherit the
+ * auto-approve path the reserved `ramspace` server gets.
  */
-const SYNARA_GATEWAY_OWNED_TOOL_NAMES = [
+const RAMSPACE_GATEWAY_OWNED_TOOL_NAMES = [
   // Thread read tools (threadReadTools.ts)
-  "synara_context",
-  "synara_capabilities",
-  "synara_list_projects",
-  "synara_list_threads",
-  "synara_read_thread",
-  "synara_wait_for_threads",
+  "ramspace_context",
+  "ramspace_capabilities",
+  "ramspace_list_projects",
+  "ramspace_list_threads",
+  "ramspace_read_thread",
+  "ramspace_wait_for_threads",
   // Kanban tools (kanbanTools.ts)
-  "synara_read_kanban_board",
-  "synara_read_kanban_card",
-  "synara_create_kanban_task",
-  "synara_create_kanban_draft",
-  "synara_move_kanban_card",
-  "synara_update_kanban_card",
-  "synara_set_kanban_goal",
-  "synara_delete_kanban_card",
+  "ramspace_read_kanban_board",
+  "ramspace_read_kanban_card",
+  "ramspace_create_kanban_task",
+  "ramspace_create_kanban_draft",
+  "ramspace_move_kanban_card",
+  "ramspace_update_kanban_card",
+  "ramspace_set_kanban_goal",
+  "ramspace_delete_kanban_card",
   // To-do tools (todoTools.ts)
-  "synara_create_todo",
-  "synara_list_todos",
-  "synara_update_todo",
+  "ramspace_create_todo",
+  "ramspace_list_todos",
+  "ramspace_update_todo",
   // Inline visuals (inlineVisualTools.ts; available in Stable and Beta)
-  "synara_show_visual",
+  "ramspace_show_visual",
   // Thread write tools (Layers/AgentGateway.ts)
-  "synara_create_threads",
-  "synara_create_thread",
-  "synara_send_message",
-  "synara_interrupt_thread",
-  "synara_set_thread_title",
-  "synara_set_thread_pull_request",
-  "synara_set_thread_archived",
-  "synara_set_thread_goal",
+  "ramspace_create_threads",
+  "ramspace_create_thread",
+  "ramspace_send_message",
+  "ramspace_interrupt_thread",
+  "ramspace_set_thread_title",
+  "ramspace_set_thread_pull_request",
+  "ramspace_set_thread_archived",
+  "ramspace_set_thread_goal",
   // Thread diagnostics (threadDiagnosticTools.ts)
-  "synara_read_thread_activity",
-  "synara_diagnose_thread",
-  "synara_read_thread_events",
-  "synara_read_thread_runtime_events",
+  "ramspace_read_thread_activity",
+  "ramspace_diagnose_thread",
+  "ramspace_read_thread_events",
+  "ramspace_read_thread_runtime_events",
   // Automations (automationTools.ts)
-  "synara_create_automation",
-  "synara_list_automations",
-  "synara_view_automation",
-  "synara_update_automation",
-  "synara_update_automation_memory",
-  "synara_cancel_automation",
-  "synara_report_automation_result",
+  "ramspace_create_automation",
+  "ramspace_list_automations",
+  "ramspace_view_automation",
+  "ramspace_update_automation",
+  "ramspace_update_automation_memory",
+  "ramspace_cancel_automation",
+  "ramspace_report_automation_result",
   // Project agent tools (projectAgentTools.ts)
-  "synara_project_context",
-  "synara_project_forget",
-  "synara_project_get_overview",
-  "synara_project_library_add",
-  "synara_project_library_list",
-  "synara_project_link_repository",
-  "synara_project_list_tasks",
-  "synara_project_list_threads",
-  "synara_project_read_document",
-  "synara_project_remember",
-  "synara_project_report_result",
-  "synara_project_write_document",
+  "ramspace_project_context",
+  "ramspace_project_forget",
+  "ramspace_project_get_overview",
+  "ramspace_project_library_add",
+  "ramspace_project_library_list",
+  "ramspace_project_link_repository",
+  "ramspace_project_list_tasks",
+  "ramspace_project_list_threads",
+  "ramspace_project_read_document",
+  "ramspace_project_remember",
+  "ramspace_project_report_result",
+  "ramspace_project_write_document",
   // Browser review tool (browserTools.ts)
-  "synara_e2e_review",
+  "ramspace_e2e_review",
   // Capability-gated device tools (deviceTools.ts — not in contracts)
   "device_boot",
   "device_configure",
@@ -252,48 +252,50 @@ const SYNARA_GATEWAY_OWNED_TOOL_NAMES = [
 ] as const;
 
 /** Every tool name the agent gateway serves, from the shared catalogs. */
-const SYNARA_GATEWAY_TOOL_NAME_SET: ReadonlySet<string> = new Set<string>([
-  ...SYNARA_GATEWAY_OWNED_TOOL_NAMES,
-  ...SYNARA_COMPUTER_TOOL_NAMES,
+const RAMSPACE_GATEWAY_TOOL_NAME_SET: ReadonlySet<string> = new Set<string>([
+  ...RAMSPACE_GATEWAY_OWNED_TOOL_NAMES,
+  ...RAMSPACE_COMPUTER_TOOL_NAMES,
   ...BROWSER_TOOL_NAMES,
 ]);
 
-const SYNARA_MCP_QUALIFIED_PREFIX = "mcp__synara__";
-const SYNARA_MCP_SERVER_PREFIX = "synara_";
+const RAMSPACE_MCP_QUALIFIED_PREFIX = "mcp__ramspace__";
+const RAMSPACE_MCP_SERVER_PREFIX = "ramspace_";
 
 /**
- * Any tool Synara's agent gateway serves under its reserved MCP server name —
+ * Any tool Ramspace's agent gateway serves under its reserved MCP server name —
  * the whole gateway catalog (thread, project, automation, diagnostics,
  * computer, browser, device). The session token is what authorizes each call
  * server-side, so providers that were granted the gateway may let these names
  * skip their own interactive permission prompt when the start input opts in
- * (`ProviderSessionStartInput.autoApproveSynaraTools`).
+ * (`ProviderSessionStartInput.autoApproveRamspaceTools`).
  *
  * Providers report MCP calls two ways, and both must pin the server identity:
- * Claude-style `mcp__synara__<tool>` matches on the exact `mcp__synara__`
- * prefix (a `synara_fs` server produces `mcp__synara_fs__*`, which fails it);
- * `<server>_<tool>` reports like OpenCode's `synara_computer_click` match only
- * when the name — or the part after the `synara_` server prefix — is in the
- * served catalog. A bare `synara_*` catalog name (`synara_list_threads`) also
+ * Claude-style `mcp__ramspace__<tool>` matches on the exact `mcp__ramspace__`
+ * prefix (a `ramspace_fs` server produces `mcp__ramspace_fs__*`, which fails it);
+ * `<server>_<tool>` reports like OpenCode's `ramspace_computer_click` match only
+ * when the name — or the part after the `ramspace_` server prefix — is in the
+ * served catalog. A bare `ramspace_*` catalog name (`ramspace_list_threads`) also
  * matches because the name itself carries the namespace; capability families
  * (`computer_*`, `browser_*`, `device_*`) must arrive server-qualified.
  * Everything else keeps the ordinary permission path.
  */
-export function isSynaraGatewayToolName(value: unknown): boolean {
+export function isRamspaceGatewayToolName(value: unknown): boolean {
   if (typeof value !== "string") return false;
   const normalized = value.trim().toLowerCase();
-  if (normalized.startsWith(SYNARA_MCP_QUALIFIED_PREFIX)) {
-    // The `mcp__synara__` prefix pins the server, not the tool — only a real
+  if (normalized.startsWith(RAMSPACE_MCP_QUALIFIED_PREFIX)) {
+    // The `mcp__ramspace__` prefix pins the server, not the tool — only a real
     // catalog name after the prefix may take the auto-approve path, so a
     // look-alike tool name on the same server cannot ride it.
-    return SYNARA_GATEWAY_TOOL_NAME_SET.has(normalized.slice(SYNARA_MCP_QUALIFIED_PREFIX.length));
+    return RAMSPACE_GATEWAY_TOOL_NAME_SET.has(
+      normalized.slice(RAMSPACE_MCP_QUALIFIED_PREFIX.length),
+    );
   }
-  if (SYNARA_GATEWAY_TOOL_NAME_SET.has(normalized)) {
-    return normalized.startsWith(SYNARA_MCP_SERVER_PREFIX);
+  if (RAMSPACE_GATEWAY_TOOL_NAME_SET.has(normalized)) {
+    return normalized.startsWith(RAMSPACE_MCP_SERVER_PREFIX);
   }
   return (
-    normalized.startsWith(SYNARA_MCP_SERVER_PREFIX) &&
-    SYNARA_GATEWAY_TOOL_NAME_SET.has(normalized.slice(SYNARA_MCP_SERVER_PREFIX.length))
+    normalized.startsWith(RAMSPACE_MCP_SERVER_PREFIX) &&
+    RAMSPACE_GATEWAY_TOOL_NAME_SET.has(normalized.slice(RAMSPACE_MCP_SERVER_PREFIX.length))
   );
 }
 
@@ -305,7 +307,7 @@ export function isSynaraGatewayToolName(value: unknown): boolean {
  * presentational text the provider composes, so it can look like a gateway
  * name without one ever being called.
  */
-export function isSynaraGatewayToolCall(input: {
+export function isRamspaceGatewayToolCall(input: {
   readonly name?: unknown;
   // Accepted for call-site shape compatibility but never consulted.
   readonly title?: unknown;
@@ -313,27 +315,27 @@ export function isSynaraGatewayToolCall(input: {
   readonly metadata?: unknown;
 }): boolean {
   const explicitName = typeof input.name === "string" ? input.name : undefined;
-  if (explicitName !== undefined) return isSynaraGatewayToolName(explicitName);
+  if (explicitName !== undefined) return isRamspaceGatewayToolName(explicitName);
 
   const rawToolName = firstRecordString(input.rawInput, ["_toolName", "toolName", "tool_name"]);
-  if (rawToolName !== undefined) return isSynaraGatewayToolName(rawToolName);
+  if (rawToolName !== undefined) return isRamspaceGatewayToolName(rawToolName);
 
   const metadataToolName = firstRecordString(input.metadata, [
     "_toolName",
     "toolName",
     "tool_name",
   ]);
-  if (metadataToolName !== undefined) return isSynaraGatewayToolName(metadataToolName);
+  if (metadataToolName !== undefined) return isRamspaceGatewayToolName(metadataToolName);
 
   return false;
 }
 
 /**
- * Provider permission prompts are redundant for an active Synara Computer
+ * Provider permission prompts are redundant for an active Ramspace Computer
  * capability: the gateway performs the authoritative task-scoped approval.
  * Plan mode and requests outside an active turn remain fail-closed.
  */
-export function shouldAllowSynaraComputerProviderTool(input: {
+export function shouldAllowRamspaceComputerProviderTool(input: {
   readonly computerControlEnabled: boolean;
   readonly activeTurn: boolean;
   readonly interactionMode: ProviderInteractionMode | undefined;

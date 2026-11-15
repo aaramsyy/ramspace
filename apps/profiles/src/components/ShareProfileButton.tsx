@@ -42,7 +42,7 @@ export function ShareProfileButton({ handle, title }: { handle: string; title: s
     const appearance = document.documentElement.classList.contains("dark") ? "dark" : "light";
     return `/@${handle}/share/${format}?appearance=${appearance}`;
   };
-  const fileName = (format: string) => `synara-${handle}-${format}.png`;
+  const fileName = (format: string) => `ramspace-${handle}-${format}.png`;
 
   const imageFile = async (format: Exclude<ShareChoice, "link">) => {
     const response = await fetch(imagePath(format));
@@ -175,7 +175,7 @@ export function ShareProfileButton({ handle, title }: { handle: string; title: s
           <div className="flex h-[min(46vh,380px)] items-center justify-center rounded-2xl bg-[var(--tile)] p-4">
             {choice === "link" ? (
               <span className="max-w-full truncate rounded-full bg-background px-4 py-2 text-[13px] text-muted-foreground ring-1 ring-[var(--hairline)]">
-                trysynara.com/@{handle}
+                tryramspace.com/@{handle}
               </span>
             ) : (
               // The route renders the PNG on request; each format loads only once picked.

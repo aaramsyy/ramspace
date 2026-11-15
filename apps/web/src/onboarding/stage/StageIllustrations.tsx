@@ -4,7 +4,7 @@
 //          ("pocket"). Decorative faux UI drawn on a fixed canvas that FitStage scales.
 // Layer: Web UI illustration (aria-hidden)
 
-import type { ProviderKind } from "@synara/contracts";
+import type { ProviderKind } from "@ramspace/contracts";
 import type { CSSProperties, ReactNode } from "react";
 
 import { ProviderIcon } from "~/components/ProviderIcon";
@@ -60,7 +60,7 @@ function Positioned(props: {
 }
 
 /** Sample data shown inside the illustrations: code, paths and names stay untranslated. */
-const SAMPLE_PROJECT = "synara-web";
+const SAMPLE_PROJECT = "ramspace-web";
 const SAMPLE_URL = "localhost:3000/login";
 const SAMPLE_DIFF_FILE = "src/auth/callback.ts";
 const SAMPLE_APPROVAL_COMMAND = "$ bun run db:migrate --env staging";

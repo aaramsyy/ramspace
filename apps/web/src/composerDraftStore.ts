@@ -9,7 +9,7 @@ import {
   type ProviderKind,
   type RuntimeMode,
   type ThreadId,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { useMemo } from "react";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";

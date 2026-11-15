@@ -6,7 +6,7 @@ import { DatabaseSync } from "node:sqlite";
 
 import { Effect } from "effect";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import * as filesystemPlatform from "@synara/shared/filesystemPlatform";
+import * as filesystemPlatform from "@ramspace/shared/filesystemPlatform";
 
 import { runCompactDatabaseCli } from "./compactDatabase.ts";
 import {
@@ -19,7 +19,9 @@ import { reclaimLegacySqliteDatabase } from "./persistence/SqliteReclamation.ts"
 const directories: string[] = [];
 
 async function fixture(mode = 0) {
-  const directory = await fs.realpath(await fs.mkdtemp(path.join(os.tmpdir(), "synara-compact-")));
+  const directory = await fs.realpath(
+    await fs.mkdtemp(path.join(os.tmpdir(), "ramspace-compact-")),
+  );
   directories.push(directory);
   const dbPath = path.join(directory, "state.sqlite");
   const database = new DatabaseSync(dbPath);
@@ -212,7 +214,7 @@ describe("offline SQLite compaction", () => {
     }
   });
 
-  it("refuses an external SQLite writer even without a Synara lifecycle lock", async () => {
+  it("refuses an external SQLite writer even without a Ramspace lifecycle lock", async () => {
     const { dbPath } = await fixture();
     const database = new DatabaseSync(dbPath);
     database.exec("BEGIN IMMEDIATE; INSERT INTO retained VALUES(3, 'external work');");
@@ -335,7 +337,7 @@ describe("offline SQLite compaction", () => {
   it("requires an explicit target and keeps other channel databases untouched", async () => {
     const { directory, dbPath } = await fixture();
     const channelPaths = await Promise.all(
-      [".synara", ".synara-beta", ".synara-remote"].map(async (channel) => {
+      [".ramspace", ".ramspace-beta", ".ramspace-remote"].map(async (channel) => {
         const target = path.join(directory, channel, "userdata", "state.sqlite");
         await fs.mkdir(path.dirname(target), { recursive: true });
         await fs.copyFile(dbPath, target);
@@ -344,8 +346,8 @@ describe("offline SQLite compaction", () => {
     );
     vi.stubEnv("HOME", directory);
     vi.stubEnv("USERPROFILE", directory);
-    vi.stubEnv("SYNARA_HOME", path.join(directory, ".synara"));
-    vi.stubEnv("SYNARA_DESKTOP_FLAVOR", "remote");
+    vi.stubEnv("RAMSPACE_HOME", path.join(directory, ".ramspace"));
+    vi.stubEnv("RAMSPACE_DESKTOP_FLAVOR", "remote");
     const before = await Promise.all(channelPaths.map(digest));
 
     expect(await runCompactDatabaseCli([], capture().output)).toBe(2);
@@ -362,7 +364,7 @@ describe("offline SQLite compaction", () => {
   it("requires an explicit existing absolute database and rejects links", async () => {
     const output = capture();
     expect(await runCompactDatabaseCli(["state.sqlite"], output.output)).toBe(2);
-    expect(output.warnings.join("\n")).toContain("Stop every Synara process");
+    expect(output.warnings.join("\n")).toContain("Stop every Ramspace process");
     const { directory, dbPath } = await fixture();
     const missing = path.join(directory, "missing.sqlite");
     expect(await runCompactDatabaseCli([missing], capture().output)).toBe(1);

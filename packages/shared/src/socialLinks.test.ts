@@ -21,9 +21,7 @@ describe("normalizeSocialUsername", () => {
     expect(normalizeSocialUsername("linkedin", "https://www.linkedin.com/in/ema-dpt/")).toBe(
       "ema-dpt",
     );
-    expect(normalizeSocialUsername("github", "https://github.com/Emanuele-web04")).toBe(
-      "Emanuele-web04",
-    );
+    expect(normalizeSocialUsername("github", "https://github.com/aaramsyy")).toBe("aaramsyy");
     expect(normalizeSocialUsername("threads", "https://www.threads.net/@ema.dpt")).toBe("ema.dpt");
     expect(normalizeSocialUsername("youtube", "m.youtube.com/@emadpt")).toBe("emadpt");
   });

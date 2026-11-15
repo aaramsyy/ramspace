@@ -8,7 +8,7 @@ async function main(): Promise<void> {
   const config = loadApiConfig(process.env);
   await runMigrations(config.databaseUrl);
 
-  // Opt-in (SYNARA_API_PERF=1): per-route timings in the log and a Server-Timing header.
+  // Opt-in (RAMSPACE_API_PERF=1): per-route timings in the log and a Server-Timing header.
   const perf = isPerfEnabled(process.env) ? createPerfRecorder() : undefined;
   perf?.instrumentFetch();
   const stopPerfReporting = perf?.startReporting();

@@ -1,6 +1,6 @@
 import "../../index.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import type { DesktopBridge } from "@synara/contracts";
+import type { DesktopBridge } from "@ramspace/contracts";
 import { afterEach, expect, it, vi } from "vitest";
 import { render } from "vitest-browser-react";
 import { page } from "vitest/browser";

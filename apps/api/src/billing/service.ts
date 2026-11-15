@@ -4,7 +4,7 @@ import type {
   AccountBillingInterval,
   AccountBillingStatus,
   AccountBillingRedirect,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import type pg from "pg";
 import { randomUUID } from "node:crypto";
 import {

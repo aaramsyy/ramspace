@@ -1,4 +1,4 @@
-# Synara Account Backend (V1) — Design
+# Ramspace Account Backend (V1) — Design
 
 Status: implemented
 Date: 2026-08-03 (identity section revised 2026-08-05; rewritten 2026-08-10
@@ -29,7 +29,7 @@ unchanged throughout. The sections below describe what is built.
 
 ## Purpose
 
-A self-hostable account service so one Synara account owns a directory of all
+A self-hostable account service so one Ramspace account owns a directory of all
 the user's environments (MacBook, Mac Studio, VPS, …). Any signed-in device
 can list every linked host and connect to it directly (LAN/Tailscale/public
 URL). This is the foundation the future relay consumes; the relay itself is
@@ -55,7 +55,7 @@ It must never store:
 
 **The service is optional.** Local, LAN, and Tailscale use works with no
 account at all: a fresh clone has account features disabled, the CLI is inert
-until `SYNARA_ACCOUNT_URL` is set, and the in-app sign-in only talks to a
+until `RAMSPACE_ACCOUNT_URL` is set, and the in-app sign-in only talks to a
 service after the user clicks the button. Accounts buy a cross-device
 directory, not admission to the product.
 
@@ -71,7 +71,7 @@ when the relay lands, and is explicitly out of scope for V1.
 
 One workspace app: **`apps/api`** — a single Railway-deployable service.
 
-- **Hono** HTTP server (Node/Bun). Serves Synara routes at `/api/v1/*` and
+- **Hono** HTTP server (Node/Bun). Serves Ramspace routes at `/api/v1/*` and
   nothing else: no mounted auth pages and no static assets.
 - **Identity behind an adapter seam** (next section). WorkOS AuthKit is the
   default provider; the service stores no users, passwords, sessions, or
@@ -87,7 +87,7 @@ One workspace app: **`apps/api`** — a single Railway-deployable service.
 
 ## The identity adapter seam
 
-Maintainer feedback, adopted verbatim as the structuring rule: _Synara's
+Maintainer feedback, adopted verbatim as the structuring rule: _Ramspace's
 domain should not directly depend on WorkOS or BetterAuth._ The routes and
 everything downstream depend on four internal interfaces
 (`apps/api/src/identity/interfaces.ts`) and their classified failure
@@ -144,7 +144,7 @@ provider's free-form `code`/`error` strings never travel verbatim.
 
 One deliberate, documented exemption: the client-side credential file. The
 session tokens (access/refresh) and the host token ARE persisted on disk, in
-plaintext, at `<synara home>/account-credentials.json`, mode `0600`, written
+plaintext, at `<ramspace home>/account-credentials.json`, mode `0600`, written
 atomically. That is the accepted V1 threat model — an attacker who can read
 the owner's home directory already owns the machine — and it is a storage
 decision, not a hole in the no-leak rules above, which govern logs, error
@@ -155,7 +155,7 @@ device-bound grants are the planned upgrade, not a keychain.
 
 Identity is the provider's; the set of enabled sign-in methods is a property
 of the operator's provider application (dashboard toggles under WorkOS), not
-of this service. What Synara ships is two ways in — and sign-in is app-only:
+of this service. What Ramspace ships is two ways in — and sign-in is app-only:
 the CLI never signs in itself, it links the host using the app's session.
 
 - **Email OTP (WorkOS Magic Auth) — fully in-app.** The app asks
@@ -168,7 +168,7 @@ the CLI never signs in itself, it links the host using the app's session.
   client secret, which a public client cannot hold.
 - **SSO (Google/Apple/GitHub) — authorization code + PKCE.** "Continue with
   Google/Apple/GitHub" runs the authorization-code grant with PKCE (S256)
-  and a loopback redirect: the Synara server starts a one-shot listener on
+  and a loopback redirect: the Ramspace server starts a one-shot listener on
   `127.0.0.1` (ephemeral port, single-use, hard timeout), asks the account
   service for the provider's authorize URL (`POST /api/v1/auth/authorize` —
   carries the provider, the loopback `redirect_uri`, the S256 challenge, and
@@ -187,7 +187,7 @@ the CLI never signs in itself, it links the host using the app's session.
   cutover; nothing accepts or stores a password.
 - **No CLI device grant.** The RFC 8628 device flow (and its proxied polling
   leg) was removed in the 2026-08-11 simplification: sign-in is app-only,
-  and `synara auth` links the host from the app's stored session.
+  and `ramspace auth` links the host from the app's stored session.
 
 **Email verification — a classified dead-end, not a flow.** Redeeming an OTP
 implicitly proves address ownership, so the provider's
@@ -263,7 +263,7 @@ a genuinely unpersisted failure surfaces — as a retryable "provider was
 slow" answer, never a flat "unavailable" for an operation that may have
 succeeded.
 
-**The CLI (`synara auth`):** links the host, nothing more. It reads the
+**The CLI (`ramspace auth`):** links the host, nothing more. It reads the
 app's stored session from the shared credentials file and registers this
 machine; with no session it points the user at the app's sign-in. The
 refresh leg stays proxied (`POST /auth/refresh`); which identity vendor sits
@@ -278,10 +278,10 @@ client refreshes with `organization_id` and retries. The same 403 answers a
 token naming a workspace the caller has left — revoked membership takes
 effect without anything being purged.
 
-**Host linking:** after auth, the Synara server calls `POST /api/v1/hosts`
+**Host linking:** after auth, the Ramspace server calls `POST /api/v1/hosts`
 (access token) with its environment ID, name, platform, kind
 (`local` | `ssh-managed`), and self-reported endpoints. The response includes
-the one-time host token, stored in the Synara home dir (0600). Re-linking the
+the one-time host token, stored in the Ramspace home dir (0600). Re-linking the
 same environment updates the record and rotates the token.
 
 ## The organization model — why it stays
@@ -324,7 +324,7 @@ until webhook cleanup exists (future work).
   `lastUsedAt` · `revokedAt` nullable.
 - `profiles`: `userId` (provider user id, pk) · `handle` (unique, immutable
   in V1) · `displayName` · `avatarColor` · `public` (default false — the
-  profile is served at trysynara.com/@handle exactly when this is on) ·
+  profile is served at tryramspace.com/@handle exactly when this is on) ·
   timestamps. A row existing is what "onboarding completed" means; there is
   deliberately no separate flag.
 - `usage_model_stats`: per-minute model-attributed counters — key
@@ -371,17 +371,17 @@ dashboard; sign-out is local (drops the session, keeps the host
 registration).
 
 `/instance` is wire-stable: `authMode: "workos"` stays, and `clientId` /
-`workosApiUrl` are **deprecated-but-present** — Synara's own clients do not
+`workosApiUrl` are **deprecated-but-present** — Ramspace's own clients do not
 consume them (every provider call is proxied), but the fields keep their
 values and their meaning for wire stability. `authMode` may grow into a
 literal union as more provider families ship.
 
 ## Client integration (`apps/server`, `apps/web`)
 
-- `synara auth` / `synara auth logout` / `synara status` — host linking
+- `ramspace auth` / `ramspace auth logout` / `ramspace status` — host linking
   (using the app's signed-in session), teardown, and status; all inert
-  without `SYNARA_ACCOUNT_URL`. The CLI performs no sign-in of its own.
-- **Credentials file (v3)** at `<synara home>/account-credentials.json`, mode
+  without `RAMSPACE_ACCOUNT_URL`. The CLI performs no sign-in of its own.
+- **Credentials file (v3)** at `<ramspace home>/account-credentials.json`, mode
   `0600`, written atomically; session fields and host registration are
   independently optional, so an expired session leaves the host linked.
 - **Transparent refresh** — every user-scoped call retries once on a 401,
@@ -414,7 +414,7 @@ answers the same 404 for an unknown handle and a private profile. Skill
 stats and environment ids never appear in a public payload.
 
 **The page.** `apps/profiles` is a deliberately tiny Next.js app (own
-Vercel project) server-rendering `trysynara.com/@handle` from the public
+Vercel project) server-rendering `tryramspace.com/@handle` from the public
 JSON. The domain stays on the marketing project, which carries two rewrites
 (`/@:handle` → the profiles deployment, and `/profiles-assets/:path*` → the
 same deployment for its static assets — only the document is proxied, so the

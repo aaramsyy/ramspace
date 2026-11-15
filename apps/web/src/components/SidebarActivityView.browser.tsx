@@ -4,7 +4,7 @@
 
 import "../index.css";
 
-import { ProjectId, ThreadId, type OrchestrationThreadPullRequest } from "@synara/contracts";
+import { ProjectId, ThreadId, type OrchestrationThreadPullRequest } from "@ramspace/contracts";
 import { useState, type PointerEvent as ReactPointerEvent, type ReactNode } from "react";
 import { page, userEvent } from "vitest/browser";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
@@ -341,7 +341,7 @@ describe("SidebarActivityView", () => {
     const parent = makeThread(1, { title: "Refactor sidebar nesting" });
     const agentChild = (index: number, overrides: Partial<SidebarThreadSummary>) =>
       makeThread(index, {
-        creationSource: "synara_mcp",
+        creationSource: "ramspace_mcp",
         sourceThreadId: parent.id,
         ...overrides,
       });
@@ -382,7 +382,7 @@ describe("SidebarActivityView", () => {
     async (state) => {
       const parent = makeThread(1);
       const child = makeThread(2, {
-        creationSource: "synara_mcp",
+        creationSource: "ramspace_mcp",
         sourceThreadId: parent.id,
         ...(state === "working"
           ? { hasLiveTailWork: true }
@@ -407,7 +407,7 @@ describe("SidebarActivityView", () => {
 
   it("reveals an open child when its creator is in the closed Done section", async () => {
     const parent = makeThread(1);
-    const child = makeThread(2, { creationSource: "synara_mcp", sourceThreadId: parent.id });
+    const child = makeThread(2, { creationSource: "ramspace_mcp", sourceThreadId: parent.id });
     const mounted = await render(
       <SidebarProvider>
         {renderActivity({
@@ -973,7 +973,7 @@ describe("SidebarActivityView", () => {
       lastKnownPr: {
         number: 42,
         title: "Persisted open PR",
-        url: "https://github.com/acme/synara/pull/42",
+        url: "https://github.com/acme/ramspace/pull/42",
         baseBranch: "main",
         headBranch: "feature/activity",
         state: "open",
@@ -982,7 +982,7 @@ describe("SidebarActivityView", () => {
     const livePr: OrchestrationThreadPullRequest = {
       number: 42,
       title: "Live merged PR",
-      url: "https://github.com/acme/synara/pull/42",
+      url: "https://github.com/acme/ramspace/pull/42",
       baseBranch: "main",
       headBranch: "feature/activity",
       state: "merged",

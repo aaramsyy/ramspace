@@ -34,8 +34,8 @@ function setup(platform: NodeJS.Platform = "darwin", systemVersion = "26.0") {
   const options = {
     platform,
     systemVersion,
-    execPath: "/Applications/Synara (Dev).app/Contents/MacOS/Synara",
-    appName: "Synara",
+    execPath: "/Applications/Ramspace (Dev).app/Contents/MacOS/Ramspace",
+    appName: "Ramspace",
     isTrustedRenderer: (id: number) => id === 1,
     openExternal: vi.fn(async (_url: string) => {}),
     showItemInFolder: vi.fn(),
@@ -64,18 +64,18 @@ describe("Safari access setup IPC", () => {
     const { options, call } = setup();
     await expect(call("getInfo")).resolves.toEqual({
       supported: true,
-      appName: "Synara (Dev)",
-      appPath: "/Applications/Synara (Dev).app",
+      appName: "Ramspace (Dev)",
+      appPath: "/Applications/Ramspace (Dev).app",
       fullDiskAccess: "denied",
     });
     expect(options.openExternal).not.toHaveBeenCalled();
     await expect(call("revealApp")).resolves.toBe(true);
     expect(options.showItemInFolder).toHaveBeenCalledExactlyOnceWith(
-      "/Applications/Synara (Dev).app",
+      "/Applications/Ramspace (Dev).app",
     );
-    expect(getSafariAccessInfo({ ...options, execPath: "/usr/bin/synara" })).toEqual({
+    expect(getSafariAccessInfo({ ...options, execPath: "/usr/bin/ramspace" })).toEqual({
       supported: true,
-      appName: "Synara",
+      appName: "Ramspace",
       appPath: null,
     });
   });

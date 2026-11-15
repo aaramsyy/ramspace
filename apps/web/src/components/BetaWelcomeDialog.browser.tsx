@@ -1,6 +1,6 @@
 import "../index.css";
 
-import type { DesktopBetaChannelState, DesktopBridge } from "@synara/contracts";
+import type { DesktopBetaChannelState, DesktopBridge } from "@ramspace/contracts";
 import { page } from "vitest/browser";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import { render } from "vitest-browser-react";
@@ -15,7 +15,7 @@ vi.mock("../appSettings", () => ({
 }));
 
 const originalBridge = window.desktopBridge;
-const storageKey = "synara:beta-welcome:v1";
+const storageKey = "ramspace:beta-welcome:v1";
 const state: DesktopBetaChannelState = {
   supported: true,
   flavor: "beta",
@@ -51,7 +51,7 @@ it("shows Beta welcome before the first-run gate and releases it only on acknowl
   const screen = await render(<BetaWelcomeDialog />);
   try {
     await expect
-      .element(page.getByRole("dialog", { name: "Welcome to Synara Beta" }))
+      .element(page.getByRole("dialog", { name: "Welcome to Ramspace Beta" }))
       .toBeVisible();
     expect(useOnboardingDialogStore.getState().betaWelcomePending).toBe(true);
     expect(localStorage.getItem(storageKey)).toBeNull();

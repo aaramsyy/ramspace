@@ -8,7 +8,7 @@ import {
   DesktopDiagnosticIssue,
   DesktopUpdateFailureReason,
   DESKTOP_RENDERER_ERROR_STACK_MAX_LENGTH,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { Schema } from "effect";
 
 /** Accepts only fixed updater failure categories at queue and ingest boundaries. */
@@ -62,7 +62,7 @@ export function classifyDesktopUpdateFailure(message: unknown): DesktopUpdateFai
   )
     return "http-server";
   if (
-    /^Cannot (?:find|parse update info from) (?:remote|beta|synara|latest)(?:-mac|-linux(?:-arm64)?)?\.yml in the latest release artifacts \(/.test(
+    /^Cannot (?:find|parse update info from) (?:remote|beta|ramspace|latest)(?:-mac|-linux(?:-arm64)?)?\.yml in the latest release artifacts \(/.test(
       text,
     )
   )
@@ -271,7 +271,7 @@ const SENSITIVE_KEY =
 
 /** URL schemes that address this machine or the app bundle, never a remote org. */
 const LOCAL_URL_SCHEME =
-  /^(?:file|synara(?:-[a-z]+)?|node|electron|devtools|chrome|chrome-extension)$/i;
+  /^(?:file|ramspace(?:-[a-z]+)?|node|electron|devtools|chrome|chrome-extension)$/i;
 
 interface Replacement {
   readonly pattern: RegExp;
@@ -303,7 +303,7 @@ const RULES: ReadonlyArray<Replacement> = [
   // URLs of any scheme: credentials in userinfo become <redacted>@ and the
   // query string and fragment are dropped. Network URLs keep only scheme +
   // host, since their paths carry org, repo, and ticket names; local schemes
-  // (file://, synara://, ...) keep the path so stack frames stay readable.
+  // (file://, ramspace://, ...) keep the path so stack frames stay readable.
   // Runs before the email rule so userinfo is not mistaken for an address.
   {
     pattern:

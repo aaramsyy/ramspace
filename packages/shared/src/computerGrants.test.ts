@@ -54,31 +54,31 @@ describe("computer permission copy", () => {
     const advice = computerStaleGrantAdvice(
       ["accessibility", "screenRecording"],
       "adhoc",
-      "com.emanueledipietro.synara.dev",
+      "com.aaramsyy.ramspace.dev",
     );
     expect(advice).toContain("add the current build again");
-    expect(advice).not.toContain("Synara has cleared");
-    expect(advice).toContain("tccutil reset Accessibility com.emanueledipietro.synara.dev");
+    expect(advice).not.toContain("Ramspace has cleared");
+    expect(advice).toContain("tccutil reset Accessibility com.aaramsyy.ramspace.dev");
     // `ScreenCapture`, not "Screen Recording": the label is not the service name,
     // and a user who types the label gets an error instead of a reset.
-    expect(advice).toContain("tccutil reset ScreenCapture com.emanueledipietro.synara.dev");
+    expect(advice).toContain("tccutil reset ScreenCapture com.aaramsyy.ramspace.dev");
   });
 
   it("names the responsible app rather than assuming the released one", () => {
     // A `.dev` flavor resetting the production identifier would revoke a
-    // separately installed Synara's grants and fix nothing here.
+    // separately installed Ramspace's grants and fix nothing here.
     const advice = computerStaleGrantAdvice(
       ["accessibility"],
       "adhoc",
-      "com.example.synara.canary",
+      "com.example.ramspace.canary",
     );
-    expect(advice).toContain("tccutil reset Accessibility com.example.synara.canary");
-    expect(advice).not.toContain("com.emanueledipietro.synara");
+    expect(advice).toContain("tccutil reset Accessibility com.example.ramspace.canary");
+    expect(advice).not.toContain("com.aaramsyy.ramspace");
   });
 
   it("withholds the tccutil sentence when no responsible bundle id is known", () => {
     // Better to say nothing than to hand the user a command that resets some
-    // other Synara. The System Settings advice still stands on its own.
+    // other Ramspace. The System Settings advice still stands on its own.
     for (const bundleId of [undefined, "", "   "]) {
       const advice = computerStaleGrantAdvice(["accessibility"], "adhoc", bundleId);
       expect(advice).toContain("add the current build again");
@@ -100,10 +100,10 @@ describe("computer permission copy", () => {
     const message = computerPermissionSetupMessage(
       ["accessibility"],
       "adhoc",
-      "com.emanueledipietro.synara",
+      "com.aaramsyy.ramspace",
     );
     expect(message).toContain("System Settings");
-    expect(message).toContain("tccutil reset Accessibility com.emanueledipietro.synara");
+    expect(message).toContain("tccutil reset Accessibility com.aaramsyy.ramspace");
   });
 });
 

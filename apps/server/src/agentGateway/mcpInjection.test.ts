@@ -4,12 +4,12 @@ import {
   configHasTomlTableHeader,
   extractManagedCodexConfigSection,
   mergeShellEnvPolicyExclude,
-  SYNARA_MANAGED_CODEX_CONFIG_BEGIN,
-  SYNARA_MANAGED_CODEX_CONFIG_END,
+  RAMSPACE_MANAGED_CODEX_CONFIG_BEGIN,
+  RAMSPACE_MANAGED_CODEX_CONFIG_END,
 } from "../codexProcessEnv.ts";
 import {
   buildAntigravityMcpPluginConfig,
-  buildAcpSynaraMcpServers,
+  buildAcpRamspaceMcpServers,
   buildClaudeMcpServers,
   buildCodexMcpConfigToml,
   buildCodexMcpThreadConfig,
@@ -17,7 +17,7 @@ import {
   buildOpenCodeMcpServer,
   callAgentGatewayMcpTool,
   listAgentGatewayMcpTools,
-  SYNARA_AGENT_GATEWAY_TOKEN_ENV,
+  RAMSPACE_AGENT_GATEWAY_TOKEN_ENV,
 } from "./mcpInjection.ts";
 
 const connection = {
@@ -34,12 +34,12 @@ describe("agent gateway MCP injection", () => {
   it("builds a secret-free Antigravity stdio plugin config", () => {
     assert.deepEqual(buildAntigravityMcpPluginConfig(stdioProxy), {
       mcpServers: {
-        synara: {
+        ramspace: {
           command: stdioProxy.command,
           args: stdioProxy.args,
           env: {
-            SYNARA_AGENT_GATEWAY_URL: "$SYNARA_AGENT_GATEWAY_URL",
-            SYNARA_AGENT_GATEWAY_BOOTSTRAP_TOKEN: "$SYNARA_AGENT_GATEWAY_BOOTSTRAP_TOKEN",
+            RAMSPACE_AGENT_GATEWAY_URL: "$RAMSPACE_AGENT_GATEWAY_URL",
+            RAMSPACE_AGENT_GATEWAY_BOOTSTRAP_TOKEN: "$RAMSPACE_AGENT_GATEWAY_BOOTSTRAP_TOKEN",
             ELECTRON_RUN_AS_NODE: "1",
           },
           disabled: false,
@@ -51,9 +51,9 @@ describe("agent gateway MCP injection", () => {
 
   it("builds a codex config block that references the token env var, not the token", () => {
     const block = buildCodexMcpConfigToml(connection.url);
-    assert.include(block, "[mcp_servers.synara]");
+    assert.include(block, "[mcp_servers.ramspace]");
     assert.include(block, `url = "${connection.url}"`);
-    assert.include(block, `bearer_token_env_var = "${SYNARA_AGENT_GATEWAY_TOKEN_ENV}"`);
+    assert.include(block, `bearer_token_env_var = "${RAMSPACE_AGENT_GATEWAY_TOKEN_ENV}"`);
     assert.notInclude(block, connection.bearerToken);
   });
 
@@ -65,21 +65,21 @@ describe("agent gateway MCP injection", () => {
       "[model]",
       'name = "gpt-5.5"',
     ].join("\n");
-    const merged = mergeShellEnvPolicyExclude(withExclude, SYNARA_AGENT_GATEWAY_TOKEN_ENV);
-    assert.include(merged, `exclude = ["${SYNARA_AGENT_GATEWAY_TOKEN_ENV}", "AWS_*"]`);
+    const merged = mergeShellEnvPolicyExclude(withExclude, RAMSPACE_AGENT_GATEWAY_TOKEN_ENV);
+    assert.include(merged, `exclude = ["${RAMSPACE_AGENT_GATEWAY_TOKEN_ENV}", "AWS_*"]`);
 
     // Idempotent: the var is not added twice.
-    assert.equal(mergeShellEnvPolicyExclude(merged, SYNARA_AGENT_GATEWAY_TOKEN_ENV), merged);
+    assert.equal(mergeShellEnvPolicyExclude(merged, RAMSPACE_AGENT_GATEWAY_TOKEN_ENV), merged);
 
     // A policy table without an exclude key gains one.
     const withoutExclude = ["[shell_environment_policy]", 'inherit = "core"'].join("\n");
-    const gained = mergeShellEnvPolicyExclude(withoutExclude, SYNARA_AGENT_GATEWAY_TOKEN_ENV);
-    assert.include(gained, `exclude = ["${SYNARA_AGENT_GATEWAY_TOKEN_ENV}"]`);
+    const gained = mergeShellEnvPolicyExclude(withoutExclude, RAMSPACE_AGENT_GATEWAY_TOKEN_ENV);
+    assert.include(gained, `exclude = ["${RAMSPACE_AGENT_GATEWAY_TOKEN_ENV}"]`);
     assert.include(gained, 'inherit = "core"');
 
     // No policy table: unchanged (the managed section appends its own).
     assert.equal(
-      mergeShellEnvPolicyExclude('[model]\nname = "gpt-5.5"', SYNARA_AGENT_GATEWAY_TOKEN_ENV),
+      mergeShellEnvPolicyExclude('[model]\nname = "gpt-5.5"', RAMSPACE_AGENT_GATEWAY_TOKEN_ENV),
       '[model]\nname = "gpt-5.5"',
     );
   });
@@ -87,30 +87,30 @@ describe("agent gateway MCP injection", () => {
   it("ignores commented and unrelated token references when merging shell exclusions", () => {
     const commentedExample = [
       "[shell_environment_policy]",
-      `# exclude = ["${SYNARA_AGENT_GATEWAY_TOKEN_ENV}"]`,
+      `# exclude = ["${RAMSPACE_AGENT_GATEWAY_TOKEN_ENV}"]`,
       'exclude = ["AWS_*"]',
     ].join("\n");
     const mergedCommentedExample = mergeShellEnvPolicyExclude(
       commentedExample,
-      SYNARA_AGENT_GATEWAY_TOKEN_ENV,
+      RAMSPACE_AGENT_GATEWAY_TOKEN_ENV,
     );
     assert.include(
       mergedCommentedExample,
-      `exclude = ["${SYNARA_AGENT_GATEWAY_TOKEN_ENV}", "AWS_*"]`,
+      `exclude = ["${RAMSPACE_AGENT_GATEWAY_TOKEN_ENV}", "AWS_*"]`,
     );
 
     const unrelatedString = [
       "[shell_environment_policy]",
-      `note = "keep ${SYNARA_AGENT_GATEWAY_TOKEN_ENV} private"`,
+      `note = "keep ${RAMSPACE_AGENT_GATEWAY_TOKEN_ENV} private"`,
       'exclude = ["AWS_*"]',
     ].join("\n");
     const mergedUnrelatedString = mergeShellEnvPolicyExclude(
       unrelatedString,
-      SYNARA_AGENT_GATEWAY_TOKEN_ENV,
+      RAMSPACE_AGENT_GATEWAY_TOKEN_ENV,
     );
     assert.include(
       mergedUnrelatedString,
-      `exclude = ["${SYNARA_AGENT_GATEWAY_TOKEN_ENV}", "AWS_*"]`,
+      `exclude = ["${RAMSPACE_AGENT_GATEWAY_TOKEN_ENV}", "AWS_*"]`,
     );
   });
 
@@ -119,45 +119,52 @@ describe("agent gateway MCP injection", () => {
       "[shell_environment_policy]",
       "exclude = [",
       '  "AWS_*",',
-      `  "${SYNARA_AGENT_GATEWAY_TOKEN_ENV}",`,
+      `  "${RAMSPACE_AGENT_GATEWAY_TOKEN_ENV}",`,
       "]",
     ].join("\n");
-    assert.equal(mergeShellEnvPolicyExclude(existing, SYNARA_AGENT_GATEWAY_TOKEN_ENV), existing);
+    assert.equal(mergeShellEnvPolicyExclude(existing, RAMSPACE_AGENT_GATEWAY_TOKEN_ENV), existing);
 
     const tokenOnlyInComment = [
       "[shell_environment_policy]",
       "exclude = [",
-      `  # "${SYNARA_AGENT_GATEWAY_TOKEN_ENV}",`,
+      `  # "${RAMSPACE_AGENT_GATEWAY_TOKEN_ENV}",`,
       '  "AWS_*",',
       "]",
     ].join("\n");
-    const merged = mergeShellEnvPolicyExclude(tokenOnlyInComment, SYNARA_AGENT_GATEWAY_TOKEN_ENV);
-    assert.include(merged, `exclude = ["${SYNARA_AGENT_GATEWAY_TOKEN_ENV}",`);
+    const merged = mergeShellEnvPolicyExclude(tokenOnlyInComment, RAMSPACE_AGENT_GATEWAY_TOKEN_ENV);
+    assert.include(merged, `exclude = ["${RAMSPACE_AGENT_GATEWAY_TOKEN_ENV}",`);
   });
 
   it("detects real TOML table headers, ignoring comments and strings", () => {
     assert.isTrue(
-      configHasTomlTableHeader('[mcp_servers.synara]\nurl = "x"', "[mcp_servers.synara]"),
+      configHasTomlTableHeader('[mcp_servers.ramspace]\nurl = "x"', "[mcp_servers.ramspace]"),
     );
     assert.isTrue(
-      configHasTomlTableHeader("  [mcp_servers.synara]  # managed", "[mcp_servers.synara]"),
+      configHasTomlTableHeader("  [mcp_servers.ramspace]  # managed", "[mcp_servers.ramspace]"),
     );
     assert.isTrue(
-      configHasTomlTableHeader("  [ mcp_servers.synara ]  # managed", "[mcp_servers.synara]"),
+      configHasTomlTableHeader("  [ mcp_servers.ramspace ]  # managed", "[mcp_servers.ramspace]"),
     );
-    assert.isTrue(configHasTomlTableHeader("  [ mcp_servers . synara ]", "[mcp_servers.synara]"));
-    assert.isTrue(configHasTomlTableHeader('[mcp_servers."synara"]', "[mcp_servers.synara]"));
-    assert.isTrue(configHasTomlTableHeader("['mcp_servers'.'synara']", "[mcp_servers.synara]"));
-    assert.isTrue(configHasTomlTableHeader('[mcp_servers."syn\\u0061ra"]', "[mcp_servers.synara]"));
+    assert.isTrue(
+      configHasTomlTableHeader("  [ mcp_servers . ramspace ]", "[mcp_servers.ramspace]"),
+    );
+    assert.isTrue(configHasTomlTableHeader('[mcp_servers."ramspace"]', "[mcp_servers.ramspace]"));
+    assert.isTrue(configHasTomlTableHeader("['mcp_servers'.'ramspace']", "[mcp_servers.ramspace]"));
+    assert.isTrue(
+      configHasTomlTableHeader('[mcp_servers."syn\\u0061ra"]', "[mcp_servers.ramspace]"),
+    );
     assert.isTrue(
       configHasTomlTableHeader('["shell_environment_policy"]', "[shell_environment_policy]"),
     );
-    assert.isFalse(configHasTomlTableHeader('["mcp_servers.synara"]', "[mcp_servers.synara]"));
-    assert.isFalse(configHasTomlTableHeader('[mcp_servers."syn\\qara"]', "[mcp_servers.synara]"));
+    assert.isFalse(configHasTomlTableHeader('["mcp_servers.ramspace"]', "[mcp_servers.ramspace]"));
+    assert.isFalse(configHasTomlTableHeader('[mcp_servers."syn\\qara"]', "[mcp_servers.ramspace]"));
     // A commented-out example block must not count as the table being present.
-    assert.isFalse(configHasTomlTableHeader("# [mcp_servers.synara]", "[mcp_servers.synara]"));
+    assert.isFalse(configHasTomlTableHeader("# [mcp_servers.ramspace]", "[mcp_servers.ramspace]"));
     assert.isFalse(
-      configHasTomlTableHeader('note = "see [mcp_servers.synara] docs"', "[mcp_servers.synara]"),
+      configHasTomlTableHeader(
+        'note = "see [mcp_servers.ramspace] docs"',
+        "[mcp_servers.ramspace]",
+      ),
     );
   });
 
@@ -166,9 +173,9 @@ describe("agent gateway MCP injection", () => {
     const overlayConfig = [
       '[model]\nname = "gpt-5.5"',
       "",
-      SYNARA_MANAGED_CODEX_CONFIG_BEGIN,
+      RAMSPACE_MANAGED_CODEX_CONFIG_BEGIN,
       section,
-      SYNARA_MANAGED_CODEX_CONFIG_END,
+      RAMSPACE_MANAGED_CODEX_CONFIG_END,
       "",
     ].join("\n");
     // A rewrite without appendConfigToml recovers the block so concurrent env
@@ -180,7 +187,7 @@ describe("agent gateway MCP injection", () => {
   it("builds a claude http server entry with the bearer header", () => {
     const servers = buildClaudeMcpServers(connection);
     assert.deepEqual(servers, {
-      synara: {
+      ramspace: {
         type: "http",
         url: connection.url,
         headers: { Authorization: `Bearer ${connection.bearerToken}` },
@@ -215,8 +222,8 @@ describe("agent gateway MCP injection", () => {
             ? {
                 tools: [
                   {
-                    name: "synara_list_threads",
-                    description: "List Synara threads.",
+                    name: "ramspace_list_threads",
+                    description: "List Ramspace threads.",
                     inputSchema: { type: "object", properties: {} },
                   },
                 ],
@@ -227,15 +234,15 @@ describe("agent gateway MCP injection", () => {
 
     assert.deepEqual(await listAgentGatewayMcpTools({ connection, fetch }), [
       {
-        name: "synara_list_threads",
-        description: "List Synara threads.",
+        name: "ramspace_list_threads",
+        description: "List Ramspace threads.",
         inputSchema: { type: "object", properties: {} },
       },
     ]);
     assert.deepEqual(
       await callAgentGatewayMcpTool({
         connection,
-        name: "synara_list_threads",
+        name: "ramspace_list_threads",
         arguments: { limit: 2 },
         fetch,
       }),
@@ -246,13 +253,13 @@ describe("agent gateway MCP injection", () => {
       [`Bearer ${connection.bearerToken}`, `Bearer ${connection.bearerToken}`],
     );
     assert.deepEqual((requests[1]?.body as { readonly params: unknown }).params, {
-      name: "synara_list_threads",
+      name: "ramspace_list_threads",
       arguments: { limit: 2 },
     });
   });
 
   it("uses the ACP http transport when the agent advertises support", () => {
-    const servers = buildAcpSynaraMcpServers({
+    const servers = buildAcpRamspaceMcpServers({
       connection,
       initializeResult: { agentCapabilities: { mcpCapabilities: { http: true } } },
       stdioProxy,
@@ -260,7 +267,7 @@ describe("agent gateway MCP injection", () => {
     assert.deepEqual(servers, [
       {
         type: "http",
-        name: "synara",
+        name: "ramspace",
         url: connection.url,
         headers: [{ name: "Authorization", value: `Bearer ${connection.bearerToken}` }],
       },
@@ -268,19 +275,19 @@ describe("agent gateway MCP injection", () => {
   });
 
   it("falls back to a Node-mode stdio proxy when http is not advertised", () => {
-    const servers = buildAcpSynaraMcpServers({
+    const servers = buildAcpRamspaceMcpServers({
       connection,
       initializeResult: {},
       stdioProxy,
     });
     assert.deepEqual(servers, [
       {
-        name: "synara",
+        name: "ramspace",
         command: stdioProxy.command,
         args: stdioProxy.args,
         env: [
-          { name: "SYNARA_AGENT_GATEWAY_URL", value: connection.url },
-          { name: SYNARA_AGENT_GATEWAY_TOKEN_ENV, value: connection.bearerToken },
+          { name: "RAMSPACE_AGENT_GATEWAY_URL", value: connection.url },
+          { name: RAMSPACE_AGENT_GATEWAY_TOKEN_ENV, value: connection.bearerToken },
           { name: "ELECTRON_RUN_AS_NODE", value: "1" },
         ],
       },
@@ -300,9 +307,9 @@ describe("connector injection", () => {
   };
   const authorization = `Bearer ${connection.bearerToken}`;
 
-  it("adds connector proxies to Claude next to synara, with the session bearer", () => {
+  it("adds connector proxies to Claude next to ramspace, with the session bearer", () => {
     assert.deepEqual(buildClaudeMcpServers(withConnectors), {
-      synara: { type: "http", url: connection.url, headers: { Authorization: authorization } },
+      ramspace: { type: "http", url: connection.url, headers: { Authorization: authorization } },
       supabase_connector: {
         type: "http",
         url: "http://127.0.0.1:3773/mcp/connectors/mcp_conn_1",
@@ -314,7 +321,7 @@ describe("connector injection", () => {
   it("adds connector proxies only to Codex's per-thread config", () => {
     assert.deepEqual(buildCodexMcpThreadConfig(withConnectors), {
       mcp_servers: {
-        synara: { url: connection.url, http_headers: { Authorization: authorization } },
+        ramspace: { url: connection.url, http_headers: { Authorization: authorization } },
         supabase_connector: {
           url: "http://127.0.0.1:3773/mcp/connectors/mcp_conn_1",
           http_headers: { Authorization: authorization },
@@ -325,23 +332,23 @@ describe("connector injection", () => {
   });
 
   it("adds connectors using the transport advertised by ACP agents", () => {
-    const http = buildAcpSynaraMcpServers({
+    const http = buildAcpRamspaceMcpServers({
       connection: withConnectors,
       initializeResult: { agentCapabilities: { mcpCapabilities: { http: true } } },
       stdioProxy,
     });
     assert.deepEqual(
       http.map((server) => server.name),
-      ["synara", "supabase_connector"],
+      ["ramspace", "supabase_connector"],
     );
-    const stdio = buildAcpSynaraMcpServers({
+    const stdio = buildAcpRamspaceMcpServers({
       connection: withConnectors,
       initializeResult: {},
       stdioProxy,
     });
     assert.deepEqual(
       stdio.map((server) => server.name),
-      ["synara", "supabase_connector"],
+      ["ramspace", "supabase_connector"],
     );
   });
 

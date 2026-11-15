@@ -3,8 +3,8 @@
  *
  * Converts full orchestration read-model shapes into compact, token-friendly
  * summaries: a derived one-word thread status, shell summaries for
- * `synara_list_threads`, and truncated/paginated message views for
- * `synara_read_thread`. Kept pure so the shaping rules are unit-testable.
+ * `ramspace_list_threads`, and truncated/paginated message views for
+ * `ramspace_read_thread`. Kept pure so the shaping rules are unit-testable.
  *
  * @module agentGateway/threadSummary
  */
@@ -12,8 +12,8 @@ import type {
   OrchestrationMessage,
   OrchestrationThread,
   OrchestrationThreadShell,
-} from "@synara/contracts";
-import { splitsSurrogatePair, unicodeSafeEndOffset } from "@synara/shared/text";
+} from "@ramspace/contracts";
+import { splitsSurrogatePair, unicodeSafeEndOffset } from "@ramspace/shared/text";
 
 export type AgentThreadStatus =
   | "working"

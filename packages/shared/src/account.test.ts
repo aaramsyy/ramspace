@@ -1,4 +1,4 @@
-import type { EnvironmentId } from "@synara/contracts";
+import type { EnvironmentId } from "@ramspace/contracts";
 import { describe, expect, it, vi } from "vitest";
 
 import { AccountApiError, createAccountClient, OrganizationRequiredError } from "./account";

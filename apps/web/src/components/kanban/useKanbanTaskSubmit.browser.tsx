@@ -1,4 +1,4 @@
-import { ProjectId, ThreadId } from "@synara/contracts";
+import { ProjectId, ThreadId } from "@ramspace/contracts";
 import { beforeEach, expect, it, vi } from "vitest";
 import { renderHook } from "vitest-browser-react/pure";
 

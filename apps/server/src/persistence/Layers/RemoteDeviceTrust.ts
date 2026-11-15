@@ -1,4 +1,4 @@
-import { RemoteTrustedDevice, RemoteTrustScope } from "@synara/contracts";
+import { RemoteTrustedDevice, RemoteTrustScope } from "@ramspace/contracts";
 import { Effect, Layer, Schema } from "effect";
 import * as SqlClient from "effect/unstable/sql/SqlClient";
 import { toPersistenceSqlError } from "../Errors";

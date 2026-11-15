@@ -9,19 +9,19 @@ import * as path from "node:path";
 
 import { app, BrowserWindow } from "electron";
 
-import { buildInlineVisualDocument } from "@synara/shared/inlineVisual";
+import { buildInlineVisualDocument } from "@ramspace/shared/inlineVisual";
 
 import { hardenBrowserAnnotationWebviewPreferences } from "../../../desktop/src/browserAnnotations/webviewSecurity";
 import { BROWSER_SESSION_PARTITION } from "../../../desktop/src/browserSessionPolicy";
 import { attachAppSubframeNavigationGuard } from "../../../desktop/src/subframeNavigationGuard";
 
-const synaraHome = process.env.SYNARA_HOME;
-const annotationPreloadPath = process.env.SYNARA_E2E_BROWSER_ANNOTATION_PRELOAD;
-const recorderOrigin = process.env.SYNARA_E2E_RECORDER_ORIGIN;
-if (!synaraHome || !annotationPreloadPath || !recorderOrigin) {
+const ramspaceHome = process.env.RAMSPACE_HOME;
+const annotationPreloadPath = process.env.RAMSPACE_E2E_BROWSER_ANNOTATION_PRELOAD;
+const recorderOrigin = process.env.RAMSPACE_E2E_RECORDER_ORIGIN;
+if (!ramspaceHome || !annotationPreloadPath || !recorderOrigin) {
   throw new Error("The inline-visual Electron fixture requires its isolated E2E environment.");
 }
-app.setPath("userData", path.join(synaraHome, "electron-userdata"));
+app.setPath("userData", path.join(ramspaceHome, "electron-userdata"));
 
 interface FixtureRecords {
   webviewAttachAttempts: string[];
@@ -140,7 +140,7 @@ void app.whenReady().then(async () => {
       records.subframeNavigations.push({ url: event.url, isMainFrame: event.isMainFrame });
     }
   });
-  const shellPath = path.join(synaraHome, "inline-visual-shell.html");
+  const shellPath = path.join(ramspaceHome, "inline-visual-shell.html");
   writeFileSync(shellPath, shell);
   await window.loadFile(shellPath);
 });

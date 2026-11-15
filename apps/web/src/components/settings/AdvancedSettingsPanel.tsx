@@ -241,7 +241,7 @@ export function AdvancedSettingsPanel(props: { active: boolean; resetEpoch: numb
           <SettingsRow
             id="setting-this-browser"
             title="settings:thisBrowser"
-            description="settings:revokeThisBrowserSessionAndCloseEveryLiveSynara"
+            description="settings:revokeThisBrowserSessionAndCloseEveryLiveRamspace"
             status={`Authenticated as ${authSessionQuery.data.role ?? "client"}.`}
             control={
               <Button

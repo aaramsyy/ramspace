@@ -1,5 +1,5 @@
 // Account billing reads and redirects stay bound to the identity that opened Settings.
-import type { AccountBillingStatus, NativeApi } from "@synara/contracts";
+import type { AccountBillingStatus, NativeApi } from "@ramspace/contracts";
 import { ensureNativeApi } from "~/nativeApi";
 import { accountStatusScope } from "./hosts/controlQueryScope";
 

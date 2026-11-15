@@ -1,5 +1,5 @@
 {
-  "name": "@synara/e2e",
+  "name": "@ramspace/e2e",
   "version": "0.0.1",
   "private": true,
   "type": "module",
@@ -7,13 +7,13 @@
     "build": "echo 'no build step'",
     "typecheck": "tsc --noEmit",
     "test": "vitest run --maxWorkers=1 --no-file-parallelism",
-    "test:workspace": "SYNARA_E2E_WORKSPACE=1 vitest run src/workspace.e2e.test.ts src/pairing.e2e.test.ts --maxWorkers=1 --no-file-parallelism"
+    "test:workspace": "RAMSPACE_E2E_WORKSPACE=1 vitest run src/workspace.e2e.test.ts src/pairing.e2e.test.ts --maxWorkers=1 --no-file-parallelism"
   },
   "dependencies": {
     "@effect/platform-node": "catalog:",
     "@hono/node-server": "^1.14.0",
-    "@synara/contracts": "workspace:*",
-    "@synara/shared": "workspace:*",
+    "@ramspace/contracts": "workspace:*",
+    "@ramspace/shared": "workspace:*",
     "effect": "catalog:",
     "hono": "^4.7.0",
     "jose": "^6.1.0",

@@ -5,9 +5,9 @@ import {
 } from "../../server/src/remoteTransport/certificates";
 import { randomBytes } from "node:crypto";
 
-import { EnvironmentId, HOST_SESSION_CLOSE_REVOKED } from "@synara/contracts";
-import { AccountApiError, createAccountClient } from "@synara/shared/account";
-import { generateSyncKey, openHostSecret, sealHostSecret } from "@synara/shared/hostSecrets";
+import { EnvironmentId, HOST_SESSION_CLOSE_REVOKED } from "@ramspace/contracts";
+import { AccountApiError, createAccountClient } from "@ramspace/shared/account";
+import { generateSyncKey, openHostSecret, sealHostSecret } from "@ramspace/shared/hostSecrets";
 import { decodeJwt } from "jose";
 import { describe, expect, it } from "vitest";
 
@@ -350,7 +350,7 @@ describe.skipIf(!TEST_DATABASE_URL)("A → B → C slice checkpoint", () => {
     }
 
     const account = createAccountClient({ baseUrl: fixture.apiOrigin });
-    const secret = { sshDestination: "e2e@example.test", launcher: ["synara", "open"] };
+    const secret = { sshDestination: "e2e@example.test", launcher: ["ramspace", "open"] };
     const initialEnvelope = await sealHostSecret({
       syncKey: existingSyncKey,
       hostId: linked.row.id,

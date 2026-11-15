@@ -1,4 +1,4 @@
-name = "synara-beta-diagnostics"
+name = "ramspace-beta-diagnostics"
 main = "worker.ts"
 compatibility_date = "2026-09-01"
 # Pin the verified production account so Wrangler cannot bind this worker to a
@@ -6,18 +6,18 @@ compatibility_date = "2026-09-01"
 account_id = "56e5b3e566be2fc8ade9b7d0eadf5e35"
 
 # Events land in D1 so the dashboard can query them through a binding.
-# Create: wrangler d1 create synara-beta-diagnostics
-# Migrate: wrangler d1 migrations apply synara-beta-diagnostics
+# Create: wrangler d1 create ramspace-beta-diagnostics
+# Migrate: wrangler d1 migrations apply ramspace-beta-diagnostics
 [[d1_databases]]
 binding = "DB"
-database_name = "synara-beta-diagnostics"
+database_name = "ramspace-beta-diagnostics"
 database_id = "642c0f74-6a06-4433-ac72-728bd6d0ed39"
 migrations_dir = "migrations"
 
 # Minidumps go to R2 and are kept indefinitely (no lifecycle expiry rule).
 [[r2_buckets]]
 binding = "CRASH_DUMPS"
-bucket_name = "synara-beta-crash-dumps"
+bucket_name = "ramspace-beta-crash-dumps"
 
 # Dashboard SPA built by `vite build` into ./dist. The worker runs first so
 # page requests are gated by the session cookie; it forwards to ASSETS for
@@ -51,7 +51,7 @@ simple = { limit = 10, period = 60 }
 # clients can still ingest). The worker verifies the Access JWT when these are
 # set:
 # [vars]
-# TEAM_DOMAIN = "https://synara.cloudflareaccess.com"
+# TEAM_DOMAIN = "https://ramspace.cloudflareaccess.com"
 # POLICY_AUD = "<Access app AUD tag>"
 # ALLOWED_EMAILS = "you@example.com,emanuele@example.com"
 # Legacy password auth (used only while POLICY_AUD is unset):

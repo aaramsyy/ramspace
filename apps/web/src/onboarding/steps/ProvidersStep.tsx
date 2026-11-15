@@ -5,7 +5,7 @@
 //          CLIs, and a setup-guide link for missing ones.
 // Layer: Web UI component
 
-import type { ProviderKind } from "@synara/contracts";
+import type { ProviderKind } from "@ramspace/contracts";
 import { useEffect, useRef, useState } from "react";
 
 import { ProviderIcon } from "~/components/ProviderIcon";

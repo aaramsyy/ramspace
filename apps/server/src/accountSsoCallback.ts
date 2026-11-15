@@ -49,15 +49,15 @@ const CALLBACK_PATH = "/callback";
  * it, because this page is the one part of the flow an outsider can render by
  * guessing the port.
  */
-const SUCCESS_PAGE = `<!doctype html><meta charset="utf-8"><title>Synara</title>
+const SUCCESS_PAGE = `<!doctype html><meta charset="utf-8"><title>Ramspace</title>
 <body style="font-family:system-ui;display:grid;place-items:center;height:100vh;margin:0">
 <div style="text-align:center"><h1 style="font-size:1.2rem">Signed in</h1>
-<p>You can close this window and return to Synara.</p></div></body>`;
+<p>You can close this window and return to Ramspace.</p></div></body>`;
 
-const FAILURE_PAGE = `<!doctype html><meta charset="utf-8"><title>Synara</title>
+const FAILURE_PAGE = `<!doctype html><meta charset="utf-8"><title>Ramspace</title>
 <body style="font-family:system-ui;display:grid;place-items:center;height:100vh;margin:0">
 <div style="text-align:center"><h1 style="font-size:1.2rem">Sign-in not completed</h1>
-<p>You can close this window and try again from Synara.</p></div></body>`;
+<p>You can close this window and try again from Ramspace.</p></div></body>`;
 
 export interface SsoCallbackListener {
   /** Where the browser will be redirected: `http://127.0.0.1:<port>/callback`. */

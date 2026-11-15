@@ -1,36 +1,36 @@
 # Connectors
 
-Connectors let agents in Synara use remote MCP servers such as Supabase, Linear, or Notion,
+Connectors let agents in Ramspace use remote MCP servers such as Supabase, Linear, or Notion,
 loopback HTTP servers, and local stdio commands. Add them in **Settings → Connectors** or ask
 in a chat; new chats receive their tools after approval and any required sign-in.
 Connectors are available in Stable and Beta builds from current source, including RPCs, OAuth
 callbacks and proxy routes. Each app reads only its own saved connectors; credentials are not
 copied from Beta into Stable. Published builds gain these additions only after updating.
 
-One sign-in covers every provider account configured in Synara on this machine, such as all
-Claude accounts, Codex, and OpenCode, because the tokens live in Synara's own store rather than
+One sign-in covers every provider account configured in Ramspace on this machine, such as all
+Claude accounts, Codex, and OpenCode, because the tokens live in Ramspace's own store rather than
 in any provider's configuration. This is separate from Claude Code's own claude.ai connectors and
 per-account MCP configuration, which stay per account. Each machine signs in separately, because
-the store belongs to one Synara home.
+the store belongs to one Ramspace home.
 
 This is the opposite direction of [External MCP](./external-mcp.md), which lets outside agents
-call into Synara.
+call into Ramspace.
 
 ## How it works
 
 | Step     | What happens                                                                                                                                                                                                                                                                                             |
 | -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Connect  | The server sends an unauthenticated MCP `initialize` to the connector URL. A valid JSON-RPC initialize result means no sign-in is needed. Existing OAuth connections retain their credentials if initialization is public. A 401 starts OAuth.                                                           |
-| Sign-in  | The MCP SDK's OAuth client discovers the protected-resource and authorization-server metadata, registers Synara with Dynamic Client Registration, and builds a PKCE (S256) authorization URL with a single-use `state` and the RFC 8707 `resource`. The web app opens it in the default browser.         |
-| Callback | The browser returns to `GET /oauth/mcp/callback` on Synara's loopback port. The `state` is the only authority (the browser carries no Synara session); it expires after ten minutes. The code is exchanged for tokens.                                                                                   |
-| Storage  | All connectors and their tokens are one entry (`mcp-connectors`) in the server secret store: a `0600` file under the Synara home. Tokens never reach the web app or provider processes.                                                                                                                  |
+| Sign-in  | The MCP SDK's OAuth client discovers the protected-resource and authorization-server metadata, registers Ramspace with Dynamic Client Registration, and builds a PKCE (S256) authorization URL with a single-use `state` and the RFC 8707 `resource`. The web app opens it in the default browser.       |
+| Callback | The browser returns to `GET /oauth/mcp/callback` on Ramspace's loopback port. The `state` is the only authority (the browser carries no Ramspace session); it expires after ten minutes. The code is exchanged for tokens.                                                                               |
+| Storage  | All connectors and their tokens are one entry (`mcp-connectors`) in the server secret store: a `0600` file under the Ramspace home. Tokens never reach the web app or provider processes.                                                                                                                |
 | Sessions | Connected connectors are published to the agent gateway. Each new provider session gets one MCP server per connector, named `<slug>_connector`, pointing at `/mcp/connectors/<id>` on the gateway and authenticated with the session's gateway bearer.                                                   |
 | Calls    | The proxy checks the bearer, attaches the connector's access token, and forwards the exchange through the origin-pinned outbound client. SSE answers are collapsed to their JSON-RPC response. A 401 triggers one refresh and one retry; a rejected refresh grant marks the connector **needs sign-in**. |
 
 The `_connector` suffix reduces accidental overlap with user-configured MCP servers. Codex
-deep-merges same-named tables, so Synara reads its effective configuration and omits a connector
+deep-merges same-named tables, so Ramspace reads its effective configuration and omits a connector
 whose name is already present rather than altering the user's server. If that configuration
-cannot be checked, connectors are omitted for that session. Names never start with `synara`,
+cannot be checked, connectors are omitted for that session. Names never start with `ramspace`,
 which tool policy treats as trusted.
 
 ## Provider coverage
@@ -40,7 +40,7 @@ which tool policy treats as trusted.
 | Claude                        | Yes, as SDK `mcpServers` HTTP entries                                                    |
 | Codex                         | Yes, in the per-thread config only (re-sent on every credential renewal)                 |
 | OpenCode                      | Yes, through `mcp.add` on the managed server; a connector that fails to start is skipped |
-| Cursor, Grok, Droid, Oh My Pi | HTTP when advertised by the agent, otherwise Synara's session-aware stdio proxy          |
+| Cursor, Grok, Droid, Oh My Pi | HTTP when advertised by the agent, otherwise Ramspace's session-aware stdio proxy        |
 | Pi, Devin, Antigravity        | No                                                                                       |
 
 Running sessions keep the connector set they started with. A disconnected connector answers its
@@ -54,9 +54,9 @@ elicitation requests other than tool approvals.
 The presets live in `packages/shared/src/mcpConnectors.ts`. Each one was checked against the live
 server: it either answers anonymously (Hugging Face) or accepts dynamic registration from an
 unknown client. Vercel documents that it admits only clients it has reviewed, yet a full sign-in
-from Synara succeeded on 2026-10-14; its consent page names Synara "An MCP client" until Vercel
+from Ramspace succeeded on 2026-10-14; its consent page names Ramspace "An MCP client" until Vercel
 approves it through its [client review form](https://forms.gle/FQ3nYPbovoHvbfmz9). Todoist
-(`ai.todoist.net/mcp`) accepted a test registration from Synara on 2026-10-14. Slack registers no
+(`ai.todoist.net/mcp`) accepted a test registration from Ramspace on 2026-10-14. Slack registers no
 clients, so its preset asks for the user's own Slack app (client ID and secret) and shows the
 redirect URL to paste into it. Vendors that refuse registration (Figma) or require a
 pre-registered OAuth app (GitHub, Asana, HubSpot) are left out; their custom URLs fail with an
@@ -75,12 +75,12 @@ and refuses redirects out of the selected origin. Public plain HTTP remains reje
 
 ## Add from chat and import
 
-- `synara_list_mcp_connectors` lists transport, status, supported providers and URL origin
+- `ramspace_list_mcp_connectors` lists transport, status, supported providers and URL origin
   or command. URL paths/queries are omitted because they can contain credentials.
-- `synara_add_mcp_connector` accepts a preset, a named URL, or a named command with an
+- `ramspace_add_mcp_connector` accepts a preset, a named URL, or a named command with an
   argument array and optional `cwd`/`env`. It saves an inert proposal and shows a card.
-- `synara_remove_mcp_connector` also creates a proposal. Removal needs UI confirmation.
-- `synara_import_mcp_servers` discovers Claude Code user/current-project entries in
+- `ramspace_remove_mcp_connector` also creates a proposal. Removal needs UI confirmation.
+- `ramspace_import_mcp_servers` discovers Claude Code user/current-project entries in
   `~/.claude.json`, `~/.codex/config.toml`, the workspace `.mcp.json`, and Claude Desktop's
   platform config. Each candidate gets a card; only the entries the user accepts are added.
   Disabled entries are skipped. Custom HTTP headers, environment-backed HTTP credentials,
@@ -110,7 +110,7 @@ An unavailable local connector stays saved as **Not running** and is omitted fro
 sessions. HTTP health is checked in the background; unavailable stdio servers are retried.
 Stdio commands run through the shared platform process boundary, with separate MCP sessions
 per provider bearer, bounded initialization, cancellation and owned process-tree cleanup.
-Ambient Synara credentials and provider API keys are stripped; explicitly configured environment
+Ambient Ramspace credentials and provider API keys are stripped; explicitly configured environment
 values reach only the local MCP subprocess. Removal closes its processes before reporting success.
 
 Running chats keep their current connector set: newly added connectors are **available in new
@@ -120,13 +120,13 @@ in the background, while explicit disconnect and stdio-client shutdown close ses
 
 ## Paired devices
 
-Synara Remote 1.0.6-remote.12 and later let authenticated paired clients read the
+Ramspace Remote 1.0.6-remote.12 and later let authenticated paired clients read the
 connector list for the computer running their chat. iPhone and iPad build 0.1
 (136) and later use it for @ suggestions, filtered to connected services and
 supported providers. Older desktop hosts can return an empty list.
 
 Connections belong to that computer’s app data home. A service connected on the
-Mini is not automatically connected on the MacBook or in another Synara flavor.
+Mini is not automatically connected on the MacBook or in another Ramspace flavor.
 Connect it in Settings → Connectors on the execution computer, then start a new
 chat so the provider receives its tools.
 
@@ -137,14 +137,14 @@ local-owner operations. No connector token is transferred to the phone.
 ## Vercel sign-in renewal
 
 Vercel requires the OAuth `offline_access` scope to issue a refresh token.
-Synara includes it when connecting to `https://mcp.vercel.com`, preserving the
+Ramspace includes it when connecting to `https://mcp.vercel.com`, preserving the
 scopes the server requested. The grant stays on the execution computer and uses
 the existing refresh path after token expiry or a desktop restart. Other
 connectors keep their existing scope selection.
 
 Older Vercel grants with only `openid` have no refresh token and need one new
 sign-in after this fix is installed. The user chooses project access in Vercel’s
-consent page; Synara does not silently expand that project selection. A source
+consent page; Ramspace does not silently expand that project selection. A source
 fix is not an upgrade to an already-issued grant.
 
 See [Vercel’s scope reference](https://vercel.com/docs/sign-in-with-vercel/scopes-and-permissions).
@@ -158,6 +158,6 @@ See [Vercel’s scope reference](https://vercel.com/docs/sign-in-with-vercel/sco
   carries the current port. After the desktop restarts, reconnecting fails until the app's
   redirect URL is updated to the one the connect dialog shows.
 - The MCP 2026-07-28 revision prefers Client ID Metadata Documents over Dynamic Client
-  Registration. Supporting it needs a hosted client metadata document on a Synara domain.
+  Registration. Supporting it needs a hosted client metadata document on a Ramspace domain.
 - Disconnecting invalidates pending sign-ins, deletes the tokens locally and attempts RFC 7009 revocation when the server
   advertises a revocation endpoint.

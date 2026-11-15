@@ -3,7 +3,7 @@
 //          when a drop should become a path mention instead of a byte attachment.
 // Layer: Web composer utility (desktop-aware)
 
-import { isLocalAbsolutePath, localPathsEqual } from "@synara/shared/path";
+import { isLocalAbsolutePath, localPathsEqual } from "@ramspace/shared/path";
 
 export interface ComposerDroppedFileItem {
   readonly kind: string;

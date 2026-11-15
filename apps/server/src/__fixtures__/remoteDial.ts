@@ -8,10 +8,10 @@ import {
   EnvironmentId,
   GRANT_JWT_TYP,
   HOST_CONNECT_SCOPE,
-  SYNARA_RELAY_AUDIENCE,
+  RAMSPACE_RELAY_AUDIENCE,
   type AccountHost,
-} from "@synara/contracts";
-import { exportPublicJwk, generateDeviceKey } from "@synara/shared/deviceKey";
+} from "@ramspace/contracts";
+import { exportPublicJwk, generateDeviceKey } from "@ramspace/shared/deviceKey";
 import { calculateJwkThumbprint, exportJWK, generateKeyPair, SignJWT } from "jose";
 import { vi } from "vitest";
 import { WebSocketServer } from "ws";
@@ -33,7 +33,7 @@ export async function createRemoteDialFixture(
   approved = true,
   resources?: { listeningPort: number; localSessions: SessionCredentialServiceShape },
 ) {
-  const directory = await fs.mkdtemp(path.join(os.tmpdir(), "synara-dial-v2-"));
+  const directory = await fs.mkdtemp(path.join(os.tmpdir(), "ramspace-dial-v2-"));
   cleanups.push(() => fs.rm(directory, { recursive: true, force: true }));
   const tlsIdentity = await initializeRemoteTlsIdentity(
     path.join(directory, "tls.json"),
@@ -127,7 +127,7 @@ export async function createRemoteDialFixture(
       .setProtectedHeader({ typ: GRANT_JWT_TYP, alg: "EdDSA", kid: "fixture" })
       .setIssuer(issuer)
       .setSubject("owner")
-      .setAudience(SYNARA_RELAY_AUDIENCE)
+      .setAudience(RAMSPACE_RELAY_AUDIENCE)
       .setIssuedAt()
       .setExpirationTime("60s")
       .setJti(randomUUID())

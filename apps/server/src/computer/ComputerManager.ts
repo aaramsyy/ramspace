@@ -42,13 +42,13 @@ import {
   type ComputerWindow,
   type ComputerZoomResult,
   type ThreadComputerState,
-} from "@synara/contracts";
-import { encodeComputerFrame } from "@synara/shared/computerFrame";
+} from "@ramspace/contracts";
+import { encodeComputerFrame } from "@ramspace/shared/computerFrame";
 import {
   classifyByFrameFlags,
   FrameTransport,
   type FrameSink,
-} from "@synara/shared/frameTransport";
+} from "@ramspace/shared/frameTransport";
 
 import {
   DesktopOperationQueue,
@@ -215,7 +215,7 @@ export const SCROLL_PROBE_TRIGGER_PX = SCROLL_PROBE_PX;
 /**
  * How close a leg's measured travel must land to its predicted distance before
  * that measurement itself counts as the settle evidence
- * (`SYNARA_CUA_CONDITIONAL_SETTLE`): the relative slack covers animation and
+ * (`RAMSPACE_CUA_CONDITIONAL_SETTLE`): the relative slack covers animation and
  * delivery residue on long legs, the floor covers the correlator's row
  * quantization on short ones.
  */
@@ -1554,7 +1554,7 @@ export class ComputerManager {
   }
 
   /**
-   * The `SYNARA_CUA_CONDITIONAL_SETTLE=1` waiver, consulted only when a
+   * The `RAMSPACE_CUA_CONDITIONAL_SETTLE=1` waiver, consulted only when a
    * settle would otherwise run. True requires positive effect proof — the
    * action's `verified` effect or its `confirmed` delivery read-back — and
    * stays false for `dispatched-unknown`, `unconfirmed`, `unverifiable`, or
@@ -2655,9 +2655,9 @@ export class ComputerManager {
 
   /**
    * The masked-activation decision for one resolved target. Engages the
-   * Synara-owned shield only when the canary flag is armed, the backend
+   * Ramspace-owned shield only when the canary flag is armed, the backend
    * speaks the macOS dialect, and the target's owning app is on the
-   * `SYNARA_CUA_MASKED_APPS` opt-in list — all three, always. Anything less
+   * `RAMSPACE_CUA_MASKED_APPS` opt-in list — all three, always. Anything less
    * returns `undefined` and the call takes the ordinary visible path.
    *
    * When the opt-in does name the app, the shield becomes mandatory: a
@@ -2686,7 +2686,7 @@ export class ComputerManager {
       );
     }
     const appName = target.title?.trim() || target.appName || "this window";
-    const label = `Synara is activating ${appName}`;
+    const label = `Ramspace is activating ${appName}`;
     const shieldId = `shield-${randomUUID().slice(0, 8)}`;
     try {
       return await timedComputerLeg("shield", () =>
@@ -3119,7 +3119,7 @@ export class ComputerManager {
    * and teach the store what the window did with the injection. A capture or
    * correlation that fails leaves the leg unmeasured, never undelivered.
    *
-   * `SYNARA_CUA_CONDITIONAL_SETTLE` extends to legs whose route already
+   * `RAMSPACE_CUA_CONDITIONAL_SETTLE` extends to legs whose route already
    * carries a learned gearing, because a learned ratio is a prediction of how
    * far this injection should move the content. The leg is captured before
    * the wait, and a measurement landing on that prediction is itself the

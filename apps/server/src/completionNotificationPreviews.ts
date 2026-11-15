@@ -7,12 +7,12 @@ import {
   JWT_CLOCK_TOLERANCE_SECONDS,
   PROVIDER_DISPLAY_NAMES,
   ProviderKind,
-  SYNARA_DEVICE_ISSUER,
+  RAMSPACE_DEVICE_ISSUER,
   type CompletionPreviewHostReport,
   type DevicePublicKeyJwk,
   type LiveActivityHostSnapshot,
   type RemoteTrustScope,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { Effect, Option, Schema } from "effect";
 import type * as SqlClient from "effect/unstable/sql/SqlClient";
 import { calculateJwkThumbprint, importJWK, jwtVerify } from "jose";
@@ -158,8 +158,8 @@ async function verifyRecipient(
     const { payload } = await jwtVerify(preview.proof, await importJWK(deviceKey, "ES256"), {
       algorithms: ["ES256"],
       typ: COMPLETION_PREVIEW_PROOF_TYPE,
-      issuer: SYNARA_DEVICE_ISSUER,
-      audience: `synara-host:${host.environmentId}`,
+      issuer: RAMSPACE_DEVICE_ISSUER,
+      audience: `ramspace-host:${host.environmentId}`,
       subject: host.userId,
       requiredClaims: ["iat", "exp"],
       clockTolerance: JWT_CLOCK_TOLERANCE_SECONDS,

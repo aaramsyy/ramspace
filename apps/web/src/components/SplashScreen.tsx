@@ -2,7 +2,7 @@
 // Purpose: Render the branded startup face while the app is still booting a route or session.
 // Layer: Shared app loading presentation
 
-import { SynaraLogo } from "@synara/profile-ui/logo";
+import { RamspaceLogo } from "@ramspace/profile-ui/logo";
 import { RouteInsetSurface } from "~/components/RouteInsetSurface";
 import { useTranslation } from "~/i18n";
 
@@ -23,7 +23,7 @@ export function SplashScreen({
     <RouteInsetSurface>
       <div className="flex min-h-0 min-w-0 flex-1 items-center justify-center">
         <div className="flex flex-col items-center gap-5 select-none">
-          <SynaraLogo aria-label="Synara" className="size-24" />
+          <RamspaceLogo aria-label="Ramspace" className="size-24" />
 
           {errorMessage ? (
             <div className="flex max-w-sm flex-col items-center gap-3 px-6 text-center">

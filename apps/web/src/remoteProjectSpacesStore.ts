@@ -1,7 +1,7 @@
 // FILE: remoteProjectSpacesStore.ts
 // Purpose: Persists the controlling computer's Space assignments for Remote projects.
 
-import type { SpaceId } from "@synara/contracts";
+import type { SpaceId } from "@ramspace/contracts";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import { getExecutionStorage } from "./lib/hosts/executionStorage";
@@ -26,7 +26,7 @@ export const useRemoteProjectSpacesStore = create<RemoteProjectSpacesState>()(
       },
     }),
     {
-      name: "synara:remote-project-spaces:v1",
+      name: "ramspace:remote-project-spaces:v1",
       storage: createJSONStorage(getExecutionStorage),
       partialize: ({ spaceByCheckout }) => ({ spaceByCheckout }),
     },

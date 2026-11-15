@@ -14,10 +14,10 @@ import {
   type ServerProviderStatus,
   type ServerSettingsView,
   type WsCompatibilityError,
-} from "@synara/contracts";
-import { defaultTerminalTitleForCliKind } from "@synara/shared/terminalThreads";
+} from "@ramspace/contracts";
+import { defaultTerminalTitleForCliKind } from "@ramspace/shared/terminalThreads";
 import { BrowserVaultDialog } from "~/components/BrowserVault";
-import { isThreadDetailEventFor } from "@synara/shared/threadDetailEvents";
+import { isThreadDetailEventFor } from "@ramspace/shared/threadDetailEvents";
 import {
   Outlet,
   createRootRouteWithContext,
@@ -52,7 +52,7 @@ import { useProjectImportDialogStore } from "../projectImport/projectImportDialo
 import { FeatureTourDialog } from "../components/FeatureTourDialog";
 import { SafariAccessOnboarding } from "../components/SafariAccessOnboarding";
 import { NewThreadDefaultsSyncCoordinator } from "../components/NewThreadDefaultsSyncCoordinator";
-import { settingsChangedBeyondNewThreadDefaults } from "@synara/shared/serverSettings";
+import { settingsChangedBeyondNewThreadDefaults } from "@ramspace/shared/serverSettings";
 import { QueuedComposerDrainCoordinator } from "../components/QueuedComposerDrainCoordinator";
 import { GlobalAccountDialogs } from "../components/account/GlobalAccountDialogs";
 import { HostDiscoverabilityPrompt } from "../components/hosts/HostDiscoverabilityPrompt";
@@ -222,7 +222,7 @@ import {
   shouldInvalidateProviderQueriesForEvent,
 } from "./-rootEventInvalidation";
 import { createDesktopProjectRecoveryAttemptGate } from "./-desktopProjectRecoveryAttempt";
-import { isSidechatThread } from "@synara/shared/sidechatThread";
+import { isSidechatThread } from "@ramspace/shared/sidechatThread";
 import { t, useTranslation } from "~/i18n";
 
 const SHELL_SNAPSHOT_BOOTSTRAP_FALLBACK_DELAY_MS = 1_500;
@@ -424,16 +424,16 @@ function TransportCompatibilityView({ issue }: { issue: WsCompatibilityError }) 
 
   const title =
     issue.action === "update-client"
-      ? t("common:thisSynaraClientNeedsAnUpdate")
+      ? t("common:thisRamspaceClientNeedsAnUpdate")
       : issue.action === "update-server"
-        ? t("common:theSynaraServerNeedsAnUpdate")
-        : t("common:synaraNeedsToReconnectWithAMatchingBuild");
+        ? t("common:theRamspaceServerNeedsAnUpdate")
+        : t("common:ramspaceNeedsToReconnectWithAMatchingBuild");
   const guidance =
     issue.action === "update-client"
       ? "Update or reload this client, then reconnect."
       : issue.action === "update-server"
         ? "Update or restart the server, then reload this client."
-        : "Reload the app. If this repeats, restart Synara so the client and server use matching builds.";
+        : "Reload the app. If this repeats, restart Ramspace so the client and server use matching builds.";
 
   return (
     <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-background px-4 py-10 text-foreground sm:px-6">
@@ -627,7 +627,7 @@ async function runProviderUpdateAll(params: {
         if (!isProviderKind(driver)) {
           failures.push({
             provider,
-            reason: "This provider driver cannot be updated by this Synara build.",
+            reason: "This provider driver cannot be updated by this Ramspace build.",
           });
           continue;
         }

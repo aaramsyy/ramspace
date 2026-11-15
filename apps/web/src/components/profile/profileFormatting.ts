@@ -7,7 +7,7 @@ import {
   formatHourLabel as hourLabel,
   formatNumber as number,
   formatShortDate as shortDate,
-} from "@synara/profile-ui/formatting";
+} from "@ramspace/profile-ui/formatting";
 import { getFormatLocale, t } from "~/i18n";
 
 export {
@@ -15,7 +15,7 @@ export {
   formatProviderLabel,
   normalizeHandle,
   toDisplayName,
-} from "@synara/profile-ui/formatting";
+} from "@ramspace/profile-ui/formatting";
 
 export function formatCompact(
   value: number | null | undefined,

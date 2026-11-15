@@ -1,5 +1,5 @@
 {
-  "name": "@synara/scripts",
+  "name": "@ramspace/scripts",
   "private": true,
   "type": "module",
   "scripts": {
@@ -11,8 +11,8 @@
   },
   "dependencies": {
     "@effect/platform-node": "catalog:",
-    "@synara/contracts": "workspace:*",
-    "@synara/shared": "workspace:*",
+    "@ramspace/contracts": "workspace:*",
+    "@ramspace/shared": "workspace:*",
     "effect": "catalog:",
     "yaml": "^2.8.3"
   },

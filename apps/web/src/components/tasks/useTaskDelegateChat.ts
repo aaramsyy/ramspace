@@ -4,7 +4,7 @@
 // Layer: Tasks UI hook
 // Exports: useTaskDelegateChat, TaskDelegateChatState
 
-import type { ThreadId, Todo } from "@synara/contracts";
+import type { ThreadId, Todo } from "@ramspace/contracts";
 import { useMemo, useState } from "react";
 
 import { useStore } from "../../store";

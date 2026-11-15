@@ -21,15 +21,15 @@ import {
   type BrowserUploadInput,
   type ThreadBrowserState,
   type ThreadId,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { app } from "electron";
 import { join } from "node:path";
 import {
   BROWSER_TOOL_DEFINITIONS_BY_NAME,
   stableJsonStringify,
-} from "@synara/shared/browserAutomationCatalogue";
+} from "@ramspace/shared/browserAutomationCatalogue";
 import { Schema } from "effect";
-import { browserInputErrorCode } from "@synara/shared/browserAutomationErrors";
+import { browserInputErrorCode } from "@ramspace/shared/browserAutomationErrors";
 
 import type {
   BrowserAutomationWindowOpenEvent,
@@ -856,7 +856,7 @@ export class DesktopBrowserAutomationHost {
       reconcile: (timeoutMs, signal) => {
         if (observedEvent) return Promise.resolve(observedEvent);
         // CDP announces link/window activation before Electron reconciles the
-        // denied child into Synara's visible tab model. Only that path waits;
+        // denied child into Ramspace's visible tab model. Only that path waits;
         // ordinary clicks return immediately with no fixed grace period.
         if (!pageAnnouncedWindowOpen) {
           return waitOneTurnForWindowOpenEvent(eventPromise, signal);

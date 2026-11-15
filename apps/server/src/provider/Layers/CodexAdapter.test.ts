@@ -17,7 +17,7 @@ import {
   type ProviderUserInputAnswers,
   ThreadId,
   TurnId,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import * as NodeServices from "@effect/platform-node/NodeServices";
 import { afterAll, it, vi } from "@effect/vitest";
 
@@ -278,10 +278,10 @@ validationLayer("CodexAdapterLive validation", (it) => {
         provider: "codex",
         threadId: asThreadId("thread-coordinator"),
         runtimeMode: "approval-required",
-        autoApproveSynaraTools: true,
+        autoApproveRamspaceTools: true,
       });
       assert.strictEqual(
-        validationManager.startSessionImpl.mock.calls[0]?.[0].autoApproveSynaraTools,
+        validationManager.startSessionImpl.mock.calls[0]?.[0].autoApproveRamspaceTools,
         true,
       );
     }),
@@ -446,8 +446,8 @@ validationLayer("CodexAdapterLive validation", (it) => {
   it.effect("lists only explicit generated-image homes from live session Codex options", () =>
     Effect.gen(function* () {
       const now = new Date().toISOString();
-      const originalSynaraHome = process.env.SYNARA_HOME;
-      process.env.SYNARA_HOME = "/tmp/synara-live-generated-images";
+      const originalRamspaceHome = process.env.RAMSPACE_HOME;
+      process.env.RAMSPACE_HOME = "/tmp/ramspace-live-generated-images";
       validationManager.sessionSnapshots = [
         {
           provider: "codex",
@@ -520,10 +520,10 @@ validationLayer("CodexAdapterLive validation", (it) => {
       } finally {
         lifecycleOptionsSpy.mockRestore();
         lifecycleListSpy.mockRestore();
-        if (originalSynaraHome === undefined) {
-          delete process.env.SYNARA_HOME;
+        if (originalRamspaceHome === undefined) {
+          delete process.env.RAMSPACE_HOME;
         } else {
-          process.env.SYNARA_HOME = originalSynaraHome;
+          process.env.RAMSPACE_HOME = originalRamspaceHome;
         }
         validationManager.sessionSnapshots = [];
         validationManager.codexOptionsByThreadId.clear();
@@ -762,7 +762,7 @@ it.effect(
   "keeps internal Codex notifications in native logs and preserves completion warnings",
   () =>
     Effect.gen(function* () {
-      const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "synara-auto-approval-review-"));
+      const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "ramspace-auto-approval-review-"));
       try {
         const logger = yield* makeEventNdjsonLogger(path.join(tempDir, "native.ndjson"), {
           stream: "native",
@@ -1058,7 +1058,7 @@ lifecycleLayer("CodexAdapterLive lifecycle", (it) => {
         payload: {
           summary: "  Invalid MCP configuration  ",
           details: "url is not supported for stdio\n",
-          path: "  mcp_servers.synara  ",
+          path: "  mcp_servers.ramspace  ",
         },
       } satisfies ProviderEvent);
 
@@ -1073,7 +1073,7 @@ lifecycleLayer("CodexAdapterLive lifecycle", (it) => {
       }
       assert.equal(firstEvent.value.payload.summary, "Invalid MCP configuration");
       assert.equal(firstEvent.value.payload.details, "url is not supported for stdio");
-      assert.equal(firstEvent.value.payload.path, "mcp_servers.synara");
+      assert.equal(firstEvent.value.payload.path, "mcp_servers.ramspace");
     }),
   );
 
@@ -2623,7 +2623,7 @@ lifecycleLayer("CodexAdapterLive lifecycle", (it) => {
         threadId: asThreadId("thread-1"),
         createdAt: new Date().toISOString(),
         method: "mcpServer/elicitation/request/unrenderable",
-        message: "Synara declined an MCP elicitation it cannot render yet.",
+        message: "Ramspace declined an MCP elicitation it cannot render yet.",
       } satisfies ProviderEvent);
 
       const firstEvent = yield* Fiber.join(firstEventFiber);
@@ -2633,7 +2633,7 @@ lifecycleLayer("CodexAdapterLive lifecycle", (it) => {
       if (firstEvent.value.type !== "runtime.warning") return;
       assert.equal(
         firstEvent.value.payload.message,
-        "Synara declined an MCP elicitation it cannot render yet.",
+        "Ramspace declined an MCP elicitation it cannot render yet.",
       );
     }),
   );
@@ -3167,7 +3167,7 @@ lifecycleLayer("CodexAdapterLive lifecycle", (it) => {
           entries: [],
         },
       });
-      assert.deepEqual(started.raw?.payload, { synaraSanitized: true });
+      assert.deepEqual(started.raw?.payload, { ramspaceSanitized: true });
 
       assert.equal(completed?.type, "hook.completed");
       if (completed?.type !== "hook.completed") return;
@@ -3178,7 +3178,7 @@ lifecycleLayer("CodexAdapterLive lifecycle", (it) => {
       assert.equal(serialized.includes("private-hook-secret"), false);
       assert.equal(serialized.includes("private-hook-token"), false);
       assert.equal(serialized.includes("[REDACTED]"), true);
-      assert.deepEqual(completed.raw?.payload, { synaraSanitized: true });
+      assert.deepEqual(completed.raw?.payload, { ramspaceSanitized: true });
     }),
   );
 
@@ -3230,7 +3230,7 @@ lifecycleLayer("CodexAdapterLive lifecycle", (it) => {
         assert.equal(serialized.includes("private-token"), false);
         assert.ok(serialized.length < 17_000);
         assert.deepEqual(firstEvent.value.raw?.payload, {
-          synaraSanitized: true,
+          ramspaceSanitized: true,
         });
         // Provider refs still resolved from the raw event.
         assert.equal(firstEvent.value.itemId, "agent_message_9");

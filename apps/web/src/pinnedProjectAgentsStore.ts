@@ -1,5 +1,5 @@
 import { executionStorage } from "./lib/hosts/executionStorage";
-import type { ProjectId } from "@synara/contracts";
+import type { ProjectId } from "@ramspace/contracts";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import { normalizePinnedIds, pinId, prunePinnedIds, unpinId } from "./pinning.logic";
@@ -12,7 +12,7 @@ interface PinnedProjectAgentsStoreState {
   prunePinnedProjectAgents: (projectIds: readonly ProjectId[]) => void;
 }
 
-const PINNED_PROJECT_AGENTS_STORAGE_KEY = "synara:pinned-project-agents:v1";
+const PINNED_PROJECT_AGENTS_STORAGE_KEY = "ramspace:pinned-project-agents:v1";
 
 export const usePinnedProjectAgentsStore = create<PinnedProjectAgentsStoreState>()(
   persist(

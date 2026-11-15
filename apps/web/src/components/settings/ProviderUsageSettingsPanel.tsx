@@ -4,12 +4,15 @@ import { localizedProviderUsageNeedsAuthDetail } from "~/lib/providerUsageDispla
 // quota/credits with linear progress meters, the provider brand icon, and plan/status pills.
 // Usage is fetched read-only from each CLI's stored credentials by the server.
 
-import { DEFAULT_SERVER_SETTINGS_VIEW, type ServerProviderUsageSnapshot } from "@synara/contracts";
-import { deriveProviderInstances } from "@synara/shared/providerInstances";
+import {
+  DEFAULT_SERVER_SETTINGS_VIEW,
+  type ServerProviderUsageSnapshot,
+} from "@ramspace/contracts";
+import { deriveProviderInstances } from "@ramspace/shared/providerInstances";
 import {
   providerUsageDisplayName,
   selectVisibleProviderUsageSnapshots,
-} from "@synara/shared/providerUsage";
+} from "@ramspace/shared/providerUsage";
 import { useMemo } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 

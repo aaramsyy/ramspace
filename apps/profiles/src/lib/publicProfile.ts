@@ -5,12 +5,12 @@
 
 import { headers } from "next/headers";
 
-export const ACCOUNT_API_URL = process.env.ACCOUNT_API_URL ?? "https://api.synara.vrbty.dev";
+export const ACCOUNT_API_URL = process.env.ACCOUNT_API_URL ?? "https://api.ramspace.vrbty.dev";
 
 /**
  * Shared secret proving to the account API that a request came from this SSR
  * deployment — the same value as the API's PROFILE_PROXY_SECRET. Sent as
- * `x-synara-proxy-secret` so the API can trust the forwarded viewer IP for
+ * `x-ramspace-proxy-secret` so the API can trust the forwarded viewer IP for
  * rate-limit keying (per-visitor budgets instead of one shared bucket for
  * this deployment's egress IP). Optional: without it the API keys on the
  * egress IP, exactly as before.
@@ -45,7 +45,7 @@ export type PublicProfile = {
   /**
    * Published social usernames by platform (never URLs), or null when none.
    * Optional so the page keeps rendering against a pre-links API; the page
-   * re-validates each with @synara/shared/socialLinks before linking it.
+   * re-validates each with @ramspace/shared/socialLinks before linking it.
    */
   socialLinks?: Partial<Record<"x" | "linkedin" | "github" | "threads" | "youtube", string>> | null;
   /**
@@ -81,7 +81,7 @@ function looksLikeIp(value: string): boolean {
  * The visiting browser's IP, read off the incoming request. Every profile
  * fetch runs server-side, so without this the account API would see one
  * caller — this app's egress IP — and its per-IP public-profile budget would
- * throttle all visitors collectively. Forwarded as `x-synara-viewer-ip` so
+ * throttle all visitors collectively. Forwarded as `x-ramspace-viewer-ip` so
  * the API can key its rate limit on the actual viewer; rate-limit keying
  * only, never authentication.
  */
@@ -108,8 +108,8 @@ async function viewerIp(): Promise<string | null> {
 export async function fetchPublicProfile(handle: string): Promise<PublicProfile | null> {
   const ip = await viewerIp();
   const headers = {
-    ...(ip ? { "x-synara-viewer-ip": ip } : {}),
-    ...(PROFILE_PROXY_SECRET ? { "x-synara-proxy-secret": PROFILE_PROXY_SECRET } : {}),
+    ...(ip ? { "x-ramspace-viewer-ip": ip } : {}),
+    ...(PROFILE_PROXY_SECRET ? { "x-ramspace-proxy-secret": PROFILE_PROXY_SECRET } : {}),
   };
   const response = await fetch(`${ACCOUNT_API_URL}/api/v1/profiles/${encodeURIComponent(handle)}`, {
     ...(Object.keys(headers).length > 0 ? { headers } : {}),

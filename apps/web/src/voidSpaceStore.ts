@@ -3,7 +3,7 @@ import { executionStorage } from "./lib/hosts/executionStorage";
 // FILE: voidSpaceStore.ts
 // Purpose: Persists what the user calls the group of projects that are in no Space.
 // Layer: Web UI state
-// Why: "Void" is Synara's word for "not filed yet", and it is the one Space label a user
+// Why: "Void" is Ramspace's word for "not filed yet", and it is the one Space label a user
 //      cannot rename through the orchestration commands — there is no row behind it. Most
 //      installs leave every project there, so the sidebar's loudest label is also its least
 //      meaningful one (and untranslatable). This keeps a per-install name and icon for it.
@@ -12,7 +12,7 @@ import { executionStorage } from "./lib/hosts/executionStorage";
 //      synchronously on first paint (the sidebar header renders the name before any query
 //      settles), and no server-side decision reads it. Windows stay in sync through `storage`.
 
-import { SPACE_NAME_MAX_LENGTH } from "@synara/contracts";
+import { SPACE_NAME_MAX_LENGTH } from "@ramspace/contracts";
 import { create } from "zustand";
 
 import {
@@ -21,7 +21,7 @@ import {
   type VoidSpacePresentation,
 } from "~/lib/spaceGrouping";
 
-const STORAGE_KEY = "synara:void-space:v1";
+const STORAGE_KEY = "ramspace:void-space:v1";
 
 /**
  * Accepts anything (a hand-edited entry, a value written by a future version) and answers

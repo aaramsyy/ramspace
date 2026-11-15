@@ -3,7 +3,7 @@
 //          nested them, so every poller classifies them the same way.
 // Layer: Server utility (no IO)
 
-import { AccountApiError } from "@synara/shared/account";
+import { AccountApiError } from "@ramspace/shared/account";
 
 /** The account API's typed error anywhere in a cause chain, if there is one. */
 export function findAccountApiError(error: unknown): AccountApiError | undefined {

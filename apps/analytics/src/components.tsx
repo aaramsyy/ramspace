@@ -77,7 +77,7 @@ export function plural(n: number, word: string, pluralWord?: string): string {
 }
 
 export function flavorLabel(flavor: string): string {
-  return flavor === "remote" ? "Synara Remote" : flavor === "beta" ? "Synara Beta" : flavor;
+  return flavor === "remote" ? "Ramspace Remote" : flavor === "beta" ? "Ramspace Beta" : flavor;
 }
 
 export function platformLabel(p: string): string {

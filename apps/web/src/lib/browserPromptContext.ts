@@ -1,4 +1,4 @@
-import type { BrowserCaptureScreenshotResult, NativeApi, ThreadId } from "@synara/contracts";
+import type { BrowserCaptureScreenshotResult, NativeApi, ThreadId } from "@ramspace/contracts";
 
 import type { ComposerImageAttachment } from "../composerDraftStore";
 import { prepareComposerImageAttachmentsFromFiles } from "./composerSend";

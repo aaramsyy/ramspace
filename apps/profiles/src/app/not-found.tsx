@@ -11,10 +11,10 @@ export default function NotFound() {
           This handle doesn&apos;t exist, or its owner keeps their profile private.
         </p>
         <a
-          href="https://trysynara.com"
+          href="https://tryramspace.com"
           className="mt-4 text-sm text-muted-foreground transition-colors hover:text-foreground"
         >
-          trysynara.com
+          tryramspace.com
         </a>
       </div>
     </PageShell>

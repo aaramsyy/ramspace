@@ -6,7 +6,7 @@ import { useTranslation } from "~/i18n";
 export type ProjectSource = "local" | "github";
 
 /**
- * The compact raised-thumb picker previously used for the Synara/Groups switch,
+ * The compact raised-thumb picker previously used for the Ramspace/Groups switch,
  * adapted to choose how a project is added.
  */
 export function ProjectSourceSegmentedPicker(props: {
@@ -42,7 +42,7 @@ export function ProjectSourceSegmentedPicker(props: {
             : {
                 title:
                   props.githubUnavailableReason ??
-                  t("workspace:updateTheSynaraServerToAddGitHubProjects"),
+                  t("workspace:updateTheRamspaceServerToAddGitHubProjects"),
               }),
         },
       ]}

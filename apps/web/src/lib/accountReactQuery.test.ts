@@ -4,7 +4,7 @@
 // account-scoped data when a status refetch reveals a different identity
 // (an account switch performed by another client against the shared server).
 
-import type { AccountStatus } from "@synara/contracts";
+import type { AccountStatus } from "@ramspace/contracts";
 import { QueryClient } from "@tanstack/react-query";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { remoteHostQueryKeys } from "./hosts/queries";

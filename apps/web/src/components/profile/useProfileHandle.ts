@@ -5,9 +5,9 @@
 
 import { useLocalStorage } from "~/hooks/useLocalStorage";
 import { Schema } from "effect";
-import { normalizeHandle } from "@synara/profile-ui/formatting";
+import { normalizeHandle } from "@ramspace/profile-ui/formatting";
 
-const PROFILE_HANDLE_STORAGE_KEY = "synara:profile:handle:v1";
+const PROFILE_HANDLE_STORAGE_KEY = "ramspace:profile:handle:v1";
 
 // Empty string means "use the server default".
 const StoredHandleSchema = Schema.String;

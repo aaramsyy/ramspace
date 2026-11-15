@@ -4,7 +4,7 @@
 // Layer: Settings UI
 // Exports: CodexDefaultAccountControl
 
-import { PROVIDER_DISPLAY_NAMES } from "@synara/contracts";
+import { PROVIDER_DISPLAY_NAMES } from "@ramspace/contracts";
 
 import { getCodexAccountOptions, type AppSettings } from "~/appSettings";
 import { useTranslation } from "~/i18n";

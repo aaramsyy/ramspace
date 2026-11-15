@@ -3,8 +3,8 @@ import {
   type OrchestrationShellSnapshot,
   type ProjectId,
   ThreadId,
-} from "@synara/contracts";
-import { workspaceRootsEqual } from "@synara/shared/threadWorkspace";
+} from "@ramspace/contracts";
+import { workspaceRootsEqual } from "@ramspace/shared/threadWorkspace";
 import type { RefObject } from "react";
 import { useCallback } from "react";
 import { newCommandId } from "~/lib/utils";

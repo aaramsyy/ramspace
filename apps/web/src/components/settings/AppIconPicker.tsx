@@ -4,9 +4,9 @@
 
 import { useState } from "react";
 
-import type { DesktopAppIcon } from "@synara/contracts";
-import { desktopFlavorFromProtocol } from "@synara/shared/betaFeatures";
-import type { SynaraDesktopFlavor } from "@synara/shared/desktopIdentity";
+import type { DesktopAppIcon } from "@ramspace/contracts";
+import { desktopFlavorFromProtocol } from "@ramspace/shared/betaFeatures";
+import type { RamspaceDesktopFlavor } from "@ramspace/shared/desktopIdentity";
 import { Spinner } from "~/components/ui/spinner";
 import { cn, isMacPlatform } from "~/lib/utils";
 import { useTranslation } from "~/i18n";
@@ -30,7 +30,7 @@ const OTHER_BETA_DESKTOP_APP_ICONS = ["default", "icon", "beta"] as const;
 
 export function desktopAppIconsForPlatform(
   platform: string,
-  flavor: SynaraDesktopFlavor | "unknown" = "unknown",
+  flavor: RamspaceDesktopFlavor | "unknown" = "unknown",
 ): ReadonlyArray<DesktopAppIcon> {
   if (flavor === "beta") {
     return isMacPlatform(platform) ? MAC_BETA_DESKTOP_APP_ICONS : OTHER_BETA_DESKTOP_APP_ICONS;

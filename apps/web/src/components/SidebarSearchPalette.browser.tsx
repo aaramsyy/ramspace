@@ -260,7 +260,7 @@ it("opens a source page for importing projects and hands the chosen source to th
             {
               id: "import-projects",
               label: "Import projects from…",
-              description: "Bring Codex and Claude Code projects into Synara.",
+              description: "Bring Codex and Claude Code projects into Ramspace.",
               keywords: ["import"],
             },
           ]}

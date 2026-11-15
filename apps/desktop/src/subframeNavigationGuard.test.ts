@@ -24,7 +24,7 @@ function navigate(
 }
 
 describe("attachAppSubframeNavigationGuard", () => {
-  const mainFrame = { url: "synara-remote://app/index.html#/remote", parent: null };
+  const mainFrame = { url: "ramspace-remote://app/index.html#/remote", parent: null };
   const emitter = Object.assign(new EventEmitter(), { mainFrame });
   attachAppSubframeNavigationGuard(emitter as unknown as Pick<WebContents, "on" | "mainFrame">);
 
@@ -32,7 +32,7 @@ describe("attachAppSubframeNavigationGuard", () => {
     "https://attacker.example/collect?data=secret",
     "http://127.0.0.1:3773/api/auth/session",
     "data:text/html,<script>1</script>",
-    "synara://app/settings",
+    "ramspace://app/settings",
     "javascript:alert(1)",
   ])("keeps an embedded document from navigating its frame to %s", (url) => {
     expect(navigate(emitter, url, false)).toBe(true);
@@ -45,7 +45,7 @@ describe("attachAppSubframeNavigationGuard", () => {
 
   it.each(["", "about:blank"])("loads an app-owned workspace from a fresh %j frame", (url) => {
     expect(
-      navigate(emitter, "synara-remote://app/index.html", false, {
+      navigate(emitter, "ramspace-remote://app/index.html", false, {
         frame: { url, parent: mainFrame },
         initiator: mainFrame,
       }),
@@ -53,7 +53,7 @@ describe("attachAppSubframeNavigationGuard", () => {
   });
 
   it("lets an initialized workspace retry its own shell document", () => {
-    const frame = { url: "synara-remote://app/index.html", parent: mainFrame };
+    const frame = { url: "ramspace-remote://app/index.html", parent: mainFrame };
     expect(navigate(emitter, frame.url, false, { frame, initiator: frame })).toBe(false);
   });
 
@@ -63,14 +63,14 @@ describe("attachAppSubframeNavigationGuard", () => {
     { frame: { url: "about:blank", parent: mainFrame }, initiator: {} },
     { frame: { url: "about:blank", parent: null }, initiator: mainFrame },
   ])("does not let embedded documents claim the app workspace exception: %j", (details) => {
-    expect(navigate(emitter, "synara-remote://app/index.html", false, details)).toBe(true);
+    expect(navigate(emitter, "ramspace-remote://app/index.html", false, details)).toBe(true);
   });
 
   it.each([
-    "synara-remote://app/settings",
-    "synara-remote://app/index.html?data=secret",
-    "synara-remote://app/index.html#data=secret",
-    "synara-beta://app/index.html",
+    "ramspace-remote://app/settings",
+    "ramspace-remote://app/index.html?data=secret",
+    "ramspace-remote://app/index.html#data=secret",
+    "ramspace-beta://app/index.html",
     "https://attacker.example/collect?data=secret",
   ])("limits app-owned workspace frames to the shell document, refusing %s", (url) => {
     expect(

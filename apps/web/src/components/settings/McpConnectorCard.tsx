@@ -1,4 +1,4 @@
-import type { McpConnector } from "@synara/contracts";
+import type { McpConnector } from "@ramspace/contracts";
 import type { ReactNode } from "react";
 
 import { McpConnectorGlyph } from "./McpConnectorGlyph";

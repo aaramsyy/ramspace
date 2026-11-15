@@ -6,11 +6,11 @@ import type {
   OrchestrationThread,
   ProjectKind,
   ThreadGoalAchievement,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import {
   ASYNC_USER_INPUT_ALREADY_ANSWERED,
   formatAsyncUserInputResponse,
-} from "@synara/shared/asyncUserInput";
+} from "@ramspace/shared/asyncUserInput";
 import {
   EventId,
   MessageId,
@@ -22,22 +22,22 @@ import {
   THREAD_GOAL_ACHIEVEMENTS_MAX_COUNT,
   TurnId,
   CommandId,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import {
   deriveAssociatedWorktreeMetadata,
   deriveAssociatedWorktreeMetadataPatch,
   workspaceRootsEqual,
-} from "@synara/shared/threadWorkspace";
-import { collectSubagentDescendants } from "@synara/shared/threadHierarchy";
-import { isSidechatThread } from "@synara/shared/sidechatThread";
-import { autoRuntimeModeSelectionIssue } from "@synara/shared/runtimeMode";
-import { isGroupContainerKind } from "@synara/shared/projectContainers";
-import { findProjectFolderProblem } from "@synara/shared/projectFolders";
-import { providerSupportsNativeTurnSteering } from "@synara/shared/providerMetadata";
+} from "@ramspace/shared/threadWorkspace";
+import { collectSubagentDescendants } from "@ramspace/shared/threadHierarchy";
+import { isSidechatThread } from "@ramspace/shared/sidechatThread";
+import { autoRuntimeModeSelectionIssue } from "@ramspace/shared/runtimeMode";
+import { isGroupContainerKind } from "@ramspace/shared/projectContainers";
+import { findProjectFolderProblem } from "@ramspace/shared/projectFolders";
+import { providerSupportsNativeTurnSteering } from "@ramspace/shared/providerMetadata";
 import {
   collectTailTurnIds,
   resolveTailUserMessageEditTarget,
-} from "@synara/shared/conversationEdit";
+} from "@ramspace/shared/conversationEdit";
 import { Effect } from "effect";
 
 import { computerActivationMetadata } from "../computer/computerActivation.ts";
@@ -1414,7 +1414,7 @@ const decideCommand = Effect.fn("decideOrchestrationCommand")(function* ({
         threadId: command.threadId,
       });
       // Provider-native threads mirror subagents the provider already runs;
-      // Synara never starts a session for them, so the Auto-mode capability
+      // Ramspace never starts a session for them, so the Auto-mode capability
       // check can only reject the projection (and durably poison the runtime
       // journal replaying it), never prevent an unverified Auto session.
       if (command.creationSource !== "provider_native") {
@@ -3513,7 +3513,7 @@ const decideCommand = Effect.fn("decideOrchestrationCommand")(function* ({
 function usageLimitMetadataEvent(
   command: {
     readonly commandId: CommandId;
-    readonly threadId: import("@synara/contracts").ThreadId;
+    readonly threadId: import("@ramspace/contracts").ThreadId;
   },
   patch: Partial<Extract<OrchestrationEvent, { type: "thread.meta-updated" }>["payload"]>,
 ): Omit<Extract<OrchestrationEvent, { type: "thread.meta-updated" }>, "sequence"> {

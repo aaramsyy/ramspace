@@ -1,6 +1,6 @@
 import "../../index.css";
 
-import type { AccountMe } from "@synara/contracts";
+import type { AccountMe } from "@ramspace/contracts";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { page } from "vitest/browser";
 import { beforeEach, describe, expect, it, vi } from "vitest";

@@ -22,7 +22,7 @@ import {
   type AuthSessionId,
   type ComputerEvent,
   type WsBootstrapNegotiateResult,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import * as NodeServices from "@effect/platform-node/NodeServices";
 import { Deferred, Duration, Effect, Exit, Layer, Schema, Scope, Stream } from "effect";
 import { Headers, HttpRouter, HttpServerRequest } from "effect/unstable/http";
@@ -60,7 +60,7 @@ import {
   bindRemoteAttachmentSession,
   CurrentManagedAttachmentPrincipal,
 } from "./managedAttachmentPrincipal";
-import { REMOTE_NATIVE_UNAVAILABLE } from "@synara/shared/remoteCapabilities";
+import { REMOTE_NATIVE_UNAVAILABLE } from "@ramspace/shared/remoteCapabilities";
 import {
   WsRequestAdmissionMiddleware,
   wsRequestAdmissionMiddlewareLayer,
@@ -266,7 +266,7 @@ async function startTestServer(
   remoteRegistry?: HostConnectionRegistry,
 ): Promise<RunningTestServer> {
   const baseConfigLayer = ServerConfig.layerTest(process.cwd(), {
-    prefix: "synara-ws-lifecycle-test-",
+    prefix: "ramspace-ws-lifecycle-test-",
   }).pipe(Layer.provide(NodeServices.layer));
   const configLayer = Layer.effect(
     ServerConfig,
@@ -373,7 +373,7 @@ async function startTestServer(
             return {
               role: yield* CurrentWsSessionRole,
               ...principal,
-              metadata: Headers.get(context.headers, "x-synara-test-metadata") ?? null,
+              metadata: Headers.get(context.headers, "x-ramspace-test-metadata") ?? null,
             };
           }),
         [COMPUTER_WS_METHODS.getState]: () =>
@@ -738,17 +738,17 @@ describe("websocket RPC payload admission", () => {
 
       // A lookalike of the desktop scheme is not the desktop scheme.
       const lookalike = await fetch(negotiateHttpUrl(server), {
-        headers: { origin: "synara://app.evil.com" },
+        headers: { origin: "ramspace://app.evil.com" },
       });
       expect(lookalike.status).toBe(403);
       expect(lookalike.headers.get("access-control-allow-origin")).toBeNull();
 
       // The desktop origin is reflected, and only that origin.
       const desktop = await fetch(negotiateHttpUrl(server), {
-        headers: { origin: "synara://app" },
+        headers: { origin: "ramspace://app" },
       });
       expect(desktop.status).toBe(200);
-      expect(desktop.headers.get("access-control-allow-origin")).toBe("synara://app");
+      expect(desktop.headers.get("access-control-allow-origin")).toBe("ramspace://app");
       expect(desktop.headers.get("vary")).toBe("Origin");
 
       // No Origin at all (CLI clients) passes without reflection, matching
@@ -799,9 +799,9 @@ describe("websocket RPC payload admission", () => {
     const server = await startTestServer(registry);
     const url = new URL(negotiateHttpUrl(server, { token: "force-session-auth" }));
     url.pathname = `/ws/remote/mini${WS_NEGOTIATE_HTTP_PATH}`;
-    const desktopHeaders = { origin: "synara://app" };
+    const desktopHeaders = { origin: "ramspace://app" };
     try {
-      for (const origin of ["http://evil.example", "synara://app.evil.com"]) {
+      for (const origin of ["http://evil.example", "ramspace://app.evil.com"]) {
         const refused = await fetch(url, { headers: { origin } });
         expect(refused.status).toBe(403);
         expect(refused.headers.get("access-control-allow-origin")).toBeNull();
@@ -810,7 +810,7 @@ describe("websocket RPC payload admission", () => {
 
       const desktop = await fetch(url, { headers: desktopHeaders });
       expect(desktop.status).toBe(200);
-      expect(desktop.headers.get("access-control-allow-origin")).toBe("synara://app");
+      expect(desktop.headers.get("access-control-allow-origin")).toBe("ramspace://app");
       expect(desktop.headers.get("vary")).toBe("Origin");
       expect(desktop.headers.get("cache-control")).toBe("no-store");
       const prepared = (await desktop.json()) as WsBootstrapNegotiateResult;
@@ -862,7 +862,7 @@ describe("websocket RPC payload admission", () => {
       url.searchParams.set(WS_NEGOTIATE_QUERY.minRevision, "invalid");
       const incompatible = await fetch(url, { headers: desktopHeaders });
       expect(incompatible.status).toBe(426);
-      expect(incompatible.headers.get("access-control-allow-origin")).toBe("synara://app");
+      expect(incompatible.headers.get("access-control-allow-origin")).toBe("ramspace://app");
       url.searchParams.set(WS_NEGOTIATE_QUERY.minRevision, String(WS_PROTOCOL_MIN_REVISION));
 
       const client = await Effect.runPromise(server.sessions.issue({ role: "client" }));
@@ -885,7 +885,7 @@ describe("websocket RPC payload admission", () => {
       url.searchParams.set("token", "force-session-auth");
       const unavailable = await fetch(url, { headers: desktopHeaders });
       expect(unavailable.status).toBe(503);
-      expect(unavailable.headers.get("access-control-allow-origin")).toBe("synara://app");
+      expect(unavailable.headers.get("access-control-allow-origin")).toBe("ramspace://app");
       expect(await unavailable.text()).toBe("Remote host unavailable");
     } finally {
       registry.closeAll();
@@ -1397,7 +1397,7 @@ describe("websocketRpcRouteLayer connection lifecycle", () => {
           (
             await request(socket, "test.connection-identity", [
               ...headers,
-              ["x-synara-test-metadata", "retained"],
+              ["x-ramspace-test-metadata", "retained"],
             ])
           ).exit,
         ).toMatchObject({

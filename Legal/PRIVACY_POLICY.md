@@ -12,7 +12,7 @@ When you use an account, the configured account service processes identity and p
 
 ## Billing
 
-Where subscriptions are enabled, Polar is the merchant of record and processes checkout, customer, payment and tax information. Synara associates your account identifier and email with the billing customer and stores subscription identifiers, access status, billing periods and billing-event identifiers. Card details entered at checkout are handled by Polar and its payment processor, not by Synara's billing backend. Billing records are separate from optional analytics.
+Where subscriptions are enabled, Polar is the merchant of record and processes checkout, customer, payment and tax information. Ramspace associates your account identifier and email with the billing customer and stores subscription identifiers, access status, billing periods and billing-event identifiers. Card details entered at checkout are handled by Polar and its payment processor, not by Ramspace's billing backend. Billing records are separate from optional analytics.
 
 ## Usage sharing
 

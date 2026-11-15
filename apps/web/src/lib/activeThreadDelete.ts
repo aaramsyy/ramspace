@@ -4,9 +4,9 @@
 // Exports: deleteActiveThreadFromClient
 
 import { t } from "~/i18n";
-import type { ThreadId } from "@synara/contracts";
-import { terminalScopeIdsForThread } from "@synara/shared/terminalThreads";
-import { collectSubagentDescendants } from "@synara/shared/threadHierarchy";
+import type { ThreadId } from "@ramspace/contracts";
+import { terminalScopeIdsForThread } from "@ramspace/shared/terminalThreads";
+import { collectSubagentDescendants } from "@ramspace/shared/threadHierarchy";
 
 import { toastManager } from "../components/ui/toast";
 import { readNativeApi } from "../nativeApi";

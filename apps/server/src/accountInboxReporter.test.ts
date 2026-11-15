@@ -5,11 +5,11 @@ import * as NodeServices from "@effect/platform-node/NodeServices";
 import { Effect, Layer, Schema } from "effect";
 import * as SqlClient from "effect/unstable/sql/SqlClient";
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest";
-import { SaveInboxRecapRequest } from "@synara/contracts";
+import { SaveInboxRecapRequest } from "@ramspace/contracts";
 import {
-  SYNARA_DESKTOP_BUNDLE_ID_ENV,
-  SYNARA_PRODUCTION_BUNDLE_ID,
-} from "@synara/shared/desktopIdentity";
+  RAMSPACE_DESKTOP_BUNDLE_ID_ENV,
+  RAMSPACE_PRODUCTION_BUNDLE_ID,
+} from "@ramspace/shared/desktopIdentity";
 import { writeAccountCredentials } from "./accountAuth";
 import { makeRecapStatsQuery } from "./recapStats";
 import { SqlitePersistenceMemory } from "./persistence/Layers/Sqlite";
@@ -17,7 +17,7 @@ import { SqlitePersistenceMemory } from "./persistence/Layers/Sqlite";
 let createAccountInboxReporter: typeof import("./accountInboxReporter").createAccountInboxReporter;
 
 beforeAll(async () => {
-  vi.stubEnv(SYNARA_DESKTOP_BUNDLE_ID_ENV, SYNARA_PRODUCTION_BUNDLE_ID);
+  vi.stubEnv(RAMSPACE_DESKTOP_BUNDLE_ID_ENV, RAMSPACE_PRODUCTION_BUNDLE_ID);
   vi.resetModules();
   ({ createAccountInboxReporter } = await import("./accountInboxReporter"));
   const { SERVER_DESKTOP_FLAVOR } = await import("./betaFeatureGate");
@@ -57,7 +57,7 @@ function run(effect: Effect.Effect<void, unknown, SqlClient.SqlClient>) {
 }
 
 async function fixture() {
-  const home = await mkdtemp(join(tmpdir(), "synara-inbox-auto-"));
+  const home = await mkdtemp(join(tmpdir(), "ramspace-inbox-auto-"));
   homes.push(home);
   await writeAccountCredentials(home, account);
   const pushes: SaveInboxRecapRequest[] = [];

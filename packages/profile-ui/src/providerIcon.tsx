@@ -2,7 +2,7 @@
 // Purpose: Single source of the provider brand glyphs (Codex/OpenAI, Claude, Cursor,
 // Antigravity, Grok, Droid, Devin, OpenCode, Pi) shared by the web app's ProviderIcon
 // wrapper and the public profile page. Keys are plain strings (structurally the
-// `ProviderKind` union from @synara/contracts) so this package stays free of the
+// `ProviderKind` union from @ramspace/contracts) so this package stays free of the
 // Effect-based contracts dependency.
 //
 // Notes for consumers:
@@ -115,7 +115,7 @@ export const DevinIcon: ProviderGlyph = (props) => (
 
 // Static ids: this component must render in Server Components, where `useId` is
 // unavailable. Instances share identical <defs>, so duplicate ids stay visually exact.
-const ANTIGRAVITY_ID_PREFIX = "synara-antigravity";
+const ANTIGRAVITY_ID_PREFIX = "ramspace-antigravity";
 const ANTIGRAVITY_MASK_ID = `${ANTIGRAVITY_ID_PREFIX}-mask`;
 const ANTIGRAVITY_FILTER_IDS = Array.from(
   { length: 11 },
@@ -235,13 +235,13 @@ export const AntigravityIcon: ProviderGlyph = (props) => (
 );
 
 /**
- * Provider key → glyph component. Keys mirror `ProviderKind` from @synara/contracts
+ * Provider key → glyph component. Keys mirror `ProviderKind` from @ramspace/contracts
  * (string-keyed here so this package stays contracts-free); the web app's ProviderIcon
  * wrapper spreads this map and overrides `opencode` with its Central-asset dark-mode
  * variant.
  */
 export const OmpIcon: ProviderGlyph = (props) => {
-  const gradientId = "synara-omp-logo";
+  const gradientId = "ramspace-omp-logo";
 
   return (
     <svg {...props} viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">

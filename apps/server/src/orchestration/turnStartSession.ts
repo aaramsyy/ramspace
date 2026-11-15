@@ -4,7 +4,7 @@ import type {
   ProviderInstanceId,
   RuntimeMode,
   ThreadId,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 
 export function deriveTurnStartModelSelection(input: {
   readonly currentModelSelection: ModelSelection;

@@ -7,7 +7,7 @@
 import * as OS from "node:os";
 import path from "node:path";
 
-import { expandHomePath } from "@synara/shared/synaraHome";
+import { expandHomePath } from "@ramspace/shared/ramspaceHome";
 
 import { providerIsolatedHomePath } from "./providerProcessEnv.ts";
 

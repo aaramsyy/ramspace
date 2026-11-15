@@ -2,14 +2,14 @@ import type { ChildProcessWithoutNullStreams } from "node:child_process";
 import { StringDecoder } from "node:string_decoder";
 import type { Transport } from "@modelcontextprotocol/sdk/shared/transport.js";
 import type { JSONRPCMessage } from "@modelcontextprotocol/sdk/types.js";
-import { spawnProcess } from "@synara/shared/processRuntime";
+import { spawnProcess } from "@ramspace/shared/processRuntime";
 import {
-  stripSynaraControlPlaneEnvironment,
+  stripRamspaceControlPlaneEnvironment,
   withoutProviderCredentialEnvironment,
 } from "../providerChildEnvironment.ts";
 import { createProtocolProcessTeardown } from "./protocolProcessTeardown.ts";
 
-/** MCP SDK transport using Synara's executable resolution and owned-tree teardown. */
+/** MCP SDK transport using Ramspace's executable resolution and owned-tree teardown. */
 export class McpStdioTransport implements Transport {
   onclose?: () => void;
   onerror?: (error: Error) => void;
@@ -33,7 +33,7 @@ export class McpStdioTransport implements Transport {
       ownProcessGroup: true,
       ...(this.config.cwd ? { cwd: this.config.cwd } : {}),
       env: {
-        ...withoutProviderCredentialEnvironment(stripSynaraControlPlaneEnvironment(process.env)),
+        ...withoutProviderCredentialEnvironment(stripRamspaceControlPlaneEnvironment(process.env)),
         ...this.config.env,
       },
     });

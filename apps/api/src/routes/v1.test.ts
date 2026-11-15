@@ -8,7 +8,7 @@ import {
   USAGE_PUSH_MAX_BUCKETS,
   type SavedInboxRecap,
   type SaveInboxRecapRequest,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { eq } from "drizzle-orm";
 import { Schema } from "effect";
 import { Hono } from "hono";
@@ -1484,7 +1484,7 @@ describe.skipIf(!TEST_DATABASE_URL)("createV1Routes", () => {
         headers: {
           "content-type": "application/json",
           "x-forwarded-for": "203.0.113.77",
-          "user-agent": "synara-test/1.0",
+          "user-agent": "ramspace-test/1.0",
         },
         body: JSON.stringify({ email, code }),
       });
@@ -1498,7 +1498,7 @@ describe.skipIf(!TEST_DATABASE_URL)("createV1Routes", () => {
       if (!grant) throw new Error("fake WorkOS saw no magic auth grant");
       const body = JSON.parse(grant.body) as Record<string, unknown>;
       expect(body.ip_address).toBe("203.0.113.77");
-      expect(body.user_agent).toBe("synara-test/1.0");
+      expect(body.user_agent).toBe("ramspace-test/1.0");
     });
 
     it("rate limits redemption attempts on their own budget", async () => {
@@ -2201,7 +2201,7 @@ describe.skipIf(!TEST_DATABASE_URL)("createV1Routes", () => {
         expect(refused.status).toBe(403);
         expect(await refused.json()).toMatchObject({
           error: "subscription_required",
-          message: "Public profiles require an active Synara Alto subscription",
+          message: "Public profiles require an active Ramspace Alto subscription",
         });
         const [row] = await database.db
           .select()
@@ -3087,16 +3087,16 @@ describe.skipIf(!TEST_DATABASE_URL)("createV1Routes", () => {
     });
 
     // Rate limiting keys on caller IP (trusted, from proxy headers) only.
-    // The x-synara-viewer-ip header is ignored because it's client-controlled
+    // The x-ramspace-viewer-ip header is ignored because it's client-controlled
     // and spoofable — accepting it would allow bypassing rate limits.
-    it("keys the budget on caller IP, ignoring x-synara-viewer-ip", async () => {
+    it("keys the budget on caller IP, ignoring x-ramspace-viewer-ip", async () => {
       const { app } = buildApp();
       const callerIp = "203.0.117.11";
       const handle = `ghost-${randomUUID().slice(0, 8)}`;
 
       const getWithHeaders = (viewerIpHeader: string) =>
         app.request(`/api/v1/profiles/${handle}`, {
-          headers: { "x-forwarded-for": callerIp, "x-synara-viewer-ip": viewerIpHeader },
+          headers: { "x-forwarded-for": callerIp, "x-ramspace-viewer-ip": viewerIpHeader },
         });
 
       // Exhaust the budget for this caller IP
@@ -3104,7 +3104,7 @@ describe.skipIf(!TEST_DATABASE_URL)("createV1Routes", () => {
         expect((await getWithHeaders("198.51.100.1")).status).toBe(404);
       }
 
-      // Now rate-limited, regardless of x-synara-viewer-ip value
+      // Now rate-limited, regardless of x-ramspace-viewer-ip value
       expect((await getWithHeaders("198.51.100.1")).status).toBe(429);
       expect((await getWithHeaders("198.51.100.2")).status).toBe(429);
       expect((await getWithHeaders("completely-different")).status).toBe(429);
@@ -3128,8 +3128,8 @@ describe.skipIf(!TEST_DATABASE_URL)("createV1Routes", () => {
         app.request(`/api/v1/profiles/${handle}`, {
           headers: {
             "x-forwarded-for": callerIp,
-            "x-synara-proxy-secret": "proxy-s3cret",
-            "x-synara-viewer-ip": viewer,
+            "x-ramspace-proxy-secret": "proxy-s3cret",
+            "x-ramspace-viewer-ip": viewer,
           },
         });
 
@@ -3159,8 +3159,8 @@ describe.skipIf(!TEST_DATABASE_URL)("createV1Routes", () => {
         expect(
           (
             await get({
-              "x-synara-proxy-secret": "wrong",
-              "x-synara-viewer-ip": `198.51.101.${i + 1}`,
+              "x-ramspace-proxy-secret": "wrong",
+              "x-ramspace-viewer-ip": `198.51.101.${i + 1}`,
             })
           ).status,
         ).toBe(404);
@@ -3168,15 +3168,19 @@ describe.skipIf(!TEST_DATABASE_URL)("createV1Routes", () => {
       // Rotating viewer values escapes nothing: wrong secret, absent secret,
       // and a wrong-length secret all stay in the caller's exhausted bucket.
       expect(
-        (await get({ "x-synara-proxy-secret": "wrong", "x-synara-viewer-ip": "198.51.101.200" }))
-          .status,
+        (
+          await get({
+            "x-ramspace-proxy-secret": "wrong",
+            "x-ramspace-viewer-ip": "198.51.101.200",
+          })
+        ).status,
       ).toBe(429);
-      expect((await get({ "x-synara-viewer-ip": "198.51.101.201" })).status).toBe(429);
+      expect((await get({ "x-ramspace-viewer-ip": "198.51.101.201" })).status).toBe(429);
       expect(
         (
           await get({
-            "x-synara-proxy-secret": "proxy-s3cret-but-longer",
-            "x-synara-viewer-ip": "198.51.101.202",
+            "x-ramspace-proxy-secret": "proxy-s3cret-but-longer",
+            "x-ramspace-viewer-ip": "198.51.101.202",
           })
         ).status,
       ).toBe(429);
@@ -3194,8 +3198,8 @@ describe.skipIf(!TEST_DATABASE_URL)("createV1Routes", () => {
         app.request(`/api/v1/profiles/${handle}`, {
           headers: {
             "x-forwarded-for": callerIp,
-            "x-synara-proxy-secret": "anything",
-            "x-synara-viewer-ip": viewer,
+            "x-ramspace-proxy-secret": "anything",
+            "x-ramspace-viewer-ip": viewer,
           },
         });
 
@@ -3832,7 +3836,7 @@ describe.skipIf(!TEST_DATABASE_URL)("createV1Routes", () => {
 
   describe("organization gate", () => {
     /**
-     * The first call after `synara auth`: the sign-in grant mints an org-less
+     * The first call after `ramspace auth`: the sign-in grant mints an org-less
      * token, so the caller is authenticated but has nowhere to act. Answering
      * 403 with the list is what lets the client refresh into a workspace
      * rather than dead-end.
@@ -4037,7 +4041,7 @@ describe.skipIf(!TEST_DATABASE_URL)("createV1Routes", () => {
       const { app } = buildApp();
       for (const redirectUri of [
         "https://evil.example.com/callback",
-        "http://synara.example.com/callback",
+        "http://ramspace.example.com/callback",
         "http://127.0.0.1.evil.example/callback",
         "not-a-url",
       ]) {

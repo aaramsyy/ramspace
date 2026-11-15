@@ -1,7 +1,7 @@
 // FILE: ComposerUsageLimitRecovery.tsx
 // Purpose: Mirror the owning computer's durable wait; the clock never dispatches work.
 
-import type { OrchestrationThread } from "@synara/contracts";
+import type { OrchestrationThread } from "@ramspace/contracts";
 import { useNowMs } from "~/hooks/useNowMs";
 import { useTranslation } from "~/i18n";
 import { ClockIcon } from "~/lib/icons";

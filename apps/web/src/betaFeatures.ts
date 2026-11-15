@@ -13,12 +13,12 @@ import {
   MCP_CONNECTORS_BETA_FEATURE,
   NATIVE_EDITOR_BETA_FEATURE,
   PULL_REQUEST_AUTO_FIX_BETA_FEATURE,
-} from "@synara/shared/betaFeatures";
-import { PROVIDER_DESCRIPTORS } from "@synara/shared/providerMetadata";
+} from "@ramspace/shared/betaFeatures";
+import { PROVIDER_DESCRIPTORS } from "@ramspace/shared/providerMetadata";
 
 // The desktop serves the app from its own scheme, so the protocol names the
 // host flavor (branding.ts uses the same signal for display names). A dev
-// build serves `synara:` too, so import.meta.env.DEV disambiguates it. SSR and
+// build serves `ramspace:` too, so import.meta.env.DEV disambiguates it. SSR and
 // tests have no window and resolve to "unknown", which keeps Beta-only
 // features on — the server gate is the authoritative one.
 const DESKTOP_FLAVOR = desktopFlavorFromProtocol(

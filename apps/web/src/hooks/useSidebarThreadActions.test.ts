@@ -2,7 +2,7 @@
 // Purpose: Covers Sidebar pin races, archive/Done navigation, undo, and batch deletion.
 // Layer: Web hook tests
 
-import { ProjectId, ThreadId } from "@synara/contracts";
+import { ProjectId, ThreadId } from "@ramspace/contracts";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 // These fixtures invoke the hook directly with a slot-based React harness.

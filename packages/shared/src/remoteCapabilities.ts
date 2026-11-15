@@ -1,4 +1,4 @@
-import { COMPUTER_WS_METHODS, DEVICE_WS_METHODS, WS_METHODS } from "@synara/contracts";
+import { COMPUTER_WS_METHODS, DEVICE_WS_METHODS, WS_METHODS } from "@ramspace/contracts";
 
 export const REMOTE_NATIVE_UNAVAILABLE =
   "This feature is unavailable for remote workspaces. Return to this computer to use it locally.";

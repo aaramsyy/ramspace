@@ -8,7 +8,7 @@ import type {
   DesktopDiagnosticActivity,
   DesktopWindowTranslucency,
   ProductAnalyticsInput,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { normalizeDesktopWsUrl, resolveDesktopWsUrlFromEnv } from "./desktopWsBridge";
 import { DESKTOP_IPC_CHANNELS } from "./ipcChannels";
 import {

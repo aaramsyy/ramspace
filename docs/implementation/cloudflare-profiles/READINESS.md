@@ -1,35 +1,35 @@
 # Public profiles qualification — 2026-09-29
 
 The operator has selected the personal Cloudflare account, now renamed
-**Synara Orgs**, as the destination for these services and Beta diagnostics.
+**Ramspace Orgs**, as the destination for these services and Beta diagnostics.
 See [the account migration plan](ACCOUNT-MIGRATION.md). The deployments below
-now serve API, profiles, avatars and diagnostics from Synara Orgs. Old API
+now serve API, profiles, avatars and diagnostics from Ramspace Orgs. Old API
 requests are forwarded there, and old profile links redirect to the new origin.
 
 ## Before and after
 
-| Area                 | Baseline                                                            | Current behavior                                                                                                      |
-| -------------------- | ------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
-| Account profile flow | Disabled in UI and server                                           | Dylan's existing flow enabled only on opted-in non-Stable servers; authoritative server capability gates mutations    |
-| Usage reporting      | Inert                                                               | Existing reporter starts only with `SYNARA_ACCOUNT_PROFILE_SYNC=1`, including its existing aggregate-history backfill |
-| Publication          | API default private; onboarding claimed public                      | Private default retained and explained; owner explicitly publishes                                                    |
-| Public reads         | 15-second stale cache                                               | Fresh publication check for every request; no persistent profile cache                                                |
-| Social preview       | Shared image caching                                                | `private, no-store`, absolute trial origin, generic card after revocation                                             |
-| Hosting              | Historical Dylan configuration, no services in the selected account | Separate API Container and OpenNext profiles Worker deployed in Synara Orgs                                           |
-| Database             | Existing sponsor project                                            | 15 RLS-enabled account tables and dedicated account role alongside unchanged sponsor tables                           |
-| Marketing routing    | Former Vercel destination                                           | Unchanged; live qualification uses workers.dev                                                                        |
+| Area                 | Baseline                                                            | Current behavior                                                                                                        |
+| -------------------- | ------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| Account profile flow | Disabled in UI and server                                           | Dylan's existing flow enabled only on opted-in non-Stable servers; authoritative server capability gates mutations      |
+| Usage reporting      | Inert                                                               | Existing reporter starts only with `RAMSPACE_ACCOUNT_PROFILE_SYNC=1`, including its existing aggregate-history backfill |
+| Publication          | API default private; onboarding claimed public                      | Private default retained and explained; owner explicitly publishes                                                      |
+| Public reads         | 15-second stale cache                                               | Fresh publication check for every request; no persistent profile cache                                                  |
+| Social preview       | Shared image caching                                                | `private, no-store`, absolute trial origin, generic card after revocation                                               |
+| Hosting              | Historical Dylan configuration, no services in the selected account | Separate API Container and OpenNext profiles Worker deployed in Ramspace Orgs                                           |
+| Database             | Existing sponsor project                                            | 15 RLS-enabled account tables and dedicated account role alongside unchanged sponsor tables                             |
+| Marketing routing    | Former Vercel destination                                           | Unchanged; live qualification uses workers.dev                                                                          |
 
 The existing editor, onboarding, identity provider, reporter and API are reused.
 No new profile UI or parallel authentication system was introduced.
 
 ## Live deployment
 
-Cloudflare account Synara Orgs: `56e5b3e566be2fc8ade9b7d0eadf5e35`.
+Cloudflare account Ramspace Orgs: `56e5b3e566be2fc8ade9b7d0eadf5e35`.
 
-| Service     | Origin                                                   | Deployed version                       |
-| ----------- | -------------------------------------------------------- | -------------------------------------- |
-| Account API | https://synara-account-api-trial.synara-orgs.workers.dev | `d6b248d5-b0aa-42da-9b3d-3d3ebd95f428` |
-| Profiles    | https://synara-profiles-trial.synara-orgs.workers.dev    | `dd981474-7d2c-4145-a71c-60923ad64fe4` |
+| Service     | Origin                                                       | Deployed version                       |
+| ----------- | ------------------------------------------------------------ | -------------------------------------- |
+| Account API | https://ramspace-account-api-trial.ramspace-orgs.workers.dev | `d6b248d5-b0aa-42da-9b3d-3d3ebd95f428` |
+| Profiles    | https://ramspace-profiles-trial.ramspace-orgs.workers.dev    | `dd981474-7d2c-4145-a71c-60923ad64fe4` |
 
 Both workers.dev routes are enabled; preview URLs are disabled and read back
 from Cloudflare. The profiles Worker has the full OpenNext code and assets,
@@ -52,13 +52,13 @@ The GitHub workflow has not run, and no commit, push or merge is claimed.
 
 ## Database and credentials
 
-The existing Supabase Synara project (`ubdkfrnaqfbdymgipddq`) contains all 16
+The existing Supabase Ramspace project (`ubdkfrnaqfbdymgipddq`) contains all 16
 API migrations and their original Drizzle hashes. The bootstrap preserved the
 nine advertising tables' schema, grants and policies (catalog fingerprint
 `b24284f605b060db3f8cb9d3dd7a4e7c`). Account tables have default-deny RLS and
 no access for Data API roles; the sponsor Data API stays enabled.
 
-After explicit operator approval, `synara_account_api_database_role` created
+After explicit operator approval, `ramspace_account_api_database_role` created
 a dedicated LOGIN role owning the 15 account tables and Drizzle schema/journal.
 It has database CONNECT/CREATE and public-schema USAGE/CREATE for migrations,
 but no superuser, role creation, database creation, replication or RLS-bypass
@@ -78,12 +78,12 @@ Scans of modified repository files and public browser assets found no task
 secret literals, WorkOS secret keys or private-key blocks. This is scoped
 verification, not a claim about all historical repository commits.
 
-WorkOS Synara's Project / Staging has Magic Auth enabled, credentials installed,
+WorkOS Ramspace's Project / Staging has Magic Auth enabled, credentials installed,
 and loopback redirects `http://127.0.0.1/callback` (default) and
 `http://127.0.0.1:*/callback`. The operator completed a real login and profile onboarding in the isolated
-Synara app. The authenticated UI shows the saved profile; live API/page reads
+Ramspace app. The authenticated UI shows the saved profile; live API/page reads
 return 404 while it is private. The login method was not independently observed.
-Wrangler OAuth is authenticated for both the source and Synara Orgs accounts.
+Wrangler OAuth is authenticated for both the source and Ramspace Orgs accounts.
 
 ## Live privacy evidence
 
@@ -129,8 +129,8 @@ The profiles trial does not make remote access operational. Stable stays gated.
 This section records the original deployment; the migration evidence below
 supersedes its account and storage URL.
 
-Created the dedicated Standard R2 bucket `synara-profile-avatars-trial` in the
-Synara account (default jurisdiction, Eastern Europe location). After explicit
+Created the dedicated Standard R2 bucket `ramspace-profile-avatars-trial` in the
+Ramspace account (default jurisdiction, Eastern Europe location). After explicit
 operator approval, enabled its trial public URL:
 `https://pub-d8104f3d8e5542bcaea593e6f1966a5c.r2.dev`. The existing backup and
 diagnostics buckets were not changed. R2 MCP access returned authentication
@@ -148,7 +148,7 @@ secrets alone did not replace the running API process. Rollout
 `342d37f0-50e4-4db6-a866-b0dae8219671` reached container application version 2
 with the same verified image. An authenticated empty avatar request changed
 from storage-not-configured 503 to expected empty-image validation 400, without
-modifying the user's avatar. The operator then successfully uploaded an image through Synara. The public
+modifying the user's avatar. The operator then successfully uploaded an image through Ramspace. The public
 profile API returned its URL on the configured R2 host; the image returned
 HTTP 200, `image/webp`, 3,884 bytes. Browser verification showed the new avatar
 on the public profile. Replacement and removal are not yet live-qualified.
@@ -158,7 +158,7 @@ profile is later hidden; existing immutable object caching can retain copies.
 The operator explicitly approved this behavior. Use this bucket only for
 avatars. The r2.dev endpoint is for the trial, not the final production domain.
 
-## Synara Orgs migration verification — 2026-09-29
+## Ramspace Orgs migration verification — 2026-09-29
 
 API traffic cut over at 02:14 CEST, followed by the profile redirect. The same
 Supabase database and WorkOS project are used. The existing signed-in session
@@ -186,17 +186,17 @@ The legacy API bridge streams bodies and preserves authentication. It uses a
 shared migration secret to authenticate the original client IP for rate limits;
 untrusted relay headers are discarded. It never follows upstream redirects.
 Both old and new API URLs return the same destination avatar URL. Deployment
-configs and GitHub workflow account IDs now target Synara Orgs. Explicit
+configs and GitHub workflow account IDs now target Ramspace Orgs. Explicit
 `wrangler.legacy.jsonc` configs retain the old compatibility endpoints.
 
 GitHub currently has no Cloudflare or account-API deployment secrets in this
 repository. The live migration used Wrangler; CI deployment is not configured
-or verified. No Synara release, commit, push or merge was performed for this
+or verified. No Ramspace release, commit, push or merge was performed for this
 migration. Usage totals still read zero; diagnostics history is separate and
 remains behind its private dashboard.
 
-The operator subsequently selected the available `synara-orgs.workers.dev`
-subdomain (`synara.workers.dev` was occupied). Final origins above use this
+The operator subsequently selected the available `ramspace-orgs.workers.dev`
+subdomain (`ramspace.workers.dev` was occupied). Final origins above use this
 branded suffix. Account renaming invalidates the intermediate personal-label
 Workers URLs; the original source-account compatibility URLs remain valid.
 The second Container rollout `22a86b13-c53c-4eec-bb69-f51c73109a25` completed.
@@ -205,7 +205,7 @@ profile HTML, avatar and social preview are verified on the final hosts.
 The source and destination deployment metadata is saved in the private backup.
 
 After the final rollout, the existing authenticated session returned 200 from
-`https://synara-account-api-trial.synara-orgs.workers.dev/api/v1/me`, preserving
+`https://ramspace-account-api-trial.ramspace-orgs.workers.dev/api/v1/me`, preserving
 the handle and destination avatar URL. Browser verification on the final origins
 showed the profile with its photo and an authenticated diagnostics dashboard
 with the migrated history (79 installs and 12 issues; live totals can change).
@@ -218,6 +218,6 @@ kept enabled throughout the subdomain propagation window.
 - `accentColor` is optional/nullable. A custom HEX takes priority over `themeAccent` on the public page and share cards. `null` restores automatic theme colors; omission preserves a stored choice, including writes from older clients. Desktop background theme sync leaves custom colors alone.
 - Handle renames send `previousHandle`; the API compares it against the current handle and the upsert condition prevents stale writes. The existing unique index rejects occupied handles with `409 handle_taken`. Changing a handle changes its public URL; the old URL returns 404 and the old handle becomes claimable. No redirect aliases were introduced.
 - Additive migration `0020_profile_accent_color.sql` adds `profiles.accent_color` with `IF NOT EXISTS`. API startup applies the migration. No sponsor tables, credentials, RLS policies or usage counters are changed by this migration.
-- Deployed in Synara Orgs: API Worker `b63854c4-ae5d-4ea5-91d7-b6d58fce84a3` (Container image `152ba61832da4c3560df46a1668a7b6408da9491417c50fdc7112ec815a3a973`); profiles Worker `34b4de16-aac0-4aa9-a3d8-53c8770f9475`. Live public API returns 200 and includes `accentColor`; the branded profile route remains available.
+- Deployed in Ramspace Orgs: API Worker `b63854c4-ae5d-4ea5-91d7-b6d58fce84a3` (Container image `152ba61832da4c3560df46a1668a7b6408da9491417c50fdc7112ec815a3a973`); profiles Worker `34b4de16-aac0-4aa9-a3d8-53c8770f9475`. Live public API returns 200 and includes `accentColor`; the branded profile route remains available.
 - A concurrent rename to the same new handle now checks the upsert's `RETURNING` result. A rejected compare-and-set cannot report success or schedule avatar cleanup, even when the winner chose the same handle. A deterministic PostgreSQL row-lock regression reproduces the previous false-success response.
 - Focused verification: 344 API tests against disposable PostgreSQL; 22 profiles tests; 27 web unit tests; 9 theme-sync browser tests; workspace typecheck, lint, formatting and migration lineage checks. The new API regressions fail on the previous implementation. Native verification is recorded in the mobile handoff. The broad workspace suite passed 10 of 11 packages; one unrelated ProviderCommandReactor restart-recovery test failed, then passed in a targeted rerun. The full suite was not rerun after that targeted pass.

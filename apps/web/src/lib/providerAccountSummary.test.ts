@@ -1,4 +1,4 @@
-import type { ServerProviderStatus } from "@synara/contracts";
+import type { ServerProviderStatus } from "@ramspace/contracts";
 import { describe, expect, it } from "vitest";
 
 import { AppSettingsSchema } from "~/appSettings";

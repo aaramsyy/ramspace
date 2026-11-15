@@ -1,5 +1,5 @@
-import type { ClaudeCacheObservation } from "@synara/contracts";
-import { assessClaudeCache } from "@synara/shared/claudeCache";
+import type { ClaudeCacheObservation } from "@ramspace/contracts";
+import { assessClaudeCache } from "@ramspace/shared/claudeCache";
 import { formatContextWindowTokens } from "~/lib/contextWindow";
 import { t, useTranslation } from "~/i18n";
 

@@ -1,7 +1,7 @@
 import { executionStorage } from "./hosts/executionStorage";
-import type { ServerConsumeCodexResetCreditInput } from "@synara/contracts";
+import type { ServerConsumeCodexResetCreditInput } from "@ramspace/contracts";
 
-const storageKey = (accountId: string) => `synara:codex-reset-attempt:${accountId}`;
+const storageKey = (accountId: string) => `ramspace:codex-reset-attempt:${accountId}`;
 
 /** An uncertain redemption survives popover unmounts, reconnects and page reloads. */
 export function readCodexResetAttempt(

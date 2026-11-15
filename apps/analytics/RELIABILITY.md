@@ -7,7 +7,7 @@ identities or chat content belong in this dataset.
 
 ## Rollout
 
-1. Verify the target is the Synara Orgs account and the `synara-beta-diagnostics`
+1. Verify the target is the Ramspace Orgs account and the `ramspace-beta-diagnostics`
    Worker/D1 binding. Inspect the applied migration ledger and schema read-only.
 2. Obtain deployment authorization and a D1 recovery point/export. Apply only
    the reviewed additive `0013_reliability.sql`, and record its completion using
@@ -40,7 +40,7 @@ receipt IDs.
 The same aggregates can be queried through the authenticated Wrangler CLI:
 
 ```sh
-bun run --cwd apps/analytics wrangler d1 execute synara-beta-diagnostics --remote \
+bun run --cwd apps/analytics wrangler d1 execute ramspace-beta-diagnostics --remote \
   --config wrangler.toml \
   --command "SELECT day, app_version, platform, code, SUM(count) AS observations FROM reliability_daily WHERE channel = 'stable' AND day >= date('now', '-6 days') GROUP BY day, app_version, platform, code ORDER BY day DESC, observations DESC LIMIT 200" \
   --json

@@ -18,12 +18,12 @@ import {
 } from "./baseSchemas";
 
 /** Protected-header `typ` values. Consumers must exact-match them. */
-export const HOST_LINK_JWT_TYP = "synara-host-link+jwt" as const;
-export const HOST_PROOF_JWT_TYP = "synara-host-proof+jwt" as const;
-export const DEVICE_REGISTER_JWT_TYP = "synara-device-register+jwt" as const;
-export const GRANT_JWT_TYP = "synara-grant+jwt" as const;
-export const MINT_REQUEST_JWT_TYP = "synara-mint-request+jwt" as const;
-export const SESSION_CREDENTIAL_JWT_TYP = "synara-session-credential+jwt" as const;
+export const HOST_LINK_JWT_TYP = "ramspace-host-link+jwt" as const;
+export const HOST_PROOF_JWT_TYP = "ramspace-host-proof+jwt" as const;
+export const DEVICE_REGISTER_JWT_TYP = "ramspace-device-register+jwt" as const;
+export const GRANT_JWT_TYP = "ramspace-grant+jwt" as const;
+export const MINT_REQUEST_JWT_TYP = "ramspace-mint-request+jwt" as const;
+export const SESSION_CREDENTIAL_JWT_TYP = "ramspace-session-credential+jwt" as const;
 export const DPOP_JWT_TYP = "dpop+jwt" as const;
 
 // Claim KEY names are not exported as constants: the Schema.Struct claim
@@ -39,9 +39,9 @@ export const SESSION_CREDENTIAL_MAX_AGE_SECONDS = 60 * 60;
 export const JWT_CLOCK_TOLERANCE_SECONDS = 60;
 
 export const HOST_CONNECT_SCOPE = "host:connect" as const;
-export const SYNARA_RELAY_AUDIENCE = "synara-relay" as const;
-export const SYNARA_SESSION_AUDIENCE = "synara-session" as const;
-export const SYNARA_DEVICE_ISSUER = "synara-device" as const;
+export const RAMSPACE_RELAY_AUDIENCE = "ramspace-relay" as const;
+export const RAMSPACE_SESSION_AUDIENCE = "ramspace-session" as const;
+export const RAMSPACE_DEVICE_ISSUER = "ramspace-device" as const;
 
 const Uuid = Schema.String.check(Schema.isUUID(undefined));
 const JwtString = boundedTrimmedNonEmptyString(ACCOUNT_AUTH_TOKEN_MAX_LENGTH * 4);

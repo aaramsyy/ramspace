@@ -4,8 +4,8 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 
 import forwarder from "./worker";
 
-const OLD = "https://synara-beta-diagnostics.kartik-9f9.workers.dev";
-const NEW = "https://synara-beta-diagnostics.example.workers.dev";
+const OLD = "https://ramspace-beta-diagnostics.kartik-9f9.workers.dev";
+const NEW = "https://ramspace-beta-diagnostics.example.workers.dev";
 
 afterEach(() => vi.unstubAllGlobals());
 

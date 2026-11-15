@@ -25,7 +25,7 @@ vi.mock("node:fs/promises", async () => {
 const tempDirectories: Array<string> = [];
 
 async function makeDbPath(): Promise<string> {
-  const directory = await fs.mkdtemp(path.join(os.tmpdir(), "synara-db-lock-"));
+  const directory = await fs.mkdtemp(path.join(os.tmpdir(), "ramspace-db-lock-"));
   tempDirectories.push(directory);
   return path.join(directory, "state.sqlite");
 }

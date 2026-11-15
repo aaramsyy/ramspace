@@ -2,7 +2,7 @@ import {
   ProjectId,
   type ExternalMcpCapability,
   type ExternalMcpCreateIntegrationResult,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useMemo, useState } from "react";
 
@@ -259,7 +259,7 @@ export function ExternalMcpSettingsPanel(props: { active: boolean }) {
           <SettingsRow
             id="setting-name"
             title="common:scripts_name"
-            description="settings:howThisConnectionAppearsInSynaraWorksWithCodex"
+            description="settings:howThisConnectionAppearsInRamspaceWorksWithCodex"
             control={
               <Input
                 className="w-full sm:w-64"
@@ -271,8 +271,8 @@ export function ExternalMcpSettingsPanel(props: { active: boolean }) {
             }
           />
           <SettingsRow
-            id="setting-access-all-of-synara"
-            title="settings:accessAllOfSynara"
+            id="setting-access-all-of-ramspace"
+            title="settings:accessAllOfRamspace"
             description="settings:theAgentCanDiscoverAndWorkInEveryProject"
             control={<Switch checked={allProjects} onCheckedChange={setAllProjects} />}
           >

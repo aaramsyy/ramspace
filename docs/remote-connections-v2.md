@@ -6,7 +6,7 @@ The transport now uses managed Cloudflare tunnels; see [operations](cloudflare-r
 
 A window shows projects and chats from the local computer and its connected hosts together. Opening a chat selects its owning environment; it does not switch or reload the whole application. Account, host directory and connection management always use the local controller. Projects, provider sessions, filesystem, Git and terminals remain owned by their execution host. Each remote workspace uses a persistent, same-origin application frame with its own verified execution context, RPC clients, stores, query cache, resume cursors and router. The outer sidebar receives project/thread navigation summaries; it never substitutes the active host in an in-flight operation. Frames load only the bundled application, never repository HTML. The local workspace stays available when a remote workspace cannot start or reconnect. Scoped editor recovery survives explicit disconnection. “Export editor drafts” also retrieves remote recoveries for the currently verified account when the window is local. It never writes those paths on the controller.
 
-Remote v2 requires Node 24, including Electron's Node runtime. Local Bun development still works; Bun cannot enable v2. Stable rejects remote connections. Beta/Canary enable the locally qualified transport; a headless development server requires `SYNARA_REMOTE_CONNECTIONS=1`. Importing Stable state into Beta suspends remote activation and preserves the destination identity. Account profile sync and host secrets sync remain disabled on both client and server.
+Remote v2 requires Node 24, including Electron's Node runtime. Local Bun development still works; Bun cannot enable v2. Stable rejects remote connections. Beta/Canary enable the locally qualified transport; a headless development server requires `RAMSPACE_REMOTE_CONNECTIONS=1`. Importing Stable state into Beta suspends remote activation and preserves the destination identity. Account profile sync and host secrets sync remain disabled on both client and server.
 
 The outer binary WebSocket carries TLS 1.3. Direct, SSH-forward and Cloudflare use the same authenticated TLS tunnel. The inner RPC WebSocket and typed HTTP resources use a host-specific P-256 root and SAN, never a public-CA fallback or plaintext downgrade. Roots last ten years; server leaves last ninety days and renew thirty days before expiry. Missing or replaced roots require explicit repair and pairing. Keys stay in the installation's private secret store; no system trust-store installation is needed.
 
@@ -47,7 +47,7 @@ account first, then request a fresh code if it has expired. Switching accounts
 disconnects the previous account's runtimes without deleting saved pairings.
 
 Connections are directional: pairing a MacBook to a Mini does not automatically authorize the
-Mini to control the MacBook. Each execution host needs its own eligible Synara runtime, account
+Mini to control the MacBook. Each execution host needs its own eligible Ramspace runtime, account
 registration, reachable endpoint and explicit device approval. The tested setup uses managed
 Cloudflare tunnels. `--ssh-forward-port` exposes a loopback entry point for manually arranged
 SSH forwarding; there is no complete SSH machine/key setup flow or automatic SSH route discovery.
@@ -65,13 +65,13 @@ raising a single limit would not establish support for unlimited connections.
 Run on the execution host, against its existing verified loopback server, using its configured home directory and Node 24. These commands use the same owner RPC and capability gate as Settings; they do not edit trust databases directly.
 
 ```sh
-synara --home-dir /path/to/isolated-home remote invite --output /private/path/invitation.json
-synara --home-dir /path/to/isolated-home remote list
-synara --home-dir /path/to/isolated-home remote approve --invite-id INVITE_ID --device-jkt EXACT_REQUESTING_JKT
-synara --home-dir /path/to/isolated-home remote reject --invite-id INVITE_ID
+ramspace --home-dir /path/to/isolated-home remote invite --output /private/path/invitation.json
+ramspace --home-dir /path/to/isolated-home remote list
+ramspace --home-dir /path/to/isolated-home remote approve --invite-id INVITE_ID --device-jkt EXACT_REQUESTING_JKT
+ramspace --home-dir /path/to/isolated-home remote reject --invite-id INVITE_ID
 ```
 
-The invitation file is created exclusively with mode `0600`; its secret is not printed. If a response is lost, inspect the host state before retrying. An existing invitation file is never overwritten. Where the loopback server requires a bootstrap token, use its existing `SYNARA_AUTH_TOKEN` environment configuration.
+The invitation file is created exclusively with mode `0600`; its secret is not printed. If a response is lost, inspect the host state before retrying. An existing invitation file is never overwritten. Where the loopback server requires a bootstrap token, use its existing `RAMSPACE_AUTH_TOKEN` environment configuration.
 
 ## Linked projects
 
@@ -91,7 +91,7 @@ Agent-controlled browser, dev-server previews, Computer Use, device control, App
 
 Main SQLite migrations 1–108 are unchanged. The historical private account tails are recognized by exact manifests before tracker repair; unknown hybrids fail closed. Usage migrations occupy 109/110, durable remote trust and pairing metadata 111, and desired host state 112. API PostgreSQL migrations are a separate chain: verified device/session binding and revocation delivery records are additive.
 
-Qualification uses disposable SQLite, PostgreSQL and fake WorkOS fixtures, real Node sockets, an HTTPS Cloudflare-boundary fixture, Chromium and Electron. No user state or production account is needed. Relevant owners include `remoteSessions/httpRoute.test.ts`, `hostConnections/resourcePool.test.ts`, `hostConnections/registry.test.ts`, `hostConnections/port.test.ts`, API host authorization tests, execution-storage tests and browser host/catalog/picker tests. `SYNARA_RUNTIME_SMOKE=remote-tls` runs certificate generation/renewal and a 512 KiB encrypted round trip from the built runtime dependency smoke entrypoint.
+Qualification uses disposable SQLite, PostgreSQL and fake WorkOS fixtures, real Node sockets, an HTTPS Cloudflare-boundary fixture, Chromium and Electron. No user state or production account is needed. Relevant owners include `remoteSessions/httpRoute.test.ts`, `hostConnections/resourcePool.test.ts`, `hostConnections/registry.test.ts`, `hostConnections/port.test.ts`, API host authorization tests, execution-storage tests and browser host/catalog/picker tests. `RAMSPACE_RUNTIME_SMOKE=remote-tls` runs certificate generation/renewal and a 512 KiB encrypted round trip from the built runtime dependency smoke entrypoint.
 
 Two physical Macs, authenticated providers, Linux headless behavior, Windows packaging, signed distribution and network/sleep recovery require separate qualification. A local bundle or Electron fixture does not establish those results. Do not claim release qualification until the corresponding evidence is recorded.
 
@@ -101,11 +101,11 @@ The paragraphs below record the prior relay implementation. Its source and contr
 
 The migrated `apps/e2e` harness uses the production relay application in a Bun child process, the real Node/Effect host gateway, TLS and explicit exact-key owner approval, against isolated PostgreSQL and fake WorkOS. It covers relay/direct bytes, grant replay, account/relay outages, owner-only admission, backpressure and targeted session closure/expiry. It does not launch a paid agent. The inactive Host Secrets cryptographic core retains its tests; server admission for that feature stays disabled.
 
-Run it on Node 24 with an isolated database and `SYNARA_E2E_AGENT=0 TEST_DATABASE_URL=... bun run --cwd apps/e2e test`. Each fixture uses an ephemeral home and loopback ports. This transport suite is separate from the full-workspace qualification below.
+Run it on Node 24 with an isolated database and `RAMSPACE_E2E_AGENT=0 TEST_DATABASE_URL=... bun run --cwd apps/e2e test`. Each fixture uses an ephemeral home and loopback ports. This transport suite is separate from the full-workspace qualification below.
 
 The packaged TLS proof ran the built server smoke entry from an isolated `app.asar` with its copied runtime dependencies, using Electron 43.4.1 / Node 24.18.1. It generated P-256 certificates, checked private permissions, renewed the leaf without replacing the root and transferred 524,288 bytes. This is not a signed full application artifact or a Linux/Windows runtime qualification.
 
-A separate build-dependent workflow runs with `SYNARA_E2E_AGENT=0 TEST_DATABASE_URL=... bun run --cwd apps/e2e test:workspace`. It launches two built Node servers, the real Bun relay and Chromium with isolated homes. A deterministic provider CLI replaces only the external provider process. The real adapter and orchestration stream a task, continue while the controller is stopped, and restore the completed transcript after restart without replay. It also checks remote filesystem routing, attachment bytes and hashes across reconnect, approval and cancellation, and local recovery. This establishes fixture-provider continuity, not authenticated provider success. The expanded scenario also passes Git branch and terminal routing, attachment Range requests, revocation cutting off RPC/resources, and provider-process cleanup on host shutdown. Cancelling or refusing a relay splice must preserve the control connection and other sessions; native WebSocket regressions cover both this isolation and deferred errors during opening cancellation. The same browser workflow also interrupts the actual Bun relay during a running turn, records a provider delta while disconnected, and recovers that text after restarting the relay at the same origin without a browser reload. The provider PID and single-turn assertion cover both relay recovery and controller restart. Accelerated authorization expiry and one-use renewal remain separate real-socket tests; this does not claim a one-hour end-to-end credential soak.
+A separate build-dependent workflow runs with `RAMSPACE_E2E_AGENT=0 TEST_DATABASE_URL=... bun run --cwd apps/e2e test:workspace`. It launches two built Node servers, the real Bun relay and Chromium with isolated homes. A deterministic provider CLI replaces only the external provider process. The real adapter and orchestration stream a task, continue while the controller is stopped, and restore the completed transcript after restart without replay. It also checks remote filesystem routing, attachment bytes and hashes across reconnect, approval and cancellation, and local recovery. This establishes fixture-provider continuity, not authenticated provider success. The expanded scenario also passes Git branch and terminal routing, attachment Range requests, revocation cutting off RPC/resources, and provider-process cleanup on host shutdown. Cancelling or refusing a relay splice must preserve the control connection and other sessions; native WebSocket regressions cover both this isolation and deferred errors during opening cancellation. The same browser workflow also interrupts the actual Bun relay during a running turn, records a provider delta while disconnected, and recovers that text after restarting the relay at the same origin without a browser reload. The provider PID and single-turn assertion cover both relay recovery and controller restart. Accelerated authorization expiry and one-use renewal remain separate real-socket tests; this does not claim a one-hour end-to-end credential soak.
 
 The Cua benchmark snapshot test now creates a temporary repository from the actual checkout inputs, preserving its checksum and license assertions. It no longer depends on an unrelated committed `HEAD` while validating pending work.
 
@@ -192,9 +192,9 @@ frame reach the outer sidebar while terminal and model-picker shortcut ownership
 
 ## Agent tools across computers
 
-The internal Synara MCP gateway follows the executing chat's computer. The sidebar's
+The internal Ramspace MCP gateway follows the executing chat's computer. The sidebar's
 combined navigation does not implicitly broaden a tool's target. An agent first calls
-`synara_list_connections`, then passes the returned `environmentId` to the existing
+`ramspace_list_connections`, then passes the returned `environmentId` to the existing
 project/thread tools. Omitting it retains local behavior. List projects and threads once
 per computer; retain `{environmentId, projectId}` and `{environmentId, threadId}` even
 when the raw IDs happen to match. Connections belong to the executing server, so a

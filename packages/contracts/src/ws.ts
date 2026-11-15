@@ -430,7 +430,7 @@ export const WS_METHODS = {
   providerListModels: "provider.listModels",
   providerListAgents: "provider.listAgents",
 
-  // Account (Synara account session brokered by the server)
+  // Account (Ramspace account session brokered by the server)
   accountStatus: "account.status",
   accountBillingStatus: "account.billingStatus",
   accountBillingCheckout: "account.billingCheckout",

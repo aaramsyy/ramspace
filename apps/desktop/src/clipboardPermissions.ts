@@ -1,11 +1,11 @@
 import type { WebContents } from "electron";
 import {
-  SYNARA_BETA_DESKTOP_SCHEME,
-  SYNARA_CANARY_DESKTOP_SCHEME,
-  SYNARA_CUA_DESKTOP_SCHEME,
-  SYNARA_DESKTOP_SCHEME,
-  SYNARA_REMOTE_DESKTOP_SCHEME,
-} from "@synara/shared/desktopIdentity";
+  RAMSPACE_BETA_DESKTOP_SCHEME,
+  RAMSPACE_CANARY_DESKTOP_SCHEME,
+  RAMSPACE_CUA_DESKTOP_SCHEME,
+  RAMSPACE_DESKTOP_SCHEME,
+  RAMSPACE_REMOTE_DESKTOP_SCHEME,
+} from "@ramspace/shared/desktopIdentity";
 
 /** Copy buttons share the OS clipboard; background reads remain denied. */
 export function isClipboardWritePermission(
@@ -26,11 +26,11 @@ export function isClipboardWritePermission(
     // returned to the composer when an asynchronous copy requests permission.
     const page = new URL(requester.getURL());
     const trustedScheme =
-      page.protocol === `${SYNARA_DESKTOP_SCHEME}:` ||
-      page.protocol === `${SYNARA_CANARY_DESKTOP_SCHEME}:` ||
-      page.protocol === `${SYNARA_CUA_DESKTOP_SCHEME}:` ||
-      page.protocol === `${SYNARA_BETA_DESKTOP_SCHEME}:` ||
-      page.protocol === `${SYNARA_REMOTE_DESKTOP_SCHEME}:`;
+      page.protocol === `${RAMSPACE_DESKTOP_SCHEME}:` ||
+      page.protocol === `${RAMSPACE_CANARY_DESKTOP_SCHEME}:` ||
+      page.protocol === `${RAMSPACE_CUA_DESKTOP_SCHEME}:` ||
+      page.protocol === `${RAMSPACE_BETA_DESKTOP_SCHEME}:` ||
+      page.protocol === `${RAMSPACE_REMOTE_DESKTOP_SCHEME}:`;
     if (trustedScheme && (page.host !== "app" || page.username || page.password)) return false;
     if (
       page.protocol !== "https:" &&

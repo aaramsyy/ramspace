@@ -31,20 +31,20 @@ import {
   type ServerSettingsView,
   type ServerSettingsPatch,
   type ServerUpdateSettingsInput,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import {
   getDefaultModel,
   getModelOptions,
   normalizeModelSlug,
   resolveSelectableModel,
-} from "@synara/shared/model";
+} from "@ramspace/shared/model";
 import {
   APP_SNAP_SHORTCUT_KEYS,
   APP_SNAP_SHORTCUT_MODIFIERS,
   DEFAULT_APP_SNAP_SHORTCUT,
-} from "@synara/shared/appSnapShortcut";
-import type { SynaraDesktopFlavor } from "@synara/shared/desktopIdentity";
-import { codexAccountInstanceId } from "@synara/shared/providerInstances";
+} from "@ramspace/shared/appSnapShortcut";
+import type { RamspaceDesktopFlavor } from "@ramspace/shared/desktopIdentity";
+import { codexAccountInstanceId } from "@ramspace/shared/providerInstances";
 import { useLocalStorage } from "./hooks/useLocalStorage";
 import { APP_SETTINGS_STORAGE_KEY } from "./appSettingsStorage";
 import { EnvMode } from "./components/BranchToolbar.logic";
@@ -81,7 +81,7 @@ import {
   normalizeChatWidthMode as normalizeChatWidthModeValue,
 } from "./lib/chatWidth";
 
-const SERVER_SETTINGS_MIGRATION_STORAGE_KEY = "synara:server-settings-migrated:v1";
+const SERVER_SETTINGS_MIGRATION_STORAGE_KEY = "ramspace:server-settings-migrated:v1";
 
 function hasCompletedServerSettingsMigration(): boolean {
   return globalThis.localStorage?.getItem(SERVER_SETTINGS_MIGRATION_STORAGE_KEY) === "1";
@@ -90,7 +90,7 @@ function hasCompletedServerSettingsMigration(): boolean {
 // Hubs ("studio") used to start hidden in the rail, and saved settings still carry that
 // default. The first launch after it became a default item shows it once; hiding it again
 // from Customize afterwards sticks.
-const HUBS_RAIL_DEFAULT_MIGRATION_STORAGE_KEY = "synara:hubs-rail-default:v1";
+const HUBS_RAIL_DEFAULT_MIGRATION_STORAGE_KEY = "ramspace:hubs-rail-default:v1";
 
 /**
  * Rewrites the stored settings once, before the app renders: every `useAppSettings` mount
@@ -477,7 +477,7 @@ export const AppSettingsSchema = Schema.Struct({
   // (and the surfaces derived from it: Kanban, Activity, project picker). Runs stay
   // listed on the automation's page and findable via search either way.
   showAutomationRunThreads: Schema.Boolean.pipe(withDefaults(() => true)),
-  // Nest threads an agent created from another thread (synara_create_thread) under that
+  // Nest threads an agent created from another thread (ramspace_create_thread) under that
   // creator thread in the project sidebar tree.
   nestAgentCreatedThreads: Schema.Boolean.pipe(withDefaults(() => false)),
   // Local-only UI preferences: which optional sections of the chat Environment panel are
@@ -641,7 +641,7 @@ export type AppSettings = typeof AppSettingsSchema.Type;
  * defaulting via getAppIcon, and the Appearance reset uses this for its target.
  */
 export function defaultDesktopAppIconForFlavor(
-  flavor: SynaraDesktopFlavor | "unknown",
+  flavor: RamspaceDesktopFlavor | "unknown",
 ): DesktopAppIcon {
   return flavor === "beta" ? "beta" : "default";
 }

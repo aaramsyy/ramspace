@@ -14,7 +14,7 @@ import { connectRemoteWebSocket, RemoteTlsServer } from "./tunnel";
 
 /** Executed from the built server and packaged Electron Node runtime. */
 export async function verifyRemoteTlsRuntime(): Promise<void> {
-  const directory = await fs.mkdtemp(path.join(os.tmpdir(), "synara-tls-runtime-"));
+  const directory = await fs.mkdtemp(path.join(os.tmpdir(), "ramspace-tls-runtime-"));
   let tunnel: RemoteTlsServer | undefined;
   let listener: WebSocketServer | undefined;
   try {

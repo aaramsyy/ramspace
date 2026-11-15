@@ -21,9 +21,9 @@ import {
   ProviderRuntimeEvent,
   ThreadId,
   TurnId,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { assert, describe, it } from "@effect/vitest";
-import { assessClaudeCache } from "@synara/shared/claudeCache";
+import { assessClaudeCache } from "@ramspace/shared/claudeCache";
 import {
   Cause,
   Deferred,
@@ -42,7 +42,7 @@ import { TestClock } from "effect/testing";
 import { afterEach, beforeEach, vi } from "vitest";
 
 import { attachmentRelativePath } from "../../attachmentStore.ts";
-import { SYNARA_HARNESS_POLICY_MARKER } from "../../agentGateway/harnessPolicy.ts";
+import { RAMSPACE_HARNESS_POLICY_MARKER } from "../../agentGateway/harnessPolicy.ts";
 import {
   AgentGatewayCredentials,
   type AgentGatewayCredentialsShape,
@@ -771,22 +771,22 @@ function fakeSlashCommand(entry: string) {
   return alias ? Object.assign(command, { aliases: [alias] }) : command;
 }
 
-describe("Claude Synara harness policy", () => {
+describe("Claude Ramspace harness policy", () => {
   it("advertises scoped MCP additively when credentials are available", () => {
     const text = buildEmbeddedClaudeSystemPromptAppend(true);
-    assert.include(text, SYNARA_HARNESS_POLICY_MARKER);
+    assert.include(text, RAMSPACE_HARNESS_POLICY_MARKER);
     assert.include(text, "Final responses must restate every needed scope");
     assert.include(text, "include all decision context");
-    assert.include(text, "Use the synara_* tools");
-    assert.notInclude(text, "Synara MCP control is unavailable");
+    assert.include(text, "Use the ramspace_* tools");
+    assert.notInclude(text, "Ramspace MCP control is unavailable");
   });
 
   it("stays truthful when scoped MCP credentials are absent", () => {
     const text = buildEmbeddedClaudeSystemPromptAppend(false);
-    assert.include(text, SYNARA_HARNESS_POLICY_MARKER);
+    assert.include(text, RAMSPACE_HARNESS_POLICY_MARKER);
     assert.include(text, "Final responses must restate every needed scope");
     assert.include(text, "include all decision context");
-    assert.include(text, "Synara MCP control is unavailable");
+    assert.include(text, "Ramspace MCP control is unavailable");
   });
 });
 
@@ -876,59 +876,62 @@ describe("ClaudeAdapterLive", () => {
     },
   );
 
-  it.effect("starts an environment-only runtime with its Synara-scoped account directories", () => {
-    const harness = makeHarness();
-    return Effect.acquireUseRelease(
-      Effect.sync(() => {
-        const previous = process.env.CLAUDE_CONFIG_DIR;
-        process.env.CLAUDE_CONFIG_DIR = "/tmp/default-claude-config";
-        return previous;
-      }),
-      () =>
-        Effect.gen(function* () {
-          const adapter = yield* ClaudeAdapter;
-          yield* adapter.startSession({
-            threadId: THREAD_ID,
-            provider: "claudeAgent",
-            providerInstanceId: "claude_work",
-            modelSelection: {
-              provider: "claudeAgent",
-              instanceId: "claude_work",
-              model: "claude-sonnet-4-5",
-            },
-            providerOptions: {
-              claudeAgent: {
-                environment: { ANTHROPIC_AUTH_TOKEN: "work-token" },
-              },
-            },
-            runtimeMode: "full-access",
-          });
-
-          const queryEnv = harness.getLastCreateQueryInput()?.options.env;
-          const accountHome = claudeIsolatedHomePath({
-            isolationRootDir: "/tmp/userdata",
-            providerInstanceId: "claude_work",
-          });
-          if (process.platform === "darwin") {
-            assert.equal(queryEnv?.CLAUDE_CONFIG_DIR, path.join(accountHome, ".claude"));
-            assert.equal(queryEnv?.CLAUDE_SECURESTORAGE_CONFIG_DIR, queryEnv?.CLAUDE_CONFIG_DIR);
-            assert.notEqual(queryEnv?.HOME, accountHome);
-          } else {
-            assert.equal(queryEnv?.HOME, accountHome);
-            assert.equal(queryEnv?.CLAUDE_CONFIG_DIR, undefined);
-          }
-          assert.equal(queryEnv?.ANTHROPIC_AUTH_TOKEN, "work-token");
-        }),
-      (previous) =>
+  it.effect(
+    "starts an environment-only runtime with its Ramspace-scoped account directories",
+    () => {
+      const harness = makeHarness();
+      return Effect.acquireUseRelease(
         Effect.sync(() => {
-          if (previous === undefined) delete process.env.CLAUDE_CONFIG_DIR;
-          else process.env.CLAUDE_CONFIG_DIR = previous;
+          const previous = process.env.CLAUDE_CONFIG_DIR;
+          process.env.CLAUDE_CONFIG_DIR = "/tmp/default-claude-config";
+          return previous;
         }),
-    ).pipe(
-      Effect.provideService(Random.Random, makeDeterministicRandomService()),
-      Effect.provide(harness.layer),
-    );
-  });
+        () =>
+          Effect.gen(function* () {
+            const adapter = yield* ClaudeAdapter;
+            yield* adapter.startSession({
+              threadId: THREAD_ID,
+              provider: "claudeAgent",
+              providerInstanceId: "claude_work",
+              modelSelection: {
+                provider: "claudeAgent",
+                instanceId: "claude_work",
+                model: "claude-sonnet-4-5",
+              },
+              providerOptions: {
+                claudeAgent: {
+                  environment: { ANTHROPIC_AUTH_TOKEN: "work-token" },
+                },
+              },
+              runtimeMode: "full-access",
+            });
+
+            const queryEnv = harness.getLastCreateQueryInput()?.options.env;
+            const accountHome = claudeIsolatedHomePath({
+              isolationRootDir: "/tmp/userdata",
+              providerInstanceId: "claude_work",
+            });
+            if (process.platform === "darwin") {
+              assert.equal(queryEnv?.CLAUDE_CONFIG_DIR, path.join(accountHome, ".claude"));
+              assert.equal(queryEnv?.CLAUDE_SECURESTORAGE_CONFIG_DIR, queryEnv?.CLAUDE_CONFIG_DIR);
+              assert.notEqual(queryEnv?.HOME, accountHome);
+            } else {
+              assert.equal(queryEnv?.HOME, accountHome);
+              assert.equal(queryEnv?.CLAUDE_CONFIG_DIR, undefined);
+            }
+            assert.equal(queryEnv?.ANTHROPIC_AUTH_TOKEN, "work-token");
+          }),
+        (previous) =>
+          Effect.sync(() => {
+            if (previous === undefined) delete process.env.CLAUDE_CONFIG_DIR;
+            else process.env.CLAUDE_CONFIG_DIR = previous;
+          }),
+      ).pipe(
+        Effect.provideService(Random.Random, makeDeterministicRandomService()),
+        Effect.provide(harness.layer),
+      );
+    },
+  );
 
   it("sets Windows profile variables for configured Claude homes", () => {
     assert.deepEqual(claudeHomeEnvironment("C:\\Users\\work\\.claude-work", "win32"), {
@@ -1011,7 +1014,7 @@ describe("ClaudeAdapterLive", () => {
     },
   );
 
-  it.effect("injects the canonical Synara browser MCP into an Opus 4.8 session", () => {
+  it.effect("injects the canonical Ramspace browser MCP into an Opus 4.8 session", () => {
     const gateway = makeGatewayCredentialsHarness();
     const harness = makeMultiQueryHarness({ gatewayCredentials: gateway.credentials });
     return Effect.gen(function* () {
@@ -1029,7 +1032,7 @@ describe("ClaudeAdapterLive", () => {
       const options = harness.createInputs[0]?.options;
       assert.equal(options?.model, "claude-opus-4-8");
       assert.deepEqual(options?.mcpServers, {
-        synara: {
+        ramspace: {
           type: "http",
           url: "http://127.0.0.1:48123/mcp",
           headers: { Authorization: "Bearer gateway-token-1" },
@@ -1073,7 +1076,7 @@ describe("ClaudeAdapterLive", () => {
   });
 
   it.effect(
-    "pre-approves Synara group tools for an opted-in coordinator session while Bash still asks",
+    "pre-approves Ramspace group tools for an opted-in coordinator session while Bash still asks",
     () => {
       const gateway = makeGatewayCredentialsHarness();
       const harness = makeMultiQueryHarness({ gatewayCredentials: gateway.credentials });
@@ -1083,7 +1086,7 @@ describe("ClaudeAdapterLive", () => {
           threadId: THREAD_ID,
           provider: "claudeAgent",
           runtimeMode: "approval-required",
-          autoApproveSynaraTools: true,
+          autoApproveRamspaceTools: true,
         });
 
         const canUseTool = harness.createInputs[0]?.options.canUseTool;
@@ -1092,8 +1095,8 @@ describe("ClaudeAdapterLive", () => {
         }
 
         for (const [index, toolName] of [
-          "mcp__synara__synara_create_thread",
-          "synara_project_link_repository",
+          "mcp__ramspace__ramspace_create_thread",
+          "ramspace_project_link_repository",
         ].entries()) {
           const result = (yield* Effect.promise(() =>
             canUseTool(
@@ -1101,8 +1104,8 @@ describe("ClaudeAdapterLive", () => {
               {},
               {
                 signal: new AbortController().signal,
-                toolUseID: `tool-use-synara-${index}`,
-                requestId: `request-synara-${index}`,
+                toolUseID: `tool-use-ramspace-${index}`,
+                requestId: `request-ramspace-${index}`,
               },
             ),
           )) as PermissionResult;
@@ -1143,54 +1146,57 @@ describe("ClaudeAdapterLive", () => {
     },
   );
 
-  it.effect("keeps Synara group tools on the approval path when the session did not opt in", () => {
-    const gateway = makeGatewayCredentialsHarness();
-    const harness = makeMultiQueryHarness({ gatewayCredentials: gateway.credentials });
-    return Effect.gen(function* () {
-      const adapter = yield* ClaudeAdapter;
-      yield* adapter.startSession({
-        threadId: THREAD_ID,
-        provider: "claudeAgent",
-        runtimeMode: "approval-required",
-      });
+  it.effect(
+    "keeps Ramspace group tools on the approval path when the session did not opt in",
+    () => {
+      const gateway = makeGatewayCredentialsHarness();
+      const harness = makeMultiQueryHarness({ gatewayCredentials: gateway.credentials });
+      return Effect.gen(function* () {
+        const adapter = yield* ClaudeAdapter;
+        yield* adapter.startSession({
+          threadId: THREAD_ID,
+          provider: "claudeAgent",
+          runtimeMode: "approval-required",
+        });
 
-      const canUseTool = harness.createInputs[0]?.options.canUseTool;
-      if (!canUseTool) {
-        return assert.fail("Expected a canUseTool hook on the query options.");
-      }
+        const canUseTool = harness.createInputs[0]?.options.canUseTool;
+        if (!canUseTool) {
+          return assert.fail("Expected a canUseTool hook on the query options.");
+        }
 
-      const pending = canUseTool(
-        "mcp__synara__synara_create_thread",
-        {},
-        {
-          signal: new AbortController().signal,
-          toolUseID: "tool-use-synara-no-opt-in",
-          requestId: "request-synara-no-opt-in",
-        },
+        const pending = canUseTool(
+          "mcp__ramspace__ramspace_create_thread",
+          {},
+          {
+            signal: new AbortController().signal,
+            toolUseID: "tool-use-ramspace-no-opt-in",
+            requestId: "request-ramspace-no-opt-in",
+          },
+        );
+        const requested = yield* Stream.filter(
+          adapter.streamEvents,
+          (event) => event.type === "request.opened",
+        ).pipe(Stream.runHead);
+        if (requested._tag !== "Some" || requested.value.type !== "request.opened") {
+          return assert.fail("A non-opted-in session must still ask for gateway tools.");
+        }
+        if (!requested.value.requestId) {
+          return assert.fail("The approval request must carry a request id.");
+        }
+        yield* adapter.respondToRequest(
+          THREAD_ID,
+          ApprovalRequestId.makeUnsafe(requested.value.requestId),
+          "decline",
+        );
+        yield* Stream.runHead(adapter.streamEvents);
+        const result = (yield* Effect.promise(() => pending)) as PermissionResult;
+        assert.equal(result.behavior, "deny");
+      }).pipe(
+        Effect.provideService(Random.Random, makeDeterministicRandomService()),
+        Effect.provide(harness.layer),
       );
-      const requested = yield* Stream.filter(
-        adapter.streamEvents,
-        (event) => event.type === "request.opened",
-      ).pipe(Stream.runHead);
-      if (requested._tag !== "Some" || requested.value.type !== "request.opened") {
-        return assert.fail("A non-opted-in session must still ask for gateway tools.");
-      }
-      if (!requested.value.requestId) {
-        return assert.fail("The approval request must carry a request id.");
-      }
-      yield* adapter.respondToRequest(
-        THREAD_ID,
-        ApprovalRequestId.makeUnsafe(requested.value.requestId),
-        "decline",
-      );
-      yield* Stream.runHead(adapter.streamEvents);
-      const result = (yield* Effect.promise(() => pending)) as PermissionResult;
-      assert.equal(result.behavior, "deny");
-    }).pipe(
-      Effect.provideService(Random.Random, makeDeterministicRandomService()),
-      Effect.provide(harness.layer),
-    );
-  });
+    },
+  );
 
   it.effect("rejects Auto on an unsupported selected Claude binary before session startup", () => {
     const query = new FakeClaudeQuery();
@@ -1411,10 +1417,10 @@ describe("ClaudeAdapterLive", () => {
       assert.include(systemPrompt.append ?? "", "Do the work yourself by default.");
       assert.include(systemPrompt.append ?? "", "When spawning subagents");
       assert.include(systemPrompt.append ?? "", "worker-<tier>");
-      assert.include(systemPrompt.append ?? "", SYNARA_HARNESS_POLICY_MARKER);
-      assert.include(systemPrompt.append ?? "", "Synara is the host and harness");
+      assert.include(systemPrompt.append ?? "", RAMSPACE_HARNESS_POLICY_MARKER);
+      assert.include(systemPrompt.append ?? "", "Ramspace is the host and harness");
       // This characterization harness intentionally omits gateway credentials.
-      assert.include(systemPrompt.append ?? "", "Synara MCP control is unavailable");
+      assert.include(systemPrompt.append ?? "", "Ramspace MCP control is unavailable");
     }).pipe(
       Effect.provideService(Random.Random, makeDeterministicRandomService()),
       Effect.provide(harness.layer),
@@ -2346,7 +2352,7 @@ describe("ClaudeAdapterLive", () => {
         assert.lengthOf(snapshot.turns, 1);
         assert.deepEqual(snapshot.turns[0]!.items, []);
         const eventJson = JSON.stringify(events);
-        assert.include(eventJson, '"synaraImageOmitted":true');
+        assert.include(eventJson, '"ramspaceImageOmitted":true');
         assert.notInclude(eventJson, data);
         assert.isBelow(eventJson.length, 30_000);
         assert.equal(image.source.data, data);
@@ -9312,7 +9318,7 @@ await agent("Draft the spec", { label: "delta-agent", phase: "Two" });
 
       const permissionPromise = canUseTool(
         "mcp__github__create_issue",
-        { repo: "synara", apiKey: "ghp_live_secret" },
+        { repo: "ramspace", apiKey: "ghp_live_secret" },
         {
           signal: new AbortController().signal,
           toolUseID: "tool-use-secret-1",
@@ -9326,7 +9332,7 @@ await agent("Draft the spec", { label: "delta-agent", phase: "Two" });
       }
       assert.equal(
         requested.value.payload.detail,
-        'mcp__github__create_issue: {"repo":"synara","apiKey":"[redacted]"}',
+        'mcp__github__create_issue: {"repo":"ramspace","apiKey":"[redacted]"}',
       );
 
       yield* adapter.respondToRequest(
@@ -9450,7 +9456,7 @@ await agent("Draft the spec", { label: "delta-agent", phase: "Two" });
 
         const result = yield* Effect.promise(() =>
           canUseTool(
-            "mcp__synara__computer_click",
+            "mcp__ramspace__computer_click",
             { x: 12, y: 34 },
             {
               signal: new AbortController().signal,
@@ -9515,15 +9521,15 @@ await agent("Draft the spec", { label: "delta-agent", phase: "Two" });
 
       // MCP tools are the case that regressed: they classify as `mcp_tool_call`
       // item-wise, and the approval must still carry the canonical request type.
-      const mcpOpened = yield* requestTypeFor("mcp__synara__computer_launch_app", {
+      const mcpOpened = yield* requestTypeFor("mcp__ramspace__computer_launch_app", {
         app: "kcalc",
       });
       assert.equal(mcpOpened?.payload.requestType, "tool_approval");
       assert.deepEqual(mcpOpened?.payload.args as Record<string, unknown> | undefined, {
-        toolName: "mcp__synara__computer_launch_app",
+        toolName: "mcp__ramspace__computer_launch_app",
         input: { app: "kcalc" },
         sessionApprovalAvailable: false,
-        toolUseId: "tool-use-mcp__synara__computer_launch_app",
+        toolUseId: "tool-use-mcp__ramspace__computer_launch_app",
       });
 
       const genericOpened = yield* requestTypeFor("WebFetch", { url: "https://example.com" });
@@ -12095,7 +12101,7 @@ await agent("Draft the spec", { label: "delta-agent", phase: "Two" });
       const promptText = yield* Effect.promise(() =>
         readFirstPromptText(harness.getLastCreateQueryInput()),
       );
-      assert.include(promptText ?? "", "Synara plan mode is active.");
+      assert.include(promptText ?? "", "Ramspace plan mode is active.");
       assert.include(promptText ?? "", "<proposed_plan>");
       assert.include(promptText ?? "", "User request:\nplan this for me");
     }).pipe(
@@ -14156,7 +14162,7 @@ describe("Claude explicit native compaction", () => {
           if (native) {
             assert.equal(text, input);
           } else {
-            assert.include(text, "Synara plan mode is active.");
+            assert.include(text, "Ramspace plan mode is active.");
           }
         }).pipe(
           Effect.provideService(Random.Random, makeDeterministicRandomService()),

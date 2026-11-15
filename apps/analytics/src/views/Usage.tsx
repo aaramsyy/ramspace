@@ -160,7 +160,7 @@ export function Usage({
             )}
             detail={
               data.newInstalls.imported > 0
-                ? `${data.newInstalls.imported} copied from Synara`
+                ? `${data.newInstalls.imported} copied from Ramspace`
                 : undefined
             }
           />

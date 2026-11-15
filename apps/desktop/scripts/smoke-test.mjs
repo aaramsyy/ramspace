@@ -7,22 +7,22 @@ import { fileURLToPath } from "node:url";
 import { setTimeout as delay } from "node:timers/promises";
 import electronPath from "electron";
 
-import { SYNARA_DESKTOP_SMOKE_USER_DATA_ENV } from "@synara/shared/desktopIdentity";
+import { RAMSPACE_DESKTOP_SMOKE_USER_DATA_ENV } from "@ramspace/shared/desktopIdentity";
 import { spawnSourceDesktop } from "./source-desktop-launch.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const desktopDir = resolve(__dirname, "..");
-const smokeHome = mkdtempSync(join(tmpdir(), "synara-desktop-smoke-"));
+const smokeHome = mkdtempSync(join(tmpdir(), "ramspace-desktop-smoke-"));
 const environment = {
   ...process.env,
   ELECTRON_ENABLE_LOGGING: "1",
-  SYNARA_HOME: smokeHome,
-  SYNARA_DESKTOP_FLAVOR: "dev",
-  [SYNARA_DESKTOP_SMOKE_USER_DATA_ENV]: join(smokeHome, "electron-user-data"),
+  RAMSPACE_HOME: smokeHome,
+  RAMSPACE_DESKTOP_FLAVOR: "dev",
+  [RAMSPACE_DESKTOP_SMOKE_USER_DATA_ENV]: join(smokeHome, "electron-user-data"),
 };
 // Config.url rejects an empty string; the built UI needs this variable absent.
 delete environment.VITE_DEV_SERVER_URL;
-delete environment.SYNARA_AUTH_TOKEN;
+delete environment.RAMSPACE_AUTH_TOKEN;
 
 console.log("\nLaunching Electron smoke test...");
 
@@ -124,7 +124,7 @@ child.on("exit", (code, signal) => {
     "StartupError:",
   ];
   const failures = fatalPatterns.filter((pattern) => output.includes(pattern));
-  if (!output.includes("Synara running")) failures.push("Backend did not report readiness");
+  if (!output.includes("Ramspace running")) failures.push("Backend did not report readiness");
   if (!restartVerified) failures.push(recoveryFailure ?? "Backend recovery was not verified");
   if (code !== 0 && signal !== "SIGTERM")
     failures.push(`Unexpected exit: code=${code} signal=${signal}`);

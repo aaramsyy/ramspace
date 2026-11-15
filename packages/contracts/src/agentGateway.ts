@@ -1,5 +1,5 @@
 /**
- * Public contracts for the Synara agent-control gateway.
+ * Public contracts for the Ramspace agent-control gateway.
  *
  * New gateway tools decode these schemas before doing any work. Keeping the
  * limits here ensures the MCP surface, server implementation, and tests share
@@ -13,11 +13,11 @@ import { ProviderModelDescriptor } from "./providerDiscovery";
 import { ProviderInstanceId } from "./providerInstance";
 import { ServerProviderAuthStatus } from "./server";
 
-export const SYNARA_GATEWAY_MAX_THREADS_PER_OPERATION = 20;
-export const SYNARA_GATEWAY_MAX_REQUEST_ID_LENGTH = 256;
-export const SYNARA_GATEWAY_MAX_WAIT_MS = 60_000;
+export const RAMSPACE_GATEWAY_MAX_THREADS_PER_OPERATION = 20;
+export const RAMSPACE_GATEWAY_MAX_REQUEST_ID_LENGTH = 256;
+export const RAMSPACE_GATEWAY_MAX_WAIT_MS = 60_000;
 
-export const SynaraGatewayErrorCode = Schema.Literals([
+export const RamspaceGatewayErrorCode = Schema.Literals([
   "caller_session_inactive",
   "caller_turn_inactive",
   "capability_denied",
@@ -32,24 +32,24 @@ export const SynaraGatewayErrorCode = Schema.Literals([
   "operation_failed",
   "remote_unavailable",
 ]);
-export type SynaraGatewayErrorCode = typeof SynaraGatewayErrorCode.Type;
+export type RamspaceGatewayErrorCode = typeof RamspaceGatewayErrorCode.Type;
 
-export const SynaraGatewayError = Schema.Struct({
-  code: SynaraGatewayErrorCode,
+export const RamspaceGatewayError = Schema.Struct({
+  code: RamspaceGatewayErrorCode,
   message: Schema.String,
   details: Schema.optional(Schema.Unknown),
 });
-export type SynaraGatewayError = typeof SynaraGatewayError.Type;
+export type RamspaceGatewayError = typeof RamspaceGatewayError.Type;
 
-export const SynaraGatewayErrorResult = Schema.Struct({
-  error: SynaraGatewayError,
+export const RamspaceGatewayErrorResult = Schema.Struct({
+  error: RamspaceGatewayError,
 });
-export type SynaraGatewayErrorResult = typeof SynaraGatewayErrorResult.Type;
+export type RamspaceGatewayErrorResult = typeof RamspaceGatewayErrorResult.Type;
 
-export const SynaraContextResult = Schema.Struct({
+export const RamspaceContextResult = Schema.Struct({
   environmentId: Schema.optional(EnvironmentId),
   harness: Schema.Struct({
-    name: Schema.Literal("Synara"),
+    name: Schema.Literal("Ramspace"),
     policyVersion: Schema.String,
   }),
   caller: Schema.Struct({
@@ -66,9 +66,9 @@ export const SynaraContextResult = Schema.Struct({
     automations: Schema.Boolean,
   }),
 });
-export type SynaraContextResult = typeof SynaraContextResult.Type;
+export type RamspaceContextResult = typeof RamspaceContextResult.Type;
 
-export const SynaraCreateThreadSpec = Schema.Struct({
+export const RamspaceCreateThreadSpec = Schema.Struct({
   prompt: Schema.String.check(Schema.isNonEmpty()),
   contextMessageIds: Schema.optional(
     Schema.Array(Schema.String.check(Schema.isNonEmpty())).check(Schema.isMaxLength(16)),
@@ -96,83 +96,83 @@ export const SynaraCreateThreadSpec = Schema.Struct({
   // It authorizes nothing and is not part of task identity.
   routingReason: Schema.optional(Schema.String.check(Schema.isMaxLength(500))),
 });
-export type SynaraCreateThreadSpec = typeof SynaraCreateThreadSpec.Type;
+export type RamspaceCreateThreadSpec = typeof RamspaceCreateThreadSpec.Type;
 
-const SynaraGatewayRequestId = Schema.String.check(Schema.isNonEmpty()).check(
-  Schema.isMaxLength(SYNARA_GATEWAY_MAX_REQUEST_ID_LENGTH),
+const RamspaceGatewayRequestId = Schema.String.check(Schema.isNonEmpty()).check(
+  Schema.isMaxLength(RAMSPACE_GATEWAY_MAX_REQUEST_ID_LENGTH),
 );
 
-export const SynaraCreateThreadsInput = Schema.Struct({
-  requestId: SynaraGatewayRequestId,
-  threads: Schema.Array(SynaraCreateThreadSpec)
+export const RamspaceCreateThreadsInput = Schema.Struct({
+  requestId: RamspaceGatewayRequestId,
+  threads: Schema.Array(RamspaceCreateThreadSpec)
     .check(Schema.isMinLength(1))
-    .check(Schema.isMaxLength(SYNARA_GATEWAY_MAX_THREADS_PER_OPERATION)),
+    .check(Schema.isMaxLength(RAMSPACE_GATEWAY_MAX_THREADS_PER_OPERATION)),
 }).annotate({ parseOptions: { onExcessProperty: "error" } });
-export type SynaraCreateThreadsInput = typeof SynaraCreateThreadsInput.Type;
+export type RamspaceCreateThreadsInput = typeof RamspaceCreateThreadsInput.Type;
 
-export const SynaraProviderInstanceCatalog = Schema.Struct({
+export const RamspaceProviderInstanceCatalog = Schema.Struct({
   instanceId: ProviderInstanceId,
   displayName: Schema.String.check(Schema.isNonEmpty()),
   isDefault: Schema.Boolean,
   enabled: Schema.Boolean,
 });
-export type SynaraProviderInstanceCatalog = typeof SynaraProviderInstanceCatalog.Type;
+export type RamspaceProviderInstanceCatalog = typeof RamspaceProviderInstanceCatalog.Type;
 
-export const SynaraProviderCatalog = Schema.Struct({
+export const RamspaceProviderCatalog = Schema.Struct({
   provider: ProviderKind,
   defaultModel: Schema.NullOr(Schema.String),
   models: Schema.Array(ProviderModelDescriptor),
   // Optional for older MCP clients that decode a capability response from a
   // server predating provider-instance discovery. Current servers always emit
   // the field, including an empty array when no extra instances are configured.
-  instances: Schema.optional(Schema.Array(SynaraProviderInstanceCatalog)),
+  instances: Schema.optional(Schema.Array(RamspaceProviderInstanceCatalog)),
   enabled: Schema.Boolean,
   available: Schema.Boolean,
   authStatus: Schema.optional(ServerProviderAuthStatus),
   source: Schema.optional(Schema.String),
   error: Schema.optional(Schema.String),
 });
-export type SynaraProviderCatalog = typeof SynaraProviderCatalog.Type;
+export type RamspaceProviderCatalog = typeof RamspaceProviderCatalog.Type;
 
-export const SynaraGatewayTargetOptionValue = Schema.Union([
+export const RamspaceGatewayTargetOptionValue = Schema.Union([
   Schema.String,
   Schema.Number,
   Schema.Boolean,
 ]);
-export type SynaraGatewayTargetOptionValue = typeof SynaraGatewayTargetOptionValue.Type;
+export type RamspaceGatewayTargetOptionValue = typeof RamspaceGatewayTargetOptionValue.Type;
 
-export const SynaraGatewayTargetOptionRule = Schema.Struct({
+export const RamspaceGatewayTargetOptionRule = Schema.Struct({
   key: Schema.String,
   valueType: Schema.Literals(["string", "number", "boolean"]),
-  allowedValues: Schema.Array(SynaraGatewayTargetOptionValue),
+  allowedValues: Schema.Array(RamspaceGatewayTargetOptionValue),
   allowedValuesSource: Schema.Literals(["provider-contract", "model-discovery"]),
 });
-export type SynaraGatewayTargetOptionRule = typeof SynaraGatewayTargetOptionRule.Type;
+export type RamspaceGatewayTargetOptionRule = typeof RamspaceGatewayTargetOptionRule.Type;
 
-export const SynaraGatewayTargetConstruction = Schema.Struct({
+export const RamspaceGatewayTargetConstruction = Schema.Struct({
   modelValueSource: Schema.Literal("providers[].models[].slug"),
   primaryOptionKey: Schema.String,
   alternativeOptionKeys: Schema.Array(Schema.String),
   optionSelectionRule: Schema.String,
-  providerOptions: Schema.Array(SynaraGatewayTargetOptionRule),
-  optionsByModel: Schema.Record(Schema.String, Schema.Array(SynaraGatewayTargetOptionRule)),
+  providerOptions: Schema.Array(RamspaceGatewayTargetOptionRule),
+  optionsByModel: Schema.Record(Schema.String, Schema.Array(RamspaceGatewayTargetOptionRule)),
   exampleTarget: Schema.NullOr(ModelSelection),
 });
-export type SynaraGatewayTargetConstruction = typeof SynaraGatewayTargetConstruction.Type;
+export type RamspaceGatewayTargetConstruction = typeof RamspaceGatewayTargetConstruction.Type;
 
-export const SynaraCapabilitiesResult = Schema.Struct({
+export const RamspaceCapabilitiesResult = Schema.Struct({
   environmentId: Schema.optional(EnvironmentId),
-  targetConstruction: Schema.Record(Schema.String, SynaraGatewayTargetConstruction),
-  providers: Schema.Array(SynaraProviderCatalog),
+  targetConstruction: Schema.Record(Schema.String, RamspaceGatewayTargetConstruction),
+  providers: Schema.Array(RamspaceProviderCatalog),
   limits: Schema.Struct({
     maxThreadsPerOperation: Schema.Int,
     maxWaitMs: Schema.Int,
     oneCreationPlanPerActiveTurn: Schema.Boolean,
   }),
 });
-export type SynaraCapabilitiesResult = typeof SynaraCapabilitiesResult.Type;
+export type RamspaceCapabilitiesResult = typeof RamspaceCapabilitiesResult.Type;
 
-export const SynaraCreatedThreadResult = Schema.Struct({
+export const RamspaceCreatedThreadResult = Schema.Struct({
   environmentId: Schema.optional(EnvironmentId),
   index: Schema.Int.check(Schema.isGreaterThanOrEqualTo(0)),
   threadId: ThreadId,
@@ -190,37 +190,37 @@ export const SynaraCreatedThreadResult = Schema.Struct({
   link: Schema.optional(Schema.String),
   status: Schema.Literal("task_dispatched"),
 });
-export type SynaraCreatedThreadResult = typeof SynaraCreatedThreadResult.Type;
+export type RamspaceCreatedThreadResult = typeof RamspaceCreatedThreadResult.Type;
 
-export const SynaraCreateThreadsResult = Schema.Struct({
+export const RamspaceCreateThreadsResult = Schema.Struct({
   environmentId: Schema.optional(EnvironmentId),
   operationId: Schema.String,
-  requestId: SynaraGatewayRequestId,
+  requestId: RamspaceGatewayRequestId,
   requestedCount: Schema.Int.check(Schema.isGreaterThanOrEqualTo(1)),
   createdCount: Schema.Int.check(Schema.isGreaterThanOrEqualTo(0)),
   threadIds: Schema.Array(ThreadId),
-  threads: Schema.Array(SynaraCreatedThreadResult),
+  threads: Schema.Array(RamspaceCreatedThreadResult),
 });
-export type SynaraCreateThreadsResult = typeof SynaraCreateThreadsResult.Type;
+export type RamspaceCreateThreadsResult = typeof RamspaceCreateThreadsResult.Type;
 
-export const SynaraWaitForThreadsInput = Schema.Struct({
+export const RamspaceWaitForThreadsInput = Schema.Struct({
   threadIds: Schema.Array(ThreadId)
     .check(Schema.isMinLength(1))
-    .check(Schema.isMaxLength(SYNARA_GATEWAY_MAX_THREADS_PER_OPERATION)),
+    .check(Schema.isMaxLength(RAMSPACE_GATEWAY_MAX_THREADS_PER_OPERATION)),
   runIds: Schema.optional(
     Schema.Array(Schema.NullOr(TurnId)).check(
-      Schema.isMaxLength(SYNARA_GATEWAY_MAX_THREADS_PER_OPERATION),
+      Schema.isMaxLength(RAMSPACE_GATEWAY_MAX_THREADS_PER_OPERATION),
     ),
   ),
   timeoutMs: Schema.optional(
     Schema.Int.check(Schema.isGreaterThanOrEqualTo(0)).check(
-      Schema.isLessThanOrEqualTo(SYNARA_GATEWAY_MAX_WAIT_MS),
+      Schema.isLessThanOrEqualTo(RAMSPACE_GATEWAY_MAX_WAIT_MS),
     ),
   ),
 }).annotate({ parseOptions: { onExcessProperty: "error" } });
-export type SynaraWaitForThreadsInput = typeof SynaraWaitForThreadsInput.Type;
+export type RamspaceWaitForThreadsInput = typeof RamspaceWaitForThreadsInput.Type;
 
-export const SynaraWaitedThreadResult = Schema.Struct({
+export const RamspaceWaitedThreadResult = Schema.Struct({
   environmentId: Schema.optional(EnvironmentId),
   threadId: ThreadId,
   runId: Schema.NullOr(TurnId),
@@ -231,18 +231,18 @@ export const SynaraWaitedThreadResult = Schema.Struct({
   summaryTruncated: Schema.Boolean,
   error: Schema.NullOr(Schema.String),
   readThread: Schema.Struct({
-    tool: Schema.Literal("synara_read_thread"),
+    tool: Schema.Literal("ramspace_read_thread"),
     arguments: Schema.Struct({ threadId: ThreadId, environmentId: Schema.optional(EnvironmentId) }),
   }),
 });
-export type SynaraWaitedThreadResult = typeof SynaraWaitedThreadResult.Type;
+export type RamspaceWaitedThreadResult = typeof RamspaceWaitedThreadResult.Type;
 
-export const SynaraWaitForThreadsResult = Schema.Struct({
+export const RamspaceWaitForThreadsResult = Schema.Struct({
   environmentId: Schema.optional(EnvironmentId),
   callerThreadId: ThreadId,
   runIds: Schema.Array(Schema.NullOr(TurnId)),
   allTerminal: Schema.Boolean,
   timedOut: Schema.Boolean,
-  threads: Schema.Array(SynaraWaitedThreadResult),
+  threads: Schema.Array(RamspaceWaitedThreadResult),
 });
-export type SynaraWaitForThreadsResult = typeof SynaraWaitForThreadsResult.Type;
+export type RamspaceWaitForThreadsResult = typeof RamspaceWaitForThreadsResult.Type;

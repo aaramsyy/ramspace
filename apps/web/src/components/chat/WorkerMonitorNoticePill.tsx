@@ -1,6 +1,6 @@
-import { ProjectId, ThreadId } from "@synara/contracts";
+import { ProjectId, ThreadId } from "@ramspace/contracts";
 import { useState } from "react";
-import type { WorkLogEntry, WorkLogSynaraWorkerNotice } from "../../workLog";
+import type { WorkLogEntry, WorkLogRamspaceWorkerNotice } from "../../workLog";
 import { readNativeApi } from "~/nativeApi";
 import { cn } from "~/lib/utils";
 import { MUTED_LABEL_TEXT_CLASS_NAME } from "~/surfaceStyles";
@@ -19,15 +19,15 @@ const OUTCOME_LABELS: Record<string, string> = {
 
 interface WorkerMonitorNoticePillProps {
   entry: WorkLogEntry;
-  notice: WorkLogSynaraWorkerNotice;
+  notice: WorkLogRamspaceWorkerNotice;
   onOpenThread?: (threadId: ThreadId) => void;
 }
 
 /**
  * Compact coordinator monitor row: worker settled / stuck / "Waiting on you" /
  * batch roll-up pills in the coordinator conversation. The needs-you variant
- * renders Synara-native actions (retry, stop, open thread) wired to real
- * Synara commands — never a fake provider input card.
+ * renders Ramspace-native actions (retry, stop, open thread) wired to real
+ * Ramspace commands — never a fake provider input card.
  */
 export function WorkerMonitorNoticePill({
   entry,

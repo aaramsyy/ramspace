@@ -47,7 +47,7 @@ function harness() {
 
 describe("local connector approval and execution", () => {
   it("keeps a stdio proposal inert, hides env values, binds sessions, cancels calls and confirms removal", async () => {
-    const dir = await mkdtemp(Path.join(tmpdir(), "synara-mcp-stdio-"));
+    const dir = await mkdtemp(Path.join(tmpdir(), "ramspace-mcp-stdio-"));
     const fixture = Path.join(dir, "server.mjs");
     const marker = Path.join(dir, "started");
     await writeFile(

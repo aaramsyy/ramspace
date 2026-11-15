@@ -1,6 +1,6 @@
 // Verifies updater version-lane admission and progress/recovery behavior.
 import { describe, expect, it } from "vitest";
-import type { DesktopUpdateState } from "@synara/contracts";
+import type { DesktopUpdateState } from "@ramspace/contracts";
 
 import {
   canCheckForDesktopUpdates,
@@ -295,7 +295,7 @@ describe("getAutoUpdateDisabledReason", () => {
         disabledByEnv: true,
         hasUpdateFeedConfig: true,
       }),
-    ).toContain("SYNARA_DISABLE_AUTO_UPDATE");
+    ).toContain("RAMSPACE_DISABLE_AUTO_UPDATE");
   });
 
   it("reports linux non-AppImage builds as disabled", () => {
@@ -419,8 +419,8 @@ describe("shouldCheckForUpdatesOnForeground", () => {
 });
 
 describe("resolved update artifact architecture", () => {
-  const arm64AppImage = "Synara-1.5.2-arm64.AppImage";
-  const intelAppImage = "Synara-1.5.2-x86_64.AppImage";
+  const arm64AppImage = "Ramspace-1.5.2-arm64.AppImage";
+  const intelAppImage = "Ramspace-1.5.2-x86_64.AppImage";
   const files = (...urls: string[]) => ({ files: urls.map((url) => ({ url })) });
 
   it("keeps both Linux architectures on their own payload", () => {
@@ -449,9 +449,9 @@ describe("resolved update artifact architecture", () => {
 
   it("reads the payload name from URLs with a directory, query or fragment", () => {
     const hostedArm64 =
-      "https://github.com/o/r/releases/download/v1.5.2/Synara-1.5.2-arm64.AppImage?token=1";
+      "https://github.com/o/r/releases/download/v1.5.2/Ramspace-1.5.2-arm64.AppImage?token=1";
     const hostedIntel =
-      "https://github.com/o/r/releases/download/v1.5.2/Synara-1.5.2-x86_64.AppImage#frag";
+      "https://github.com/o/r/releases/download/v1.5.2/Ramspace-1.5.2-x86_64.AppImage#frag";
     expect(updateFilesMatchRuntimeArch(files(hostedArm64), "linux", "arm64")).toBe(true);
     expect(updateFilesMatchRuntimeArch(files(hostedIntel), "linux", "x64")).toBe(true);
     expect(updateFilesMatchRuntimeArch(files(hostedArm64), "linux", "x64")).toBe(false);
@@ -462,7 +462,7 @@ describe("resolved update artifact architecture", () => {
     expect(updateFilesMatchRuntimeArch(files(intelAppImage), "win32", "x64")).toBe(true);
     expect(
       updateFilesMatchRuntimeArch(
-        { files: [{ url: undefined }, { url: "Synara-1.5.2.zip" }] },
+        { files: [{ url: undefined }, { url: "Ramspace-1.5.2.zip" }] },
         "linux",
         "arm64",
       ),
@@ -471,8 +471,8 @@ describe("resolved update artifact architecture", () => {
 });
 
 describe("available update admission", () => {
-  const arm64AppImage = "Synara-1.5.2-arm64.AppImage";
-  const intelAppImage = "Synara-1.5.2-x86_64.AppImage";
+  const arm64AppImage = "Ramspace-1.5.2-arm64.AppImage";
+  const intelAppImage = "Ramspace-1.5.2-x86_64.AppImage";
   const candidate = (info: { path?: string; files?: ReadonlyArray<{ url?: string }> }) => ({
     currentVersion: "1.5.1",
     version: "1.5.2",

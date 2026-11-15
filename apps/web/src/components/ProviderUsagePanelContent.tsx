@@ -8,8 +8,8 @@ import {
   PROVIDER_DISPLAY_NAMES,
   type ProviderKind,
   type ServerCodexResetCredits,
-} from "@synara/contracts";
-import { providerUsageLabel } from "@synara/shared/providerUsage";
+} from "@ramspace/contracts";
+import { providerUsageLabel } from "@ramspace/shared/providerUsage";
 
 import { useAppSettings } from "~/appSettings";
 import { ExternalLinkIcon, TriangleAlertIcon } from "~/lib/icons";

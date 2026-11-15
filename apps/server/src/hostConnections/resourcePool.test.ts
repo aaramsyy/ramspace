@@ -6,7 +6,7 @@ import { HttpRouter } from "effect/unstable/http";
 import * as NodeServices from "@effect/platform-node/NodeServices";
 import { Effect, Layer, ManagedRuntime, Scope, Exit } from "effect";
 import { afterEach, expect, it, vi } from "vitest";
-import { EnvironmentId, type RemoteResourceReference } from "@synara/contracts";
+import { EnvironmentId, type RemoteResourceReference } from "@ramspace/contracts";
 import { createRemoteDialFixture } from "../__fixtures__/remoteDial";
 import { SessionCredentialServiceLive } from "../auth/Layers/SessionCredentialService";
 import { ServerSecretStoreLive } from "../auth/Layers/ServerSecretStore";
@@ -65,7 +65,7 @@ it("streams encrypted resources with client authority, stable attachment ownersh
       Layer.provide(SqlitePersistenceMemory),
       Layer.provide(ServerSecretStoreLive),
       Layer.provideMerge(
-        ServerConfig.layerTest(process.cwd(), { prefix: "synara-resource-test-" }),
+        ServerConfig.layerTest(process.cwd(), { prefix: "ramspace-resource-test-" }),
       ),
       Layer.provide(NodeServices.layer),
     ),

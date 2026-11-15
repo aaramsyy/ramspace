@@ -24,7 +24,7 @@ export function HostConnectionControl({ compact = false }: { compact?: boolean }
   const label = context.remote ? context.execution.label : "This computer";
   const channel = context.remote?.channel ?? context.controller.channel;
   const destination = channel
-    ? `${label} · ${channel === "dev" ? "Development" : `Synara ${channel[0]!.toUpperCase()}${channel.slice(1)}`}`
+    ? `${label} · ${channel === "dev" ? "Development" : `Ramspace ${channel[0]!.toUpperCase()}${channel.slice(1)}`}`
     : label;
   const status =
     state === "open"
@@ -59,7 +59,7 @@ export function HostConnectionControl({ compact = false }: { compact?: boolean }
       const saveFile = ensureNativeApi().dialogs.saveFile;
       if (!saveFile) throw new Error("File export is unavailable in this client.");
       await saveFile({
-        defaultFilename: "synara-editor-drafts.json",
+        defaultFilename: "ramspace-editor-drafts.json",
         contents: JSON.stringify(
           { environmentId: context.execution.environmentId, host: label, current, recovered },
           null,

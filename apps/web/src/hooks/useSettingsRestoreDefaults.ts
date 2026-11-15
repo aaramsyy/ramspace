@@ -5,7 +5,7 @@
 // Layer: Settings hook
 // Exports: useSettingsRestoreDefaults
 
-import { sameAppSnapShortcut } from "@synara/shared/appSnapShortcut";
+import { sameAppSnapShortcut } from "@ramspace/shared/appSnapShortcut";
 import { useState } from "react";
 
 import { type AppSettings, isGitTextGenerationSettingsDirty } from "~/appSettings";
@@ -178,7 +178,7 @@ export function useSettingsRestoreDefaults({
       ? ["settings:changed_providerUpdateChecks"]
       : []),
     ...(settings.lowerProviderProcessPriority !== defaults.lowerProviderProcessPriority
-      ? ["settings:keepSynaraResponsive"]
+      ? ["settings:keepRamspaceResponsive"]
       : []),
     ...(defaultDiffRenderMode !== DEFAULT_DIFF_RENDER_MODE ? ["settings:diffLayout"] : []),
     ...(settings.diffWordWrap !== defaults.diffWordWrap

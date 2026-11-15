@@ -6,7 +6,7 @@ import {
   ThreadId,
   TurnId,
   type OrchestrationEvent,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { assert, it } from "@effect/vitest";
 import { Effect, Layer, Schema, Stream } from "effect";
 import * as SqlClient from "effect/unstable/sql/SqlClient";
@@ -582,7 +582,7 @@ layer("OrchestrationEventStore", (it) => {
     }),
   );
 
-  it.effect("normalizes imported Synara model-selection shapes during replay", () =>
+  it.effect("normalizes imported Ramspace model-selection shapes during replay", () =>
     Effect.gen(function* () {
       const eventStore = yield* OrchestrationEventStore;
       const sql = yield* SqlClient.SqlClient;

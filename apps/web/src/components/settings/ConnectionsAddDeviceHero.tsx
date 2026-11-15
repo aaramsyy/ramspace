@@ -45,7 +45,7 @@ function PhoneScreen({ computerNoun }: { computerNoun: string }) {
           Connect to your {computerNoun}?
         </p>
         <p className="mt-1 text-center text-ui-timestamp leading-snug text-muted-foreground">
-          Synara on this phone will control it.
+          Ramspace on this phone will control it.
         </p>
       </div>
     </div>

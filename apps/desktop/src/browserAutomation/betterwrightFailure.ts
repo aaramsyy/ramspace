@@ -2,8 +2,8 @@ import { homedir } from "node:os";
 import {
   BROWSER_AUTOMATION_ERROR_CAUSE_MESSAGE_MAX_BYTES,
   type BrowserAutomationErrorCause,
-} from "@synara/contracts";
-import { redactDiagnosticText } from "@synara/shared/diagnosticsRedaction";
+} from "@ramspace/contracts";
+import { redactDiagnosticText } from "@ramspace/shared/diagnosticsRedaction";
 
 // Globals agents reach for that the browser_run realm does not define, with the
 // replacement to use. The sandbox is a bare VM context: only ECMAScript
@@ -161,7 +161,7 @@ const ENGINE_MESSAGE_SHAPES: ReadonlyArray<readonly [RegExp, ScriptErrorName]> =
     "SyntaxError",
   ],
 ];
-// Fixed Betterwright and Synara host messages that carry no page data.
+// Fixed Betterwright and Ramspace host messages that carry no page data.
 const FIXED_RUNTIME_MESSAGES: ReadonlyArray<RegExp> = [
   /^human\.type did not change the field\. The target may ignore synthetic key events \(common in Draft\.js and other rich-text editors\)\.$/,
   /^human\.type needs about \d{1,9} ms to type \d{1,9} characters at human pace, but about \d{1,9} ms remain in this call\. Nothing was typed\. Use locator\.fill\(text\) or page\.keyboard\.insertText\(text\) for long text, or raise timeoutMs\.$/,

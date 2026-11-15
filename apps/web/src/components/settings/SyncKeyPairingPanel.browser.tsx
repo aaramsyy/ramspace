@@ -4,7 +4,7 @@
 
 import "../../index.css";
 
-import type { SyncKeyPairingRequest } from "@synara/contracts";
+import type { SyncKeyPairingRequest } from "@ramspace/contracts";
 import { page } from "vitest/browser";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { render } from "vitest-browser-react";

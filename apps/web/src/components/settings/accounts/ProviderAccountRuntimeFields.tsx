@@ -5,7 +5,7 @@
 // Layer: Settings UI
 // Exports: ProviderAccountRuntimeFields
 
-import { normalizeProviderCliAlias } from "@synara/shared/providerCliProfiles";
+import { normalizeProviderCliAlias } from "@ramspace/shared/providerCliProfiles";
 import { useState, type ReactNode } from "react";
 
 import type { ManageableProviderInstance } from "~/appSettings";
@@ -202,11 +202,11 @@ export function ProviderAccountRuntimeFields(props: {
         {isAccountProvider ? (
           <span className="block text-ui-sm text-muted-foreground sm:col-span-2">
             {provider === "codex"
-              ? "Leave both paths blank and Synara keeps this account's sign-in in its " +
+              ? "Leave both paths blank and Ramspace keeps this account's sign-in in its " +
                 "own folder. Set a shadow auth home to keep only the sign-in elsewhere " +
                 "while sharing settings and history with the default account, or a " +
                 "CODEX_HOME to keep everything separate."
-              : "Leave blank and Synara keeps this account's sign-in in its own folder. " +
+              : "Leave blank and Ramspace keeps this account's sign-in in its own folder. " +
                 "Set a directory to use a Claude config folder you already signed in to."}
           </span>
         ) : null}
@@ -256,7 +256,7 @@ export function ProviderAccountRuntimeFields(props: {
               ? t("settings:use164LettersNumbersDashesOrUnderscoresBare")
               : cliCommandConflicts
                 ? t("settings:thisCommandIsAlreadyAssignedToAnotherAccountChoose")
-                : t("settings:availableInSynaraTerminalsForZshBashFishAnd")}
+                : t("settings:availableInRamspaceTerminalsForZshBashFishAnd")}
           </span>
         </label>
         {props.config.fields.filter(isAdvancedField).map((field) => renderField(field, entry))}

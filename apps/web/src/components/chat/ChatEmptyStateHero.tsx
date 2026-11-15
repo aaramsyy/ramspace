@@ -3,7 +3,7 @@
 // Layer: Chat presentation
 // Depends on: the caller-supplied project display name.
 
-import { SynaraLogo } from "@synara/profile-ui/logo";
+import { RamspaceLogo } from "@ramspace/profile-ui/logo";
 import { useTranslation } from "~/i18n";
 
 export const ChatEmptyStateHero = function ChatEmptyStateHero({
@@ -15,7 +15,7 @@ export const ChatEmptyStateHero = function ChatEmptyStateHero({
 
   return (
     <div className="flex flex-col items-center gap-5 select-none">
-      <SynaraLogo aria-label={t("chat:chat_synaraLogo")} className="size-10" />
+      <RamspaceLogo aria-label={t("chat:chat_ramspaceLogo")} className="size-10" />
 
       <div className="flex flex-col items-center gap-0.5">
         <h1 className="text-2xl font-semibold text-foreground/90">

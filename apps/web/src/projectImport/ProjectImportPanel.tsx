@@ -2,7 +2,7 @@ import type {
   ImportProjectResult,
   ListProjectImportsResult,
   ProjectImportProvider,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { useEffect, useRef, useState } from "react";
 
 import { ProviderIcon } from "~/components/ProviderIcon";

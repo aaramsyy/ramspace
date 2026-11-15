@@ -1,4 +1,4 @@
-import type { McpConnector } from "@synara/contracts";
+import type { McpConnector } from "@ramspace/contracts";
 import { describe, expect, it } from "vitest";
 
 import { connectorsForPairedClient } from "./pairedClientView";

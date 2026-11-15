@@ -4,7 +4,7 @@
 // Layer: Group settings dialog
 // Exports: GroupSettingsDialog
 
-import type { ModelSelection, ProjectAgentOverview, ProjectId } from "@synara/contracts";
+import type { ModelSelection, ProjectAgentOverview, ProjectId } from "@ramspace/contracts";
 import { useEffect, useRef, useState, type ComponentType } from "react";
 
 import { createCentralIconComponent } from "~/lib/central-icons";
@@ -33,7 +33,7 @@ import { useProjectInstructionsAutosave } from "~/components/chat/environment/En
 import { useProjectInstructionsSource } from "~/components/chat/project/useProjectInstructionsSource";
 import { useProjectAgent } from "~/components/chat/project/useProjectAgent";
 import { useProjectAgentSummariesStore } from "~/components/chat/project/useProjectAgentSummaries";
-import { toDisplayName } from "@synara/profile-ui/formatting";
+import { toDisplayName } from "@ramspace/profile-ui/formatting";
 import { useProfileName } from "~/components/profile/useProfileName";
 import { isDefaultGroupCoordinatorName } from "~/lib/groupCoordinatorName";
 import { cn, newCommandId } from "~/lib/utils";

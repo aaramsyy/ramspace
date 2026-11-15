@@ -54,9 +54,9 @@ describe("portable release outputs", () => {
     for (const env of [
       { AZURE_TRUSTED_SIGNING_SUBJECT_DN: "publisher" },
       { VITE_FEEDBACK_ENDPOINT: "https://example.test" },
-      { SYNARA_STABLE_ACCOUNT_URL: "https://account.example.test" },
-      { VITE_SYNARA_BILLING_ENABLED: "1" },
-      { SYNARA_WEB_SOURCEMAP: "1" },
+      { RAMSPACE_STABLE_ACCOUNT_URL: "https://account.example.test" },
+      { VITE_RAMSPACE_BILLING_ENABLED: "1" },
+      { RAMSPACE_WEB_SOURCEMAP: "1" },
     ])
       expect(() => verifyPortableBuild(root, commit, manifest, env)).toThrow("mismatch");
     writeFileSync(join(root, "bun.lock"), "changed");

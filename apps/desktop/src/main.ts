@@ -19,10 +19,10 @@ import { attachBackendReliability } from "./backendReliability";
 import { attachProductAnalyticsIpc } from "./productAnalyticsIpc";
 import { createDesktopNotificationRetainer } from "./notificationRetention";
 import { registerComputerDesktopLifecycle } from "./computerDesktopLifecycle";
-import { COMPUTER_PERMISSION_KINDS } from "@synara/shared/computerGrants";
-import { CUA_HOST_SOCKET_ENV } from "@synara/shared/cuaDriverProtocol";
-import { MODEL_SCREEN_IMAGE_MAX_DIMENSION } from "@synara/shared/modelImageBudget";
-import { spawnProcessSync } from "@synara/shared/processRuntime";
+import { COMPUTER_PERMISSION_KINDS } from "@ramspace/shared/computerGrants";
+import { CUA_HOST_SOCKET_ENV } from "@ramspace/shared/cuaDriverProtocol";
+import { MODEL_SCREEN_IMAGE_MAX_DIMENSION } from "@ramspace/shared/modelImageBudget";
+import { spawnProcessSync } from "@ramspace/shared/processRuntime";
 // FILE: main.ts
 // Purpose: Starts the Electron shell, backend process, native menus, IPC bridges, and updater.
 // Layer: Desktop main process
@@ -73,7 +73,7 @@ import type {
   DesktopTheme,
   DesktopUpdateActionResult,
   DesktopUpdateState,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import {
   autoUpdater,
   BaseUpdater,
@@ -82,29 +82,29 @@ import {
 } from "electron-updater";
 
 import { buildContextMenuTemplate } from "./contextMenuTemplate";
-import { isKeyboardShortcutsHelpChord } from "@synara/shared/browserShortcuts";
-import { getMacTrafficLightPosition } from "@synara/shared/desktopChrome";
-import { DEVICE_HELPER_SOURCE_DIR_ENV } from "@synara/shared/deviceHelperCache";
+import { isKeyboardShortcutsHelpChord } from "@ramspace/shared/browserShortcuts";
+import { getMacTrafficLightPosition } from "@ramspace/shared/desktopChrome";
+import { DEVICE_HELPER_SOURCE_DIR_ENV } from "@ramspace/shared/deviceHelperCache";
 import {
   desktopUpdateChannel,
-  SYNARA_DESKTOP_SMOKE_USER_DATA_ENV,
-  SYNARA_DESKTOP_BUNDLE_ID_ENV,
-  SYNARA_SOURCE_DESKTOP_BUILD_MARKER,
+  RAMSPACE_DESKTOP_SMOKE_USER_DATA_ENV,
+  RAMSPACE_DESKTOP_BUNDLE_ID_ENV,
+  RAMSPACE_SOURCE_DESKTOP_BUILD_MARKER,
   canOverrideDesktopSmokeUserData,
-  resolveSynaraDesktopRuntimeFlavor,
-  synaraDesktopIdentity,
-  synaraSourceDesktopIdentity,
-} from "@synara/shared/desktopIdentity";
-import { NetService } from "@synara/shared/Net";
-import { applyShellEnvironmentHydrationMarker } from "@synara/shared/shell";
-import { RotatingFileSink } from "@synara/shared/logging";
+  resolveRamspaceDesktopRuntimeFlavor,
+  ramspaceDesktopIdentity,
+  ramspaceSourceDesktopIdentity,
+} from "@ramspace/shared/desktopIdentity";
+import { NetService } from "@ramspace/shared/Net";
+import { applyShellEnvironmentHydrationMarker } from "@ramspace/shared/shell";
+import { RotatingFileSink } from "@ramspace/shared/logging";
 import {
   MIGRATION_DIVERGENCE_CONSENT_ENV,
   MIGRATION_RUNTIME_SOURCE_DIGEST_ENV,
   type MigrationRuntimeIdentityMismatch,
   type MigrationSchemaTooNewStartupBlock,
-} from "@synara/shared/migrationRecovery";
-import { ensureStaticSnapshot, findAsarArchivePath } from "@synara/shared/staticSnapshot";
+} from "@ramspace/shared/migrationRecovery";
+import { ensureStaticSnapshot, findAsarArchivePath } from "@ramspace/shared/staticSnapshot";
 import { isBackendReadinessAborted, waitForHttpReady } from "./backendReadiness";
 import { resolveBackendNodeArgs } from "./backendNodeOptions";
 import {
@@ -313,7 +313,7 @@ import {
 } from "./browserIpc";
 import {
   BrowserHostPipeServer,
-  SYNARA_BROWSER_HOST_PIPE_PATH,
+  RAMSPACE_BROWSER_HOST_PIPE_PATH,
   resolveBrowserHostPipeBackendEnv,
 } from "./browserUsePipeServer";
 import { normalizeDesktopWsUrl, resolveDesktopWsUrlFromEnv } from "./desktopWsBridge";
@@ -347,9 +347,9 @@ import {
   writeDesktopWindowState,
 } from "./windowState";
 import {
-  acknowledgeSynaraStorageSnapshot,
-  readSynaraStorageSnapshot,
-  resolveSynaraStorageSnapshotPath,
+  acknowledgeRamspaceStorageSnapshot,
+  readRamspaceStorageSnapshot,
+  resolveRamspaceStorageSnapshotPath,
 } from "./desktopStorageMigration";
 import { DESKTOP_IPC_CHANNELS } from "./ipcChannels";
 import { DesktopAppSnapManager } from "./appSnapManager";
@@ -360,7 +360,7 @@ import {
   listAudioInputDevices,
   MAX_MICROPHONE_ID_LENGTH,
 } from "./audioLevelMonitor";
-import { AUDIO_TRAIL_BETA_FEATURE, isBetaFeatureEnabled } from "@synara/shared/betaFeatures";
+import { AUDIO_TRAIL_BETA_FEATURE, isBetaFeatureEnabled } from "@ramspace/shared/betaFeatures";
 import { hardenBrowserAnnotationWebviewPreferences } from "./browserAnnotations/webviewSecurity";
 import { LOCAL_HTML_PREVIEW_SCHEME } from "./localHtmlPreviewProtocol";
 import {
@@ -372,12 +372,12 @@ import {
   sendAppSnapState,
 } from "./appSnapIpc";
 
-const requestedSourceBuildMarker = process.env.SYNARA_SOURCE_DESKTOP_BUILD_MARKER;
+const requestedSourceBuildMarker = process.env.RAMSPACE_SOURCE_DESKTOP_BUILD_MARKER;
 if (
   requestedSourceBuildMarker !== undefined &&
-  requestedSourceBuildMarker !== SYNARA_SOURCE_DESKTOP_BUILD_MARKER
+  requestedSourceBuildMarker !== RAMSPACE_SOURCE_DESKTOP_BUILD_MARKER
 ) {
-  throw new Error("The source desktop launcher and built main are incompatible. Rebuild Synara.");
+  throw new Error("The source desktop launcher and built main are incompatible. Rebuild Ramspace.");
 }
 
 // Capture the real archive identity before any explicit app.asar lookup. Static
@@ -391,7 +391,7 @@ const startupBundleIdentity = captureStartupBundleIdentity();
 // The reads a few lines below decide where this install's data lives, and two of them
 // depend on what this probe brings in: `resolveUserDataPath()` takes the Electron profile
 // directory from XDG_CONFIG_HOME on Linux, which the login-shell probe captures, and
-// `BASE_DIR` prefers SYNARA_HOME, which the Windows registry read hydrates whenever the
+// `BASE_DIR` prefers RAMSPACE_HOME, which the Windows registry read hydrates whenever the
 // user set it persistently. Resolving either against an unhydrated environment would
 // silently relocate an existing user's profile and data directory.
 // (The probe also carries PATH, SSH_AUTH_SOCK and HOMEBREW_* for later provider spawns.
@@ -403,33 +403,33 @@ const MAX_CLIPBOARD_IMAGE_DATA_URL_LENGTH = 16 * 1024 * 1024;
 const packagedDesktopFlavor = app.isPackaged
   ? (
       JSON.parse(FS.readFileSync(Path.join(app.getAppPath(), "package.json"), "utf8")) as {
-        synaraDesktopFlavor?: unknown;
+        ramspaceDesktopFlavor?: unknown;
       }
-    ).synaraDesktopFlavor
+    ).ramspaceDesktopFlavor
   : undefined;
 const isSourceDesktopBuild =
-  requestedSourceBuildMarker === SYNARA_SOURCE_DESKTOP_BUILD_MARKER &&
+  requestedSourceBuildMarker === RAMSPACE_SOURCE_DESKTOP_BUILD_MARKER &&
   packagedDesktopFlavor === undefined;
 const isDevelopment =
   (!app.isPackaged || isSourceDesktopBuild) && Boolean(process.env.VITE_DEV_SERVER_URL);
-const desktopFlavor = resolveSynaraDesktopRuntimeFlavor({
+const desktopFlavor = resolveRamspaceDesktopRuntimeFlavor({
   isPackaged: app.isPackaged,
   isDevelopment,
   packagedFlavor: packagedDesktopFlavor,
-  requestedFlavor: process.env.SYNARA_DESKTOP_FLAVOR,
+  requestedFlavor: process.env.RAMSPACE_DESKTOP_FLAVOR,
   allowDevelopmentOverride: isSourceDesktopBuild,
 });
 const desktopIdentity = isSourceDesktopBuild
-  ? synaraSourceDesktopIdentity(synaraDesktopIdentity(desktopFlavor))
-  : synaraDesktopIdentity(desktopFlavor);
-// Beta and Remote ignore SYNARA_HOME so a globally exported Stable home
+  ? ramspaceSourceDesktopIdentity(ramspaceDesktopIdentity(desktopFlavor))
+  : ramspaceDesktopIdentity(desktopFlavor);
+// Beta and Remote ignore RAMSPACE_HOME so a globally exported Stable home
 // cannot make a parallel app open (and migrate) Stable's database.
 const BASE_DIR =
   (desktopFlavor === "remote"
-    ? process.env.SYNARA_REMOTE_HOME?.trim()
+    ? process.env.RAMSPACE_REMOTE_HOME?.trim()
     : desktopFlavor === "beta"
-      ? process.env.SYNARA_BETA_HOME?.trim()
-      : process.env.SYNARA_HOME?.trim()) ||
+      ? process.env.RAMSPACE_BETA_HOME?.trim()
+      : process.env.RAMSPACE_HOME?.trim()) ||
   Path.join(OS.homedir(), desktopIdentity.defaultHomeDirectoryName);
 const STATE_DIR = Path.join(BASE_DIR, "userdata");
 const DESKTOP_WINDOW_STATE_PATH = Path.join(STATE_DIR, "desktop-window-state.json");
@@ -441,8 +441,8 @@ function translateAutoUpdateDisabledReason(reason: string): string {
       "desktop:automaticUpdatesAreNotAvailableBecauseNoUpdateFeed",
     "Automatic updates are only available in packaged production builds.":
       "desktop:automaticUpdatesAreOnlyAvailableInPackagedProductionBuilds",
-    "Automatic updates are disabled by the SYNARA_DISABLE_AUTO_UPDATE setting.":
-      "desktop:automaticUpdatesAreDisabledByTheSYNARADISABLEAUTO",
+    "Automatic updates are disabled by the RAMSPACE_DISABLE_AUTO_UPDATE setting.":
+      "desktop:automaticUpdatesAreDisabledByTheRAMSPACEDISABLEAUTO",
     "Automatic updates on Linux require running the AppImage build.":
       "desktop:automaticUpdatesOnLinuxRequireRunningTheAppImageBuild",
   };
@@ -584,7 +584,7 @@ const BACKEND_SHUTDOWN_TIMEOUT_MS = 10_000;
 const POSIX_BACKEND_TERMINATE_DELAY_MS = 15_000;
 const POSIX_BACKEND_FORCE_KILL_DELAY_MS = 18_000;
 const POSIX_BACKEND_SHUTDOWN_TIMEOUT_MS = 20_000;
-const BACKEND_MAX_OLD_SPACE_ENV_KEYS = ["SYNARA_BACKEND_MAX_OLD_SPACE_MB"] as const;
+const BACKEND_MAX_OLD_SPACE_ENV_KEYS = ["RAMSPACE_BACKEND_MAX_OLD_SPACE_MB"] as const;
 const DESKTOP_UPDATE_ALLOW_PRERELEASE = desktopFlavor === "beta" || desktopFlavor === "remote";
 const BROWSER_PERF_SAMPLE_INTERVAL_MS = 5_000;
 const DESKTOP_MENU_ZOOM_FACTOR_STEP = 1.1;
@@ -593,8 +593,8 @@ const DESKTOP_MENU_ZOOM_FACTOR_STEP = 1.1;
 let desktopMenuAccelerators: DesktopMenuAccelerators = DEFAULT_DESKTOP_MENU_ACCELERATORS;
 const DESKTOP_MENU_MIN_ZOOM_FACTOR = 0.25;
 const DESKTOP_MENU_MAX_ZOOM_FACTOR = 5;
-const SYNARA_BROWSER_LABEL = "Synara browser";
-const browserPerfLoggingEnabled = process.env.SYNARA_BROWSER_PERF === "1";
+const RAMSPACE_BROWSER_LABEL = "Ramspace browser";
+const browserPerfLoggingEnabled = process.env.RAMSPACE_BROWSER_PERF === "1";
 
 type DesktopUpdateErrorContext = DesktopUpdateState["errorContext"];
 
@@ -726,7 +726,7 @@ function startBrowserPerformanceLogging(): void {
         name: metric.name,
       }));
 
-    console.info(`[${SYNARA_BROWSER_LABEL} perf]`, {
+    console.info(`[${RAMSPACE_BROWSER_LABEL} perf]`, {
       ...snapshot.counters,
       trackedProcessIds: snapshot.trackedProcessIds,
       processes: processMetrics,
@@ -736,7 +736,7 @@ function startBrowserPerformanceLogging(): void {
 }
 
 async function ensureBrowserHostPipeServer(): Promise<void> {
-  if (browserHostPipeServer || !SYNARA_BROWSER_HOST_PIPE_PATH) {
+  if (browserHostPipeServer || !RAMSPACE_BROWSER_HOST_PIPE_PATH) {
     return;
   }
   const server = new BrowserHostPipeServer(browserManager, {
@@ -914,7 +914,7 @@ async function reserveBackendEndpoint(reason: string): Promise<void> {
   );
   backendHttpUrl = `http://127.0.0.1:${backendPort}`;
   backendWsUrl = `ws://127.0.0.1:${backendPort}/?token=${encodeURIComponent(backendAuthToken)}`;
-  process.env.SYNARA_DESKTOP_WS_URL = backendWsUrl;
+  process.env.RAMSPACE_DESKTOP_WS_URL = backendWsUrl;
   writeDesktopLogHeader(`${reason} resolved backend endpoint port=${backendPort}`);
 }
 
@@ -1383,21 +1383,21 @@ function resolveEmbeddedCommitHash(): string | null {
 
   try {
     const raw = FS.readFileSync(packageJsonPath, "utf8");
-    const parsed = JSON.parse(raw) as { synaraCommitHash?: unknown };
-    return normalizeCommitHash(parsed.synaraCommitHash);
+    const parsed = JSON.parse(raw) as { ramspaceCommitHash?: unknown };
+    return normalizeCommitHash(parsed.ramspaceCommitHash);
   } catch {
     return null;
   }
 }
 
-declare const __SYNARA_WINDOWS_UPDATER_PUBLISHER__: string;
+declare const __RAMSPACE_WINDOWS_UPDATER_PUBLISHER__: string;
 
 function resolveEmbeddedWindowsPublisherSubjects(): string[] {
   if (!app.isPackaged || process.platform !== "win32") {
     return [];
   }
 
-  const subject = __SYNARA_WINDOWS_UPDATER_PUBLISHER__.trim();
+  const subject = __RAMSPACE_WINDOWS_UPDATER_PUBLISHER__.trim();
   return subject ? [subject] : [];
 }
 
@@ -1406,7 +1406,7 @@ function resolveAboutCommitHash(): string | null {
     return aboutCommitHashCache;
   }
 
-  const envCommitHash = normalizeCommitHash(process.env.SYNARA_COMMIT_HASH);
+  const envCommitHash = normalizeCommitHash(process.env.RAMSPACE_COMMIT_HASH);
   if (envCommitHash) {
     aboutCommitHashCache = envCommitHash;
     return aboutCommitHashCache;
@@ -1453,9 +1453,9 @@ async function rejectUnverifiableDesktopMigrationBundle(error: unknown): Promise
   writeDesktopLogHeader(`migration bundle source check failed message=${message}`);
   await dialog.showMessageBox({
     type: "error",
-    title: t("desktop:synaraCouldNotVerifyItsServerBuild"),
+    title: t("desktop:ramspaceCouldNotVerifyItsServerBuild"),
     message: t("desktop:theMigrationSourceCouldNotBeCheckedSafely"),
-    detail: t("desktop:rebuildWithBunRunBuildDesktopBeforeStartingSynara", { value0: message }),
+    detail: t("desktop:rebuildWithBunRunBuildDesktopBeforeStartingRamspace", { value0: message }),
     buttons: [t("desktop:quit3")],
     defaultId: 0,
     noLink: true,
@@ -1473,7 +1473,7 @@ async function rejectDesktopMigrationBundleMismatch(
   );
   await dialog.showMessageBox({
     type: "error",
-    title: t("desktop:synaraSServerBuildIsStale"),
+    title: t("desktop:ramspaceSServerBuildIsStale"),
     message: t("desktop:theBuiltMigrationCodeDoesNotMatchThisCheckout"),
     detail: t("desktop:expectedButTheDesktopBundleContainsRebuildWithBun", {
       value0: mismatch.expectedDigest,
@@ -1531,7 +1531,7 @@ async function handleDesktopMigrationRecovery(): Promise<DesktopMigrationRecover
       productAnalytics.trackReliability({
         code: previousFailure === null ? "migration.startup_blocked" : "migration.recovery_failed",
       });
-      // The user is here because Synara cannot open its database, so the
+      // The user is here because Ramspace cannot open its database, so the
       // in-app update button is unreachable by definition. A newer build is
       // often the actual fix, and this dialog is the only surface left to
       // offer it from: installing it in place when the updater can reach the
@@ -1558,8 +1558,8 @@ async function handleDesktopMigrationRecovery(): Promise<DesktopMigrationRecover
       ];
       if (canInstallUpdate) {
         choices.push({
-          label: t("desktop:updateSynaraAndRestart"),
-          detail: t("desktop:installTheNewestSynaraReleaseWhichMayAlreadyContain"),
+          label: t("desktop:updateRamspaceAndRestart"),
+          detail: t("desktop:installTheNewestRamspaceReleaseWhichMayAlreadyContain"),
           decision: "install-update",
         });
       }
@@ -1570,7 +1570,7 @@ async function handleDesktopMigrationRecovery(): Promise<DesktopMigrationRecover
             value0: t(
               canInstallUpdate
                 ? "desktop:downloadThatRelease"
-                : "desktop:downloadTheLatestSynaraRelease",
+                : "desktop:downloadTheLatestRamspaceRelease",
             ),
           }),
           decision: "open-release-page",
@@ -1587,16 +1587,16 @@ async function handleDesktopMigrationRecovery(): Promise<DesktopMigrationRecover
         type: previousFailure === null ? "warning" : "error",
         title:
           previousFailure === null
-            ? t("desktop:synaraNeedsToRecoverItsDatabase")
+            ? t("desktop:ramspaceNeedsToRecoverItsDatabase")
             : restoreFailed
               ? t("desktop:migrationRecoveryFailed")
-              : t("desktop:synaraCouldNotUpdateItself"),
+              : t("desktop:ramspaceCouldNotUpdateItself"),
         message:
           previousFailure === null
-            ? t("desktop:synaraStoppedADatabaseMigrationBeforeItCouldFinish")
+            ? t("desktop:ramspaceStoppedADatabaseMigrationBeforeItCouldFinish")
             : restoreFailed
               ? t("desktop:theSavedDatabaseBackupCouldNotBeRestored")
-              : t("desktop:theNewestSynaraReleaseCouldNotBeInstalled"),
+              : t("desktop:theNewestRamspaceReleaseCouldNotBeInstalled"),
         detail: t("desktop:youCanNoProviderOrChatProcessWillStart", {
           value0: previousFailure === null ? "" : `${previousFailure.message}\n\n`,
           value1: options,
@@ -1683,7 +1683,7 @@ let servedStaticRootCache: ServedStaticRoot | null | undefined;
 // being replaced beneath the running app (Electron caches the header per process,
 // so every later read returns bytes from the wrong offsets). Extract the client
 // to a per-archive snapshot on real disk and serve that instead — both for the
-// synara:// protocol here and, via SYNARA_STATIC_DIR, for the backend's HTTP static
+// ramspace:// protocol here and, via RAMSPACE_STATIC_DIR, for the backend's HTTP static
 // route. Memoized so one app run serves one coherent asset generation.
 function resolveServedStaticRoot(): ServedStaticRoot | null {
   if (servedStaticRootCache === undefined) {
@@ -1775,7 +1775,7 @@ function handleFatalStartupError(stage: string, error: unknown): void {
   if (!isQuitting) {
     isQuitting = true;
     dialog.showErrorBox(
-      t("desktop:synaraFailedToStart"),
+      t("desktop:ramspaceFailedToStart"),
       t("desktop:stage", {
         value0: stage,
         value1: message,
@@ -1923,7 +1923,7 @@ function adjustWindowZoomFromMenu(multiplier: number): void {
 // A configured app-update.yml (or the mock-updates flag) is the prerequisite for any
 // auto-update activity; centralized so the menu and the enable check stay in lockstep.
 function hasConfiguredUpdateFeed(): boolean {
-  return readAppUpdateYml() !== null || Boolean(process.env.SYNARA_DESKTOP_MOCK_UPDATES);
+  return readAppUpdateYml() !== null || Boolean(process.env.RAMSPACE_DESKTOP_MOCK_UPDATES);
 }
 
 function resolveAutoUpdateDisabledReason(): string | null {
@@ -1933,7 +1933,7 @@ function resolveAutoUpdateDisabledReason(): string | null {
     platform: process.platform,
     appImage: process.env.APPIMAGE,
     disabledByEnv:
-      desktopIdentity.usesScriptedUpdates || process.env.SYNARA_DISABLE_AUTO_UPDATE === "1",
+      desktopIdentity.usesScriptedUpdates || process.env.RAMSPACE_DISABLE_AUTO_UPDATE === "1",
     hasUpdateFeedConfig: hasConfiguredUpdateFeed(),
   });
 }
@@ -1965,7 +1965,7 @@ async function checkForUpdatesFromMenu(): Promise<void> {
     void dialog.showMessageBox({
       type: "info",
       title: t("desktop:youReUpToDate"),
-      message: t("desktop:synaraIsCurrentlyTheNewestVersionAvailable", {
+      message: t("desktop:ramspaceIsCurrentlyTheNewestVersionAvailable", {
         value0: updateState.currentVersion,
       }),
       buttons: [t("desktop:common_ok")],
@@ -1974,7 +1974,7 @@ async function checkForUpdatesFromMenu(): Promise<void> {
     void dialog.showMessageBox({
       type: "info",
       title: t("desktop:updateFound"),
-      message: t("desktop:synaraIsPreparingTheUpdateInTheBackground"),
+      message: t("desktop:ramspaceIsPreparingTheUpdateInTheBackground"),
       buttons: [t("desktop:common_ok")],
     });
   } else if (updateState.status === "downloaded") {
@@ -2145,20 +2145,20 @@ function resolveNotificationIconPath(): string | null {
     return null;
   }
   if (process.platform === "win32") {
-    return resolveResourcePath("synara.png") ?? resolveIconPath("ico");
+    return resolveResourcePath("ramspace.png") ?? resolveIconPath("ico");
   }
-  return resolveResourcePath("synara.png") ?? resolveIconPath("png");
+  return resolveResourcePath("ramspace.png") ?? resolveIconPath("png");
 }
 
 function loadWindowMaterialAddon(): WindowMaterialAddon | null {
   const addonPath = app.isPackaged
-    ? Path.resolve(process.resourcesPath, "..", "Frameworks", "synara-window-material.node")
+    ? Path.resolve(process.resourcesPath, "..", "Frameworks", "ramspace-window-material.node")
     : Path.resolve(
         __dirname,
         "..",
         ".electron-runtime",
         "window-material",
-        "synara-window-material.node",
+        "ramspace-window-material.node",
       );
   try {
     const addonModule: { exports: Partial<WindowMaterialAddon> } = { exports: {} };
@@ -2195,9 +2195,9 @@ const desktopWindowTranslucency = resolveDesktopWindowTranslucency({
 
 function resolveAppSnapHelperPath(): string {
   if (app.isPackaged) {
-    return Path.resolve(process.resourcesPath, "..", "Helpers", "synara-appsnap-helper");
+    return Path.resolve(process.resourcesPath, "..", "Helpers", "ramspace-appsnap-helper");
   }
-  return Path.resolve(__dirname, "..", ".electron-runtime", "appsnap", "synara-appsnap-helper");
+  return Path.resolve(__dirname, "..", ".electron-runtime", "appsnap", "ramspace-appsnap-helper");
 }
 
 /// The .app bundle that owns this process; the permission guide drags this
@@ -2406,7 +2406,7 @@ function showDesktopNotification(input: {
  * Resolve the Electron userData directory path.
  *
  * Electron derives the default userData path from `productName` in
- * package.json. We override it to a clean lowercase Synara name.
+ * package.json. We override it to a clean lowercase Ramspace name.
  */
 function resolveUserDataPath(): string {
   const appDataBase = resolveDesktopAppDataBase();
@@ -2417,7 +2417,7 @@ function resolveUserDataPath(): string {
       packagedFlavor: packagedDesktopFlavor,
       sourceBuildMarker: requestedSourceBuildMarker,
     })
-      ? process.env[SYNARA_DESKTOP_SMOKE_USER_DATA_ENV]
+      ? process.env[RAMSPACE_DESKTOP_SMOKE_USER_DATA_ENV]
       : undefined,
   });
 }
@@ -2425,13 +2425,13 @@ function resolveUserDataPath(): string {
 function repairBrowserProfileBeforeElectronReady(userDataPath: string): void {
   const browserProfileRepair = repairBrowserProfileFromBridgeManifest(userDataPath);
   if (browserProfileRepair.status === "repaired") {
-    console.info("[desktop] Completed Synara browser profile bridge repair", {
+    console.info("[desktop] Completed Ramspace browser profile bridge repair", {
       sourcePath: browserProfileRepair.sourcePath,
       targetPath: browserProfileRepair.targetPath,
       copiedEntries: browserProfileRepair.copiedEntries,
     });
   } else if (browserProfileRepair.status === "repair-failed") {
-    console.warn("[desktop] Failed to complete Synara browser profile bridge repair", {
+    console.warn("[desktop] Failed to complete Ramspace browser profile bridge repair", {
       sourcePath: browserProfileRepair.sourcePath,
       targetPath: browserProfileRepair.targetPath,
       error: browserProfileRepair.error,
@@ -2446,7 +2446,7 @@ function configureAppIdentity(): void {
     applicationName: APP_DISPLAY_NAME,
     applicationVersion: app.getVersion(),
     version: commitHash ?? "unknown",
-    copyright: `© ${new Date().getFullYear()} Emanuele Di Pietro`,
+    copyright: `© ${new Date().getFullYear()} aaramsyy`,
   });
 
   if (process.platform === "win32") {
@@ -2973,10 +2973,10 @@ function restartAfterStartupBundleSwap(error: BundleChangedDuringStartupError): 
   void dialog
     .showMessageBox({
       type: "warning",
-      title: t("desktop:synaraNeedsToRestart"),
-      message: t("desktop:synaraChangedWhileItWasOpening"),
+      title: t("desktop:ramspaceNeedsToRestart"),
+      message: t("desktop:ramspaceChangedWhileItWasOpening"),
       detail: t("desktop:theCurrentProcessCannotSafelyReadTheReplacedApplication"),
-      buttons: [t("desktop:restartSynara")],
+      buttons: [t("desktop:restartRamspace")],
       defaultId: 0,
     })
     .catch(() => undefined)
@@ -2988,7 +2988,7 @@ function restartAfterStartupBundleSwap(error: BundleChangedDuringStartupError): 
 
 // Electron caches the asar header per process, so once app.asar changes on disk
 // (updater retry racing a relaunch, a reinstall, a build copied over the bundle)
-// every archive read in this process — the synara:// protocol, the backend's static
+// every archive read in this process — the ramspace:// protocol, the backend's static
 // files, lazily-loaded renderer chunks — resolves to stale offsets and silently
 // returns the wrong bytes. Detect the swap and offer a restart; continuing is
 // never safe.
@@ -3028,8 +3028,8 @@ function startBundleSwapWatcher(): void {
     void dialog
       .showMessageBox({
         type: "warning",
-        title: t("desktop:synaraWasReplacedOnDisk"),
-        message: t("desktop:theInstalledSynaraAppChangedWhileItWasRunning"),
+        title: t("desktop:ramspaceWasReplacedOnDisk"),
+        message: t("desktop:theInstalledRamspaceAppChangedWhileItWasRunning"),
         detail: t("desktop:theInterfaceKeepsRunningFromASafeguardedCopyBut"),
         buttons: [t("desktop:restartNow"), t("desktop:later")],
         defaultId: 0,
@@ -3225,7 +3225,7 @@ function processInstallMarkerOnStartup(): void {
   }
 
   automaticUpdateActivitySuppressed = true;
-  const message = t("desktop:synaraRestartedButUpdateWasNotInstalledTryAgain", {
+  const message = t("desktop:ramspaceRestartedButUpdateWasNotInstalledTryAgain", {
     value0: marker.toVersion,
   });
   setUpdateState(
@@ -3671,7 +3671,7 @@ async function installLatestUpdateForMigrationRecovery(): Promise<string | null>
   }
 
   if (updateState.status === "up-to-date") {
-    return t("desktop:synaraIsAlreadyTheNewestReleaseSoUpdatingCannot", {
+    return t("desktop:ramspaceIsAlreadyTheNewestReleaseSoUpdatingCannot", {
       version: app.getVersion(),
     });
   }
@@ -3958,7 +3958,7 @@ function configureAutoUpdater(): void {
   autoUpdater.autoDownload = false;
   autoUpdater.autoInstallOnAppQuit = false;
   // The dedicated channel keeps the permanent compatibility release on the
-  // default feed while Synara versions advance independently.
+  // default feed while Ramspace versions advance independently.
   autoUpdater.channel = desktopUpdateChannel(desktopFlavor);
   autoUpdater.allowPrerelease = DESKTOP_UPDATE_ALLOW_PRERELEASE;
   autoUpdater.allowDowngrade = false;
@@ -4136,7 +4136,7 @@ function configureAutoUpdater(): void {
 
   scheduleUpdatePoll();
 }
-// Builds process-local Node args so provider/tool children do not inherit Synara's heap guard.
+// Builds process-local Node args so provider/tool children do not inherit Ramspace's heap guard.
 function backendNodeArgs(): string[] {
   const configuredMaxOldSpaceMb =
     BACKEND_MAX_OLD_SPACE_ENV_KEYS.map((key) => process.env[key]).find(
@@ -4329,7 +4329,7 @@ async function startCuaHost(): Promise<void> {
   }
 }
 
-declare const __SYNARA_STABLE_ACCOUNT_URL__: string;
+declare const __RAMSPACE_STABLE_ACCOUNT_URL__: string;
 
 function backendEnv(): NodeJS.ProcessEnv {
   const servedStaticRoot = resolveServedStaticRoot();
@@ -4337,19 +4337,21 @@ function backendEnv(): NodeJS.ProcessEnv {
   const migrationDivergenceConsent = migrationConsentHandoff.take();
   const stableAccountUrl =
     app.isPackaged && !isSourceDesktopBuild && desktopFlavor === "production"
-      ? __SYNARA_STABLE_ACCOUNT_URL__
+      ? __RAMSPACE_STABLE_ACCOUNT_URL__
       : "";
   const accountUrl =
-    process.env.SYNARA_ACCOUNT_URL?.trim() || stableAccountUrl || desktopIdentity.defaultAccountUrl;
+    process.env.RAMSPACE_ACCOUNT_URL?.trim() ||
+    stableAccountUrl ||
+    desktopIdentity.defaultAccountUrl;
   const env: NodeJS.ProcessEnv = {
     ...resolveBrowserHostPipeBackendEnv(
       process.env,
-      browserHostPipeServer ? SYNARA_BROWSER_HOST_PIPE_PATH : null,
+      browserHostPipeServer ? RAMSPACE_BROWSER_HOST_PIPE_PATH : null,
       browserHostPipeServer ? DESKTOP_BROWSER_HOST_CAPABILITY_FD : null,
     ),
     // Point the backend's HTTP static route at the same swap-immune snapshot the
-    // synara:// protocol serves, so both surfaces survive app.asar being replaced.
-    ...(servedStaticRoot?.snapshotted ? { SYNARA_STATIC_DIR: servedStaticRoot.dir } : {}),
+    // ramspace:// protocol serves, so both surfaces survive app.asar being replaced.
+    ...(servedStaticRoot?.snapshotted ? { RAMSPACE_STATIC_DIR: servedStaticRoot.dir } : {}),
     ...(app.isPackaged
       ? { [DEVICE_HELPER_SOURCE_DIR_ENV]: Path.join(process.resourcesPath, "device-helper") }
       : {}),
@@ -4360,28 +4362,28 @@ function backendEnv(): NodeJS.ProcessEnv {
       ? { [MIGRATION_DIVERGENCE_CONSENT_ENV]: migrationDivergenceConsent }
       : {}),
     ...(cuaHostEndpoint ? { [CUA_HOST_SOCKET_ENV]: cuaHostEndpoint } : {}),
-    [SYNARA_DESKTOP_BUNDLE_ID_ENV]: desktopIdentity.bundleId,
-    SYNARA_MODE: "desktop",
-    SYNARA_NO_BROWSER: "1",
-    SYNARA_PORT: String(backendPort),
-    SYNARA_HOME: BASE_DIR,
-    SYNARA_AUTH_TOKEN: backendAuthToken,
-    SYNARA_DESKTOP_SHUTDOWN_TOKEN: DESKTOP_BACKEND_SHUTDOWN_TOKEN,
+    [RAMSPACE_DESKTOP_BUNDLE_ID_ENV]: desktopIdentity.bundleId,
+    RAMSPACE_MODE: "desktop",
+    RAMSPACE_NO_BROWSER: "1",
+    RAMSPACE_PORT: String(backendPort),
+    RAMSPACE_HOME: BASE_DIR,
+    RAMSPACE_AUTH_TOKEN: backendAuthToken,
+    RAMSPACE_DESKTOP_SHUTDOWN_TOKEN: DESKTOP_BACKEND_SHUTDOWN_TOKEN,
     // Packaged launches supply their account authority without shell setup.
-    ...(accountUrl ? { SYNARA_ACCOUNT_URL: accountUrl } : {}),
-    ...(stableAccountUrl && process.env.SYNARA_REMOTE_CONNECTIONS === undefined
-      ? { SYNARA_REMOTE_CONNECTIONS: "1" }
+    ...(accountUrl ? { RAMSPACE_ACCOUNT_URL: accountUrl } : {}),
+    ...(stableAccountUrl && process.env.RAMSPACE_REMOTE_CONNECTIONS === undefined
+      ? { RAMSPACE_REMOTE_CONNECTIONS: "1" }
       : {}),
     ...(app.isPackaged
       ? {
-          SYNARA_CLOUDFLARED_PATH: Path.join(
+          RAMSPACE_CLOUDFLARED_PATH: Path.join(
             process.resourcesPath,
             "cloudflared",
             process.platform === "win32" ? "cloudflared.exe" : "cloudflared",
           ),
         }
-      : process.env.SYNARA_CLOUDFLARED_PATH
-        ? { SYNARA_CLOUDFLARED_PATH: process.env.SYNARA_CLOUDFLARED_PATH }
+      : process.env.RAMSPACE_CLOUDFLARED_PATH
+        ? { RAMSPACE_CLOUDFLARED_PATH: process.env.RAMSPACE_CLOUDFLARED_PATH }
         : {}),
   };
   // The backend runs the same login-shell probe at startup and does not begin listening
@@ -4450,7 +4452,7 @@ function backendFailureDialogDetail(reason: string): string {
   const cause = summary.length > 0 ? summary : reason;
   return [
     cause,
-    t("desktop:synaraPausedAutomaticRestartsSoAFailingBackendCan"),
+    t("desktop:ramspacePausedAutomaticRestartsSoAFailingBackendCan"),
     t("desktop:logFile", { value0: Path.join(LOG_DIR, BACKEND_LOG_FILE_NAME) }),
   ].join("\n\n");
 }
@@ -4479,8 +4481,8 @@ function presentBackendStartupGiveUp(reason: string): void {
     for (;;) {
       const result = await dialog.showMessageBox({
         type: "error",
-        title: t("desktop:synaraSBackendDidnTStart"),
-        message: t("desktop:synaraSBackendFailedToStartTimesInA", {
+        title: t("desktop:ramspaceSBackendDidnTStart"),
+        message: t("desktop:ramspaceSBackendFailedToStartTimesInA", {
           value0: BACKEND_MAX_CONSECUTIVE_START_FAILURES,
         }),
         detail,
@@ -4518,7 +4520,7 @@ function schemaTooNewRestoreDetail(
   restoreCandidate: ReturnType<typeof resolveDesktopMigrationRestoreCandidate>,
 ): string {
   if (restoreCandidate) {
-    return t("desktop:synaraVerifiedTheExactPreMigrationBackupAtIts", {
+    return t("desktop:ramspaceVerifiedTheExactPreMigrationBackupAtIts", {
       value0: restoreCandidate.backupPath,
       value1: restoreCandidate.backupMigrationId,
     });
@@ -4573,7 +4575,7 @@ async function handleDesktopSchemaTooNewRecovery(
         });
       }
       if (canInstallUpdate) {
-        choices.push({ label: t("desktop:updateSynaraAndRestart"), decision: "install-update" });
+        choices.push({ label: t("desktop:updateRamspaceAndRestart"), decision: "install-update" });
       }
       if (releaseUrl !== null) {
         choices.push({ label: t("desktop:downloadLatestRelease"), decision: "open-release-page" });
@@ -4588,10 +4590,10 @@ async function handleDesktopSchemaTooNewRecovery(
           type: previousFailure === null ? "warning" : "error",
           title:
             previousFailure === null
-              ? t("desktop:thisDatabaseIsNewerThanSynara")
+              ? t("desktop:thisDatabaseIsNewerThanRamspace")
               : restoreFailed
                 ? t("desktop:databaseRestoreFailed")
-                : t("desktop:synaraCouldNotUpdateItself"),
+                : t("desktop:ramspaceCouldNotUpdateItself"),
           message:
             previousFailure === null
               ? t("desktop:databaseMigrationIsNewerThanThisBuildSupports", {
@@ -4600,7 +4602,7 @@ async function handleDesktopSchemaTooNewRecovery(
                 })
               : restoreFailed
                 ? t("desktop:theVerifiedDatabaseBackupCouldNotBeRestored")
-                : t("desktop:theNewestSynaraReleaseCouldNotBeInstalled"),
+                : t("desktop:theNewestRamspaceReleaseCouldNotBeInstalled"),
           detail: t("desktop:theBackendAndProviderProcessesWillRemainStoppedUntil", {
             value0: previousFailure === null ? "" : `${previousFailure.message}\n\n`,
             value1: schemaTooNewRestoreDetail(block, restoreCandidate),
@@ -4680,20 +4682,20 @@ function handleBackendStartupBlock(block: BackendStartupBlock): void {
             type: "error",
             title:
               previousFailure === null
-                ? t("desktop:synaraCouldNotVerifyMigrationRecovery")
-                : t("desktop:synaraCouldNotUpdateItself"),
+                ? t("desktop:ramspaceCouldNotVerifyMigrationRecovery")
+                : t("desktop:ramspaceCouldNotUpdateItself"),
             message:
               previousFailure === null
                 ? t("desktop:theBackendStoppedForDatabaseSafetyButItsRecovery")
-                : t("desktop:theNewestSynaraReleaseCouldNotBeInstalled"),
-            detail: t("desktop:synaraWillKeepTheBackendAndProviderProcessesStopped", {
+                : t("desktop:theNewestRamspaceReleaseCouldNotBeInstalled"),
+            detail: t("desktop:ramspaceWillKeepTheBackendAndProviderProcessesStopped", {
               value0: previousFailure === null ? "" : `${previousFailure.message}\n\n`,
             }),
             buttons: choices.map((choice) =>
               t(
                 {
                   restore: "desktop:restoreBackupAndRestart",
-                  "install-update": "desktop:updateSynaraAndRestart",
+                  "install-update": "desktop:updateRamspaceAndRestart",
                   "open-release-page": "desktop:downloadLatestRelease",
                   "open-logs": "desktop:openLogs",
                   quit: "desktop:quit3",
@@ -4727,7 +4729,7 @@ function handleBackendStartupBlock(block: BackendStartupBlock): void {
       const challenge = block.challenge;
       const result = await showBlockDialog({
         type: "warning",
-        title: t("desktop:synaraFoundADifferentDatabaseMigrationHistory"),
+        title: t("desktop:ramspaceFoundADifferentDatabaseMigrationHistory"),
         message: t("desktop:migrationDoesNotMatchThisBuild", {
           value0: challenge.firstDivergedId,
         }),
@@ -4756,11 +4758,11 @@ function handleBackendStartupBlock(block: BackendStartupBlock): void {
     if (block.kind === "migration-runtime-identity-mismatch") {
       await showBlockDialog({
         type: "error",
-        title: t("desktop:synaraSServerBuildDoesNotMatch"),
+        title: t("desktop:ramspaceSServerBuildDoesNotMatch"),
         message: t("desktop:theDesktopAndServerMigrationCodeCameFromDifferent"),
         detail: app.isPackaged
-          ? t("desktop:updateOrReinstallSynaraBeforeStartingItAgainThe")
-          : t("desktop:rebuildWithBunRunBuildDesktopBeforeStartingSynara2"),
+          ? t("desktop:updateOrReinstallRamspaceBeforeStartingItAgainThe")
+          : t("desktop:rebuildWithBunRunBuildDesktopBeforeStartingRamspace2"),
         buttons: [t("desktop:quit3")],
         defaultId: 0,
         noLink: true,
@@ -4772,9 +4774,9 @@ function handleBackendStartupBlock(block: BackendStartupBlock): void {
     if (block.kind === "migration-recovery-required") {
       const result = await showBlockDialog({
         type: "warning",
-        title: t("desktop:synaraNeedsToRecoverItsDatabase"),
+        title: t("desktop:ramspaceNeedsToRecoverItsDatabase"),
         message: t("desktop:aDatabaseMigrationDidNotFinishSafely"),
-        detail: t("desktop:restartSynaraToOpenTheVerifiedBackupRecoveryFlow"),
+        detail: t("desktop:restartRamspaceToOpenTheVerifiedBackupRecoveryFlow"),
         buttons: [t("desktop:restartAndRecover"), t("desktop:quit3")],
         defaultId: 0,
         cancelId: 1,
@@ -4791,8 +4793,8 @@ function handleBackendStartupBlock(block: BackendStartupBlock): void {
 
     const processDetail =
       block.ownerPid === null
-        ? t("desktop:synaraCouldNotVerifyTheDatabaseLockTheLock")
-        : t("desktop:anotherSynaraServerProcessIsAlreadyUsingThisDatabase", {
+        ? t("desktop:ramspaceCouldNotVerifyTheDatabaseLockTheLock")
+        : t("desktop:anotherRamspaceServerProcessIsAlreadyUsingThisDatabase", {
             value0: block.ownerPid,
           });
     for (;;) {
@@ -4800,13 +4802,13 @@ function handleBackendStartupBlock(block: BackendStartupBlock): void {
         type: "warning",
         title:
           block.ownerPid === null
-            ? t("desktop:synaraCouldNotVerifyDatabaseOwnership")
-            : t("desktop:synaraIsAlreadyRunningElsewhere"),
+            ? t("desktop:ramspaceCouldNotVerifyDatabaseOwnership")
+            : t("desktop:ramspaceIsAlreadyRunningElsewhere"),
         message:
           block.ownerPid === null
-            ? t("desktop:synaraCouldNotSafelyOpenYourLocalData")
-            : t("desktop:yourLocalSynaraDataIsInUseByAnother"),
-        detail: t("desktop:closeAnyOtherSynaraAppOrDevelopmentServerUsing", {
+            ? t("desktop:ramspaceCouldNotSafelyOpenYourLocalData")
+            : t("desktop:yourLocalRamspaceDataIsInUseByAnother"),
+        detail: t("desktop:closeAnyOtherRamspaceAppOrDevelopmentServerUsing", {
           value0: processDetail,
           value1: Path.join(LOG_DIR, BACKEND_LOG_FILE_NAME),
         }),
@@ -4929,8 +4931,8 @@ function startBackend(trigger: BackendStartTrigger = "lifecycle"): void {
       // workers keep DNS and crypto, and so remote authorization, moving meanwhile.
       UV_THREADPOOL_SIZE: process.env.UV_THREADPOOL_SIZE || "16",
       ELECTRON_RUN_AS_NODE: "1",
-      SYNARA_SERVER_ENTRY: backendEntry,
-      SYNARA_DESKTOP_PARENT_STDIN: "1",
+      RAMSPACE_SERVER_ENTRY: backendEntry,
+      RAMSPACE_DESKTOP_PARENT_STDIN: "1",
       [DESKTOP_UPDATE_IPC_ENV]: supportsDesktopUpdateControl(app.isPackaged, process.platform)
         ? "1"
         : "0",
@@ -5361,7 +5363,7 @@ function requestGracefulAppQuit(reason: string): void {
 }
 
 function registerIpcHandlers(): void {
-  const storageSnapshotPath = resolveSynaraStorageSnapshotPath(app.getPath("userData"));
+  const storageSnapshotPath = resolveRamspaceStorageSnapshotPath(app.getPath("userData"));
 
   attachProductAnalyticsIpc(productAnalytics, () => mainWindow?.webContents ?? null);
 
@@ -5381,12 +5383,12 @@ function registerIpcHandlers(): void {
 
   ipcMain.removeAllListeners(IPC.storageMigration.read);
   ipcMain.on(IPC.storageMigration.read, (event: IpcMainEvent) => {
-    event.returnValue = readSynaraStorageSnapshot(storageSnapshotPath);
+    event.returnValue = readRamspaceStorageSnapshot(storageSnapshotPath);
   });
 
   ipcMain.removeHandler(IPC.storageMigration.acknowledge);
   ipcMain.handle(IPC.storageMigration.acknowledge, async () => {
-    await acknowledgeSynaraStorageSnapshot(storageSnapshotPath);
+    await acknowledgeRamspaceStorageSnapshot(storageSnapshotPath);
   });
 
   ipcMain.removeAllListeners(IPC.wsUrl);
@@ -5796,10 +5798,10 @@ function registerIpcHandlers(): void {
     homeDir: OS.homedir(),
     betaHomeDir: resolveBetaHomeDir(),
     flavor: desktopFlavor === "development" ? "production" : desktopFlavor,
-    feedUrlOverride: process.env.SYNARA_BETA_FEED_URL,
-    installDirOverride: process.env.SYNARA_BETA_INSTALL_DIR,
+    feedUrlOverride: process.env.RAMSPACE_BETA_FEED_URL,
+    installDirOverride: process.env.RAMSPACE_BETA_INSTALL_DIR,
     expectedTeamId: ownAppTeamId(),
-    betaUserDataDir: process.env.SYNARA_BETA_USER_DATA,
+    betaUserDataDir: process.env.RAMSPACE_BETA_USER_DATA,
     stableExecutablePath: desktopFlavor === "production" ? process.execPath : undefined,
     stableHomeDir: desktopFlavor === "production" ? BASE_DIR : undefined,
     canTrashOwnBundle: isTrashableBetaBundle(),
@@ -5832,7 +5834,7 @@ function registerIpcHandlers(): void {
         return {
           ok: false,
           error: "internal" as const,
-          message: t("desktop:synaraIsOpenButSynaraBetaCouldNotBe", {
+          message: t("desktop:ramspaceIsOpenButRamspaceBetaCouldNotBe", {
             value0: formatErrorMessage(error),
           }),
         };
@@ -5955,7 +5957,7 @@ function registerIpcHandlers(): void {
             "Secure browser session persistence failed.",
           ];
           console.warn(
-            "[Synara browser]",
+            "[Ramspace browser]",
             error instanceof Error && allowed.includes(error.message)
               ? error.message
               : "Browser session checkpoint failed.",
@@ -6023,7 +6025,7 @@ function getTitleBarOptions(): BrowserWindowConstructorOptions {
   if (process.platform === "darwin") {
     return {
       titleBarStyle: "hiddenInset",
-      // Derived from the shared chat-surface header geometry (@synara/shared/desktopChrome)
+      // Derived from the shared chat-surface header geometry (@ramspace/shared/desktopChrome)
       // so the native lights and the renderer's leading toggle/arrow controls always share
       // the same vertical center. Tune the height/radius there, never the raw px here.
       trafficLightPosition: getMacTrafficLightPosition(),
@@ -6364,13 +6366,13 @@ function presentRendererCrashRecovery(
 
   const message =
     response.cause === "reload-budget-exhausted"
-      ? t("desktop:synaraSWindowCrashedTimesInARow", { value0: response.crashes })
-      : t("desktop:synaraSWindowStoppedUnexpectedly");
+      ? t("desktop:ramspaceSWindowCrashedTimesInARow", { value0: response.crashes })
+      : t("desktop:ramspaceSWindowStoppedUnexpectedly");
   const detail = [
     t("desktop:theWindowSRendererProcessExited", { reason }),
     response.cause === "reload-budget-exhausted"
-      ? t("desktop:synaraPausedAutomaticReloadsSoARepeatingCrashCan")
-      : t("desktop:thisExitReasonRepeatsOnReloadSoSynaraDid"),
+      ? t("desktop:ramspacePausedAutomaticReloadsSoARepeatingCrashCan")
+      : t("desktop:thisExitReasonRepeatsOnReloadSoRamspaceDid"),
     t("desktop:logFile", { value0: Path.join(LOG_DIR, DESKTOP_LOG_FILE_NAME) }),
   ].join("\n\n");
 
@@ -6378,7 +6380,7 @@ function presentRendererCrashRecovery(
     for (;;) {
       const result = await dialog.showMessageBox({
         type: "error",
-        title: t("desktop:synaraSWindowStopped"),
+        title: t("desktop:ramspaceSWindowStopped"),
         message,
         detail,
         buttons: [t("desktop:panel_reload"), t("desktop:openLogs"), t("desktop:quit3")],
@@ -6424,7 +6426,7 @@ function configureMediaPermissions(): void {
     },
     {
       // Browser pages are untrusted web origins. They must never inherit the
-      // microphone grant used by Synara's own voice-composer renderer.
+      // microphone grant used by Ramspace's own voice-composer renderer.
       targetSession: session.fromPartition(BROWSER_SESSION_PARTITION),
       trustedRequester: () => null,
     },
@@ -6545,7 +6547,7 @@ async function bootstrap(): Promise<void> {
     }
   } catch {
     console.warn(
-      "[Synara browser] Secure session restoration is unavailable; no saved session cookies were restored.",
+      "[Ramspace browser] Secure session restoration is unavailable; no saved session cookies were restored.",
     );
   }
 
@@ -6569,7 +6571,7 @@ async function bootstrap(): Promise<void> {
   try {
     await ensureBrowserHostPipeServer();
   } catch (error) {
-    console.warn("[Synara browser] Failed to start browser host pipe", error);
+    console.warn("[Ramspace browser] Failed to start browser host pipe", error);
   }
   await startCuaHost();
   startBackend();

@@ -36,9 +36,9 @@ import { join, resolve } from "node:path";
 import {
   BETA_IMPORT_REQUEST_FILE_NAME,
   BETA_IMPORT_RESULT_FILE_NAME,
-  SYNARA_STABLE_HOME_ENV,
+  RAMSPACE_STABLE_HOME_ENV,
   type BetaImportRequest,
-} from "@synara/shared/betaChannel";
+} from "@ramspace/shared/betaChannel";
 
 /** Entries that describe this install's live runtime, not user data. */
 const EXCLUDED_STATE_ENTRIES = new Set([
@@ -230,7 +230,7 @@ export function copyLiveDatabase(
     }
     if (signature(sourceDbPath) === before) return stagedDbPath;
   }
-  throw new Error("Synara kept rewriting its database during the copy. Try again in a moment.");
+  throw new Error("Ramspace kept rewriting its database during the copy. Try again in a moment.");
 }
 
 async function snapshotStableDatabase(
@@ -258,7 +258,7 @@ async function snapshotStableDatabase(
     const inspection = await inspectSqliteMigrationBackup(stagingPath);
     if (inspection.migrationId > latestMigrationId) {
       throw new Error(
-        "Synara is newer than this Synara Beta. Update Synara Beta, then copy your data again.",
+        "Ramspace is newer than this Ramspace Beta. Update Ramspace Beta, then copy your data again.",
       );
     }
     if (inspection.lineage === "incompatible")
@@ -341,8 +341,8 @@ function commitStagedImport(
 
 /** Stable homes a beta may import from: the one stable handed over, else the default. */
 export function allowedImportSourceHomes(env: NodeJS.ProcessEnv = process.env): string[] {
-  const handedOver = env[SYNARA_STABLE_HOME_ENV]?.trim();
-  return [handedOver ? resolve(handedOver) : resolve(homedir(), ".synara")];
+  const handedOver = env[RAMSPACE_STABLE_HOME_ENV]?.trim();
+  return [handedOver ? resolve(handedOver) : resolve(homedir(), ".ramspace")];
 }
 
 export async function runBetaImportIfRequested(input: {
@@ -396,7 +396,7 @@ export async function runBetaImportIfRequested(input: {
     return finish(false, "import source points at the beta home itself");
   }
   if (!(input.allowedSourceHomes ?? allowedImportSourceHomes()).includes(sourceHomeDir)) {
-    return finish(false, "import source is not the Synara data folder");
+    return finish(false, "import source is not the Ramspace data folder");
   }
 
   const sourceStateDir = join(sourceHomeDir, "userdata");

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { ProviderModelDescriptor } from "@synara/contracts";
+import type { ProviderModelDescriptor } from "@ramspace/contracts";
 
 import { formatThreadModelSummaryLabel, resolveThreadModelSummary } from "./threadModelSummary";
 

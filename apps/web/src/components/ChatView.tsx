@@ -2,7 +2,7 @@ import { type LegendListRef } from "@legendapp/list/react";
 import {
   parseComputerInvocation,
   resolveComputerInvocationMode,
-} from "@synara/shared/computerInvocation";
+} from "@ramspace/shared/computerInvocation";
 import {
   MessageId,
   OrchestrationThreadActivity,
@@ -24,18 +24,18 @@ import {
   type ServerProviderStatus,
   type ThreadGoalAchievement,
   type TurnId,
-} from "@synara/contracts";
-import { resolveLatestTailUserMessageEditTarget } from "@synara/shared/conversationEdit";
-import { getModelCapabilities, resolveApiModelId } from "@synara/shared/model";
-import { isProviderDeliveryBlockDetail } from "@synara/shared/providerDeliveryBlock";
+} from "@ramspace/contracts";
+import { resolveLatestTailUserMessageEditTarget } from "@ramspace/shared/conversationEdit";
+import { getModelCapabilities, resolveApiModelId } from "@ramspace/shared/model";
+import { isProviderDeliveryBlockDetail } from "@ramspace/shared/providerDeliveryBlock";
 import {
   resolveThreadWorkspaceCwd as resolveSharedThreadWorkspaceCwd,
   resolveThreadBranchSourceCwd,
   resolveThreadWorkspaceState,
-} from "@synara/shared/threadEnvironment";
-import { threadExportBlockedReason } from "@synara/shared/threadExport";
-import { pendingRequestInstanceKey } from "@synara/shared/threadSummary";
-import { deriveAssociatedWorktreeMetadata } from "@synara/shared/threadWorkspace";
+} from "@ramspace/shared/threadEnvironment";
+import { threadExportBlockedReason } from "@ramspace/shared/threadExport";
+import { pendingRequestInstanceKey } from "@ramspace/shared/threadSummary";
+import { deriveAssociatedWorktreeMetadata } from "@ramspace/shared/threadWorkspace";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import {
@@ -138,7 +138,7 @@ import {
 } from "../hooks/useComposerCommandMenuItems";
 import { MCP_CONNECTORS_ON } from "../betaFeatures";
 import { mcpConnectorsQueryOptions } from "../lib/mcpConnectorsReactQuery";
-import { providerSupportsMcpConnectors } from "@synara/shared/mcpConnectors";
+import { providerSupportsMcpConnectors } from "@ramspace/shared/mcpConnectors";
 import { useComposerThreadMentionDrop } from "../hooks/useComposerThreadMentionDrop";
 import { splitComposerDropzoneFiles, useComposerDropzone } from "../hooks/useComposerDropzone";
 import { useComposerImageIntake } from "../hooks/useComposerImageIntake";
@@ -305,7 +305,7 @@ import { PullRequestThreadDialog } from "./PullRequestThreadDialog";
 import { RenameThreadDialog } from "./RenameThreadDialog";
 import { hasUnseenSnoozeReturn } from "./Sidebar.logic";
 import { SidebarHeaderNavigationControls } from "./SidebarHeaderNavigationControls";
-import { SynaraLogo } from "@synara/profile-ui/logo";
+import { RamspaceLogo } from "@ramspace/profile-ui/logo";
 import { AsciiWaveBackground } from "./chat/AsciiWaveBackground";
 import { SponsorLandingBanner } from "./SponsorLandingBanner";
 import TerminalWorkspaceTabs from "./TerminalWorkspaceTabs";
@@ -497,7 +497,7 @@ import { Button } from "./ui/button";
 import { SidebarHeaderTrigger } from "./ui/sidebar";
 import { Skeleton } from "./ui/skeleton";
 import { toastManager } from "./ui/toast";
-import { isSidechatThread, isStandaloneSidechatThread } from "@synara/shared/sidechatThread";
+import { isSidechatThread, isStandaloneSidechatThread } from "@ramspace/shared/sidechatThread";
 import { useTranslation } from "~/i18n";
 import { Translation } from "~/i18n/Translation";
 
@@ -627,7 +627,7 @@ interface ChatViewProps {
 
 // Builds an ephemeral transcript bubble for the conversational automation-setup
 // exchange. These never reach a provider and are not persisted; they render the
-// back-and-forth (user request, Synara's clarifying questions) inline like Codex.
+// back-and-forth (user request, Ramspace's clarifying questions) inline like Codex.
 
 export default function ChatView({
   threadId,
@@ -3039,7 +3039,7 @@ export default function ChatView({
     }
     // A disabled editor (dispatch connecting, pending approval) cannot
     // take focus either. Never ask the renderer to focus while another app owns
-    // the desktop; on macOS that can activate Synara and switch Spaces.
+    // the desktop; on macOS that can activate Ramspace and switch Spaces.
     const editor = composerEditorRef.current;
     if (
       !editor ||
@@ -6752,7 +6752,7 @@ export default function ChatView({
                                 ? t("chat:placeholder_followUp")
                                 : standaloneSidechatContext
                                   ? t("chat:askAboutItem", { item: standaloneSidechatItemNoun })
-                                  : t("chat:doAnythingInSynara")
+                                  : t("chat:doAnythingInRamspace")
                   }
                   disabled={isComposerEditorDisabled}
                   singleLine={composerSingleRow}
@@ -7055,7 +7055,7 @@ export default function ChatView({
                       CHAT_COLUMN_FRAME_CLASS_NAME,
                     )}
                   >
-                    <SynaraLogo aria-label={t("chat:chat_synaraLogo")} className="size-10" />
+                    <RamspaceLogo aria-label={t("chat:chat_ramspaceLogo")} className="size-10" />
                     <h2
                       data-testid="empty-landing-heading"
                       // A combobox contributes its (empty) value, not its text, to the

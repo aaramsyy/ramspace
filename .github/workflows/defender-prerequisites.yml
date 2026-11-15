@@ -1,4 +1,4 @@
-# Live qualification of the release guard prerequisites, not a Synara installer.
+# Live qualification of the release guard prerequisites, not a Ramspace installer.
 name: Windows Defender Prerequisites
 
 on:
@@ -35,14 +35,14 @@ jobs:
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
-          $probeHome = Join-Path $env:RUNNER_TEMP 'synara-defender-prerequisites'
+          $probeHome = Join-Path $env:RUNNER_TEMP 'ramspace-defender-prerequisites'
           $probeAssets = New-Item -ItemType Directory -Path "$probeHome/assets" -Force
           $probeEvidence = New-Item -ItemType Directory -Path "$probeHome/evidence" -Force
           $probeSource = Join-Path $env:SystemRoot 'System32/where.exe'
           $probeDestination = Join-Path $probeAssets.FullName 'prerequisite-probe.exe'
           $receipt = @{
               state = 'PROBE_NOT_QUALIFIED'
-              qualification = 'Defender prerequisites only, not a Synara installer'
+              qualification = 'Defender prerequisites only, not a Ramspace installer'
               publicSource = 'Microsoft Windows System32/where.exe'
               neverExecuted = $true
           }
@@ -63,7 +63,7 @@ jobs:
               (Get-FileHash -LiteralPath $probeDestination -Algorithm SHA256).Hash -ne $expected) {
               throw 'The public source or its staged probe changed during qualification.'
           }
-          $receipt.state = 'PREREQUISITES_QUALIFIED_NOT_SYNARA_INSTALLER'
+          $receipt.state = 'PREREQUISITES_QUALIFIED_NOT_RAMSPACE_INSTALLER'
           $receipt | ConvertTo-Json | Set-Content "$probeEvidence/probe-manifest.json"
 
       - name: Preserve live prerequisite evidence
@@ -71,6 +71,6 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: windows-defender-prerequisites-${{ github.run_attempt }}
-          path: ${{ runner.temp }}/synara-defender-prerequisites/evidence/
+          path: ${{ runner.temp }}/ramspace-defender-prerequisites/evidence/
           retention-days: 7
           if-no-files-found: error

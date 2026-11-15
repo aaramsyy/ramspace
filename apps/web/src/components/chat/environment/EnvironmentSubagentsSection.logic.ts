@@ -9,8 +9,8 @@
 // Exports: deriveEnvironmentSubagentRoster, environmentSubagentElapsedMs,
 //          formatEnvironmentSubagentMeta, and the roster types
 
-import type { OrchestrationThreadActivity, ThreadId } from "@synara/contracts";
-import { pluralize } from "@synara/shared/text";
+import type { OrchestrationThreadActivity, ThreadId } from "@ramspace/contracts";
+import { pluralize } from "@ramspace/shared/text";
 
 import { formatContextWindowTokens } from "~/lib/contextWindow";
 

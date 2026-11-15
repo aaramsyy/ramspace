@@ -7,7 +7,7 @@ import {
 } from "react";
 import { useLocation } from "@tanstack/react-router";
 import type { useSortable } from "@dnd-kit/sortable";
-import { ThreadId } from "@synara/contracts";
+import { ThreadId } from "@ramspace/contracts";
 import { CentralIcon } from "../../lib/central-icons";
 import {
   ArchiveIcon,

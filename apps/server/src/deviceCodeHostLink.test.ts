@@ -2,15 +2,15 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 
-import { type AccountHost, EnvironmentId } from "@synara/contracts";
-import { AccountApiError, type AccountClient } from "@synara/shared/account";
+import { type AccountHost, EnvironmentId } from "@ramspace/contracts";
+import { AccountApiError, type AccountClient } from "@ramspace/shared/account";
 import { describe, expect, it } from "vitest";
 
 import { readAccountFile, runDeviceCodeHostLink } from "./accountAuth";
 
 describe("runDeviceCodeHostLink", () => {
   it("polls approval and links a headless host with a fresh persisted key", async () => {
-    const baseDir = fs.mkdtempSync(path.join(os.tmpdir(), "synara-device-code-link-"));
+    const baseDir = fs.mkdtempSync(path.join(os.tmpdir(), "ramspace-device-code-link-"));
     fs.mkdirSync(path.join(baseDir, "userdata"), { recursive: true });
     fs.writeFileSync(path.join(baseDir, "userdata", "environment-id"), "device-env");
     let polls = 0;

@@ -1,4 +1,8 @@
-import type { ProjectId, PullRequestListEntry, PullRequestProjectContext } from "@synara/contracts";
+import type {
+  ProjectId,
+  PullRequestListEntry,
+  PullRequestProjectContext,
+} from "@ramspace/contracts";
 
 type ProjectAwarePullRequestEntry = Pick<
   PullRequestListEntry,

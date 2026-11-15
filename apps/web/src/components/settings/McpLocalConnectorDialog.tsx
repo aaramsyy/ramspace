@@ -1,5 +1,5 @@
-import type { McpConnector } from "@synara/contracts";
-import { isMcpLoopbackHostname, normalizeMcpConnectorUrl } from "@synara/shared/mcpConnectors";
+import type { McpConnector } from "@ramspace/contracts";
+import { isMcpLoopbackHostname, normalizeMcpConnectorUrl } from "@ramspace/shared/mcpConnectors";
 import { useMutation } from "@tanstack/react-query";
 import { useId, useState, type FormEvent } from "react";
 import { Button } from "~/components/ui/button";
@@ -175,7 +175,7 @@ export function McpLocalConnectorDialog(props: {
                 </label>
                 <p className="text-ui-sm text-muted-foreground">
                   Adding this server runs the exact command and arguments above. Environment values
-                  are saved in Synara’s secrets store.
+                  are saved in Ramspace’s secrets store.
                 </p>
               </>
             )}

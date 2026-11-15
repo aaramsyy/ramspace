@@ -3,7 +3,7 @@ import {
   DevicePublicKeyJwk,
   type RemotePairingDevice,
   type RemoteTrustScope,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { Effect, Schema } from "effect";
 import { calculateJwkThumbprint, importJWK, jwtVerify } from "jose";
 import type WebSocket from "ws";
@@ -11,7 +11,7 @@ import type { AuthControlPlaneShape } from "../auth/Services/AuthControlPlane";
 import { HostMintError, type HostGrantVerifier } from "../hostAuth/grantVerifier";
 import type { RemoteDeviceTrustRepositoryShape } from "../persistence/Services/RemoteDeviceTrust";
 
-export const REMOTE_PAIRING_PROOF_TYPE = "synara-remote-pairing+jwt";
+export const REMOTE_PAIRING_PROOF_TYPE = "ramspace-remote-pairing+jwt";
 
 /** Spends the owner's account grant for this device key, or reports a generic refusal. */
 async function acceptOwnerGrant(
@@ -27,7 +27,7 @@ async function acceptOwnerGrant(
     // The device falls back to owner approval; never reveal why to it or log grant details.
     const reason = cause instanceof HostMintError ? cause.code : "invalid_grant";
     console.warn(
-      `[synara] Remote pairing grant not accepted (${reason}); owner approval required.`,
+      `[ramspace] Remote pairing grant not accepted (${reason}); owner approval required.`,
     );
     return false;
   }
@@ -140,8 +140,8 @@ export function acceptRemotePairing(
             {
               algorithms: [algorithm],
               typ: REMOTE_PAIRING_PROOF_TYPE,
-              issuer: "synara-device",
-              audience: `synara-host:${scope.environmentId}`,
+              issuer: "ramspace-device",
+              audience: `ramspace-host:${scope.environmentId}`,
               requiredClaims: ["exp", "iat", "jti"],
               maxTokenAge: "60s",
             },

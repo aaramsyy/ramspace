@@ -14,7 +14,7 @@ import {
 const checkout = (environmentId: string, projectId: string, url: string): CatalogCheckout => ({
   environmentId,
   projectId,
-  name: "Synara",
+  name: "Ramspace",
   cwd: `/code/${projectId}`,
   hostName: environmentId,
   channel: "beta",

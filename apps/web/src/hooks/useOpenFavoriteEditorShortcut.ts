@@ -7,7 +7,7 @@
 //          host (the chat header) and gate it with `enabled`.
 // Layer: Chat editor action hook
 
-import type { EditorId, ResolvedKeybindingsConfig } from "@synara/contracts";
+import type { EditorId, ResolvedKeybindingsConfig } from "@ramspace/contracts";
 import { useEffect, useEffectEvent } from "react";
 
 import { isOpenFavoriteEditorShortcut } from "../keybindings";

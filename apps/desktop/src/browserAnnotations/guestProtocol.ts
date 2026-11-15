@@ -1,4 +1,4 @@
-import type { BrowserAnnotationMarker } from "@synara/contracts";
+import type { BrowserAnnotationMarker } from "@ramspace/contracts";
 
 import type { AnnotationGuestCommand } from "./protocol";
 

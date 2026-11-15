@@ -13,7 +13,7 @@ function renderGuide(pane: Parameters<typeof AppSnapPermissionGuide>[0]["pane"])
   return renderToStaticMarkup(
     <AppSnapPermissionGuide
       pane={pane}
-      appDisplayName="Synara"
+      appDisplayName="Ramspace"
       waiting
       onOpenSettings={() => undefined}
       onRestart={() => undefined}
@@ -35,7 +35,7 @@ describe("AppSnap permission copy", () => {
       expect(markup).toContain(labels[index]);
       expect(markup).toContain("Watching for the change");
       expect(markup).toContain("Restart");
-      expect(markup).toContain("If this copy of Synara is already listed");
+      expect(markup).toContain("If this copy of Ramspace is already listed");
       expect(markup).toContain("Complete any macOS authentication");
       expect(markup).not.toContain("settings:");
       expect(markup).not.toContain("macOS is asking");

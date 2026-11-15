@@ -1,4 +1,4 @@
-// Preserve Synara ownership when an operator migrates WorkOS environments.
+// Preserve Ramspace ownership when an operator migrates WorkOS environments.
 // Explicit ID pairs only: neither email nor provider-supplied external IDs authorize linking.
 import { Schema } from "effect";
 

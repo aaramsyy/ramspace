@@ -30,7 +30,7 @@ describe("providerStatusCache", () => {
       Effect.gen(function* () {
         const fileSystem = yield* FileSystem.FileSystem;
         const tempDir = yield* fileSystem.makeTempDirectoryScoped({
-          prefix: "synara-provider-status-cache-",
+          prefix: "ramspace-provider-status-cache-",
         });
         const cachePath = resolveProviderStatusCachePath({
           stateDir: tempDir,
@@ -65,7 +65,7 @@ describe("providerStatusCache", () => {
         const fileSystem = yield* FileSystem.FileSystem;
         const path = yield* Path.Path;
         const tempDir = yield* fileSystem.makeTempDirectoryScoped({
-          prefix: "synara-provider-status-cache-bad-",
+          prefix: "ramspace-provider-status-cache-bad-",
         });
         const cachePath = resolveProviderStatusCachePath({
           stateDir: tempDir,
@@ -88,7 +88,7 @@ describe("providerStatusCache", () => {
         const fileSystem = yield* FileSystem.FileSystem;
         const path = yield* Path.Path;
         const tempDir = yield* fileSystem.makeTempDirectoryScoped({
-          prefix: "synara-provider-status-cache-legacy-",
+          prefix: "ramspace-provider-status-cache-legacy-",
         });
         const cachePath = resolveProviderStatusCachePath({
           stateDir: tempDir,
@@ -129,7 +129,7 @@ describe("providerStatusCache", () => {
       Effect.gen(function* () {
         const fileSystem = yield* FileSystem.FileSystem;
         const tempDir = yield* fileSystem.makeTempDirectoryScoped({
-          prefix: "synara-provider-status-cache-identity-",
+          prefix: "ramspace-provider-status-cache-identity-",
         });
         const cachePath = resolveProviderStatusCachePath({
           stateDir: tempDir,

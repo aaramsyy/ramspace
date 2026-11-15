@@ -16,7 +16,7 @@ import {
   type DeviceCapabilityId,
   type DeviceCapabilityStatus,
   type DeviceToolchain,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 
 import { fitDeviceMessage } from "./DeviceBackend.ts";
 

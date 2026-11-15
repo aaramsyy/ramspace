@@ -1,6 +1,6 @@
 // FILE: RemoteConnectionsAnnouncement.tsx
 // Purpose: One-time launch for Remote Connections: a sheet, then a hint on the sidebar
-//          account button. Without Synara Alto the sheet opens the plans in Usage &
+//          account button. Without Ramspace Alto the sheet opens the plans in Usage &
 //          limits; with Alto (or where billing is off) it opens Connections.
 // Layer: Root web overlay
 // Exports: RemoteConnectionsAnnouncement, RemoteConnectionsCoachmark
@@ -30,12 +30,12 @@ import { remoteHostEnrollmentQueryOptions } from "~/lib/hosts/queries";
 import { useOnboardingDialogStore } from "~/onboarding/onboardingDialogStore";
 import { AnnouncementSheet } from "../AnnouncementSheet";
 import { OneTimeCoachmark } from "../OneTimeCoachmark";
-import { useOpenSynaraPlan } from "../settings/BillingSettingsPanel";
+import { useOpenRamspacePlan } from "../settings/BillingSettingsPanel";
 import { RemoteConnectionsAnnouncementHero } from "./RemoteConnectionsAnnouncementHero";
 
 export const REMOTE_CONNECTIONS_ANNOUNCEMENT_STORAGE_KEY =
-  "synara:remote-connections-announcement:v1";
-export const REMOTE_CONNECTIONS_COACHMARK_STORAGE_KEY = "synara:remote-connections-coachmark:v1";
+  "ramspace:remote-connections-announcement:v1";
+export const REMOTE_CONNECTIONS_COACHMARK_STORAGE_KEY = "ramspace:remote-connections-coachmark:v1";
 
 const AnnouncementStorageSchema = Schema.Struct({
   acknowledged: Schema.Boolean,
@@ -86,7 +86,7 @@ function useClearOfOutsideDialogs(wanted: boolean): boolean {
 
 export function RemoteConnectionsAnnouncement() {
   const navigate = useNavigate();
-  const openPlans = useOpenSynaraPlan();
+  const openPlans = useOpenRamspacePlan();
   const [storage, setStorage] = useAnnouncementStorage();
   const onboardingOpen = useOnboardingDialogStore((state) => state.isOpen);
   const available = useRemoteConnectionsAvailable();
@@ -119,8 +119,8 @@ export function RemoteConnectionsAnnouncement() {
       title="Introducing Remote Connections"
       description={
         offerPlans
-          ? "Control Synara on one computer from another. Included with Synara Alto; iPhone and iPad are coming soon."
-          : "Control Synara on one computer from another. Pair a device to start; iPhone and iPad are coming soon."
+          ? "Control Ramspace on one computer from another. Included with Ramspace Alto; iPhone and iPad are coming soon."
+          : "Control Ramspace on one computer from another. Pair a device to start; iPhone and iPad are coming soon."
       }
       dismissLabel="Not now"
       confirmLabel={offerPlans ? "View Alto plans" : "Connect a device"}

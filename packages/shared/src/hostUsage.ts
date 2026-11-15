@@ -7,7 +7,7 @@ import {
   HOST_USAGE_RECEIPT_DAYS,
   type HostUsageRow,
   type HostUsageWindow,
-} from "@synara/contracts/hostUsage";
+} from "@ramspace/contracts/hostUsage";
 import { usageTurnCategories } from "./usageAnalytics";
 
 export const HOST_USAGE_POLICY_FILE = "host-usage-policy.json";

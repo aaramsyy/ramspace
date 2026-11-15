@@ -136,12 +136,12 @@ import {
   ThreadId,
   type ResolvedKeybindingsConfig,
   WS_GITHUB_PROJECT_PROVISIONING_CAPABILITY,
-} from "@synara/contracts";
-import { isGenericChatThreadTitle } from "@synara/shared/chatThreads";
-import { parseGitHubRepositoryNameWithOwnerFromPullRequestUrl } from "@synara/shared/githubRepository";
-import { getDefaultModel } from "@synara/shared/model";
+} from "@ramspace/contracts";
+import { isGenericChatThreadTitle } from "@ramspace/shared/chatThreads";
+import { parseGitHubRepositoryNameWithOwnerFromPullRequestUrl } from "@ramspace/shared/githubRepository";
+import { getDefaultModel } from "@ramspace/shared/model";
 import { pluralize } from "~/i18n/pluralize";
-import { resolveThreadWorkspaceCwd } from "@synara/shared/threadEnvironment";
+import { resolveThreadWorkspaceCwd } from "@ramspace/shared/threadEnvironment";
 import { useQueries, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useLocation, useNavigate, useParams, useSearch } from "@tanstack/react-router";
 import {
@@ -591,7 +591,7 @@ import {
   SidebarContextMenuIcon,
 } from "./sidebarContextMenuStyles";
 import { spaceDisplayIcon, spaceDisplayName, resolveActiveSpaceId } from "../lib/spaceGrouping";
-import { isSidechatThread } from "@synara/shared/sidechatThread";
+import { isSidechatThread } from "@ramspace/shared/sidechatThread";
 import { t, useTranslation } from "~/i18n";
 
 // Central glyphs for the sidebar section-header buttons (expand/collapse, sort, add).
@@ -677,8 +677,8 @@ function ProjectContextMenuIcon({ icon }: { icon: LucideIcon }) {
 }
 
 type DebugFeatureFlagsWindow = Window & {
-  synaraShowFeatureFlags?: () => void;
-  synaraHideFeatureFlags?: () => void;
+  ramspaceShowFeatureFlags?: () => void;
+  ramspaceHideFeatureFlags?: () => void;
 };
 
 function readDebugFeatureFlagsMenuVisibility(): boolean {
@@ -791,7 +791,7 @@ function resolveWorktreeBadgeLabel(
 
 /** User message the coordinator receives when a thread is handed to a group. */
 function groupPickupMessageText(sourceThread: Pick<Thread, "id" | "title">): string {
-  return `A thread was handed to this hub for you to pick up: "${sourceThread.title ?? "Untitled thread"}" (thread id ${sourceThread.id}). Use synara_read_thread to read it and continue the work it was doing.`;
+  return `A thread was handed to this hub for you to pick up: "${sourceThread.title ?? "Untitled thread"}" (thread id ${sourceThread.id}). Use ramspace_read_thread to read it and continue the work it was doing.`;
 }
 
 type ThreadMetaChip = {
@@ -988,7 +988,7 @@ function ProjectSortMenu({
   );
 }
 
-const SYNARA_DOCS_URL = "https://trysynara.com/docs";
+const RAMSPACE_DOCS_URL = "https://tryramspace.com/docs";
 
 // Latest curated releases surfaced directly in the help menu. Static data, so
 // computed once at module scope rather than per render.
@@ -1093,7 +1093,7 @@ function SidebarHelpMenu({
             </MenuItem>
             <MenuItem
               className={SIDEBAR_CONTEXT_MENU_ITEM_CLASS_NAME}
-              onClick={() => openExternalLink(SYNARA_DOCS_URL)}
+              onClick={() => openExternalLink(RAMSPACE_DOCS_URL)}
             >
               <SidebarContextMenuIcon icon={BookIcon} />
               <span>{t("workspace:docs")}</span>
@@ -1291,7 +1291,7 @@ export function SidebarActivityBellButton({
 }
 
 const SIDEBAR_SURFACE_PICKER_COPY: Record<SidebarView, { title: string; description: string }> = {
-  threads: { title: "Synara", description: "workspace:buildDebugShip" },
+  threads: { title: "Ramspace", description: "workspace:buildDebugShip" },
   groups: { title: "common:hubs", description: "workspace:coordinatedAcrossRepos" },
 };
 
@@ -1623,18 +1623,18 @@ export default function Sidebar() {
       updateVisibility();
     };
 
-    debugWindow.synaraShowFeatureFlags = showFeatureFlags;
-    debugWindow.synaraHideFeatureFlags = hideFeatureFlags;
+    debugWindow.ramspaceShowFeatureFlags = showFeatureFlags;
+    debugWindow.ramspaceHideFeatureFlags = hideFeatureFlags;
     window.addEventListener("storage", updateVisibility);
     updateVisibility();
 
     return () => {
       window.removeEventListener("storage", updateVisibility);
-      if (debugWindow.synaraShowFeatureFlags === showFeatureFlags) {
-        delete debugWindow.synaraShowFeatureFlags;
+      if (debugWindow.ramspaceShowFeatureFlags === showFeatureFlags) {
+        delete debugWindow.ramspaceShowFeatureFlags;
       }
-      if (debugWindow.synaraHideFeatureFlags === hideFeatureFlags) {
-        delete debugWindow.synaraHideFeatureFlags;
+      if (debugWindow.ramspaceHideFeatureFlags === hideFeatureFlags) {
+        delete debugWindow.ramspaceHideFeatureFlags;
       }
     };
   }, []);
@@ -5943,7 +5943,7 @@ export default function Sidebar() {
   }, [activeSidebarThreadId, visibleSidebarThreadIds]);
 
   // Pinned rows share the thread-container label rule (project name, or
-  // "Synara" for project-less chats) with the hover cards and Activity rows.
+  // "Ramspace" for project-less chats) with the hover cards and Activity rows.
   function resolvePinnedThreadProjectLabel(projectId: ProjectId): string {
     return resolveThreadProjectLabel(projectById.get(projectId));
   }
@@ -6777,8 +6777,8 @@ export default function Sidebar() {
     );
   }
 
-  // A project reads as "running" when Synara tracks a run for it or when a local server
-  // (possibly started outside Synara) is attributed by cwd. Shared by the tree's project
+  // A project reads as "running" when Ramspace tracks a run for it or when a local server
+  // (possibly started outside Ramspace) is attributed by cwd. Shared by the tree's project
   // header and the rail layout's Spaces rows.
   function isSidebarProjectRunning(projectId: ProjectId): boolean {
     return (
@@ -7615,9 +7615,9 @@ export default function Sidebar() {
       },
       {
         id: "feedback",
-        label: t("workspace:feedbackSynara"),
-        description: t("workspace:sendFeedbackOrReportAnIssueToTheSynara"),
-        keywords: ["feedback", "bug", "issue", "problem", "report", "support", "synara"],
+        label: t("workspace:feedbackRamspace"),
+        description: t("workspace:sendFeedbackOrReportAnIssueToTheRamspace"),
+        keywords: ["feedback", "bug", "issue", "problem", "report", "support", "ramspace"],
       },
       {
         id: "settings",
@@ -7705,7 +7705,7 @@ export default function Sidebar() {
             toastManager.add({
               type: "info",
               title: t("workspace:desktopUpdate_preparingUpdate"),
-              description: t("workspace:synaraIsPreparingVersionInTheBackground", {
+              description: t("workspace:ramspaceIsPreparingVersionInTheBackground", {
                 value0: nextState.availableVersion ?? t("chat:available2"),
               }),
             });
@@ -7734,7 +7734,7 @@ export default function Sidebar() {
             toastManager.add({
               type: "info",
               title: t("workspace:youReUpToDate"),
-              description: t("workspace:synaraIsAlreadyTheNewestVersion", {
+              description: t("workspace:ramspaceIsAlreadyTheNewestVersion", {
                 value0: nextState.currentVersion,
               }),
             });
@@ -7912,7 +7912,7 @@ export default function Sidebar() {
 
   const betaBadge = isBetaDesktopFlavor ? (
     <span
-      aria-label="Synara Beta"
+      aria-label="Ramspace Beta"
       className="inline-flex shrink-0 items-center rounded-full bg-[var(--beta-pill)] px-1.5 py-0.5 text-ui-xs font-semibold leading-none text-[var(--beta-pill-ink)]"
     >
       {t("workspace:beta")}

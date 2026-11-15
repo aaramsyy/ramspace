@@ -6,7 +6,7 @@
 // Layer: Settings panel
 // Exports: AccountsSettingsPanel, AccountsSettingsPanelProps
 
-import { PROVIDER_DISPLAY_NAMES, type ServerProviderUsageSnapshot } from "@synara/contracts";
+import { PROVIDER_DISPLAY_NAMES, type ServerProviderUsageSnapshot } from "@ramspace/contracts";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 

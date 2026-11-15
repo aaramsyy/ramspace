@@ -1,5 +1,5 @@
 import { t } from "~/i18n";
-import type { ProjectFileEncoding, ProjectFileLineEnding } from "@synara/contracts";
+import type { ProjectFileEncoding, ProjectFileLineEnding } from "@ramspace/contracts";
 
 /** On-disk format of a loaded buffer; every save re-encodes with it. */
 export interface WorkspaceFileEditorFormat {

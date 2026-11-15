@@ -59,7 +59,7 @@ import {
   sortProjectsForSidebar,
   sortThreadsForSidebar,
 } from "./Sidebar.logic";
-import { ProjectId, SpaceId, ThreadId } from "@synara/contracts";
+import { ProjectId, SpaceId, ThreadId } from "@ramspace/contracts";
 import { buildActivityViewModel } from "./SidebarActivityView.logic";
 import {
   DEFAULT_INTERACTION_MODE,
@@ -245,12 +245,12 @@ describe("resolveSidebarThreadPullRequest", () => {
     const live = openPr(575, "feat/current-branch");
     expect(
       resolveSidebarThreadPullRequest({
-        threadBranch: "synara/stale-branch",
+        threadBranch: "ramspace/stale-branch",
         liveBranch: "feat/current-branch",
         hasLiveStatus: true,
         hasDedicatedWorktree: true,
         livePullRequest: live,
-        persistedPullRequest: openPr(574, "synara/stale-branch"),
+        persistedPullRequest: openPr(574, "ramspace/stale-branch"),
       }),
     ).toBe(live);
   });
@@ -423,24 +423,24 @@ describe("resolveThreadHoverCardMetadata", () => {
     const metadata = resolveThreadHoverCardMetadata({
       thread: makeSidebarThreadSummary({
         envMode: "worktree",
-        branch: "codex/synara-mobile",
+        branch: "codex/ramspace-mobile",
         worktreePath: "/Users/me/.codex/worktrees/1234/Remodex",
         associatedWorktreePath: "/Users/me/.codex/worktrees/1234/Remodex",
-        associatedWorktreeBranch: "codex/synara-mobile",
+        associatedWorktreeBranch: "codex/ramspace-mobile",
       }),
       project: {
         kind: "project",
-        name: "synara-mobile",
+        name: "ramspace-mobile",
         folderName: "Remodex",
         cwd: "/Users/me/Developer/Remodex",
       },
     });
 
     expect(metadata).toEqual({
-      projectName: "synara-mobile",
+      projectName: "ramspace-mobile",
       projectCwd: "/Users/me/Developer/Remodex",
       sourceProjectName: "Remodex",
-      branch: "codex/synara-mobile",
+      branch: "codex/ramspace-mobile",
       worktreeName: "Remodex",
     });
   });
@@ -452,15 +452,15 @@ describe("resolveThreadHoverCardMetadata", () => {
       }),
       project: {
         kind: "project",
-        name: "synara",
-        folderName: "synara",
-        cwd: "/Users/me/Developer/synara",
+        name: "ramspace",
+        folderName: "ramspace",
+        cwd: "/Users/me/Developer/ramspace",
       },
     });
 
     expect(metadata).toEqual({
-      projectName: "synara",
-      projectCwd: "/Users/me/Developer/synara",
+      projectName: "ramspace",
+      projectCwd: "/Users/me/Developer/ramspace",
       sourceProjectName: null,
       branch: "main",
       worktreeName: null,
@@ -472,7 +472,7 @@ describe("resolveThreadHoverCardMetadata", () => {
       envMode: "worktree",
       branch: "feat/current-branch",
       worktreePath: "/repo/.worktrees/thread",
-      associatedWorktreeBranch: "synara/stale-branch",
+      associatedWorktreeBranch: "ramspace/stale-branch",
     });
 
     expect(resolveThreadDisplayBranch(thread)).toBe("feat/current-branch");
@@ -481,8 +481,8 @@ describe("resolveThreadHoverCardMetadata", () => {
         thread,
         project: {
           kind: "project",
-          name: "synara",
-          folderName: "synara",
+          name: "ramspace",
+          folderName: "ramspace",
           cwd: "/repo",
         },
       }).branch,
@@ -502,18 +502,18 @@ describe("resolveThreadHoverCardMetadata", () => {
     ).toBeNull();
   });
 
-  it("labels project-less chat containers as Synara instead of the slug folder", () => {
+  it("labels project-less chat containers as Ramspace instead of the slug folder", () => {
     const metadata = resolveThreadHoverCardMetadata({
       thread: makeSidebarThreadSummary({ branch: null }),
       project: {
         kind: "chat",
         name: "open-the-browser-search-house-music",
         folderName: "open-the-browser-search-house-music",
-        cwd: "/Users/me/Documents/Synara/2026-08-01/open-the-browser-search-house-music",
+        cwd: "/Users/me/Documents/Ramspace/2026-08-01/open-the-browser-search-house-music",
       },
     });
 
-    expect(metadata.projectName).toBe("Synara");
+    expect(metadata.projectName).toBe("Ramspace");
   });
 });
 
@@ -806,7 +806,7 @@ describe("add-project error helpers", () => {
 
   it("explains root-absolute add-project paths that probably missed the home directory", () => {
     expect(
-      describeAddProjectError("Failed to create project directory: /Developer/Testing/synara"),
+      describeAddProjectError("Failed to create project directory: /Developer/Testing/ramspace"),
     ).toContain("/Users/<name>/Developer");
   });
 
@@ -1550,7 +1550,7 @@ describe("canSnoozeSidebarThread", () => {
     const newWorker = makeSidebarThreadSummary({
       id: ThreadId.makeUnsafe("new-worker"),
       projectId: repoId,
-      creationSource: "synara_mcp",
+      creationSource: "ramspace_mcp",
       sourceThreadId: coordinator.id,
     });
     expect(canSnoozeSidebarThread({ ...input, thread: newWorker })).toBe(false);
@@ -1560,7 +1560,7 @@ describe("canSnoozeSidebarThread", () => {
     const spawned = makeSidebarThreadSummary({
       id: ThreadId.makeUnsafe("spawned"),
       projectId: repoId,
-      creationSource: "synara_mcp",
+      creationSource: "ramspace_mcp",
       sourceThreadId: ordinary.id,
     });
     expect(canSnoozeSidebarThread({ ...input, thread: spawned })).toBe(true);
@@ -1618,7 +1618,7 @@ describe("mayBelongToGroup", () => {
       mayBelongToGroup({
         ...loaded,
         threadId: newWorkerId,
-        creationSource: "synara_mcp",
+        creationSource: "ramspace_mcp",
         sourceThreadId: coordinatorId,
       }),
     ).toBe(true);
@@ -1630,7 +1630,7 @@ describe("mayBelongToGroup", () => {
       mayBelongToGroup({
         ...loaded,
         threadId: newWorkerId,
-        creationSource: "synara_mcp",
+        creationSource: "ramspace_mcp",
         sourceThreadId: ordinaryId,
       }),
     ).toBe(false);
@@ -2626,7 +2626,7 @@ describe("nestAgentCreatedThreadEntries", () => {
   const mk = (id: string, sourceId?: string) =>
     makeSidebarThreadSummary({
       id: tid(id),
-      creationSource: sourceId ? "synara_mcp" : null,
+      creationSource: sourceId ? "ramspace_mcp" : null,
       sourceThreadId: sourceId ? tid(sourceId) : null,
     });
   const ids = (entries: { rowId: string }[]) => entries.map((entry) => entry.rowId);
@@ -2660,7 +2660,7 @@ describe("nestAgentCreatedThreadEntries", () => {
     const child = makeSidebarThreadSummary({
       id: tid("c"),
       projectId: ProjectId.makeUnsafe("other-project"),
-      creationSource: "synara_mcp",
+      creationSource: "ramspace_mcp",
       sourceThreadId: parent.id,
     });
     const entries = nestAgentCreatedThreadEntries([parent, child], new Set(), new Set([parent.id]));

@@ -1,4 +1,4 @@
-import { EnvironmentId, type AccountHost, type RemoteExecutionScope } from "@synara/contracts";
+import { EnvironmentId, type AccountHost, type RemoteExecutionScope } from "@ramspace/contracts";
 import { expect, it } from "vitest";
 import { HostConnectionRegistry } from "./registry";
 import { makeHostConnectionsPort } from "./port";

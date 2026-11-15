@@ -10,7 +10,7 @@
 import * as FS from "node:fs";
 import * as Path from "node:path";
 
-import type { DesktopKeepAwakeState } from "@synara/contracts";
+import type { DesktopKeepAwakeState } from "@ramspace/contracts";
 
 export interface PersistedKeepAwakePreference {
   readonly version: 1;

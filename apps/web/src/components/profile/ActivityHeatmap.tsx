@@ -6,14 +6,14 @@ import type { ComponentProps } from "react";
 import {
   ActivityHeatmap as SharedActivityHeatmap,
   type HeatmapCell,
-} from "@synara/profile-ui/heatmap";
+} from "@ramspace/profile-ui/heatmap";
 import { getFormatLocale, t, useTranslation } from "~/i18n";
 import { formatCompact, formatShortDate } from "./profileFormatting";
 
 export {
   APP_HEATMAP_INTENSITY_CLASSES,
   CARD_HEATMAP_INTENSITY_CLASSES,
-} from "@synara/profile-ui/heatmap";
+} from "@ramspace/profile-ui/heatmap";
 
 export function ActivityHeatmap(props: ComponentProps<typeof SharedActivityHeatmap>) {
   const { formatLocale } = useTranslation();

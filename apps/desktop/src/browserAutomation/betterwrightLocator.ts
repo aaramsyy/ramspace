@@ -1,4 +1,4 @@
-import type { BrowserUploadTarget } from "@synara/contracts";
+import type { BrowserUploadTarget } from "@ramspace/contracts";
 
 /** Only schema-validated values enter generated host snippets. */
 export function betterwrightLocator(target: BrowserUploadTarget): string {

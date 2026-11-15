@@ -11,7 +11,7 @@ import { requireRemoteConnections, requireHostSecretsSync } from "./remoteFeatur
 // neither read nor mutate any of them. The guard runs before the handler
 // effect is built, so a refused session touches no account or credential state.
 
-import { WS_METHODS } from "@synara/contracts";
+import { WS_METHODS } from "@ramspace/contracts";
 import { Effect } from "effect";
 
 import {

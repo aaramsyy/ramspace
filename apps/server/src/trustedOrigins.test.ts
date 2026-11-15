@@ -37,28 +37,28 @@ describe("trustedOrigins", () => {
     ).toBe(true);
     expect(
       isTrustedAppOrigin({
-        origin: "synara://app",
+        origin: "ramspace://app",
         requestOrigin: "http://127.0.0.1:58090",
         config,
       }),
     ).toBe(true);
     expect(
       isTrustedAppOrigin({
-        origin: "synara-canary://app",
+        origin: "ramspace-canary://app",
         requestOrigin: "http://127.0.0.1:58090",
         config,
       }),
     ).toBe(true);
     expect(
       isTrustedAppOrigin({
-        origin: "synara-cua://app",
+        origin: "ramspace-cua://app",
         requestOrigin: "http://127.0.0.1:58090",
         config,
       }),
     ).toBe(true);
     expect(
       isTrustedAppOrigin({
-        origin: "synara-beta://app",
+        origin: "ramspace-beta://app",
         requestOrigin: "http://127.0.0.1:58090",
         config,
       }),
@@ -110,12 +110,12 @@ describe("trustedOrigins", () => {
     const remoteConfig = {
       ...config,
       host: "0.0.0.0",
-      publicUrl: new URL("https://synara.example.test/"),
+      publicUrl: new URL("https://ramspace.example.test/"),
     };
     expect(
       isTrustedAppOrigin({
-        origin: "https://synara.example.test",
-        requestOrigin: "http://synara.example.test",
+        origin: "https://ramspace.example.test",
+        requestOrigin: "http://ramspace.example.test",
         config: remoteConfig,
       }),
     ).toBe(true);
@@ -130,20 +130,20 @@ describe("trustedOrigins", () => {
 
   it("normalizes desktop origins and single Origin-header arrays", () => {
     expect(normalizeCorsOrigin(["http://localhost:5173"])).toBe("http://localhost:5173");
-    expect(normalizeCorsOrigin("synara://app/")).toBe("synara://app");
-    expect(normalizeCorsOrigin("synara-canary://app/")).toBe("synara-canary://app");
-    expect(normalizeCorsOrigin("synara-cua://app/")).toBe("synara-cua://app");
-    expect(normalizeCorsOrigin("synara-beta://app/")).toBe("synara-beta://app");
-    expect(normalizeCorsOrigin("synara-remote://app/")).toBe("synara-remote://app");
+    expect(normalizeCorsOrigin("ramspace://app/")).toBe("ramspace://app");
+    expect(normalizeCorsOrigin("ramspace-canary://app/")).toBe("ramspace-canary://app");
+    expect(normalizeCorsOrigin("ramspace-cua://app/")).toBe("ramspace-cua://app");
+    expect(normalizeCorsOrigin("ramspace-beta://app/")).toBe("ramspace-beta://app");
+    expect(normalizeCorsOrigin("ramspace-remote://app/")).toBe("ramspace-remote://app");
   });
 
   it("trusts every packaged desktop flavor at the request gate and rejects lookalikes", () => {
     for (const rawOrigin of [
-      "synara://app",
-      "synara-beta://app",
-      "synara-canary://app",
-      "synara-cua://app",
-      "synara-remote://app",
+      "ramspace://app",
+      "ramspace-beta://app",
+      "ramspace-canary://app",
+      "ramspace-cua://app",
+      "ramspace-remote://app",
     ]) {
       expect(
         shouldRejectUntrustedRequestOrigin({
@@ -154,17 +154,17 @@ describe("trustedOrigins", () => {
       ).toBe(false);
     }
     for (const rawOrigin of [
-      "synara://evil.test",
-      "synara-beta://evil.test",
-      "synara-beta://app.evil.test",
-      "synara-betas://app",
-      "synara-canary://evil.test",
-      "synara-cua://evil.test",
-      "synara-remote://evil.test",
-      "synara-remote://app.evil.test",
-      "synara-remote://app:8080",
-      "synara-remote://user@app",
-      "synara-remotes://app",
+      "ramspace://evil.test",
+      "ramspace-beta://evil.test",
+      "ramspace-beta://app.evil.test",
+      "ramspace-betas://app",
+      "ramspace-canary://evil.test",
+      "ramspace-cua://evil.test",
+      "ramspace-remote://evil.test",
+      "ramspace-remote://app.evil.test",
+      "ramspace-remote://app:8080",
+      "ramspace-remote://user@app",
+      "ramspace-remotes://app",
     ]) {
       expect(
         shouldRejectUntrustedRequestOrigin({
@@ -242,7 +242,7 @@ describe("trustedOrigins", () => {
       requiresWebSocketAuthentication({
         host: "127.0.0.1",
         authToken: undefined,
-        publicUrl: new URL("https://synara.example.test/"),
+        publicUrl: new URL("https://ramspace.example.test/"),
       }),
     ).toBe(true);
   });

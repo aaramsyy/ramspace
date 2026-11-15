@@ -4,7 +4,7 @@
 //          path in the browser build). Adding a project finishes the tour.
 // Layer: Web UI component
 
-import type { ProviderKind } from "@synara/contracts";
+import type { ProviderKind } from "@ramspace/contracts";
 import { useState, type FormEvent } from "react";
 
 import { APP_BASE_NAME } from "~/branding";

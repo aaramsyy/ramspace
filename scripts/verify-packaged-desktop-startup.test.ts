@@ -21,7 +21,7 @@ afterEach(() => {
 
 describe("packaged desktop startup verification", () => {
   it("retains bounded failure diagnostics even when a startup log is missing", () => {
-    const root = mkdtempSync(join(tmpdir(), "synara-startup-diagnostics-test-"));
+    const root = mkdtempSync(join(tmpdir(), "ramspace-startup-diagnostics-test-"));
     temporaryRoots.push(root);
     writeFileSync(join(root, "desktop-main.log"), "old entry" + "x".repeat(20_000) + "app ready");
 
@@ -50,7 +50,7 @@ describe("packaged desktop startup verification", () => {
       arch: "x64",
       version: "1.2.3",
       timeoutMs: 60_000,
-      executableName: "synara",
+      executableName: "ramspace",
     });
 
     expect(
@@ -64,11 +64,11 @@ describe("packaged desktop startup verification", () => {
         "--version",
         "1.2.3",
         "--executable-name",
-        "synara-beta",
+        "ramspace-beta",
       ]),
-    ).toMatchObject({ executableName: "synara-beta" });
+    ).toMatchObject({ executableName: "ramspace-beta" });
 
-    for (const bad of ["../outside", "a/b", "..", "synara\\beta"]) {
+    for (const bad of ["../outside", "a/b", "..", "ramspace\\beta"]) {
       expect(() =>
         parsePackagedDesktopStartupArgs([
           "--assets-dir",
@@ -101,10 +101,10 @@ describe("packaged desktop startup verification", () => {
     ).toThrow("--timeout-ms must be an integer between 5000 and 180000");
   });
 
-  it.each(["synara-beta", "synara-remote"])(
+  it.each(["ramspace-beta", "ramspace-remote"])(
     "isolates %s user state and removes inherited runtime authority",
     (executableName) => {
-      const root = mkdtempSync(join(tmpdir(), "synara-packaged-smoke-env-test-"));
+      const root = mkdtempSync(join(tmpdir(), "ramspace-packaged-smoke-env-test-"));
       temporaryRoots.push(root);
 
       const env = createPackagedDesktopSmokeEnvironment(
@@ -112,14 +112,14 @@ describe("packaged desktop startup verification", () => {
         { platform: "mac", version: "1.2.3", executableName },
         {
           PATH: process.env.PATH,
-          SYNARA_AUTH_TOKEN: "must-not-leak",
-          SYNARA_ACCOUNT_URL: "https://operator-only.example",
+          RAMSPACE_AUTH_TOKEN: "must-not-leak",
+          RAMSPACE_ACCOUNT_URL: "https://operator-only.example",
           ELECTRON_RUN_AS_NODE: "1",
         },
       );
 
-      expect(env.SYNARA_AUTH_TOKEN).toBeUndefined();
-      expect(env.SYNARA_ACCOUNT_URL).toBeUndefined();
+      expect(env.RAMSPACE_AUTH_TOKEN).toBeUndefined();
+      expect(env.RAMSPACE_ACCOUNT_URL).toBeUndefined();
       expect(env.ELECTRON_RUN_AS_NODE).toBeUndefined();
       for (const name of [
         "HOME",
@@ -129,16 +129,16 @@ describe("packaged desktop startup verification", () => {
         "XDG_CONFIG_HOME",
         "XDG_CACHE_HOME",
         "XDG_DATA_HOME",
-        "SYNARA_HOME",
-        "SYNARA_BETA_HOME",
-        "SYNARA_REMOTE_HOME",
+        "RAMSPACE_HOME",
+        "RAMSPACE_BETA_HOME",
+        "RAMSPACE_REMOTE_HOME",
       ] as const) {
         expect(env[name]?.startsWith(root)).toBe(true);
         expect(existsSync(env[name]!)).toBe(true);
       }
-      expect(env.SYNARA_BETA_HOME).not.toBe(env.SYNARA_HOME);
-      expect(env.SYNARA_REMOTE_HOME).not.toBe(env.SYNARA_HOME);
-      expect(env.SYNARA_REMOTE_HOME).not.toBe(env.SYNARA_BETA_HOME);
+      expect(env.RAMSPACE_BETA_HOME).not.toBe(env.RAMSPACE_HOME);
+      expect(env.RAMSPACE_REMOTE_HOME).not.toBe(env.RAMSPACE_HOME);
+      expect(env.RAMSPACE_REMOTE_HOME).not.toBe(env.RAMSPACE_BETA_HOME);
       expect(
         existsSync(
           join(
@@ -154,7 +154,7 @@ describe("packaged desktop startup verification", () => {
   );
 
   it("requires packaged peers and the pinned connector despite development dependencies", async () => {
-    const root = mkdtempSync(join(tmpdir(), "synara-runtime-deps-test-"));
+    const root = mkdtempSync(join(tmpdir(), "ramspace-runtime-deps-test-"));
     temporaryRoots.push(root);
     const app = join(root, "app.asar");
     const dist = join(app, "apps/server/dist");
@@ -204,7 +204,7 @@ describe("packaged desktop startup verification", () => {
   });
 
   it("bounds a runtime import that never finishes", async () => {
-    const root = mkdtempSync(join(tmpdir(), "synara-runtime-timeout-test-"));
+    const root = mkdtempSync(join(tmpdir(), "ramspace-runtime-timeout-test-"));
     temporaryRoots.push(root);
     const dist = join(root, "app.asar/apps/server/dist");
     mkdirSync(dist, { recursive: true });

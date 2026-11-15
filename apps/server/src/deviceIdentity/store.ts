@@ -1,13 +1,13 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 
-import type { Es256PublicKeyJwk } from "@synara/contracts";
+import type { Es256PublicKeyJwk } from "@ramspace/contracts";
 import {
   DEVICE_KEY_ALGORITHM,
   deviceThumbprint,
   exportPublicJwk,
   generateDeviceKey,
-} from "@synara/shared/deviceKey";
+} from "@ramspace/shared/deviceKey";
 import { Effect } from "effect";
 
 import { withCredentialFileLock } from "../accountCredentialLock";

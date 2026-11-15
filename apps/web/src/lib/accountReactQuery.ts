@@ -8,10 +8,10 @@ import { remoteHostQueryKeys } from "./hosts/queries";
 import { readExecutionContext } from "./hosts/executionContext";
 import { deactivateHost } from "./hosts/activeHost";
 // FILE: accountReactQuery.ts
-// Purpose: React Query options and invalidation for the Synara account session.
+// Purpose: React Query options and invalidation for the Ramspace account session.
 // Layer: Web data-fetching (see serverReactQuery.ts for the conventions).
 
-import type { AccountStatus, UsageSummary } from "@synara/contracts";
+import type { AccountStatus, UsageSummary } from "@ramspace/contracts";
 import { hashKey, queryOptions, type QueryClient } from "@tanstack/react-query";
 import { ensureNativeApi } from "~/nativeApi";
 import { runAccountBillingOperation } from "./accountBilling";

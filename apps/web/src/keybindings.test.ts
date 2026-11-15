@@ -5,7 +5,7 @@ import {
   type KeybindingShortcut,
   type KeybindingWhenNode,
   type ResolvedKeybindingsConfig,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import {
   formatKeybindingWhenExpression,
   formatShortcutLabel,

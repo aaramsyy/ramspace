@@ -1,4 +1,4 @@
-import type { SavedInboxRecap, StatsGetRecapResult } from "@synara/contracts";
+import type { SavedInboxRecap, StatsGetRecapResult } from "@ramspace/contracts";
 import { useInfiniteQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState, type ReactNode } from "react";
 import { useAccount } from "~/hooks/useAccount";

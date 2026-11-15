@@ -10,8 +10,8 @@
 // Layer: Chat composer UI
 // Exports: WorkflowRunCard, WorkflowRunCapsule
 
-import type { ThreadId } from "@synara/contracts";
-import { getModelCapabilities } from "@synara/shared/model";
+import type { ThreadId } from "@ramspace/contracts";
+import { getModelCapabilities } from "@ramspace/shared/model";
 import { pluralize } from "~/i18n/pluralize";
 import { useState } from "react";
 

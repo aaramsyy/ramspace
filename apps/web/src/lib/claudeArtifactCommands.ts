@@ -1,5 +1,5 @@
 import { t } from "~/i18n";
-import type { ProviderArtifactsState, ProviderKind } from "@synara/contracts";
+import type { ProviderArtifactsState, ProviderKind } from "@ramspace/contracts";
 
 // Claude commands that publish a claude.ai Artifact. Claude Code keeps the
 // Artifact tool off for embedded (Agent SDK) sessions unless the host opts in.

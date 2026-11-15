@@ -22,7 +22,7 @@ import { restoreClaudeImportedCopyDates } from "../claudeImportedCopyDates.ts";
  *
  * @module ClaudeAdapterLive
  */
-import { execProcessFile, spawnProcess } from "@synara/shared/processRuntime";
+import { execProcessFile, spawnProcess } from "@ramspace/shared/processRuntime";
 import type {
   AgentInfo,
   CanUseTool,
@@ -81,7 +81,7 @@ import {
   type ProviderListAgentsResult,
   type ProviderListModelsResult,
   getAgentMentionAliases,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import {
   applyClaudePromptEffortPrefix,
   getClaudeContextWindowSuffix,
@@ -95,12 +95,12 @@ import {
   resolveApiModelId,
   stripClaudeContextWindowSuffix,
   trimOrNull,
-} from "@synara/shared/model";
-import { buildClaudeSubagentPrompt } from "@synara/shared/agentMentions";
-import { assessClaudeCache } from "@synara/shared/claudeCache";
-import { approvalSessionGrantWidensSessionPolicy } from "@synara/shared/approvalSessionGrant";
-import { approvalRequestKindFromRequestType } from "@synara/shared/threadSummary";
-import { nonEmptyTrimmed } from "@synara/shared/text";
+} from "@ramspace/shared/model";
+import { buildClaudeSubagentPrompt } from "@ramspace/shared/agentMentions";
+import { assessClaudeCache } from "@ramspace/shared/claudeCache";
+import { approvalSessionGrantWidensSessionPolicy } from "@ramspace/shared/approvalSessionGrant";
+import { approvalRequestKindFromRequestType } from "@ramspace/shared/threadSummary";
+import { nonEmptyTrimmed } from "@ramspace/shared/text";
 import {
   claudeCacheContextTokens,
   claudeCacheFromRequest,
@@ -130,10 +130,10 @@ import {
 } from "effect";
 
 import { buildClaudeMcpServers } from "../../agentGateway/mcpInjection.ts";
-import { renderSynaraHarnessPolicy } from "../../agentGateway/harnessPolicy.ts";
+import { renderRamspaceHarnessPolicy } from "../../agentGateway/harnessPolicy.ts";
 import {
-  isSynaraGatewayToolName,
-  shouldAllowSynaraComputerProviderTool,
+  isRamspaceGatewayToolName,
+  shouldAllowRamspaceComputerProviderTool,
 } from "../../agentGateway/computerToolPermission.ts";
 import { AgentGatewayCredentials } from "../../agentGateway/Services/AgentGatewayCredentials.ts";
 import { PROVIDER_ADAPTER_RUNTIME_EVENT_BUFFER_CAPACITY } from "../Services/ProviderAdapter.ts";
@@ -236,8 +236,8 @@ type PromptQueueItem =
     };
 
 /**
- * The native message a completed Synara turn ended at, so "Fork from this
- * turn" can stop the SDK fork there. Synara assistant message ids are not
+ * The native message a completed Ramspace turn ended at, so "Fork from this
+ * turn" can stop the SDK fork there. Ramspace assistant message ids are not
  * Claude message uuids, so the turn id is the only stable join.
  */
 interface ClaudeTurnBoundary {
@@ -488,7 +488,7 @@ interface ClaudeSessionContext {
   // inputs) are not retained: nothing live reads them back, and keeping them made
   // memory grow with every turn of a long session. `readThread` reports each turn
   // with an empty `items` list; the durable transcript lives in Claude's own
-  // session files and in Synara's runtime event log.
+  // session files and in Ramspace's runtime event log.
   readonly turns: Array<{ readonly id: TurnId }>;
   readonly inFlightTools: Map<number, ToolInFlight>;
   readonly trackedTasks: Map<string, ClaudeTrackedTask>;
@@ -1599,7 +1599,7 @@ function toolLifecycleEventData(
 
 // Receiver identity for the shared subagent-thread machinery: ingestion spawns a
 // child thread per receiverThreadId on collab_agent_tool_call items and titles it
-// from these hints (see extractSubagentIdentityHints in @synara/shared/subagents).
+// from these hints (see extractSubagentIdentityHints in @ramspace/shared/subagents).
 function subagentReceiverData(
   tool: Pick<ToolInFlight, "itemId" | "input">,
 ): Record<string, unknown> {
@@ -1668,14 +1668,14 @@ export const buildEmbeddedClaudeSystemPromptAppend = (
   enableComputerControl = false,
 ) =>
   [
-    "You are running inside Synara, a coding app that embeds the Claude Agent SDK.",
+    "You are running inside Ramspace, a coding app that embeds the Claude Agent SDK.",
     "Do not present the host app as Claude Code unless the user is explicitly asking about Claude Code.",
     "Treat the current working directory as the active workspace for the task.",
     "When the user asks about the current project, codebase, or repository, proactively inspect files in the current working directory before asking the user where to look.",
     "Do the work yourself by default. Spawn subagents only when the user asks for them or when independent pieces of work clearly benefit from running in parallel; every subagent draws on the same usage limits as this conversation, whichever model it runs.",
     "When spawning subagents, set the Agent tool's `model` parameter and pick reasoning effort by choosing a worker-<tier> subagent type (worker-low, worker-medium, worker-high, worker-xhigh).",
     "Honor explicit user instructions about a subagent's model or effort verbatim; otherwise match task complexity: mechanical work → haiku or worker-low, standard work → sonnet or worker-medium, hard reasoning → opus or fable with worker-high and above.",
-    renderSynaraHarnessPolicy({
+    renderRamspaceHarnessPolicy({
       gatewayControlAvailable,
       enableComputerControl,
       automationAuthoring: "tool-descriptions",
@@ -2513,7 +2513,7 @@ function makeClaudeAdapter(options?: ClaudeAdapterLiveOptions) {
     const fileSystem = yield* FileSystem.FileSystem;
     const serverConfig = yield* ServerConfig;
     // Optional so adapter tests can run without the gateway layer; when
-    // present, every session gets the synara_* MCP tools.
+    // present, every session gets the ramspace_* MCP tools.
     const agentGatewayCredentials = Option.getOrUndefined(
       yield* Effect.serviceOption(AgentGatewayCredentials),
     );
@@ -7423,7 +7423,7 @@ function makeClaudeAdapter(options?: ClaudeAdapterLiveOptions) {
                 context.turnState?.turnId ??
                 (callbackOptions.agentID !== undefined ? context.lastTurnId : undefined);
               if (
-                shouldAllowSynaraComputerProviderTool({
+                shouldAllowRamspaceComputerProviderTool({
                   computerControlEnabled:
                     input.enableComputerControl === true &&
                     context.gatewaySessionLease !== undefined,
@@ -7440,13 +7440,13 @@ function makeClaudeAdapter(options?: ClaudeAdapterLiveOptions) {
               }
               // A group coordinator (and any other gateway-only principal the
               // orchestrator trusts) must not stall its turn on interactive
-              // approval for its own Synara group tools — the gateway already
+              // approval for its own Ramspace group tools — the gateway already
               // scopes and authorizes them server-side. File edits, shell, and
-              // every non-Synara tool keep the ordinary permission path.
+              // every non-Ramspace tool keep the ordinary permission path.
               if (
-                input.autoApproveSynaraTools === true &&
+                input.autoApproveRamspaceTools === true &&
                 context.gatewaySessionLease !== undefined &&
-                isSynaraGatewayToolName(toolName)
+                isRamspaceGatewayToolName(toolName)
               ) {
                 return {
                   behavior: "allow",
@@ -8952,7 +8952,7 @@ function makeClaudeAdapter(options?: ClaudeAdapterLiveOptions) {
             provider: PROVIDER,
             operation: "forkThread",
             issue:
-              "The source Claude session has a turn in flight; Synara will rebuild the fork from its retained transcript.",
+              "The source Claude session has a turn in flight; Ramspace will rebuild the fork from its retained transcript.",
           });
         }
         const claudeOptions = input.providerOptions?.claudeAgent;
@@ -8966,7 +8966,7 @@ function makeClaudeAdapter(options?: ClaudeAdapterLiveOptions) {
             provider: PROVIDER,
             operation: "forkThread",
             issue:
-              "A stopped account-scoped Claude session cannot be forked safely through the default SDK store; Synara will rebuild the fork from its retained transcript.",
+              "A stopped account-scoped Claude session cannot be forked safely through the default SDK store; Ramspace will rebuild the fork from its retained transcript.",
           });
         }
         const sourceState = readClaudeResumeState(input.sourceResumeCursor);
@@ -8994,7 +8994,7 @@ function makeClaudeAdapter(options?: ClaudeAdapterLiveOptions) {
               provider: PROVIDER,
               operation: "forkThread",
               issue:
-                "The source Claude session has no native boundary for the chosen turn; Synara will rebuild the fork from its retained transcript.",
+                "The source Claude session has no native boundary for the chosen turn; Ramspace will rebuild the fork from its retained transcript.",
             });
           }
           upToMessageId = boundary.assistantUuid;
@@ -9026,7 +9026,7 @@ function makeClaudeAdapter(options?: ClaudeAdapterLiveOptions) {
               provider: PROVIDER,
               operation: "forkThread",
               issue:
-                "The chosen Claude turn is no longer in the native transcript; Synara will rebuild the fork from its retained transcript.",
+                "The chosen Claude turn is no longer in the native transcript; Ramspace will rebuild the fork from its retained transcript.",
             });
           }
           const completedMessages = messages.slice(0, cutoffIndex + 1);

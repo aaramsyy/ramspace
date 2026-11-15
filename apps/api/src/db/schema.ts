@@ -1,10 +1,10 @@
-import type { SocialLinks } from "@synara/shared/socialLinks";
+import type { SocialLinks } from "@ramspace/shared/socialLinks";
 import type {
   DevicePublicKeyJwk,
   HostPublicKeyJwk,
   SyncKeyWrap,
   SavedInboxRecap,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { sql } from "drizzle-orm";
 import {
   bigint,
@@ -313,7 +313,7 @@ export const syncKeyWraps = pgTable(
 ).enableRLS();
 
 /**
- * The part of a user's identity Synara owns. Keyed by WorkOS user id because
+ * The part of a user's identity Ramspace owns. Keyed by WorkOS user id because
  * WorkOS is the authority on who someone is — this table only holds what
  * WorkOS has no opinion about. A row existing is what "onboarding completed"
  * means; there is deliberately no separate flag to drift from it.
@@ -338,7 +338,7 @@ export const profiles = pgTable("profiles", {
   accentColor: text("accent_color"),
   // Validated usernames only; NULL means no published social accounts.
   socialLinks: jsonb("social_links").$type<SocialLinks>(),
-  // Opt-in, default private: a profile is served at trysynara.com/@handle
+  // Opt-in, default private: a profile is served at tryramspace.com/@handle
   // exactly when its owner flipped this on.
   public: boolean("public").notNull().default(false),
   // The owner's UTC offset at last profile save, so public day/hour
@@ -481,7 +481,7 @@ export const remotePairingCodes = pgTable(
     ownerOrgId: text("owner_org_id").notNull(),
     keyGeneration: integer("key_generation").notNull(),
     code: text("code").notNull(),
-    bundle: jsonb("bundle").$type<import("@synara/contracts").RemotePairingBundle | null>(),
+    bundle: jsonb("bundle").$type<import("@ramspace/contracts").RemotePairingBundle | null>(),
     expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
     claimedJkt: text("claimed_jkt"),
     cancelledAt: timestamp("cancelled_at", { withTimezone: true }),
@@ -516,7 +516,7 @@ export const liveActivities = pgTable(
       .notNull()
       .default("liveactivity"),
     notificationSource: text("notification_source"),
-    request: jsonb("request").$type<import("@synara/contracts").RegisterLiveActivity>().notNull(),
+    request: jsonb("request").$type<import("@ramspace/contracts").RegisterLiveActivity>().notNull(),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
     expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
     ended: boolean("ended").notNull().default(false),
@@ -541,7 +541,7 @@ export const liveActivityHosts = pgTable("live_activity_hosts", {
     .references(() => hosts.id, { onDelete: "cascade" }),
   keyGeneration: integer("key_generation").notNull(),
   snapshot: jsonb("snapshot")
-    .$type<import("@synara/contracts").LiveActivityHostSnapshot>()
+    .$type<import("@ramspace/contracts").LiveActivityHostSnapshot>()
     .notNull(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
 }).enableRLS();

@@ -3,7 +3,7 @@
 // Layer: Route/UI support
 // Exports: section ids, nav items, and search normalization helper
 
-import { MCP_CONNECTORS_BETA_FEATURE } from "@synara/shared/betaFeatures";
+import { MCP_CONNECTORS_BETA_FEATURE } from "@ramspace/shared/betaFeatures";
 
 import { isBetaFeatureOn } from "~/betaFeatures";
 import { ACCOUNT_BILLING_ENABLED } from "~/lib/accountBillingFlag";
@@ -37,7 +37,7 @@ export const SETTINGS_SECTION_IDS = [
 export type SettingsSectionId = (typeof SETTINGS_SECTION_IDS)[number];
 export type SettingsNavGroupId =
   | "pinned"
-  | "synara"
+  | "ramspace"
   | "agents"
   | "connections"
   | "workspace"
@@ -79,7 +79,7 @@ export const SETTINGS_NAV_GROUPS: ReadonlyArray<{
   hideLabel?: boolean;
 }> = [
   { id: "pinned", label: "settings:navGroup_you", hideLabel: true },
-  { id: "synara", label: "settings:navGroup_synara" },
+  { id: "ramspace", label: "settings:navGroup_ramspace" },
   { id: "agents", label: "settings:navGroup_agents" },
   { id: "connections", label: "settings:navGroup_connections" },
   { id: "workspace", label: "settings:navGroup_workspace" },
@@ -119,7 +119,7 @@ const ALL_SETTINGS_NAV_ITEMS: readonly SettingsNavItem[] = [
   },
   {
     id: "general",
-    group: "synara",
+    group: "ramspace",
     label: "settings:nav_general",
     description: "settings:nav_generalDescription",
     icon: "settings-gear-4",
@@ -127,7 +127,7 @@ const ALL_SETTINGS_NAV_ITEMS: readonly SettingsNavItem[] = [
   },
   {
     id: "appearance",
-    group: "synara",
+    group: "ramspace",
     label: "common:nav_appearance",
     description: "settings:customizeTheThemeTypographyDensityAndTimeFormat",
     icon: "color-palette",
@@ -135,7 +135,7 @@ const ALL_SETTINGS_NAV_ITEMS: readonly SettingsNavItem[] = [
   },
   {
     id: "layout",
-    group: "synara",
+    group: "ramspace",
     label: "settings:nav_layout",
     description: "settings:nav_layoutDescription",
     icon: "layout-sidebar",
@@ -143,7 +143,7 @@ const ALL_SETTINGS_NAV_ITEMS: readonly SettingsNavItem[] = [
   },
   {
     id: "behavior",
-    group: "synara",
+    group: "ramspace",
     label: "settings:nav_chats",
     description: "settings:controlLiveResponsesFollowUpsReviewDefaultsAndSafety",
     icon: "chat-bubbles",
@@ -151,17 +151,17 @@ const ALL_SETTINGS_NAV_ITEMS: readonly SettingsNavItem[] = [
   },
   {
     id: "notifications",
-    group: "synara",
+    group: "ramspace",
     label: "settings:nav_notifications",
-    description: "settings:chooseHowSynaraTellsYouWhenWorkFinishesOr",
+    description: "settings:chooseHowRamspaceTellsYouWhenWorkFinishesOr",
     icon: "bell",
     eyebrow: "Alerts",
   },
   {
     id: "shortcuts",
-    group: "synara",
+    group: "ramspace",
     label: "settings:nav_keyboardShortcuts",
-    description: "settings:changeAddOrRemoveTheShortcutForEverySynara",
+    description: "settings:changeAddOrRemoveTheShortcutForEveryRamspace",
     icon: KEYBINDINGS_ICON_NAME,
     eyebrow: "Key bindings",
   },
@@ -192,7 +192,7 @@ const ALL_SETTINGS_NAV_ITEMS: readonly SettingsNavItem[] = [
   {
     id: "usage",
     group: "agents",
-    // The Synara plan is the Billing tab here, so builds that ship it say so.
+    // The Ramspace plan is the Billing tab here, so builds that ship it say so.
     label: ACCOUNT_BILLING_ENABLED ? "settings:usageAndBilling" : "settings:nav_usage",
     description: "settings:seeRemainingQuotaAndCreditsForEverySignedIn",
     icon: "gauge",
@@ -244,7 +244,7 @@ const ALL_SETTINGS_NAV_ITEMS: readonly SettingsNavItem[] = [
     id: "worktrees",
     group: "workspace",
     label: "settings:nav_worktrees",
-    description: "settings:reviewAndCleanUpIsolatedWorkspacesCreatedBySynara",
+    description: "settings:reviewAndCleanUpIsolatedWorkspacesCreatedByRamspace",
     icon: "branch-simple",
     eyebrow: "Workspace management",
   },

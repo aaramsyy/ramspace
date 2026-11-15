@@ -160,15 +160,15 @@ export function PullRequestsUnavailableState({
         </EmptyTitle>
         <EmptyDescription>
           {notInstalled
-            ? t("git:synaraReadsGitHubDataOnlyThroughTheGhCLI")
+            ? t("git:ramspaceReadsGitHubDataOnlyThroughTheGhCLI")
             : notAuthenticated
               ? t("git:authenticateTheGitHubCLIInATerminalThenRetry")
               : rateLimited
                 ? resetTime
-                  ? t("git:synaraPausesGitHubRequestsUntilTheLimitResetsAt", {
+                  ? t("git:ramspacePausesGitHubRequestsUntilTheLimitResetsAt", {
                       value0: resetTime,
                     })
-                  : t("git:synaraPausesGitHubRequestsUntilTheLimitResets")
+                  : t("git:ramspacePausesGitHubRequestsUntilTheLimitResets")
                 : error instanceof Error
                   ? error.message
                   : t("git:theRequestToGitHubFailed")}

@@ -12,7 +12,7 @@ import type {
   RemoteExecutionScope,
   DesiredHostConnection,
   PairedHost,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 
 import type { RemoteTlsAnchor } from "../remoteTransport/certificates";
 import type { HostsAccountSession } from "../accountSession";

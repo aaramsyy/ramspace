@@ -1,7 +1,9 @@
 {
-  "name": "@synara/desktop",
+  "name": "@ramspace/desktop",
   "version": "1.5.3",
   "private": true,
+  "author": "aaramsyy",
+  "repository": "https://github.com/aaramsyy/ramspace",
   "main": "dist-electron/main.js",
   "scripts": {
     "dev": "bun run scripts/dev.mjs",
@@ -29,8 +31,8 @@
     "ws": "^8.21.0"
   },
   "devDependencies": {
-    "@synara/contracts": "workspace:*",
-    "@synara/shared": "workspace:*",
+    "@ramspace/contracts": "workspace:*",
+    "@ramspace/shared": "workspace:*",
     "@types/node": "catalog:",
     "@types/ws": "^8.5.13",
     "tsdown": "catalog:",
@@ -38,5 +40,5 @@
     "vitest": "catalog:",
     "wait-on": "^8.0.2"
   },
-  "productName": "Synara"
+  "productName": "Ramspace"
 }

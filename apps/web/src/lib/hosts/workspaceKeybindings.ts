@@ -1,4 +1,4 @@
-import type { ServerConfig } from "@synara/contracts";
+import type { ServerConfig } from "@ramspace/contracts";
 import type { QueryClient } from "@tanstack/react-query";
 import { readWorkspaceFrame } from "./workspaceFrame";
 

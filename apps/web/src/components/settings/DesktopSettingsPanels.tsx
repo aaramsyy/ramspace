@@ -1,5 +1,5 @@
 import { readExecutionContext } from "~/lib/hosts/executionContext";
-import { REMOTE_NATIVE_UNAVAILABLE } from "@synara/shared/remoteCapabilities";
+import { REMOTE_NATIVE_UNAVAILABLE } from "@ramspace/shared/remoteCapabilities";
 // FILE: DesktopSettingsPanels.tsx
 // Purpose: Own settings panels whose behavior depends on browser or desktop-native lifecycles.
 // Layer: Settings UI components
@@ -11,8 +11,8 @@ import {
   type DesktopBetaActionResult,
   type DesktopBetaChannelState,
   type ResolvedKeybindingsConfig,
-} from "@synara/contracts";
-import { appSnapShortcutLabels } from "@synara/shared/appSnapShortcut";
+} from "@ramspace/contracts";
+import { appSnapShortcutLabels } from "@ramspace/shared/appSnapShortcut";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useId, useRef, useState } from "react";
 
@@ -59,7 +59,7 @@ import { serverConfigQueryOptions } from "~/lib/serverReactQuery";
 import { useTranslation, t } from "~/i18n";
 
 function appSnapStatusText(state: DesktopAppSnapState | null): string {
-  if (!state) return t("settings:availableInTheSynaraDesktopApp");
+  if (!state) return t("settings:availableInTheRamspaceDesktopApp");
   if (!state.supported) return state.message ?? t("settings:availableOnMacOSOnly");
   if (state.status === "ready") {
     const shortcut = state.shortcut;
@@ -150,7 +150,7 @@ export function NotificationsSettingsPanel({
       return;
     }
 
-    const notification = new Notification(title, { body, tag: "synara:test-notification" });
+    const notification = new Notification(title, { body, tag: "ramspace:test-notification" });
     notification.addEventListener("click", () => {
       window.focus();
     });
@@ -324,7 +324,7 @@ function LocalAppSnapSettingsPanel({
       toastManager.add({
         type: "warning",
         title: t("settings:appSnapUnavailable"),
-        description: t("settings:appSnapRequiresTheSynaraDesktopAppOnMacOS"),
+        description: t("settings:appSnapRequiresTheRamspaceDesktopAppOnMacOS"),
       });
       return;
     }
@@ -387,7 +387,7 @@ function LocalAppSnapSettingsPanel({
             <p className={cn(SETTINGS_CARD_ROW_DESCRIPTION_CLASS_NAME, "pt-0.5")}>
               {appSnapState
                 ? (appSnapState.message ?? t("settings:appSnapIsAvailableOnlyInTheMacOSDesktopApp"))
-                : t("settings:appSnapRequiresTheSynaraDesktopAppOnMacOS")}
+                : t("settings:appSnapRequiresTheRamspaceDesktopAppOnMacOS")}
             </p>
           ) : null}
         </div>
@@ -397,7 +397,7 @@ function LocalAppSnapSettingsPanel({
         <SettingsRow
           id="setting-enable-appsnap"
           title="settings:enableAppSnap"
-          description="settings:runTheCaptureListenerInTheBackgroundWhileSynara"
+          description="settings:runTheCaptureListenerInTheBackgroundWhileRamspace"
           status={appSnapStatusText(appSnapState)}
           resetAction={
             settings.enableAppSnap !== defaults.enableAppSnap ? (
@@ -495,7 +495,7 @@ function LocalAppSnapSettingsPanel({
 }
 
 /**
- * Beta → stable: opens stable Synara and quits beta. Beta data is never copied
+ * Beta → stable: opens stable Ramspace and quits beta. Beta data is never copied
  * back because beta can hold data for features stable does not have yet.
  */
 function LeaveBetaDialog({
@@ -527,8 +527,8 @@ function LeaveBetaDialog({
       if (!result.ok) {
         toastManager.add({
           type: "warning",
-          title: t("settings:couldNotSwitchBackToSynara"),
-          description: result.message ?? t("settings:openSynaraFromYourApplicationsFolder"),
+          title: t("settings:couldNotSwitchBackToRamspace"),
+          description: result.message ?? t("settings:openRamspaceFromYourApplicationsFolder"),
         });
         onOpenChange(false);
       }
@@ -541,9 +541,9 @@ function LeaveBetaDialog({
     <AlertDialog open={open} onOpenChange={(next) => !pending && onOpenChange(next)}>
       <AlertDialogPopup>
         <AlertDialogHeader>
-          <AlertDialogTitle>{t("settings:switchBackToSynara2")}</AlertDialogTitle>
+          <AlertDialogTitle>{t("settings:switchBackToRamspace2")}</AlertDialogTitle>
           <AlertDialogDescription>
-            {t("settings:synaraOpensWithTheChatsAndSettingsItHad")}
+            {t("settings:ramspaceOpensWithTheChatsAndSettingsItHad")}
           </AlertDialogDescription>
           <AlertDialogDescription>
             {t("settings:anythingYouDidInBetaStaysInBetaIt")}
@@ -561,7 +561,7 @@ function LeaveBetaDialog({
                 onCheckedChange={(checked) => setMoveToTrash(checked === true)}
               />
               <span className="space-y-0.5">
-                <span className="block">{t("settings:moveSynaraBetaToTheTrash")}</span>
+                <span className="block">{t("settings:moveRamspaceBetaToTheTrash")}</span>
                 <span className="block text-ui-sm text-muted-foreground">
                   {t("settings:yourBetaDataIsKeptSoYouCanPick")}
                 </span>
@@ -574,7 +574,7 @@ function LeaveBetaDialog({
             {t("settings:stayOnBeta")}
           </AlertDialogClose>
           <Button size="sm" disabled={pending} onClick={() => void leave()}>
-            {pending ? t("settings:switching") : t("settings:switchToSynara")}
+            {pending ? t("settings:switching") : t("settings:switchToRamspace")}
           </Button>
         </AlertDialogFooter>
       </AlertDialogPopup>
@@ -586,14 +586,14 @@ function BetaChannelMark() {
   return (
     <img
       src="/app-icons/beta.png"
-      alt="Synara Beta"
+      alt="Ramspace Beta"
       className="mt-0.5 size-9 shrink-0 rounded-xl"
     />
   );
 }
 
 /**
- * Stable → Synara Beta handoff. Rendered inside General settings; visible only
+ * Stable → Ramspace Beta handoff. Rendered inside General settings; visible only
  * on desktop builds, with the full action card on production and a status card
  * (plus diagnostics disclosure) on beta.
  */
@@ -633,7 +633,7 @@ export function BetaChannelSettingsPanel({ active }: { readonly active: boolean 
       }
       toastManager.add({
         type: "success",
-        title: t("settings:openingSynaraBeta"),
+        title: t("settings:openingRamspaceBeta"),
         description: t("settings:betaIsCopyingYourProjectsSettingsAndProviderSign"),
       });
       refresh();
@@ -649,7 +649,7 @@ export function BetaChannelSettingsPanel({ active }: { readonly active: boolean 
       if (!result.ok) {
         toastManager.add({
           type: "warning",
-          title: t("settings:couldNotOpenSynaraBeta"),
+          title: t("settings:couldNotOpenRamspaceBeta"),
           description: result.message ?? t("settings:theBetaInstallWasNotFound"),
         });
       }
@@ -666,7 +666,7 @@ export function BetaChannelSettingsPanel({ active }: { readonly active: boolean 
       if (!result.ok) {
         toastManager.add({
           type: "warning",
-          title: t("settings:couldNotInstallSynaraBeta"),
+          title: t("settings:couldNotInstallRamspaceBeta"),
           description: result.message ?? t("settings:tryAgainFromSettingsGeneral"),
         });
       }
@@ -693,7 +693,7 @@ export function BetaChannelSettingsPanel({ active }: { readonly active: boolean 
       <SettingsCard divided={false} className="flex items-start gap-3 px-4 py-3.5">
         <BetaChannelMark />
         <div className="min-w-0 flex-1 space-y-1">
-          <p className={SETTINGS_CARD_ROW_TITLE_CLASS_NAME}>{t("settings:youReOnSynaraBeta")}</p>
+          <p className={SETTINGS_CARD_ROW_TITLE_CLASS_NAME}>{t("settings:youReOnRamspaceBeta")}</p>
           <p className={SETTINGS_CARD_ROW_DESCRIPTION_CLASS_NAME}>
             {t("settings:toHelpUsFixProblemsBetaSharesCrashReports")}
           </p>
@@ -737,11 +737,11 @@ export function BetaChannelSettingsPanel({ active }: { readonly active: boolean 
           <div className="flex flex-wrap items-center gap-2 pt-1.5">
             {state.stableInstalled ? (
               <Button size="xs" variant="outline" onClick={() => setLeaveDialogOpen(true)}>
-                {t("settings:switchBackToSynara")}
+                {t("settings:switchBackToRamspace")}
               </Button>
             ) : (
               <Button size="xs" variant="outline" onClick={() => void openStableDownloadPage()}>
-                {t("settings:getSynara")}
+                {t("settings:getRamspace")}
               </Button>
             )}
           </div>
@@ -764,7 +764,7 @@ export function BetaChannelSettingsPanel({ active }: { readonly active: boolean 
         <BetaChannelMark />
         <div className="min-w-0 flex-1 space-y-1">
           <div className="flex items-center gap-2">
-            <p className={SETTINGS_CARD_ROW_TITLE_CLASS_NAME}>Synara Beta</p>
+            <p className={SETTINGS_CARD_ROW_TITLE_CLASS_NAME}>Ramspace Beta</p>
             <span className="inline-flex items-center rounded-full bg-[var(--beta-pill)] px-1.5 py-0.5 text-ui-xs font-semibold leading-none text-[var(--beta-pill-ink)]">
               {t("workspace:beta")}
             </span>
@@ -779,8 +779,8 @@ export function BetaChannelSettingsPanel({ active }: { readonly active: boolean 
           </div>
           <p className={SETTINGS_CARD_ROW_DESCRIPTION_CLASS_NAME}>
             {state.installed
-              ? t("settings:betaRunsNextToSynaraWithItsOwnData")
-              : t("settings:tryNewFeaturesBeforeEveryoneElseSynaraBetaIs")}
+              ? t("settings:betaRunsNextToRamspaceWithItsOwnData")
+              : t("settings:tryNewFeaturesBeforeEveryoneElseRamspaceBetaIs")}
           </p>
           {state.lastImportAt ? (
             <p className="text-ui-xs text-muted-foreground">
@@ -801,14 +801,14 @@ export function BetaChannelSettingsPanel({ active }: { readonly active: boolean 
           ) : state.install ? (
             <p className="text-ui-xs text-muted-foreground">
               {state.install.phase === "downloading"
-                ? t("settings:downloadingSynaraBeta", {
+                ? t("settings:downloadingRamspaceBeta", {
                     value0: state.install.percent !== null ? ` — ${state.install.percent}%` : "…",
                   })
                 : state.install.phase === "verifying"
                   ? t("settings:verifyingTheDownload")
                   : state.install.phase === "installing"
-                    ? t("settings:installingSynaraBeta")
-                    : t("settings:openingSynaraBeta2")}
+                    ? t("settings:installingRamspaceBeta")
+                    : t("settings:openingRamspaceBeta2")}
             </p>
           ) : null}
           <div className="flex flex-wrap items-center gap-2 pt-1.5">
@@ -822,7 +822,7 @@ export function BetaChannelSettingsPanel({ active }: { readonly active: boolean 
                   >
                     {actionPending === "install"
                       ? t("settings:installing")
-                      : t("settings:installSynaraBeta")}
+                      : t("settings:installRamspaceBeta")}
                   </Button>
                   <Button
                     size="xs"
@@ -845,7 +845,7 @@ export function BetaChannelSettingsPanel({ active }: { readonly active: boolean 
                 </>
               ) : (
                 <Button size="xs" onClick={() => void openDownloadPage()}>
-                  {t("settings:getSynaraBeta")}
+                  {t("settings:getRamspaceBeta")}
                 </Button>
               )
             ) : (
@@ -854,7 +854,9 @@ export function BetaChannelSettingsPanel({ active }: { readonly active: boolean 
                   size="xs"
                   variant="outline"
                   disabled={actionPending !== null || state.running}
-                  title={state.running ? t("settings:quitSynaraBetaFirstSoItCanPickUp") : undefined}
+                  title={
+                    state.running ? t("settings:quitRamspaceBetaFirstSoItCanPickUp") : undefined
+                  }
                   onClick={() => setCopyDialogOpen(true)}
                 >
                   {actionPending === "copy"
@@ -879,9 +881,9 @@ export function BetaChannelSettingsPanel({ active }: { readonly active: boolean 
       <AlertDialog open={copyDialogOpen} onOpenChange={setCopyDialogOpen}>
         <AlertDialogPopup>
           <AlertDialogHeader>
-            <AlertDialogTitle>{t("settings:replaceSynaraBetaData")}</AlertDialogTitle>
+            <AlertDialogTitle>{t("settings:replaceRamspaceBetaData")}</AlertDialogTitle>
             <AlertDialogDescription>
-              {t("settings:copyingFromSynaraReplacesBetaChatsAndProjectsChats")}
+              {t("settings:copyingFromRamspaceReplacesBetaChatsAndProjectsChats")}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

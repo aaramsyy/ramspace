@@ -1,4 +1,4 @@
-import { WsBootstrapNegotiateInput, type WsBootstrapNegotiateResult } from "@synara/contracts";
+import { WsBootstrapNegotiateInput, type WsBootstrapNegotiateResult } from "@ramspace/contracts";
 import { Effect, Schema } from "effect";
 import { negotiateWsCompatibility } from "../wsCompatibility";
 import { randomUUID } from "node:crypto";
@@ -6,7 +6,7 @@ import { randomUUID } from "node:crypto";
 import {
   HOST_SESSION_CLOSE_AUTH_FAILED,
   HOST_SESSION_CLOSE_PROTOCOL_ERROR,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import WebSocket, { type RawData } from "ws";
 
 import type { HostMintService } from "../hostAuth";
@@ -153,7 +153,7 @@ export class RemoteConnectionGateway {
             identity: this.options.identity,
             environmentId: this.options.environmentId,
             keyGeneration: this.options.keyGeneration,
-            expectedHtu: this.options.presentationHtu ?? "synara://remote/session",
+            expectedHtu: this.options.presentationHtu ?? "ramspace://remote/session",
             expectedHtm: "CONNECT",
             replayCache: this.#dpopReplays,
           });

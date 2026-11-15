@@ -9,7 +9,7 @@ import type {
   AccountHost,
   ListHostConnectionsResponse,
   HostSession,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { queryOptions, type QueryClient } from "@tanstack/react-query";
 
 import { readHostsApi, type HostEnrollment } from "./api";
@@ -30,7 +30,7 @@ export const remoteHostQueryKeys = {
  */
 export class HostsUnsupportedError extends Error {
   constructor() {
-    super("This Synara server does not support hosts yet.");
+    super("This Ramspace server does not support hosts yet.");
     this.name = "HostsUnsupportedError";
   }
 }

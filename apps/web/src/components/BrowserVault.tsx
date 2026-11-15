@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import type { BrowserVaultSettings, BrowserVaultSnapshot } from "@synara/contracts";
+import type { BrowserVaultSettings, BrowserVaultSnapshot } from "@ramspace/contracts";
 import { CentralIcon } from "~/lib/central-icons";
 import { Key01Icon } from "~/lib/icons";
 import { readNativeApi } from "~/nativeApi";
@@ -12,7 +12,7 @@ import { BrowserVaultMaster } from "./BrowserVaultMaster";
 import { BrowserCookieImport, type BrowserCookieDestination } from "./BrowserCookieImport";
 import { useTranslation } from "~/i18n";
 
-const OPEN_EVENT = "synara:open-browser-vault";
+const OPEN_EVENT = "ramspace:open-browser-vault";
 
 export function BrowserVaultButton({
   destination,

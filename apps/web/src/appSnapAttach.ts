@@ -4,7 +4,7 @@ import { readExecutionContext } from "./lib/hosts/executionContext";
 // Layer: Web composer domain
 // Depends on: composer draft image intake, toast notifications, and optional bridge acknowledgement.
 
-import type { DesktopAppSnapCapture, ThreadId } from "@synara/contracts";
+import type { DesktopAppSnapCapture, ThreadId } from "@ramspace/contracts";
 
 import { insertAppSnapCaptureIntoDraft } from "~/appSnapIntake";
 import { toastManager } from "~/components/ui/toast";
@@ -19,7 +19,7 @@ export async function attachAppSnapCapture(
   const persistenceResult = await insertAppSnapCaptureIntoDraft(threadId, capture);
 
   const unverifiedDescription =
-    "The capture is attached, but Synara could not verify its draft metadata. If it is missing after a reload, Synara will attach it again.";
+    "The capture is attached, but Ramspace could not verify its draft metadata. If it is missing after a reload, Ramspace will attach it again.";
   const successDescription = capture.sourceAppName
     ? `Captured ${capture.sourceAppName} and added it to the composer.`
     : "The window was added to the composer.";

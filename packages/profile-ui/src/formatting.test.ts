@@ -38,14 +38,14 @@ describe("formatNumber / formatDays", () => {
 describe("toDisplayName", () => {
   it("title-cases separator-delimited basenames", () => {
     expect(toDisplayName("jane_doe-dev")).toBe("Jane Doe Dev");
-    expect(toDisplayName("")).toBe("Synara");
+    expect(toDisplayName("")).toBe("Ramspace");
   });
 });
 
 describe("normalizeHandle", () => {
   it("slugs to a lowercase @handle with a fallback", () => {
     expect(normalizeHandle("  @Jane Doe! ")).toBe("@janedoe");
-    expect(normalizeHandle("$$$")).toBe("@synara");
+    expect(normalizeHandle("$$$")).toBe("@ramspace");
   });
 });
 

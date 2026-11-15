@@ -8,7 +8,7 @@ function renderSignedOutScreen(): void {
   const root = document.getElementById("root");
   if (!root) return;
 
-  document.title = t("common:signedOutSynara");
+  document.title = t("common:signedOutRamspace");
   root.innerHTML = `
     <main aria-labelledby="signed-out-title" style="min-height:100vh;box-sizing:border-box;display:grid;place-items:center;padding:32px;background:#10110f;color:#f3f0e8;font-family:'DM Sans',sans-serif">
       <section style="position:relative;width:min(100%,560px);overflow:hidden;border:1px solid #373a34;background:#171915;padding:clamp(30px,6vw,56px);box-shadow:12px 12px 0 #080907">
@@ -20,7 +20,7 @@ function renderSignedOutScreen(): void {
     </main>`;
   root.querySelectorAll("section > p, section > h1")[0]!.textContent = t("common:sessionClosed");
   root.querySelectorAll("section > p, section > h1")[1]!.textContent = t(
-    "common:thisBrowserNoLongerControlsSynara",
+    "common:thisBrowserNoLongerControlsRamspace",
   );
   root.querySelectorAll("section > p, section > h1")[2]!.textContent = t(
     "common:theSessionAndItsLiveConnectionsWereRevokedTo",

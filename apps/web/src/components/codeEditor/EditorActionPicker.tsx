@@ -1,6 +1,6 @@
 import { useTranslation } from "~/i18n";
 // FILE: EditorActionPicker.tsx
-// Purpose: Synara's command picker for editor commands, navigation results,
+// Purpose: Ramspace's command picker for editor commands, navigation results,
 //          problems and workspace symbols.
 // Layer: Web editor UI
 // Exports: EditorActionPicker, EditorActionRow

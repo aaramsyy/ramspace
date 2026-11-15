@@ -1,9 +1,9 @@
 // FILE: privacy/page.tsx
-// Purpose: Full privacy page — the detailed, honest account of what Synara does
+// Purpose: Full privacy page — the detailed, honest account of what Ramspace does
 //          (and doesn't do) with your data. Linked from the homepage + footer.
 // Layer: App Router page (static)
 // Depends on: Navbar, SiteFooter, react-icons/lu
-// Note: Claims verified against the synara codebase. Keep them in sync with the
+// Note: Claims verified against the ramspace codebase. Keep them in sync with the
 //       app: local workspaces, optional account features, explicit feedback,
 //       product analytics choices and separate Beta/Remote diagnostics.
 
@@ -15,9 +15,9 @@ import SiteFooter from "@/components/SiteFooter";
 import { SITE_URL, breadcrumbJsonLd, jsonLdScript, pageMetadata } from "@/lib/seo";
 
 export const metadata = pageMetadata({
-  title: "Privacy — Synara",
+  title: "Privacy — Ramspace",
   description:
-    "Synara's security and privacy boundary: local workspaces, optional account features, product analytics choices and separate Beta/Remote diagnostics.",
+    "Ramspace's security and privacy boundary: local workspaces, optional account features, product analytics choices and separate Beta/Remote diagnostics.",
   path: "/privacy",
 });
 
@@ -43,14 +43,14 @@ const PRIVACY_JSONLD = [
     "@context": "https://schema.org",
     "@type": "WebPage",
     "@id": `${SITE_URL}/privacy#webpage`,
-    name: "Synara privacy",
+    name: "Ramspace privacy",
     url: `${SITE_URL}/privacy`,
     dateModified: "2026-11-08",
     description:
-      "Synara privacy details covering local workspaces, optional account features, product analytics choices and separate Beta/Remote diagnostics.",
+      "Ramspace privacy details covering local workspaces, optional account features, product analytics choices and separate Beta/Remote diagnostics.",
   },
   breadcrumbJsonLd([
-    { name: "Synara", path: "/" },
+    { name: "Ramspace", path: "/" },
     { name: "Privacy", path: "/privacy" },
   ]),
 ];
@@ -72,18 +72,18 @@ export default function PrivacyPage() {
           Private by default. Clear by design.
         </h1>
         <p className="mt-5 text-[14px] leading-[1.7] text-[var(--text-secondary)] sm:text-[15px]">
-          Synara stores workspace history on the computer running the workspace. Optional account
+          Ramspace stores workspace history on the computer running the workspace. Optional account
           features, connections and mobile access use additional services as described below. Stable
-          and Beta product analytics are off by default. Synara Remote from .18 and iPhone/iPad from
-          build 139 share limited usage data by default, with a local switch to turn it off. Synara
-          Beta has separate, always-on crash and release diagnostics.
+          and Beta product analytics are off by default. Ramspace Remote from .18 and iPhone/iPad
+          from build 139 share limited usage data by default, with a local switch to turn it off.
+          Ramspace Beta has separate, always-on crash and release diagnostics.
         </p>
 
         <Section title="Where your data lives">
           <p>
             Workspace chats, projects and operational state live in a local SQLite database on the
             host computer. Desktop and mobile clients also keep local history, drafts and caches. A
-            connected device can access that host with your authorization. Optional Synara account
+            connected device can access that host with your authorization. Optional Ramspace account
             features store profile information, private usage aggregates and saved Inbox recaps in
             our account database on PostgreSQL/Supabase, accessed through our Cloudflare API. These
             saved account records are separate from product analytics.
@@ -95,25 +95,26 @@ export default function PrivacyPage() {
             The host computer connects <strong>directly</strong> to the provider you chose — Claude,
             Codex, OpenCode, Cursor, Antigravity, Grok, Droid, and so on — using your own existing
             logins. That provider receives the prompts and code needed for the session, governed by{" "}
-            <em>their</em> privacy terms. Synara does not proxy normal provider requests through its
-            own model service. For managed remote connections, Cloudflare transports chat and file
-            traffic between your approved device and the host before the host contacts the provider.
+            <em>their</em> privacy terms. Ramspace does not proxy normal provider requests through
+            its own model service. For managed remote connections, Cloudflare transports chat and
+            file traffic between your approved device and the host before the host contacts the
+            provider.
           </p>
         </Section>
 
         <Section title="Optional accounts and connections">
           <p>
-            Local desktop use does not require a Synara account. Signing in enables account features
-            and managed device connections. Authentication uses WorkOS; the account API and managed
-            tunnels use Cloudflare. Approved devices can access the selected host, including its
-            chats and files, through that connection. You can revoke device access. Information you
-            choose to publish on your profile is public; saved Inbox recaps are private.
+            Local desktop use does not require a Ramspace account. Signing in enables account
+            features and managed device connections. Authentication uses WorkOS; the account API and
+            managed tunnels use Cloudflare. Approved devices can access the selected host, including
+            its chats and files, through that connection. You can revoke device access. Information
+            you choose to publish on your profile is public; saved Inbox recaps are private.
           </p>
         </Section>
 
         <Section title="Product analytics and Remote diagnostics">
           <p>
-            Stable and Beta product analytics are off by default. Synara Remote from version
+            Stable and Beta product analytics are off by default. Ramspace Remote from version
             1.0.6-remote.18 and the native iPhone/iPad apps from build 139 share limited usage data
             by default. Settings → Privacy →<strong> Share usage and diagnostics</strong> turns
             sharing off on that installation; an existing off choice is preserved. On Remote desktop
@@ -175,7 +176,7 @@ export default function PrivacyPage() {
 
         <Section title="Separate Beta diagnostics">
           <p>
-            Synara Beta sends crash, error, release-health and daily usage diagnostics
+            Ramspace Beta sends crash, error, release-health and daily usage diagnostics
             automatically, using fixed categories, numeric source positions and bounded counters.
             They exclude prompts, replies, file contents, credentials, error prose, function/file
             names, log excerpts and raw crash memory. Stable does not send Beta diagnostics. Product
@@ -184,7 +185,7 @@ export default function PrivacyPage() {
             retired. Historical storage cleanup requires a separate operator action; this policy
             does not claim previously received data has already been deleted. See the{" "}
             <a
-              href="https://github.com/Emanuele-web04/synara/blob/main/docs/diagnostics.md"
+              href="https://github.com/aaramsyy/ramspace/blob/main/docs/diagnostics.md"
               className="text-[var(--accent-link)]"
             >
               diagnostics documentation
@@ -195,24 +196,25 @@ export default function PrivacyPage() {
 
         <Section title="Feedback you choose to send">
           <p>
-            The in-app <strong>Feedback Synara</strong> dialog sends only when you press Submit. It
-            includes the text you wrote, app version, operating system, provider and model, runtime
-            modes, and session/turn status so we can understand the conditions around a problem.
+            The in-app <strong>Feedback Ramspace</strong> dialog sends only when you press Submit.
+            It includes the text you wrote, app version, operating system, provider and model,
+            runtime modes, and session/turn status so we can understand the conditions around a
+            problem.
           </p>
           <p>
             Feedback context excludes chat messages, prompts, project paths, repository contents,
             session logs and screenshots. Feedback reports are delivered through our website and
-            email provider to the Synara maintainer for support and product improvement, rather than
-            being added to an analytics profile.
+            email provider to the Ramspace maintainer for support and product improvement, rather
+            than being added to an analytics profile.
           </p>
         </Section>
 
         <Section title="Open source">
           <p>
-            Synara is open source under the MIT license. If a sentence on this page isn&apos;t
+            Ramspace is open source under the MIT license. If a sentence on this page isn&apos;t
             enough, you can verify every claim yourself —{" "}
             <a
-              href="https://github.com/Emanuele-web04/synara"
+              href="https://github.com/aaramsyy/ramspace"
               target="_blank"
               rel="noopener noreferrer"
               className="text-[var(--accent-link)] transition-colors hover:text-[var(--accent-link-hover)]"
@@ -243,7 +245,7 @@ export default function PrivacyPage() {
           <p className="text-[12px] text-[var(--text-tertiary)]">
             Last updated {LAST_UPDATED}. Questions?{" "}
             <a
-              href="https://x.com/emanueledpt"
+              href="https://github.com/aaramsyy"
               target="_blank"
               rel="noopener noreferrer"
               className="text-[var(--accent-link)] transition-colors hover:text-[var(--accent-link-hover)]"
@@ -256,7 +258,7 @@ export default function PrivacyPage() {
             href="/install"
             className="inline-flex w-fit items-center gap-2 rounded-full bg-[var(--btn-primary-bg)] px-5 py-2.5 text-[13px] font-medium text-[var(--btn-primary-fg)] transition-opacity hover:opacity-90"
           >
-            Download Synara
+            Download Ramspace
             <LuArrowDownToLine className="size-4" aria-hidden="true" />
           </Link>
         </div>

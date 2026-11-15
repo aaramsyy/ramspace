@@ -21,7 +21,7 @@ it.each([
 ] as const)(
   "reports subscribed %s/%s turns with host proof and no chat content",
   async (state, interaction, expected) => {
-    const home = await mkdtemp(join(tmpdir(), "synara-activity-reporter-"));
+    const home = await mkdtemp(join(tmpdir(), "ramspace-activity-reporter-"));
     const identityPath = join(home, "secrets", "host-identity.json");
     const identity = await generateAndPersistHostIdentity(identityPath);
     const account = {
@@ -184,7 +184,7 @@ const recoveryCases = [
 it.each(recoveryCases)(
   "keeps an original killed-phone watch exact through $name",
   async (scenario) => {
-    const home = await mkdtemp(join(tmpdir(), "synara-quota-activity-"));
+    const home = await mkdtemp(join(tmpdir(), "ramspace-quota-activity-"));
     const identityPath = join(home, "host-identity.json");
     await generateAndPersistHostIdentity(identityPath);
     await writeAccountCredentials(home, {
@@ -304,7 +304,7 @@ async function waitForIo(ms = 50) {
 }
 
 async function cadenceFixture() {
-  const home = await mkdtemp(join(tmpdir(), "synara-activity-cadence-"));
+  const home = await mkdtemp(join(tmpdir(), "ramspace-activity-cadence-"));
   const identityPath = join(home, "host-identity.json");
   await generateAndPersistHostIdentity(identityPath);
   await writeAccountCredentials(home, {

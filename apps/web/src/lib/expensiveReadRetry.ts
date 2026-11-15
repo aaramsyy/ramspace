@@ -11,7 +11,7 @@
 import {
   WS_REQUEST_CAPACITY_EXCEEDED_CODES,
   WS_REQUEST_CAPACITY_RETRY_AFTER_MS,
-} from "@synara/shared/wsRequestClass";
+} from "@ramspace/shared/wsRequestClass";
 
 const RPC_CAPACITY_EXCEEDED_CODES = new Set<string>(WS_REQUEST_CAPACITY_EXCEEDED_CODES);
 

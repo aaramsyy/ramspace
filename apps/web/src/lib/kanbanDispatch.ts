@@ -10,7 +10,7 @@ import type {
   ProjectId,
   ProviderStartOptions,
   ThreadId,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import {
   resolveKanbanDraftOpenThreadReason,
   resolveDraftDropAction,

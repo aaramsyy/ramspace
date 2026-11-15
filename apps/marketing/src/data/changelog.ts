@@ -1,7 +1,7 @@
 // FILE: data/changelog.ts
-// Purpose: Curated Synara release notes powering the public /changelog page.
+// Purpose: Curated Ramspace release notes powering the public /changelog page.
 // Layer: static data (server-importable). Mirrors the in-app "What's new"
-//        changelog from the Synara desktop app, newest release first.
+//        changelog from the Ramspace desktop app, newest release first.
 // Note: To add a release, prepend a new entry. `date` is rendered verbatim,
 //       so keep the format consistent (e.g. "Jun 4").
 
@@ -81,7 +81,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         id: "offline-compaction",
         title: "Reclaim legacy database space offline",
         description:
-          "The installed synara-compact-database command can compact a closed legacy database after verifying a private copy.",
+          "The installed ramspace-compact-database command can compact a closed legacy database after verifying a private copy.",
         details:
           "Close every client first and supply the correct absolute database path. Scratch space is required; the command preserves retained rows and migration backups and never selects another app channel automatically.",
       },
@@ -117,11 +117,11 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
       },
       {
         id: "languages",
-        title: "Use Synara in Spanish",
+        title: "Use Ramspace in Spanish",
         description:
           "Choose English, Spanish or System in Settings → General → Language. The interface and native menus follow your preference.",
         details:
-          "Your messages, provider output and code remain unchanged. An already loaded editor may need the offered reload to update its engine labels. Simplified Chinese is available in Synara Beta.",
+          "Your messages, provider output and code remain unchanged. An already loaded editor may need the offered reload to update its engine labels. Simplified Chinese is available in Ramspace Beta.",
       },
       {
         id: "chat-workspace",
@@ -151,7 +151,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         id: "offline-compaction",
         title: "Reclaim legacy database space offline",
         description:
-          "The installed synara-compact-database command can compact a closed legacy database after verifying a private copy.",
+          "The installed ramspace-compact-database command can compact a closed legacy database after verifying a private copy.",
         details:
           "Close every client first and supply the correct absolute database path. Scratch space is required; the command preserves retained rows and migration backups and never selects another app channel automatically.",
       },
@@ -215,9 +215,9 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
     features: [
       {
         id: "native-editor",
-        title: "An intelligent native editor in Synara Beta",
+        title: "An intelligent native editor in Ramspace Beta",
         description:
-          "The Code OSS editor engine brings TypeScript and JavaScript completion, diagnostics, navigation, references, rename, quick fixes and refactors into Synara\u2019s existing editing surfaces.",
+          "The Code OSS editor engine brings TypeScript and JavaScript completion, diagnostics, navigation, references, rename, quick fixes and refactors into Ramspace\u2019s existing editing surfaces.",
         details:
           "JSON, CSS and HTML retain language-worker features. Other languages retain editing and highlighting. The shared native buffer owns autosave, conflicts and undo; large lightweight previews retain their fallback. Stable keeps the previous editor. There is no extension host or alternate IDE workbench.",
       },
@@ -448,7 +448,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
     features: [
       {
         id: "connectors",
-        title: "Connect your tools to Synara Beta",
+        title: "Connect your tools to Ramspace Beta",
         description:
           "Sign in to remote MCP services from Settings → Connectors and use their tools in supported agent sessions.",
         details:
@@ -828,7 +828,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         description:
           "Supported agent sessions can create, list and update the to-dos in your Tasks list directly from a chat.",
         details:
-          "Set notes, priority, due date and project, mark a to-do complete or reopen it. Retried creates use a request ID to avoid duplicates. These tools maintain the list; they do not dispatch the to-do to an agent. Synara permissions still apply.",
+          "Set notes, priority, due date and project, mark a to-do complete or reopen it. Retried creates use a request ID to avoid duplicates. These tools maintain the list; they do not dispatch the to-do to an agent. Ramspace permissions still apply.",
       },
       {
         id: "mcp-accounts",
@@ -946,13 +946,13 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         description:
           "Supported agent sessions can create, list and update the to-dos in your Tasks list directly from a chat.",
         details:
-          "Set notes, priority, due date and project, mark a to-do complete or reopen it. Retried creates use a request ID to avoid duplicates. These tools maintain the list; they do not dispatch the to-do to an agent. Synara permissions still apply.",
+          "Set notes, priority, due date and project, mark a to-do complete or reopen it. Retried creates use a request ID to avoid duplicates. These tools maintain the list; they do not dispatch the to-do to an agent. Ramspace permissions still apply.",
       },
       {
         id: "hub-approvals",
         title: "Resolve Hub worker approvals in one place",
         description:
-          "In Synara Beta, pending worker approvals appear above the coordinator composer, with links to the worker conversation.",
+          "In Ramspace Beta, pending worker approvals appear above the coordinator composer, with links to the worker conversation.",
         details:
           "Approve once, allow the session when supported, decline or cancel the worker turn. Answering in either conversation clears the request in both. Only you can approve; the coordinator has no approval tool. Queued Hub tasks inherit the coordinator access mode unless explicitly overridden.",
       },
@@ -1017,7 +1017,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         id: "opencode-recovery",
         title: "More reliable OpenCode startup",
         description:
-          "Synara finds OpenCode across common installation paths and explains when a CLI lacks the managed-session tools it needs.",
+          "Ramspace finds OpenCode across common installation paths and explains when a CLI lacks the managed-session tools it needs.",
       },
       {
         id: "release-performance",
@@ -1042,7 +1042,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         id: "computer-beta",
         title: "Computer Use beta — macOS first",
         description:
-          "Ask Synara to work with Mac apps and browsers. Computer Use is in beta and available on macOS only for this release; Linux is coming soon.",
+          "Ask Ramspace to work with Mac apps and browsers. Computer Use is in beta and available on macOS only for this release; Linux is coming soon.",
         details:
           "Use /computer-use followed by a task, or opt in to Computer control in Settings. Guided Accessibility, Input Monitoring and Screen Recording setup, task approvals, background-first actions, human-readable activity and a window-specific preview keep the work visible. Stop ends the task; physical Escape interrupts the current action when Input Monitoring is granted. Closing the preview only hides it. App compatibility varies during beta.",
       },
@@ -1058,7 +1058,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         id: "project-import",
         title: "Bring your Codex and Claude Code projects",
         description:
-          "Discover local projects and import their conversations into Synara with a source picker, search, selection and progress.",
+          "Discover local projects and import their conversations into Ramspace with a source picker, search, selection and progress.",
         details:
           "Choose which projects and sessions to bring over, include archived conversations when needed, and select a replacement folder for moved projects. Imports preserve source history, retain completed legacy turns and resume from separate provider session copies. Failed items can be retried without duplicating completed imports.",
       },
@@ -1091,7 +1091,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         title: "Opt in to Claude Artifacts",
         description: "Enable Claude Artifacts, /design and /slides from Claude provider settings.",
         details:
-          "Artifacts are off by default in Synara sessions. After enabling them, start a new session; availability depends on the installed Claude version and account. Unavailable commands now explain the requirement instead of silently failing.",
+          "Artifacts are off by default in Ramspace sessions. After enabling them, start a new session; availability depends on the installed Claude version and account. Unavailable commands now explain the requirement instead of silently failing.",
       },
       {
         id: "codex-questions",
@@ -1107,7 +1107,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         description:
           "View available reset credits and redeem one from usage panels after explicit confirmation.",
         details:
-          "Synara rechecks the account and current limits before spending a credit. A reset is available when the five-hour or weekly limit has 10% or less remaining. Retrying an uncertain result checks the same attempt rather than spending another credit.",
+          "Ramspace rechecks the account and current limits before spending a credit. A reset is available when the five-hour or weekly limit has 10% or less remaining. Retrying an uncertain result checks the same attempt rather than spending another credit.",
       },
       {
         id: "chat-drag",
@@ -1153,7 +1153,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         id: "macos-refresh",
         title: "A refreshed Mac app and installer",
         description:
-          "New Liquid Glass app icons and a redesigned drag-to-Applications installer give Synara a more native finish.",
+          "New Liquid Glass app icons and a redesigned drag-to-Applications installer give Ramspace a more native finish.",
         details:
           "Alternate app icon choices persist after quitting and are reapplied on launch. Default restores the bundled system-appearance behavior. The command palette and recent-view switcher also share a cleaner visual layout.",
       },
@@ -1192,7 +1192,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         description:
           "History queries select the visible records before loading large message and tool bodies.",
         details:
-          "In a synthetic history with 6,000 messages and 6,000 tool activities of 16 KiB each, bulk-message query-worker peak RSS fell from 565.61 to 377.48 MiB (33.3%) and bulk-activity peak RSS from 255.92 to 115.16 MiB (55.0%). Median query time fell from 43.66 to 20.44 ms and 19.15 to 7.21 ms respectively. These are three-sample query-worker measurements, including warmup, with matching returned content; they are not total Synara RAM figures.",
+          "In a synthetic history with 6,000 messages and 6,000 tool activities of 16 KiB each, bulk-message query-worker peak RSS fell from 565.61 to 377.48 MiB (33.3%) and bulk-activity peak RSS from 255.92 to 115.16 MiB (55.0%). Median query time fell from 43.66 to 20.44 ms and 19.15 to 7.21 ms respectively. These are three-sample query-worker measurements, including warmup, with matching returned content; they are not total Ramspace RAM figures.",
       },
       {
         id: "provider-memory",
@@ -1230,7 +1230,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         id: "browser-sessions",
         title: "Browser automation with saved sessions and embedded popups",
         description:
-          "The embedded browser now uses BetterWright and keeps sign-in popups inside Synara.",
+          "The embedded browser now uses BetterWright and keeps sign-in popups inside Ramspace.",
         details:
           "Import eligible login cookies for the current site, or choose All sites in this profile with explicit consent. Restore protected imported sessions across restarts where secure storage is available. Saved Logins adds save/update prompts, optional autosave, account deletion, lock/unlock and master-password-protected reveal. Optional agent access discovers account metadata only; agent password filling and generation are unavailable. Browser cookies and sign-ins are shared across tasks. Browser input, redirects, cancellation, hidden captures, Retina scaling, uploads, focus restoration and stale-session recovery have also been improved.",
       },
@@ -1252,7 +1252,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
       },
       {
         id: "workspace-editor",
-        title: "Edit workspace files directly in Synara",
+        title: "Edit workspace files directly in Ramspace",
         description:
           "Edit from Explorer, full-file previews and supported working-tree diffs, with a lightweight large-file fallback in Explorer.",
         details:
@@ -1480,7 +1480,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         id: "rename-and-preferences",
         title: "Rename tasks directly from the composer",
         description:
-          "Use /rename with a title, or let Synara generate a title from the conversation.",
+          "Use /rename with a title, or let Ramspace generate a title from the conversation.",
         details:
           "/rename My task sets the title directly. Bare /rename generates a title once the task has conversation context, preserving a newer title if another rename wins the race. New chats restore the last-used model and options, and expanded or collapsed sidebar projects stay that way across restarts.",
       },
@@ -1535,13 +1535,13 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         description:
           "Claude Fable 5.1 is now a first-class model with the right thinking controls, aliases, context variants, and usage reporting.",
         details:
-          "Synara lists Fable 5.1 at the top of the Claude catalog and repairs older Pi Anthropic catalogs so the model remains selectable there too. The plain `fable` alias now resolves to 5.1 while explicit Fable 5 selections keep working. Its always-on thinking model exposes Low through Max effort without a fast-mode lane, compatible Cursor context variants are recognized, and Claude usage surfaces now show Fable's dedicated weekly allowance from Anthropic's current scoped-limit response.",
+          "Ramspace lists Fable 5.1 at the top of the Claude catalog and repairs older Pi Anthropic catalogs so the model remains selectable there too. The plain `fable` alias now resolves to 5.1 while explicit Fable 5 selections keep working. Its always-on thinking model exposes Low through Max effort without a fast-mode lane, compatible Cursor context variants are recognized, and Claude usage surfaces now show Fable's dedicated weekly allowance from Anthropic's current scoped-limit response.",
       },
       {
         id: "large-database-startup",
         title: "Open large workspaces with less startup work",
         description:
-          "Synara avoids redundant sidebar snapshots, dead-turn replay, and oversized SQLite memory budgets during launch.",
+          "Ramspace avoids redundant sidebar snapshots, dead-turn replay, and oversized SQLite memory budgets during launch.",
         details:
           "The browser now accepts the live shell snapshot and only falls back when one is genuinely missing, including after reconnects. The server prunes unrecoverable open-turn rows instead of replaying and logging them on every boot, stops a failed replay once, and scales SQLite cache and mmap budgets to the machine. On the measured 1.7 GB database, shell snapshot requests fell from three to one and warm server boot-to-listen time fell from 1.06 seconds to 0.53 seconds.",
       },
@@ -1551,7 +1551,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         description:
           "Quiet but active Devin tools no longer look like abandoned turns, and malformed tool-output requests recover safely.",
         details:
-          "A current in-progress tool call now receives its own one-hour idle budget instead of sharing the ordinary 30-minute turn watchdog, with stale events prevented from refreshing the active clock. Synara also normalizes Devin's unexpected boolean `get_output.block` field without weakening other ACP messages, and project creation waits for a real task before navigation so superseded routes cannot overwrite newer work.",
+          "A current in-progress tool call now receives its own one-hour idle budget instead of sharing the ordinary 30-minute turn watchdog, with stale events prevented from refreshing the active clock. Ramspace also normalizes Devin's unexpected boolean `get_output.block` field without weakening other ACP messages, and project creation waits for a real task before navigation so superseded routes cannot overwrite newer work.",
       },
       {
         id: "windows-process-runtime",
@@ -1577,11 +1577,11 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
     features: [
       {
         id: "devin-acp-provider",
-        title: "Work with Devin from the same Synara workspace",
+        title: "Work with Devin from the same Ramspace workspace",
         description:
-          "Devin CLI joins Synara as a first-class ACP provider with its own models, commands, modes, usage, attachments, and MCP configuration.",
+          "Devin CLI joins Ramspace as a first-class ACP provider with its own models, commands, modes, usage, attachments, and MCP configuration.",
         details:
-          "Synara can start and resume Devin ACP sessions, discover the models and slash commands exposed by the installed CLI, switch Plan mode, compact long conversations, attach files and images, pass compatible MCP servers, and show account usage. Authentication remains owned by Devin through `devin auth login` or its supported API-key environment variables, and provider capabilities are gated so unsupported active-turn steering is never implied.",
+          "Ramspace can start and resume Devin ACP sessions, discover the models and slash commands exposed by the installed CLI, switch Plan mode, compact long conversations, attach files and images, pass compatible MCP servers, and show account usage. Authentication remains owned by Devin through `devin auth login` or its supported API-key environment variables, and provider capabilities are gated so unsupported active-turn steering is never implied.",
       },
       {
         id: "provider-neutral-webmcp",
@@ -1589,7 +1589,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         description:
           "WebMCP browser tools are now provider-neutral instead of being tied to one agent runtime.",
         details:
-          "Browser sessions expose the same bounded, task-owned WebMCP surface to supported providers, with consistent tool discovery, invocation, timeouts, result shaping, tab ownership, and lifecycle cleanup. This keeps browser work attached to the correct task while allowing more agents to inspect and operate the page Synara is already showing.",
+          "Browser sessions expose the same bounded, task-owned WebMCP surface to supported providers, with consistent tool discovery, invocation, timeouts, result shaping, tab ownership, and lifecycle cleanup. This keeps browser work attached to the correct task while allowing more agents to inspect and operate the page Ramspace is already showing.",
       },
       {
         id: "in-thread-find",
@@ -1613,7 +1613,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         description:
           "Follow-ups no longer race the turn ahead of them or strand work when a task is in the background.",
         details:
-          "Synara holds a queued follow-up until the previous turn has actually started, promotes work for backgrounded tasks, preserves preview contents while capacity is constrained, resumes from the durable cursor after an idle stop, and prevents duplicated streamed replies. Reconnect and settlement paths converge on the same turn instead of replaying visible text twice.",
+          "Ramspace holds a queued follow-up until the previous turn has actually started, promotes work for backgrounded tasks, preserves preview contents while capacity is constrained, resumes from the durable cursor after an idle stop, and prevents duplicated streamed replies. Reconnect and settlement paths converge on the same turn instead of replaying visible text twice.",
       },
       {
         id: "migration-recovery-and-isolation",
@@ -1629,7 +1629,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         description:
           "Settings, usage, context changes, update notices, and enabled-provider behavior now agree on what the runtime can actually do.",
         details:
-          "Disabling a provider now prevents server lifecycle execution instead of only hiding it in the interface. Usage is available for every enabled provider Synara can verify, provider-driven context changes appear in the conversation, routine lifecycle hooks stay out of the transcript, and update notices recover when availability checks overlap or temporarily fail.",
+          "Disabling a provider now prevents server lifecycle execution instead of only hiding it in the interface. Usage is available for every enabled provider Ramspace can verify, provider-driven context changes appear in the conversation, routine lifecycle hooks stay out of the transcript, and update notices recover when availability checks overlap or temporarily fail.",
       },
       {
         id: "durable-sidechat-panes",
@@ -1705,9 +1705,9 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         id: "safe-quit-and-resume",
         title: "Quit without silently abandoning running chats",
         description:
-          "Synara now shows every chat still working before the desktop app closes and can continue eligible work on the next launch.",
+          "Ramspace now shows every chat still working before the desktop app closes and can continue eligible work on the next launch.",
         details:
-          "The quit dialog lists live chats and remembers whether automatic resume is enabled. When you confirm, Synara records the exact in-flight turns before interrupting them, then starts one guarded continuation per unchanged chat after restart. Completed, archived, deleted, replaced, or otherwise advanced work is skipped, and a bounded fallback still lets the app quit if the local server cannot acknowledge the resume record.",
+          "The quit dialog lists live chats and remembers whether automatic resume is enabled. When you confirm, Ramspace records the exact in-flight turns before interrupting them, then starts one guarded continuation per unchanged chat after restart. Completed, archived, deleted, replaced, or otherwise advanced work is skipped, and a bounded fallback still lets the app quit if the local server cannot acknowledge the resume record.",
       },
       {
         id: "floating-in-chat-browser",
@@ -1721,9 +1721,9 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         id: "all-provider-usage",
         title: "See usage for every signed-in provider",
         description:
-          "Provider usage is no longer limited to Codex and Claude; Settings and in-context meters now cover every authenticated runtime Synara can verify.",
+          "Provider usage is no longer limited to Codex and Claude; Settings and in-context meters now cover every authenticated runtime Ramspace can verify.",
         details:
-          "Synara adds account or quota views for Antigravity, Cursor, Grok, OpenCode, and locally authenticated providers, while keeping Codex and Claude's detailed windows. Provider-specific adapters use local credentials or documented account endpoints, share cached snapshots, retain useful stale data through transient failures, apply bounded cooldowns after rate limiting, and explain when a provider exposes sign-in state but no machine-readable quota.",
+          "Ramspace adds account or quota views for Antigravity, Cursor, Grok, OpenCode, and locally authenticated providers, while keeping Codex and Claude's detailed windows. Provider-specific adapters use local credentials or documented account endpoints, share cached snapshots, retain useful stale data through transient failures, apply bounded cooldowns after rate limiting, and explain when a provider exposes sign-in state but no machine-readable quota.",
       },
       {
         id: "runtime-performance-pass",
@@ -1739,15 +1739,15 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         description:
           "WSL repositories, UNC paths, taskbar icons, and desktop chrome now behave like first-class platform paths and controls.",
         details:
-          "On Windows, a project opened through \\\\wsl.localhost or \\\\wsl$ launches provider commands inside the selected distribution with a Linux cwd, while local-folder mentions and the project browser recognize UNC and Windows home paths. Runtime icon changes now refresh the shell-visible taskbar icon. Windows and Linux users can also switch between Synara's custom title bar and the system title bar from Appearance, with an explicit restart to apply the frame change.",
+          "On Windows, a project opened through \\\\wsl.localhost or \\\\wsl$ launches provider commands inside the selected distribution with a Linux cwd, while local-folder mentions and the project browser recognize UNC and Windows home paths. Runtime icon changes now refresh the shell-visible taskbar icon. Windows and Linux users can also switch between Ramspace's custom title bar and the system title bar from Appearance, with an explicit restart to apply the frame change.",
       },
       {
         id: "headless-server-distribution",
-        title: "Run and inspect Synara without the desktop shell",
+        title: "Run and inspect Ramspace without the desktop shell",
         description:
           "GitHub releases now include a versioned headless server tarball, and the CLI can verify whether a server is reachable and ready.",
         details:
-          "The release pipeline builds synara-server-<version>.tar.gz from the same source and web client as the desktop release. The new `synara server status` command discovers the persisted local runtime or accepts an explicit HTTP(S) URL, verifies the runtime identity, probes `/health`, reports projection readiness, supports JSON output, and exits non-zero when the server is unreachable or not ready.",
+          "The release pipeline builds ramspace-server-<version>.tar.gz from the same source and web client as the desktop release. The new `ramspace server status` command discovers the persisted local runtime or accepts an explicit HTTP(S) URL, verifies the runtime identity, probes `/health`, reports projection readiness, supports JSON output, and exits non-zero when the server is unreachable or not ready.",
       },
       {
         id: "cross-provider-side-chats",
@@ -1755,7 +1755,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         description:
           "`/side` can now target a different installed provider without moving the main conversation.",
         details:
-          "Use `/side <provider> <prompt>` with a provider kind or display name. Synara validates the requested provider against the runtimes currently available to the task, removes the provider token from the child prompt, and keeps the existing guarded side-chat creation and source relationship. Omitting the provider continues to open the side chat on the current runtime.",
+          "Use `/side <provider> <prompt>` with a provider kind or display name. Ramspace validates the requested provider against the runtimes currently available to the task, removes the provider token from the child prompt, and keeps the existing guarded side-chat creation and source relationship. Omitting the provider continues to open the side chat on the current runtime.",
       },
       {
         id: "provider-runtime-correctness",
@@ -1771,7 +1771,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         description:
           "Process, provider, environment, URL, and fixture diagnostics now apply a broader fail-closed credential policy.",
         details:
-          "Synara redacts quoted, wrapped, truncated, serialized, reordered, compact, URL-embedded, and shell-composed secret forms; bounds sanitizer traversal; preserves safe numeric diagnostic tokens; and keeps OpenAI credentials out of restricted provider children. Duplicate Origin headers, off-origin WebSocket token injection, high-water cursor violations, unterminated credentials, and ambiguous command substitutions are rejected instead of being interpreted optimistically.",
+          "Ramspace redacts quoted, wrapped, truncated, serialized, reordered, compact, URL-embedded, and shell-composed secret forms; bounds sanitizer traversal; preserves safe numeric diagnostic tokens; and keeps OpenAI credentials out of restricted provider children. Duplicate Origin headers, off-origin WebSocket token injection, high-water cursor violations, unterminated credentials, and ambiguous command substitutions are rejected instead of being interpreted optimistically.",
       },
       {
         id: "workspace-and-landing-flow",
@@ -1787,7 +1787,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         description:
           "Approvals, managed worktrees, feature flags, and route restoration now have stronger replay and ownership fences.",
         details:
-          "Duplicate approval responses are rejected durably at the serialized decider. Permanent deletion reclaims only Synara-owned managed worktrees and preserves unowned paths. Malformed cached feature flags reset instead of leaving stale values, route restoration ignores snapshots from superseded refreshes, and large projection repair stops thrashing when the state is already being repaired.",
+          "Duplicate approval responses are rejected durably at the serialized decider. Permanent deletion reclaims only Ramspace-owned managed worktrees and preserves unowned paths. Malformed cached feature flags reset instead of leaving stale values, route restoration ignores snapshots from superseded refreshes, and large projection repair stops thrashing when the state is already being repaired.",
       },
       {
         id: "stream-and-path-integrity",
@@ -1823,9 +1823,9 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         id: "ios-simulator-pane",
         title: "Build and test iOS apps beside the conversation",
         description:
-          "The new iOS Simulator pane gives you and supported agents one live, interactive device surface inside Synara.",
+          "The new iOS Simulator pane gives you and supported agents one live, interactive device surface inside Ramspace.",
         details:
-          "On macOS, Synara can boot and attach simulators, stream their display, install and launch apps, tap, swipe, type, press hardware controls, save screenshots, record the view, and inspect accessibility elements. The source-shipped helper compiles with your selected Xcode, runs in a constrained sandbox, drops slow frames instead of blocking RPC traffic, and reclaims Synara-owned devices after crashes.",
+          "On macOS, Ramspace can boot and attach simulators, stream their display, install and launch apps, tap, swipe, type, press hardware controls, save screenshots, record the view, and inspect accessibility elements. The source-shipped helper compiles with your selected Xcode, runs in a constrained sandbox, drops slow frames instead of blocking RPC traffic, and reclaims Ramspace-owned devices after crashes.",
       },
       {
         id: "persistent-autonomous-goals",
@@ -1833,7 +1833,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         description:
           "Persistent goals stay visible, timed, and active across turns, with pause, resume, achievement, and recovery controls.",
         details:
-          "Use /goal or the stacked composer panel to set an objective. Synara carries it through provider turns, restarts, retries, and subagent steering, records completed goals, and can automatically start the next continuation after clean completion. Queued user work, approvals, Plan mode, interrupts, failures, timeouts, and repeated blockers all have explicit priority and pause rules so autonomy does not become an uncontrolled loop.",
+          "Use /goal or the stacked composer panel to set an objective. Ramspace carries it through provider turns, restarts, retries, and subagent steering, records completed goals, and can automatically start the next continuation after clean completion. Queued user work, approvals, Plan mode, interrupts, failures, timeouts, and repeated blockers all have explicit priority and pause rules so autonomy does not become an uncontrolled loop.",
       },
       {
         id: "stacked-pull-requests",
@@ -1841,7 +1841,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         description:
           "Pull-request rows and details now understand stack position, order, readiness, navigation, and merge outcomes.",
         details:
-          "Stack badges show where each PR sits, the detail view opens an ordered navigator, and merge copy accounts for drafts, conflicts, and incomplete stack data. Synara uses GitHub's asynchronous merge path when available, falls back safely where needed, and refreshes repository-wide PR state after a stack mutation.",
+          "Stack badges show where each PR sits, the detail view opens an ordered navigator, and merge copy accounts for drafts, conflicts, and incomplete stack data. Ramspace uses GitHub's asynchronous merge path when available, falls back safely where needed, and refreshes repository-wide PR state after a stack mutation.",
       },
       {
         id: "evidence-first-debug-mode",
@@ -1913,7 +1913,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         description:
           "One malformed model or very large local Codex archive no longer destabilizes an entire catalogue or usage refresh.",
         details:
-          "Synara isolates invalid descriptors, warms every available provider catalogue for new threads, shows installed providers, exposes Pi's maximum thinking level, and turns unknown rate-limit windows into readable labels. Codex usage scans now read archives backward in bounded 64 KiB chunks and skip oversized records without loading entire session files into memory.",
+          "Ramspace isolates invalid descriptors, warms every available provider catalogue for new threads, shows installed providers, exposes Pi's maximum thinking level, and turns unknown rate-limit windows into readable labels. Codex usage scans now read archives backward in bounded 64 KiB chunks and skip oversized records without loading entire session files into memory.",
       },
       {
         id: "adjustable-chat-and-file-actions",
@@ -1921,7 +1921,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         description:
           "Choose a focused, standard, or wide chat column and use context actions directly from file references.",
         details:
-          "Chat width is persisted as a visual preference, while Markdown file links can copy their path, open in Synara, or reveal supported workspace references. File and snippet search use the same direct-to-file workflow for a more consistent navigation path.",
+          "Chat width is persisted as a visual preference, while Markdown file links can copy their path, open in Ramspace, or reveal supported workspace references. File and snippet search use the same direct-to-file workflow for a more consistent navigation path.",
       },
       {
         id: "desktop-platform-polish",
@@ -1957,7 +1957,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         id: "startup-reconnect-recovery",
         title: "Large histories start and reconnect without a fixed deadline",
         description:
-          "Synara now keeps waiting for a healthy backend and recovers late connections instead of giving up while a large history is still loading.",
+          "Ramspace now keeps waiting for a healthy backend and recovers late connections instead of giving up while a large history is still loading.",
         details:
           "Desktop readiness is cancellable but no longer capped by a fixed timeout, WebSocket reconnects use bounded backoff, and orchestration replay filters irrelevant events before decoding them. Startup, resume, and late-event handling now converge without turning a slow database into a false failure.",
       },
@@ -1981,7 +1981,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         id: "editable-explorer",
         title: "Edit and save files directly from Explorer",
         description:
-          "Workspace previews are now useful for small code and text edits without leaving Synara.",
+          "Workspace previews are now useful for small code and text edits without leaving Ramspace.",
         details:
           "Explorer file previews support editing, dirty-state tracking, guarded saves, clearer breadcrumbs, and safer path validation. Image overlays and preview layering were also corrected so file inspection remains usable beside the native browser and docked tools.",
       },
@@ -2058,11 +2058,11 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
       {
         id: "analytics-configuration-removed",
         title:
-          "A review of the Synara codebase found an analytics configuration that came from the original T3 Code codebase when Synara was created as a clone in March.",
+          "A review of the Ramspace codebase found an analytics configuration that came from the original T3 Code codebase when Ramspace was created as a clone in March.",
         description:
           "We did not add it, and we have no access to the PostHog project receiving the events.",
         details:
-          "The configuration has been removed. Synara no longer sends remote product analytics. The events did not include prompts, source code, filenames, or file contents. We're sorry this wasn't caught earlier.",
+          "The configuration has been removed. Ramspace no longer sends remote product analytics. The events did not include prompts, source code, filenames, or file contents. We're sorry this wasn't caught earlier.",
       },
     ],
   },
@@ -2074,7 +2074,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         id: "github-project-import",
         title: "Start directly from a GitHub repository",
         description:
-          "Create a project from a GitHub URL or repository name and let Synara prepare the local checkout for you.",
+          "Create a project from a GitHub URL or repository name and let Ramspace prepare the local checkout for you.",
         details:
           "The new GitHub source in the project dialog validates repository and folder names, uses your GitHub CLI access, reports clone progress, reuses compatible checkouts, and recovers safely from cancellation or a failed registration without leaving an ambiguous project behind.",
       },
@@ -2114,7 +2114,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         id: "attention-aware-notifications",
         title: "Notifications respect where your attention is",
         description:
-          "Completion alerts stay quiet while Synara is in front of you, and provider update notices refresh more reliably when you return.",
+          "Completion alerts stay quiet while Ramspace is in front of you, and provider update notices refresh more reliably when you return.",
         details:
           "Foreground detection now includes the native browser pane, toast visibility follows side-chat dock and split routes, and provider update checks retry on focus with fresher scheduling so stale availability does not linger in the sidebar.",
       },
@@ -2146,13 +2146,13 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         description:
           "Permission prompts and other requests for your input are less likely to linger, reappear, or acknowledge the wrong task.",
         details:
-          "Human interactions are now fenced to the owning provider request and turn across Claude and OpenCode. Resolved guards remain resolved, stale cross-turn requests are ignored, retryable interactions stay visible, and OpenCode permission replies wait for a real acknowledgement before Synara clears them.",
+          "Human interactions are now fenced to the owning provider request and turn across Claude and OpenCode. Resolved guards remain resolved, stale cross-turn requests are ignored, retryable interactions stay visible, and OpenCode permission replies wait for a real acknowledgement before Ramspace clears them.",
       },
       {
         id: "provider-skills-and-models",
         title: "Installed skills and favourite models stay discoverable",
         description:
-          "Synara now finds installed Claude plugin skills and keeps similarly named favourite models tied to the correct provider.",
+          "Ramspace now finds installed Claude plugin skills and keeps similarly named favourite models tied to the correct provider.",
         details:
           "Claude plugin discovery respects install precedence and Windows path boundaries. Model metadata from Pi extensions is normalized without losing resolvable identities, favourite entries distinguish providers, and model-cost context remains accessible in the picker.",
       },
@@ -2168,7 +2168,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         id: "accurate-completion-signals",
         title: "Completion alerts mean the task really completed",
         description:
-          "Synara no longer treats interrupted or errored work as a successful completion or repeats an alert as timestamps change.",
+          "Ramspace no longer treats interrupted or errored work as a successful completion or repeats an alert as timestamps change.",
         details:
           "Completion identity is now tied to the turn rather than mutable session fields, stale snapshots cannot settle the active turn, and notification deduplication remains stable as status projections converge.",
       },
@@ -2230,7 +2230,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         description:
           "Let supported agents navigate and operate the same browser surface you can see, with tabs, snapshots, screenshots, input, dialogs, and workspace-safe file transfer.",
         details:
-          "The browser bridge is provider-agnostic and session-scoped: it reuses Synara's visible Electron WebView, cookies, and authenticated state instead of creating a hidden browser. Agents get bounded semantic snapshots, trusted clicks, typing, key presses, scrolling, selection, dragging, waits, and page diagnostics, while navigation, target refs, timeouts, popup sign-in, uploads, and download approval boundaries stay explicit.",
+          "The browser bridge is provider-agnostic and session-scoped: it reuses Ramspace's visible Electron WebView, cookies, and authenticated state instead of creating a hidden browser. Agents get bounded semantic snapshots, trusted clicks, typing, key presses, scrolling, selection, dragging, waits, and page diagnostics, while navigation, target refs, timeouts, popup sign-in, uploads, and download approval boundaries stay explicit.",
       },
       {
         id: "browser-dom-annotations",
@@ -2268,7 +2268,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         id: "lighter-reconnects",
         title: "Reconnects use less bandwidth and recover more state",
         description:
-          "Synara negotiates one authenticated connection, compresses large traffic, and resumes thread detail from a cursor when possible.",
+          "Ramspace negotiates one authenticated connection, compresses large traffic, and resumes thread detail from a cursor when possible.",
         details:
           "A single handshake negotiates compatibility and permessage-deflate; delta-capable subscriptions replay from safe cursors with conservative snapshot fallback; precompressed web assets and cache headers speed first loads. Hydration also reads durable projections directly, retries missing snapshots after timed-out starts, and keeps provider notification drains alive until sessions settle.",
       },
@@ -2286,7 +2286,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         description:
           "Model discovery and runtime menus stay useful across cold starts, Claude capabilities, and mixed provider sessions.",
         details:
-          "Claude models can be discovered on a cold start, model and effort options use capability-aware ordering and labels, and thread hover cards expose the active provider and model context. Unknown provider update statuses no longer break self-update flows, and Antigravity returns a decision for inactive hook requests instead of launching Synara.",
+          "Claude models can be discovered on a cold start, model and effort options use capability-aware ordering and labels, and thread hover cards expose the active provider and model context. Unknown provider update statuses no longer break self-update flows, and Antigravity returns a decision for inactive hook requests instead of launching Ramspace.",
       },
       {
         id: "repository-aware-git-workflows",
@@ -2306,7 +2306,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         id: "responsive-stop-controls",
         title: "Stop stays responsive under load",
         description:
-          "Interrupt and stop actions now take priority over new work, even when a busy Synara server has filled its ordinary command queue.",
+          "Interrupt and stop actions now take priority over new work, even when a busy Ramspace server has filled its ordinary command queue.",
         details:
           "Control, user, and background commands now use separate admission priorities while preserving reserved capacity for recovery. Provider calls and lifecycle locks are bounded too, so one wedged session cannot hold every other task hostage, and failed stop requests now surface an actionable error instead of silently leaving the UI spinning.",
       },
@@ -2324,7 +2324,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         description:
           "Turns are less likely to remain stuck as running after terminal provider events, restarts, stale resumes, or delayed lifecycle updates.",
         details:
-          "Synara retains enough turn identity to settle late Claude results, fences stale lifecycle generations, reconciles durable provider commands and runtime events, and aligns Codex, Claude, Cursor, and ACP session ownership through start, stop, reconnect, and restart boundaries.",
+          "Ramspace retains enough turn identity to settle late Claude results, fences stale lifecycle generations, reconciles durable provider commands and runtime events, and aligns Codex, Claude, Cursor, and ACP session ownership through start, stop, reconnect, and restart boundaries.",
       },
       {
         id: "safe-follow-up-queues",
@@ -2354,7 +2354,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         description:
           "Follow tools as they start, update, and finish across supported providers, with consistent labels and details directly in the transcript.",
         details:
-          "Synara now normalizes live and settled tool activity into one presentation model, preserves expandable tool details and interactions, and reconciles terminal states without leaving duplicate or permanently running work rows behind.",
+          "Ramspace now normalizes live and settled tool activity into one presentation model, preserves expandable tool details and interactions, and reconciles terminal states without leaving duplicate or permanently running work rows behind.",
       },
       {
         id: "reliable-live-recovery",
@@ -2378,7 +2378,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         description:
           "When an uncertain provider delivery quarantines a thread, the error banner now offers a safe Unblock thread action.",
         details:
-          "Synara abandons ambiguous blockers oldest-first, then replays only the skipped turn starts. This restores the conversation without risking a duplicate resend of the command whose delivery could not be proven.",
+          "Ramspace abandons ambiguous blockers oldest-first, then replays only the skipped turn starts. This restores the conversation without risking a duplicate resend of the command whose delivery could not be proven.",
       },
       {
         id: "automation-and-desktop-resilience",
@@ -2392,7 +2392,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         id: "faster-startup-and-diffs",
         title: "Startup and large diffs do less work",
         description:
-          "Synara loads expensive provider and diff machinery only when needed and computes working-tree statistics without transferring full patches.",
+          "Ramspace loads expensive provider and diff machinery only when needed and computes working-tree statistics without transferring full patches.",
         details:
           "Shell environment probes and orchestration startup state are reused, route chunks are preloaded selectively, supervised process scans are throttled, and React Compiler coverage protects chat, picker, hook, and UI hot paths.",
       },
@@ -2402,7 +2402,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         description:
           "Exclusive SQLite locking and stricter migration-artifact cleanup reduce the chance of competing writers or abandoned update files.",
         details:
-          "Database access now proves exclusive ownership, migration backups and resumable artifacts receive broader retention and reclamation coverage, and orphan cleanup stays bounded to verified Synara-owned paths.",
+          "Database access now proves exclusive ownership, migration backups and resumable artifacts receive broader retention and reclamation coverage, and orphan cleanup stays bounded to verified Ramspace-owned paths.",
       },
       {
         id: "custom-void-space",
@@ -2430,7 +2430,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         id: "database-recovery",
         title: "Updates recover safely from interrupted migrations",
         description:
-          "Synara now detects and repairs the database state that could leave some 0.6.0 installations stuck during startup.",
+          "Ramspace now detects and repairs the database state that could leave some 0.6.0 installations stuck during startup.",
         details:
           "Migration lineage is validated before launch, recovery uses verified backups and resumable markers, and the desktop supervisor distinguishes recoverable migration failures from ordinary backend exits. The recovery path is covered on macOS, Linux, and Windows, including Windows-specific process and filesystem behavior.",
       },
@@ -2473,20 +2473,20 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
     date: "Jul 24",
     features: [
       {
-        id: "external-synara-mcp",
-        title: "Bring Synara to any MCP-capable agent",
+        id: "external-ramspace-mcp",
+        title: "Bring Ramspace to any MCP-capable agent",
         description:
-          "Connect Codex, Claude Code, Claude Desktop, or another local MCP app, then let it discover your Synara workspace, launch isolated tasks, wait for results, and bring the answer back.",
+          "Connect Codex, Claude Code, Claude Desktop, or another local MCP app, then let it discover your Ramspace workspace, launch isolated tasks, wait for results, and bring the answer back.",
         details:
           "Settings → Integrations now provides a copy-ready guided prompt for agentic clients, manual JSON configuration for Claude Desktop and other non-agentic clients, resumable pairing, all-or-selected project access, provider and model discovery, connection status, and immediate revocation. Connections expire, are rate-limited and capability-scoped, and default new work to managed worktrees with approval-required execution; local-checkout, full-access, and project-wide task reading stay behind explicit advanced permissions.",
       },
       {
-        id: "built-in-synara-mcp",
-        title: "Synara's agents can now operate Synara",
+        id: "built-in-ramspace-mcp",
+        title: "Ramspace's agents can now operate Ramspace",
         description:
-          "Every supported agent running inside Synara receives built-in tools to understand the app, delegate work, coordinate parallel tasks, inspect failures, and manage automations.",
+          "Every supported agent running inside Ramspace receives built-in tools to understand the app, delegate work, coordinate parallel tasks, inspect failures, and manage automations.",
         details:
-          "The new Synara Agent Gateway can list and read projects and tasks, create one task or an exact multi-agent batch across providers and models, wait for every result, continue or interrupt work, rename or archive tasks, inspect runtime diagnostics, and manage automation lifecycles. Thread-bound authority, privilege caps, idempotent creation, isolated worktrees, and restart recovery keep delegated work visible and contained.",
+          "The new Ramspace Agent Gateway can list and read projects and tasks, create one task or an exact multi-agent batch across providers and models, wait for every result, continue or interrupt work, rename or archive tasks, inspect runtime diagnostics, and manage automation lifecycles. Thread-bound authority, privilege caps, idempotent creation, isolated worktrees, and restart recovery keep delegated work visible and contained.",
       },
       {
         id: "project-spaces",
@@ -2508,7 +2508,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         id: "claude-subagents-workflows",
         title: "Claude subagents and workflows are first-class",
         description:
-          "Follow Claude's native subagents and dynamic workflows as real Synara work, with live status, phases, tools, usage, steering, and background controls.",
+          "Follow Claude's native subagents and dynamic workflows as real Ramspace work, with live status, phases, tools, usage, steering, and background controls.",
         details:
           "Child tasks are navigable and independently visible, workflow cards show every phase and agent by default, model and effort stay live, and pause, resume, stop, foreground, and background actions remain synchronized through late events and provider restarts.",
       },
@@ -2516,7 +2516,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         id: "cross-task-context",
         title: "Bring another task into the conversation",
         description:
-          "Mention an existing Synara task from the composer to give the current agent the right recent context without copying a transcript by hand.",
+          "Mention an existing Ramspace task from the composer to give the current agent the right recent context without copying a transcript by hand.",
         details:
           "Cross-task mentions include bounded recent conversation context together with the source project and provider identity, and disambiguate tasks that share the same title.",
       },
@@ -2526,7 +2526,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         description:
           "New chats paint sooner, model choices arrive earlier, and active turns spend less time on repeated setup, storage, and rendering work.",
         details:
-          "Synara prefetches provider models before the composer opens, avoids a redundant first-turn Claude permission wait, prepares Codex overlays without blocking, parallelizes independent turn-start I/O, reduces streaming SQL work, and expands React Compiler coverage across the web app.",
+          "Ramspace prefetches provider models before the composer opens, avoids a redundant first-turn Claude permission wait, prepares Codex overlays without blocking, parallelizes independent turn-start I/O, reduces streaming SQL work, and expands React Compiler coverage across the web app.",
       },
       {
         id: "provider-reliability",
@@ -2534,7 +2534,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         description:
           "Claude, Codex, Cursor, Droid, Grok, OpenCode, Kilo, Pi, and Antigravity receive a broad round of model, permission, resume, child-event, and completion fixes.",
         details:
-          "Highlights include Fable 5 and Opus 4.8 in Pi, namespaced Cursor and Grok model support, accurate Claude context windows, official ACP SDK handling, app-owned OpenCode review commands, isolated Codex child events, safer provider updates, preserved blank PATH defaults, and an Antigravity hook that no longer launches Synara unexpectedly.",
+          "Highlights include Fable 5 and Opus 4.8 in Pi, namespaced Cursor and Grok model support, accurate Claude context windows, official ACP SDK handling, app-owned OpenCode review commands, isolated Codex child events, safer provider updates, preserved blank PATH defaults, and an Antigravity hook that no longer launches Ramspace unexpectedly.",
       },
       {
         id: "desktop-runtime-hardening",
@@ -2560,11 +2560,11 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
     features: [
       {
         id: "antigravity-provider",
-        title: "Antigravity joins Synara",
+        title: "Antigravity joins Ramspace",
         description:
           "Connect the Antigravity CLI as a first-class coding agent, with discovered models, reasoning controls, streaming activity, approvals, and resumable conversations.",
         details:
-          "The new provider adapter covers installation and authentication guidance, model and effort discovery, session creation and resume, tool and plan events, permission requests, usage reporting, cancellation, and restart recovery. Synara also includes dedicated Antigravity branding throughout provider setup and selection.",
+          "The new provider adapter covers installation and authentication guidance, model and effort discovery, session creation and resume, tool and plan events, permission requests, usage reporting, cancellation, and restart recovery. Ramspace also includes dedicated Antigravity branding throughout provider setup and selection.",
       },
       {
         id: "steadier-live-turns",
@@ -2596,7 +2596,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         description:
           "A failed Cursor model refresh no longer takes down the model picker or discards usable choices from other discovery sources.",
         details:
-          "Model-catalog queries retain successful and cached data when one Cursor discovery path fails, while pull-request data is coalesced through shared list logic and picker popups use a unified interaction model. Diff headers now use Synara's own visual chrome for a more consistent workspace.",
+          "Model-catalog queries retain successful and cached data when one Cursor discovery path fails, while pull-request data is coalesced through shared list logic and picker popups use a unified interaction model. Diff headers now use Ramspace's own visual chrome for a more consistent workspace.",
       },
     ],
   },
@@ -2606,7 +2606,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
     features: [
       {
         id: "pull-request-workspace",
-        title: "Review pull requests without leaving Synara",
+        title: "Review pull requests without leaving Ramspace",
         description:
           "Browse, search, and filter pull requests across your projects, then open a complete review workspace beside the conversation.",
         details:
@@ -2640,7 +2640,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         id: "desktop-window-restore",
         title: "Desktop windows reopen where you left them",
         description:
-          "Synara restores the previous desktop window size, position, and maximized state while keeping reopened windows on a visible display.",
+          "Ramspace restores the previous desktop window size, position, and maximized state while keeping reopened windows on a visible display.",
         details:
           "Window state is persisted across launches and validated against the current monitor layout, avoiding off-screen restoration when displays have changed.",
       },
@@ -2662,7 +2662,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         id: "appsnap-capture",
         title: "Capture any Mac app straight into your task",
         description:
-          "Press both Option keys to capture the window you are using and attach it to the current Synara task.",
+          "Press both Option keys to capture the window you are using and attach it to the current Ramspace task.",
         details:
           "AppSnap is an opt-in macOS workflow with a dedicated setup panel, permission guidance, capture feedback, app icons, and a first-run introduction. Captures stay tied to the active task without stealing focus, and the desktop helper is included in packaged Mac builds.",
       },
@@ -2700,15 +2700,15 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         id: "droid-provider",
         title: "Factory Droid is now a first-class provider",
         description:
-          "Droid is now available alongside Synara's other agents, with runtime model discovery, session import, token multipliers, and resilient resume and recovery.",
+          "Droid is now available alongside Ramspace's other agents, with runtime model discovery, session import, token multipliers, and resilient resume and recovery.",
         details:
-          "Synara now connects to Factory Droid through ACP, discovers models and their switching capabilities at runtime, imports existing Droid sessions, carries context across forks and restarts, and keeps bootstrap, configuration, and turn teardown state coherent. The release also adds the Factory logo and richer Droid token reporting.",
+          "Ramspace now connects to Factory Droid through ACP, discovers models and their switching capabilities at runtime, imports existing Droid sessions, carries context across forks and restarts, and keeps bootstrap, configuration, and turn teardown state coherent. The release also adds the Factory logo and richer Droid token reporting.",
       },
       {
         id: "large-history-startup",
         title: "Large conversation histories start reliably",
         description:
-          "Synara now upgrades large local histories without leaving the project list stuck on its loading screen.",
+          "Ramspace now upgrades large local histories without leaving the project list stuck on its loading screen.",
         details:
           "The activity-sequence backfill now builds one indexed lookup instead of repeatedly scanning the entire event history. A database with more than 180,000 activities completes the recovery in seconds while preserving every project, thread, message, and activity.",
       },
@@ -2757,12 +2757,12 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
     date: "Jul 11",
     features: [
       {
-        id: "synara-identity",
-        title: "Synara, all the way through",
+        id: "ramspace-identity",
+        title: "Ramspace, all the way through",
         description:
           "The app now uses one identity everywhere, from its desktop installation and command line to packages, settings, diagnostics, and release artifacts.",
         details:
-          "The desktop bundle is now com.emanueledipietro.synara, the CLI is @synara/cli with the synara command, and every first-party runtime identifier uses the Synara namespace. The 0.4.2 bridge preserves renderer state during the origin change.",
+          "The desktop bundle is now com.aaramsyy.ramspace, the CLI is @ramspace/cli with the ramspace command, and every first-party runtime identifier uses the Ramspace namespace. The 0.4.2 bridge preserves renderer state during the origin change.",
       },
       {
         id: "claude-context-and-resume",
@@ -2811,12 +2811,12 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
     date: "Jul 9",
     features: [
       {
-        id: "synara-identity-bridge",
-        title: "Synara is preparing a seamless identity upgrade",
+        id: "ramspace-identity-bridge",
+        title: "Ramspace is preparing a seamless identity upgrade",
         description:
-          "Launch this version at least once before installing the next Synara release so your drafts, pins, theme, browser state, and other local interface preferences move with you.",
+          "Launch this version at least once before installing the next Ramspace release so your drafts, pins, theme, browser state, and other local interface preferences move with you.",
         details:
-          "This bridge writes a validated Synara-only snapshot of renderer state, keeps existing project and thread data intact, and prepares database and checkpoint metadata for the final identity cutover. Earlier command and environment aliases are accepted by this bridge release only and will be removed next.",
+          "This bridge writes a validated Ramspace-only snapshot of renderer state, keeps existing project and thread data intact, and prepares database and checkpoint metadata for the final identity cutover. Earlier command and environment aliases are accepted by this bridge release only and will be removed next.",
       },
       {
         id: "claude-usage-reliability",
@@ -2830,7 +2830,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         id: "desktop-update-verification",
         title: "Desktop updates now verify their own installs",
         description:
-          "Synara checks that an update actually installed after restart, detects failed installs, and recovers instead of silently staying on the old version.",
+          "Ramspace checks that an update actually installed after restart, detects failed installs, and recovers instead of silently staying on the old version.",
         details:
           "A durable install marker survives restarts and tracks handoff state, an install watchdog recovers from hung installs, and on macOS dedicated diagnostics capture updater state to make failures actionable.",
       },
@@ -2876,7 +2876,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         id: "restore-and-routing-reliability",
         title: "Returning to a chat or Studio is more reliable",
         description:
-          "Synara is more careful about restoring the right destination after reloads, segment switches, reconnects, and partially completed project creation.",
+          "Ramspace is more careful about restoring the right destination after reloads, segment switches, reconnects, and partially completed project creation.",
         details:
           "Routing now prefers canonical containers, waits for snapshot hydration where needed, fails closed on ambiguous thread kinds, and guards against overlapping fresh-chat creation so drafts and active work land in the intended surface.",
       },
@@ -2922,7 +2922,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         id: "claude-rate-limits",
         title: "Claude rate limits fail more gracefully",
         description:
-          "When Claude reports usage or rate-limit trouble, Synara now presents the condition more calmly instead of turning it into a generic provider failure.",
+          "When Claude reports usage or rate-limit trouble, Ramspace now presents the condition more calmly instead of turning it into a generic provider failure.",
         details:
           "Provider usage handling now narrows usage summary types more safely and treats Claude usage limit responses as a recoverable, user-facing state with focused parser and resilience coverage.",
       },
@@ -2976,7 +2976,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         id: "terminal-shutdown-escalation",
         title: "Terminal shutdown is more reliable",
         description:
-          "Synara is better at shutting down stubborn terminal process trees without returning early while child processes are still alive.",
+          "Ramspace is better at shutting down stubborn terminal process trees without returning early while child processes are still alive.",
         details:
           "TerminalManager now routes shutdown through a dedicated process-tree killer with SIGTERM-to-SIGKILL escalation, cancellation when processes exit cleanly, nested process activity coverage, and tests for disposal timing.",
       },
@@ -3014,7 +3014,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         id: "worktree-setup-status",
         title: "Worktree setup failures recover cleanly",
         description:
-          "When a worktree setup step fails, Synara now shows the failed setup state, keeps the timeline from looking stuck, and resets the local dispatch when you send again.",
+          "When a worktree setup step fails, Ramspace now shows the failed setup state, keeps the timeline from looking stuck, and resets the local dispatch when you send again.",
         details:
           "ChatView and timeline setup snapshots now carry explicit setup step status, targeted cleanup for failed local dispatches, and focused browser/unit coverage for new-turn reset and setup rows.",
       },
@@ -3038,7 +3038,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         id: "startup-keepalive-gating",
         title: "Startup does less surprise work",
         description:
-          "Synara avoids unnecessary provider refresh work during startup and gates Claude keepalive behavior more carefully, so opening the app is calmer and less likely to fight credential checks.",
+          "Ramspace avoids unnecessary provider refresh work during startup and gates Claude keepalive behavior more carefully, so opening the app is calmer and less likely to fight credential checks.",
         details:
           "Server startup no longer runs provider refresh eagerly, Claude keepalive respects auth-state timing, provider usage hooks handle inactive summaries more predictably, and related settings/server query invalidation paths have tests.",
       },
@@ -3060,7 +3060,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         id: "update-download-progress",
         title: "Update downloads show their progress",
         description:
-          "When Synara is downloading a desktop update, the sidebar update button now shows a live percent badge so you can tell whether it is moving or nearly ready.",
+          "When Ramspace is downloading a desktop update, the sidebar update button now shows a live percent badge so you can tell whether it is moving or nearly ready.",
         details:
           "The desktop update helper now clamps reported download percentages, hides them outside active downloads, and covers edge cases for null, negative, oversized, and fractional progress values.",
       },
@@ -3076,7 +3076,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         id: "checkpoint-baseline-resilience",
         title: "Turn checkpoints are harder to confuse",
         description:
-          "Synara preserves the first pre-turn snapshot more carefully, so transcript diffs and restore points better match what was on disk when you pressed send.",
+          "Ramspace preserves the first pre-turn snapshot more carefully, so transcript diffs and restore points better match what was on disk when you pressed send.",
         details:
           "Checkpoint capture now has single-flight behavior per repo/ref, a bounded capture timeout, first-writer-wins `skipIfExists` baselines, and extra recovery when a startup or backup path missed the original message baseline.",
       },
@@ -3114,7 +3114,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         id: "sonnet-5-support",
         title: "Sonnet 5 is here",
         description:
-          "Synara now surfaces Sonnet 5 variants in the model picker, so Claude workflows can jump to the newest Sonnet generation right from the app.",
+          "Ramspace now surfaces Sonnet 5 variants in the model picker, so Claude workflows can jump to the newest Sonnet generation right from the app.",
         details:
           "The release adds Sonnet 5 model variant metadata and keeps the new choices aligned with the existing provider/model catalog, including sidebar status and model-picker presentation polish.",
       },
@@ -3122,13 +3122,13 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         id: "cursor-launch-fallbacks",
         title: "Cursor launch fallback is much sturdier",
         description:
-          "Synara now finds Cursor agent commands across more install layouts, including bundled sibling shims and legacy shim locations, while rejecting unsafe fallbacks.",
+          "Ramspace now finds Cursor agent commands across more install layouts, including bundled sibling shims and legacy shim locations, while rejecting unsafe fallbacks.",
         details:
           "Cursor ACP command discovery now resolves safer CLI paths, honors bundled sibling launchers, preserves legacy shim coverage, and avoids falling back to paths that do not match the expected Cursor agent shape.",
       },
       {
         id: "muxy-open-in",
-        title: "Muxy can open from Synara",
+        title: "Muxy can open from Ramspace",
         description:
           "Open-in support now recognizes Muxy, so editor/open buttons can hand files to the right desktop target when Muxy is part of your workflow.",
         details:
@@ -3154,7 +3154,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         id: "claude-credential-keepalive",
         title: "Claude credentials stay fresh longer",
         description:
-          "Synara refreshes Claude credential freshness on macOS so long sessions are less likely to hit the familiar stale-token sign-in failure.",
+          "Ramspace refreshes Claude credential freshness on macOS so long sessions are less likely to hit the familiar stale-token sign-in failure.",
         details:
           "A Claude credential keepalive helper, adapter integration, and focused tests now keep the OAuth token file active enough to avoid the roughly eight-hour stale credential path.",
       },
@@ -3256,7 +3256,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         description:
           "Agent mentions, task rows, tool labels, file-change rows, chat seams, and switches received a small polish pass that makes dense chats easier to scan.",
         details:
-          "Synara now reuses the central robot glyph for agent chips, improves file-change and tool-call labels, refines chat card contrast, and tightens shared switch sizing, thumb travel, and animation.",
+          "Ramspace now reuses the central robot glyph for agent chips, improves file-change and tool-call labels, refines chat card contrast, and tightens shared switch sizing, thumb travel, and animation.",
       },
       {
         id: "release-gate-type-fixes",
@@ -3276,7 +3276,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         id: "windows-vscode-store-launch",
         title: "VS Code from the Microsoft Store opens correctly on Windows",
         description:
-          "Synara can now launch VS Code Store installs through the right Windows app identity and URI fallback, so editor buttons work even when the normal `code` command is unavailable.",
+          "Ramspace can now launch VS Code Store installs through the right Windows app identity and URI fallback, so editor buttons work even when the normal `code` command is unavailable.",
         details:
           "Editor launch discovery now understands Windows packaged app metadata, adds VS Code and VS Code Insiders Store coverage, falls back from command launch to URI activation, and keeps file-manager launches isolated from editor-specific behavior.",
       },
@@ -3284,17 +3284,17 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         id: "provider-update-checks",
         title: "Provider update checks are now optional",
         description:
-          "A new settings toggle lets you disable provider update checks when you want Synara to stay quieter about external CLI versions.",
+          "A new settings toggle lets you disable provider update checks when you want Ramspace to stay quieter about external CLI versions.",
         details:
           "Provider health, server settings, app settings migration, settings search, root notifications, and provider update filtering now share the same `enableProviderUpdateChecks` flag so background update notices respect the user's preference.",
       },
       {
         id: "icons-and-logo-refresh",
-        title: "The app icon and Synara mark look cleaner",
+        title: "The app icon and Ramspace mark look cleaner",
         description:
-          "The desktop, web, marketing, and release assets were refreshed so the Synara icon renders more consistently across macOS, Windows, browser favicons, and update artifacts.",
+          "The desktop, web, marketing, and release assets were refreshed so the Ramspace icon renders more consistently across macOS, Windows, browser favicons, and update artifacts.",
         details:
-          "This release refreshes the inline Synara logo path, replaces generated icon assets from the full source image, corrects macOS bundle icon handling after the rounded-icon Ventura pass, and removes a literal Dock-icon workaround that was not the final direction.",
+          "This release refreshes the inline Ramspace logo path, replaces generated icon assets from the full source image, corrects macOS bundle icon handling after the rounded-icon Ventura pass, and removes a literal Dock-icon workaround that was not the final direction.",
       },
       {
         id: "workspace-explorer-polish",
@@ -3308,7 +3308,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         id: "lighter-idle-polling",
         title: "Idle server polling is lighter",
         description:
-          "Synara polls local server state less aggressively while idle, reducing background work without changing the active-session refresh path.",
+          "Ramspace polls local server state less aggressively while idle, reducing background work without changing the active-session refresh path.",
         details:
           "The server React Query helper now separates active and idle refresh intervals, the sidebar uses the calmer idle cadence, and focused tests cover the interval behavior.",
       },
@@ -3330,7 +3330,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         id: "branch-toolbar-projects",
         title: "Project switching moved closer to your branch work",
         description:
-          "The branch toolbar can now show and change the active project, so project, branch, and worktree context are easier to keep aligned while you move around Synara.",
+          "The branch toolbar can now show and change the active project, so project, branch, and worktree context are easier to keep aligned while you move around Ramspace.",
         details:
           "This release teaches the branch toolbar about project selection, shared home-chat containers, draft-thread mapping, project creation recovery, and project picker state so navigation does not depend only on the sidebar.",
       },
@@ -3348,7 +3348,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         description:
           "The diff panel now has a review file tree, giving larger review batches a clearer outline before you dive into individual patches.",
         details:
-          "Synara now builds file diff trees, renders a collapsible review panel with shared disclosure motion, and reuses file-row styling so review navigation feels closer to the rest of the workspace.",
+          "Ramspace now builds file diff trees, renders a collapsible review panel with shared disclosure motion, and reuses file-row styling so review navigation feels closer to the rest of the workspace.",
       },
       {
         id: "workspace-explorer",
@@ -3394,7 +3394,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         description:
           "Transcript tool calls now expose clearer detail dialogs for shell commands, patches, file changes, and tool output, so review-heavy chats are easier to audit.",
         details:
-          "Synara now formats tool command transcripts, normalizes patch/change output, labels more tool kinds consistently, preserves structured work metadata through the timeline, and adds focused coverage for tool-call labels and formatting.",
+          "Ramspace now formats tool command transcripts, normalizes patch/change output, labels more tool kinds consistently, preserves structured work metadata through the timeline, and adds focused coverage for tool-call labels and formatting.",
       },
       {
         id: "transcript-flow",
@@ -3450,7 +3450,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         description:
           "Provider icons, central icon assets, model pickers, composer controls, automation banners, Kanban cards, preview cards, and tooltips were cleaned up in small but visible ways.",
         details:
-          "Synara now ships a curated central-icons set, improves provider/model picker presentation, refines composer picker and automation banners, adds better project/thread hover details, and keeps repeated UI surfaces closer to the same visual language.",
+          "Ramspace now ships a curated central-icons set, improves provider/model picker presentation, refines composer picker and automation banners, adds better project/thread hover details, and keeps repeated UI surfaces closer to the same visual language.",
       },
     ],
   },
@@ -3462,7 +3462,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         id: "automations-workspace",
         title: "Automations are a real workspace surface",
         description:
-          "Synara now has first-class Automations for scheduled agent work, with sidebar navigation, list/detail pages, run history, triage actions, and inline editing.",
+          "Ramspace now has first-class Automations for scheduled agent work, with sidebar navigation, list/detail pages, run history, triage actions, and inline editing.",
         details:
           "This release wires automation contracts, persistence, scheduler leases, run tracking, RPC methods, sidebar badges, Current/Paused views, detail routes, editable fields, previous-run history, and result triage so scheduled work lives inside the same thread/provider/worktree pipeline as normal chat work.",
       },
@@ -3496,7 +3496,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         description:
           "Chat now supports generic file attachments alongside images, with better chips/cards, safer upload normalization, worktree-aware previews, and in-app local image downloads.",
         details:
-          "File attachments now flow through contracts, upload storage, composer paste/drop, provider prompts, Kanban dispatch, recap/bootstrap surfaces, optimistic timeline rendering, caps/rollback, attachment-bearing plan follow-ups, explicit unsupported-file rejection, worktree-backed file preview roots, and blob-based download handling that keeps failed local image downloads inside Synara.",
+          "File attachments now flow through contracts, upload storage, composer paste/drop, provider prompts, Kanban dispatch, recap/bootstrap surfaces, optimistic timeline rendering, caps/rollback, attachment-bearing plan follow-ups, explicit unsupported-file rejection, worktree-backed file preview roots, and blob-based download handling that keeps failed local image downloads inside Ramspace.",
       },
       {
         id: "provider-model-scoping",
@@ -3554,7 +3554,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         id: "restart-chat-restore",
         title: "Restarts bring you back to the right chat",
         description:
-          "Synara now waits for one fresh server snapshot before giving up on a remembered chat route, so app restarts are less likely to dump you onto an empty fallback screen.",
+          "Ramspace now waits for one fresh server snapshot before giving up on a remembered chat route, so app restarts are less likely to dump you onto an empty fallback screen.",
         details:
           "Chat route restore now validates remembered thread/split routes against refreshed orchestration state, holds fallback while startup data is still empty, and has focused coverage for missing-thread and empty-startup recovery paths.",
       },
@@ -3584,9 +3584,9 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         id: "smarter-profile-stats",
         title: "Your profile understands more of your work",
         description:
-          "Synara now tracks richer local profile stats, including your most worked project, skill and agent usage, active hours, provider/model mix, and prompt activity.",
+          "Ramspace now tracks richer local profile stats, including your most worked project, skill and agent usage, active hours, provider/model mix, and prompt activity.",
         details:
-          "Profile stats now derive more signal from Synara's local projection database: most-worked project, prompt/thread activity, skill and agent usage, provider/model usage, reasoning patterns, active-hour windows, and token heatmap data are all represented in the profile contract and settings panel.",
+          "Profile stats now derive more signal from Ramspace's local projection database: most-worked project, prompt/thread activity, skill and agent usage, provider/model usage, reasoning patterns, active-hour windows, and token heatmap data are all represented in the profile contract and settings panel.",
       },
       {
         id: "pasted-text-cards",
@@ -3612,9 +3612,9 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
     features: [
       {
         id: "profile-and-personalization",
-        title: "Your Synara profile has more personality",
+        title: "Your Ramspace profile has more personality",
         description:
-          "Profile settings now include richer identity details, activity stats, and a cleaner editing flow so Synara feels more like your own workspace.",
+          "Profile settings now include richer identity details, activity stats, and a cleaner editing flow so Ramspace feels more like your own workspace.",
         details:
           "This release adds profile stats aggregation, profile settings UI polish, activity heatmap refinements, avatar/profile editing updates, and focused coverage for the new profile data paths.",
       },
@@ -3624,7 +3624,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         description:
           "Thread deletion now keeps soft-deleted data around long enough to avoid accidental loss while still letting cleanup happen predictably.",
         details:
-          "Synara now tracks thread retention state explicitly, covers soft-delete cleanup behavior with server tests, and keeps deletion/recovery semantics more predictable for early WIP data.",
+          "Ramspace now tracks thread retention state explicitly, covers soft-delete cleanup behavior with server tests, and keeps deletion/recovery semantics more predictable for early WIP data.",
       },
       {
         id: "live-composer-edits",
@@ -3676,7 +3676,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         id: "restart-and-idle-recovery",
         title: "Restarted sessions are less likely to leave turns hanging",
         description:
-          "After provider restarts, reconnects, or quiet ACP sessions, Synara does a better job of reconciling active turns and finishing idle work instead of getting stuck.",
+          "After provider restarts, reconnects, or quiet ACP sessions, Ramspace does a better job of reconciling active turns and finishing idle work instead of getting stuck.",
         details:
           "Startup turn reconciliation, ACP idle watchdog handling, provider runtime ingestion, Cursor/Grok/OpenCode adapter event paths, command reactor cleanup, and shared thread summaries now work together to recover unfinished turns and surface stale runtime state more predictably.",
       },
@@ -3688,7 +3688,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
     features: [
       {
         id: "secure-pdf-preview",
-        title: "PDFs open safely inside Synara",
+        title: "PDFs open safely inside Ramspace",
         description:
           "Local PDFs can now be previewed directly in the workspace pane with page navigation, zoom controls, selection-safe rendering, and hardened link handling.",
         details:
@@ -3700,13 +3700,13 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         description:
           "The right dock and editor workspace now use the same richer file preview surface, so browsing files, images, markdown, and PDFs feels more consistent.",
         details:
-          "Synara now routes file preview through `WorkspaceFilePreview`, `PdfFilePreview`, shared preview headers, markdown/source selection references, workspace file openers, dock pane activation metadata, local preview URL helpers, and tighter file reference context-menu behavior.",
+          "Ramspace now routes file preview through `WorkspaceFilePreview`, `PdfFilePreview`, shared preview headers, markdown/source selection references, workspace file openers, dock pane activation metadata, local preview URL helpers, and tighter file reference context-menu behavior.",
       },
       {
         id: "pi-plugin-routing",
         title: "Pi plugin sessions start in the right place",
         description:
-          "Pi-backed plugin flows now route through Synara more reliably, discover model support better, and keep startup prompts attached to the correct provider session.",
+          "Pi-backed plugin flows now route through Ramspace more reliably, discover model support better, and keep startup prompts attached to the correct provider session.",
         details:
           "The Pi adapter gained richer ACP handling, extension model discovery, cwd/session wiring, startup prompt routing, provider command reactor coverage, provider service safeguards, and an ACP mock agent so plugin startup, prompt forwarding, and provider state transitions are covered more directly.",
       },
@@ -3732,7 +3732,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         description:
           "Cursor message ids are handled more carefully, changed files moved to a flatter UI path, and stale plan/sidebar indicators were cleaned up.",
         details:
-          "Synara now preserves Cursor message identity more reliably, removes the older turn diff tree path, refines changed-file file-list rendering, fixes duplicate plan-mode icons and stale plan sidebar state, and hides inline project actions from the chat header where they created noise.",
+          "Ramspace now preserves Cursor message identity more reliably, removes the older turn diff tree path, refines changed-file file-list rendering, fixes duplicate plan-mode icons and stale plan sidebar state, and hides inline project actions from the chat header where they created noise.",
       },
       {
         id: "preview-security-and-local-files",
@@ -3792,7 +3792,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         id: "soccer-physics-playground",
         title: "A World Cup soccer ball playground landed",
         description:
-          "There is now a playful soccer-ball physics view for experimenting with motion and interaction inside Synara.",
+          "There is now a playful soccer-ball physics view for experimenting with motion and interaction inside Ramspace.",
         details:
           "The new World Cup soccer ball physics playground adds a self-contained visual interaction surface, with follow-up formatting and server typecheck cleanup landed on main before the release.",
       },
@@ -3816,7 +3816,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         description:
           "Ghostty, Terminal, JetBrains, Xcode, Zed, Cursor, VS Code, and other editor launchers now have better discovery, icons, and platform-specific launch behavior.",
         details:
-          "Synara now discovers native editor apps and icons, caches icon assets server-side, exposes authenticated icon routes, and tightens macOS/Linux/Windows launcher handling, including Ghostty working-directory behavior and Linux desktop-entry matching.",
+          "Ramspace now discovers native editor apps and icons, caches icon assets server-side, exposes authenticated icon routes, and tightens macOS/Linux/Windows launcher handling, including Ghostty working-directory behavior and Linux desktop-entry matching.",
       },
       {
         id: "portable-skills",
@@ -3848,7 +3848,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         description:
           "Legacy migration trackers, pinned/sidechat reconciliation, terminal environment handling, and workspace path checks were tightened for early-WIP installs.",
         details:
-          "Synara now reconciles legacy migration bookkeeping before running migrations, expands migration coverage, validates workspace real-path containment, and carries terminal environment updates through shared server and web contracts.",
+          "Ramspace now reconciles legacy migration bookkeeping before running migrations, expands migration coverage, validates workspace real-path containment, and carries terminal environment updates through shared server and web contracts.",
       },
     ],
   },
@@ -3878,7 +3878,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         description:
           "Usage limits and pace now show up in the chat environment, settings, and compact controls for Codex, Claude, and Cursor.",
         details:
-          "Synara now reads provider credentials and usage data through shared server parsers, normalizes snapshots, stores cached values in SQLite, and renders reusable usage rows, progress tracks, line lists, and settings panels in the web app.",
+          "Ramspace now reads provider credentials and usage data through shared server parsers, normalizes snapshots, stores cached values in SQLite, and renders reusable usage rows, progress tracks, line lists, and settings panels in the web app.",
       },
       {
         id: "composer-picker-polish",
@@ -3932,7 +3932,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         description:
           "AI response links, source lists, composer chips, and sent user bubbles now share the same link parsing path with website favicons instead of generic globe icons.",
         details:
-          "Synara now caches site favicons server-side, serves authenticated favicon image URLs, recognizes bare domains in composer text, and keeps markdown link text aligned with the same medium-weight chip styling used while composing.",
+          "Ramspace now caches site favicons server-side, serves authenticated favicon image URLs, recognizes bare domains in composer text, and keeps markdown link text aligned with the same medium-weight chip styling used while composing.",
       },
       {
         id: "local-server-environment",
@@ -3970,7 +3970,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         description:
           "The macOS release path now has stronger artifact smoke checks, zip finalization helpers, and updater download coverage so new builds are easier to trust before they ship.",
         details:
-          "Release tooling now validates Mac update artifacts, parses boolean environment flags consistently, and tests the resumable update downloader without the older update-feed cache layer. The README and release docs were refreshed around the current Synara desktop flow too.",
+          "Release tooling now validates Mac update artifacts, parses boolean environment flags consistently, and tests the resumable update downloader without the older update-feed cache layer. The README and release docs were refreshed around the current Ramspace desktop flow too.",
       },
       {
         id: "diff-panel-refactor",
@@ -4064,7 +4064,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         description:
           "External Claude shutdowns, terminal cleanup, websocket RPC errors, and provider session recovery picked up extra guards for reconnects and interrupted work.",
         details:
-          "Claude SIGTERM from outside Synara is treated as a benign suspend path, terminal process cleanup has stronger tests, and websocket RPC failure handling is less likely to leave the UI believing a request is still in flight.",
+          "Claude SIGTERM from outside Ramspace is treated as a benign suspend path, terminal process cleanup has stronger tests, and websocket RPC failure handling is less likely to leave the UI believing a request is still in flight.",
       },
       {
         id: "migration-and-release-hardening",
@@ -4090,7 +4090,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         id: "thread-recap-panel",
         title: "Long chats can be recapped in place",
         description:
-          "Synara can now generate and cache thread recaps, show current-state context in the chat environment, and reuse provider-backed recap generation without making the transcript harder to follow.",
+          "Ramspace can now generate and cache thread recaps, show current-state context in the chat environment, and reuse provider-backed recap generation without making the transcript harder to follow.",
       },
       {
         id: "diff-totals-performance",
@@ -4156,13 +4156,13 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         id: "stale-claude-resume-recovery",
         title: "Claude resumes recover from stale native sessions",
         description:
-          "When Claude reports a missing conversation id, Synara clears the stale resume cursor, recreates the provider session, and retries with transcript context instead of leaving the turn failed.",
+          "When Claude reports a missing conversation id, Ramspace clears the stale resume cursor, recreates the provider session, and retries with transcript context instead of leaving the turn failed.",
       },
       {
         id: "desktop-update-manual-fallback",
         title: "Desktop updates now have a manual escape hatch",
         description:
-          "If an in-app install silently fails, Synara restarts the backend, resumes update polling, deduplicates error toasts, and points you at the exact GitHub release page for a manual download.",
+          "If an in-app install silently fails, Ramspace restarts the backend, resumes update polling, deduplicates error toasts, and points you at the exact GitHub release page for a manual download.",
       },
       {
         id: "mac-desktop-chrome-alignment",
@@ -4180,7 +4180,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         id: "agent-task-activity-rendering",
         title: "Agent task activity is easier to follow",
         description:
-          "OpenCode task child sessions and newer shell-step events now flow into Synara's activity timeline, while generic agent task rows keep their useful prompt and result text instead of disappearing or showing wrapper noise.",
+          "OpenCode task child sessions and newer shell-step events now flow into Ramspace's activity timeline, while generic agent task rows keep their useful prompt and result text instead of disappearing or showing wrapper noise.",
       },
       {
         id: "transport-reconnect-events",
@@ -4198,7 +4198,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         id: "opencode-provider-depth",
         title: "OpenCode support is much deeper",
         description:
-          "OpenCode startup, model discovery, command discovery, server connection options, and experimental WebSocket mode now flow through the same settings and runtime paths as the rest of Synara.",
+          "OpenCode startup, model discovery, command discovery, server connection options, and experimental WebSocket mode now flow through the same settings and runtime paths as the rest of Ramspace.",
       },
       {
         id: "opencode-command-discovery-settings",
@@ -4246,7 +4246,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         id: "legacy-database-repairs",
         title: "Imported legacy databases recover missing columns",
         description:
-          "Fresh repair migrations reconcile older imported migration trackers that skipped Synara's sidechat-source or pinned-thread columns, preventing startup crashes in those upgraded histories.",
+          "Fresh repair migrations reconcile older imported migration trackers that skipped Ramspace's sidechat-source or pinned-thread columns, preventing startup crashes in those upgraded histories.",
       },
       {
         id: "opencode-visual-polish",
@@ -4267,10 +4267,10 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
     date: "Jun 3",
     features: [
       {
-        id: "synara-home-migration",
-        title: "Synara is now the default home",
+        id: "ramspace-home-migration",
+        title: "Ramspace is now the default home",
         description:
-          "The app now starts from `~/.synara`, carries the Synara environment variables through the desktop and server runtime, and safely imports existing legacy data on first launch.",
+          "The app now starts from `~/.ramspace`, carries the Ramspace environment variables through the desktop and server runtime, and safely imports existing legacy data on first launch.",
       },
       {
         id: "desktop-platform-polish",
@@ -4311,7 +4311,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
       {
         id: "claude-opus-4-8",
         title: "Claude Opus 4.8 is available",
-        description: "Synara now includes Claude Opus 4.8 in the Claude model picker.",
+        description: "Ramspace now includes Claude Opus 4.8 in the Claude model picker.",
       },
     ],
   },
@@ -4329,7 +4329,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         id: "provider-picker-readiness",
         title: "Provider choices wait for real readiness",
         description:
-          "The provider picker no longer treats unknown provider status as usable. Providers stay in a checking state until Synara has confirmed that the local runtime is available and authenticated.",
+          "The provider picker no longer treats unknown provider status as usable. Providers stay in a checking state until Ramspace has confirmed that the local runtime is available and authenticated.",
       },
       {
         id: "desktop-shutdown-recovery",
@@ -4357,7 +4357,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
     features: [
       {
         id: "grok-provider-headline",
-        title: "Grok joins Synara",
+        title: "Grok joins Ramspace",
         description:
           "Pick Grok as a first-class coding provider with ACP-backed sessions, model selection, approval handling, resume support, provider health checks, settings, icons, and handoff wired through the same app surfaces as the rest of your agents.",
       },
@@ -4437,7 +4437,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         id: "kilo-code-provider",
         title: "Kilo Code joins the provider lineup",
         description:
-          "Synara can now launch and monitor Kilo Code sessions alongside Codex, Claude, Cursor, and OpenCode, with health checks, settings, mentions, handoff, and model compatibility wired through the app.",
+          "Ramspace can now launch and monitor Kilo Code sessions alongside Codex, Claude, Cursor, and OpenCode, with health checks, settings, mentions, handoff, and model compatibility wired through the app.",
       },
       {
         id: "provider-ordering",
@@ -4467,7 +4467,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         id: "opencode-latest-events",
         title: "OpenCode sessions understand the latest event stream",
         description:
-          "Synara now tracks the newer OpenCode SDK session events, keeps titles fresher, and has much deeper coverage around OpenCode startup, output, and recovery flows.",
+          "Ramspace now tracks the newer OpenCode SDK session events, keeps titles fresher, and has much deeper coverage around OpenCode startup, output, and recovery flows.",
       },
       {
         id: "turn-recovery-stability",
@@ -4509,7 +4509,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         id: "secure-local-image-route",
         title: "Generated images use a safer local route",
         description:
-          "Synara now serves generated files through a dedicated local-image endpoint with MIME checks, workspace-aware path resolution, and Codex generated_images allowlists for both the normal home and desktop overlay home.",
+          "Ramspace now serves generated files through a dedicated local-image endpoint with MIME checks, workspace-aware path resolution, and Codex generated_images allowlists for both the normal home and desktop overlay home.",
       },
       {
         id: "provider-favorites",
@@ -4537,9 +4537,9 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
     features: [
       {
         id: "cursor-provider",
-        title: "Cursor is now a first-class Synara provider",
+        title: "Cursor is now a first-class Ramspace provider",
         description:
-          "Run Cursor CLI sessions directly from Synara with ACP-backed startup, model discovery, existing-chat resume, handoff, and provider health checks alongside Codex and OpenCode.",
+          "Run Cursor CLI sessions directly from Ramspace with ACP-backed startup, model discovery, existing-chat resume, handoff, and provider health checks alongside Codex and OpenCode.",
       },
       {
         id: "effect-acp-runtime",
@@ -4587,7 +4587,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         id: "git-commit-push-action",
         title: "Git gained commit and push",
         description:
-          "The Git actions menu can now commit current work and push it from Synara, keeping the common release and handoff flow closer to the chat.",
+          "The Git actions menu can now commit current work and push it from Ramspace, keeping the common release and handoff flow closer to the chat.",
       },
       {
         id: "task-and-approval-polish",
@@ -4629,13 +4629,13 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         id: "git-branch-pr-flow",
         title: "Git flows are smoother",
         description:
-          "The Git menu now includes branch creation with Synara-style names, and PR creation can recover from GitHub duplicate-PR responses by reusing the existing open pull request.",
+          "The Git menu now includes branch creation with Ramspace-style names, and PR creation can recover from GitHub duplicate-PR responses by reusing the existing open pull request.",
       },
       {
         id: "legacy-import-recovery",
         title: "Legacy imports heal themselves",
         description:
-          "A new migration reconciles older imported legacy databases whose migration history skipped Synara schema changes, preventing missing-column crashes after import.",
+          "A new migration reconciles older imported legacy databases whose migration history skipped Ramspace schema changes, preventing missing-column crashes after import.",
       },
       {
         id: "runtime-idle-cleanup",
@@ -4677,7 +4677,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         id: "opencode-task-events",
         title: "OpenCode tasks show live progress",
         description:
-          "OpenCode todo events now flow into Synara as active task updates, with a compact banner option for keeping current work visible without taking over the chat.",
+          "OpenCode todo events now flow into Ramspace as active task updates, with a compact banner option for keeping current work visible without taking over the chat.",
       },
       {
         id: "opencode-model-favourites",
@@ -4689,7 +4689,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         id: "opencode-context-usage",
         title: "OpenCode context usage is tracked",
         description:
-          "OpenCode sessions now report context usage more consistently, giving Synara better runtime visibility as conversations grow.",
+          "OpenCode sessions now report context usage more consistently, giving Ramspace better runtime visibility as conversations grow.",
       },
       {
         id: "production-debug-flags",
@@ -4707,7 +4707,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         id: "cursor-provider",
         title: "Cursor CLI support landed",
         description:
-          "Cursor is now available as a provider, with ACP sessions, model discovery, existing chats, handoff, shortcuts, and git text generation wired into Synara.",
+          "Cursor is now available as a provider, with ACP sessions, model discovery, existing chats, handoff, shortcuts, and git text generation wired into Ramspace.",
       },
       {
         id: "chatgpt-voice-transcription",
@@ -4737,7 +4737,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         id: "toast-feature-flags",
         title: "Toast behavior can be feature-flagged",
         description:
-          "Toast notifications picked up feature-flag wiring, giving Synara a safer way to roll notification changes forward or back.",
+          "Toast notifications picked up feature-flag wiring, giving Ramspace a safer way to roll notification changes forward or back.",
       },
       {
         id: "desktop-bridge-reconnects",
@@ -4755,7 +4755,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         id: "branch-switch-recovery",
         title: "Branch switching is much safer",
         description:
-          "Synara now handles messy branch switches with clearer recovery actions, recreated stashes, unpublished branch publishing, and stronger checks around conflicts and local work.",
+          "Ramspace now handles messy branch switches with clearer recovery actions, recreated stashes, unpublished branch publishing, and stronger checks around conflicts and local work.",
       },
       {
         id: "plan-mode-proposals",
@@ -4767,7 +4767,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         id: "desktop-navigation-controls",
         title: "Desktop navigation controls landed",
         description:
-          "The desktop app now has app-level back and forward navigation controls, making it easier to move around Synara without losing your place.",
+          "The desktop app now has app-level back and forward navigation controls, making it easier to move around Ramspace without losing your place.",
       },
       {
         id: "sidebar-sort-stability",
@@ -4791,7 +4791,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         id: "gpt-5-5-available",
         title: "GPT-5.5 is available",
         description:
-          "GPT-5.5 is now in the model picker with the right default reasoning behavior, so you can move new Codex sessions onto the latest model directly from Synara.",
+          "GPT-5.5 is now in the model picker with the right default reasoning behavior, so you can move new Codex sessions onto the latest model directly from Ramspace.",
       },
       {
         id: "opencode-provider",
@@ -4845,7 +4845,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         id: "desktop-boot-splash-screen",
         title: "🚀 Desktop startup feels clearer",
         description:
-          "Synara now shows a proper splash screen while the desktop backend spins up, so launch feels intentional instead of looking briefly stalled.",
+          "Ramspace now shows a proper splash screen while the desktop backend spins up, so launch feels intentional instead of looking briefly stalled.",
       },
       {
         id: "provider-capability-and-theme-polish",
@@ -4869,7 +4869,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         id: "theme-pack-editor",
         title: "🎨 Theme packs are editable",
         description:
-          "The new theme pack editor lets you tune UI colors directly in Synara, with shared theme tokens keeping the sidebar, composer, transcript, and controls in sync.",
+          "The new theme pack editor lets you tune UI colors directly in Ramspace, with shared theme tokens keeping the sidebar, composer, transcript, and controls in sync.",
       },
       {
         id: "sidebar-notifications",
@@ -4947,7 +4947,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         id: "update-check-timeout-recovery",
         title: "🛟 No more stuck checking state",
         description:
-          "If the updater never answers, Synara now times out and recovers instead of hanging on a permanent Checking status.",
+          "If the updater never answers, Ramspace now times out and recovers instead of hanging on a permanent Checking status.",
       },
     ],
   },
@@ -4965,7 +4965,7 @@ export const CHANGELOG_ENTRIES: readonly ChangelogEntry[] = [
         id: "custom-provider-binaries",
         title: "🛠️ Custom binary paths for every provider",
         description:
-          "Point Synara at your own Codex or Claude binary when your setup lives outside the default install path.",
+          "Point Ramspace at your own Codex or Claude binary when your setup lives outside the default install path.",
       },
       {
         id: "assistant-selections-as-context",

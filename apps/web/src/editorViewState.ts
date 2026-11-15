@@ -4,7 +4,7 @@ import { executionStorage } from "./lib/hosts/executionStorage";
 //          directories, center mode) so re-entering the editor view restores it.
 // Layer: Web UI state persistence
 
-const EDITOR_VIEW_STATE_STORAGE_KEY = "synara.editor.viewStateByThreadId";
+const EDITOR_VIEW_STATE_STORAGE_KEY = "ramspace.editor.viewStateByThreadId";
 const MAX_PERSISTED_THREADS = 50;
 
 export interface EditorViewStateSnapshot {

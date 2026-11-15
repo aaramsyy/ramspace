@@ -1,7 +1,7 @@
 import {
   PROVIDER_SEND_TURN_MAX_ATTACHMENTS,
   PROVIDER_SEND_TURN_MAX_IMAGE_BYTES,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import type {
@@ -21,7 +21,7 @@ import {
 } from "./composerSend";
 
 describe("Computer command with provider prompt formatting", () => {
-  it("keeps the Synara command first when Claude uses a prompt-injected effort", () => {
+  it("keeps the Ramspace command first when Claude uses a prompt-injected effort", () => {
     expect(
       formatOutgoingComposerPrompt({
         provider: "claudeAgent",
@@ -259,7 +259,7 @@ describe("composerSend attachment builders", () => {
     };
     vi.stubGlobal("window", {
       desktopBridge: { getWsUrl: () => null },
-      location: { origin: "synara-remote://app" },
+      location: { origin: "ramspace-remote://app" },
     });
     vi.stubEnv("VITE_WS_URL", "");
     const fetchMock = vi.fn<typeof fetch>();

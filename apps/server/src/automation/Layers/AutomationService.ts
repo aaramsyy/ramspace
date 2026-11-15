@@ -27,16 +27,16 @@ import {
   type ServerSettings,
   type ThreadEnvironmentMode,
   type TurnId,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import {
   automationContinuationThreadId,
   automationContinuesThread,
   automationOwnsItsThread,
   automationRequiresTargetThread,
-} from "@synara/shared/automationMode";
-import { buildTemporaryWorktreeBranchName } from "@synara/shared/git";
-import { providerStartOptionsFromServerSettings } from "@synara/shared/serverSettings";
-import { autoRuntimeModeSelectionIssue } from "@synara/shared/runtimeMode";
+} from "@ramspace/shared/automationMode";
+import { buildTemporaryWorktreeBranchName } from "@ramspace/shared/git";
+import { providerStartOptionsFromServerSettings } from "@ramspace/shared/serverSettings";
+import { autoRuntimeModeSelectionIssue } from "@ramspace/shared/runtimeMode";
 import { Cause, Effect, Layer, Option, PubSub, Queue, Stream } from "effect";
 import {
   isUnresolvedAutomationInstanceId,
@@ -44,7 +44,7 @@ import {
   type ResolvedProviderInstance,
   resolveModelSelectionInstanceId,
   resolveProviderInstance,
-} from "@synara/shared/providerInstances";
+} from "@ramspace/shared/providerInstances";
 
 import { GitCore } from "../../git/Services/GitCore.ts";
 import { TextGeneration } from "../../git/Services/TextGeneration.ts";
@@ -800,7 +800,7 @@ export const AutomationServiceLive = Layer.effect(
       }
       return instance.instanceId === instance.driver
         ? providerDisabledSettingsMessage(instance.driver)
-        : `Provider instance '${instance.displayName}' is disabled in Synara settings.`;
+        : `Provider instance '${instance.displayName}' is disabled in Ramspace settings.`;
     };
     const providerDisabledReason = (definition: AutomationDefinition) =>
       serverSettings.getSettings.pipe(

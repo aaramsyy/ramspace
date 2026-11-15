@@ -2,7 +2,7 @@ import {
   EnvironmentId,
   PROVIDER_SEND_TURN_MAX_IMAGE_BYTES,
   type RemoteResource,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { describe, expect, it, vi } from "vitest";
 
 import { createWorkspaceResourceRequester } from "./workspaceResources";
@@ -21,7 +21,7 @@ function owner() {
   let available = true;
   let listener = () => {};
   const fetch = vi.fn<typeof globalThis.fetch>().mockResolvedValue(new Response(null));
-  const resourceUrl = vi.fn(() => "synara-resource://owned/handle");
+  const resourceUrl = vi.fn(() => "ramspace-resource://owned/handle");
   const request = createWorkspaceResourceRequester({
     environmentId,
     isAvailable: () => available,
@@ -52,7 +52,7 @@ describe("controller-owned workspace resources", () => {
     await fixture.request(image, { body });
     expect(fixture.resourceUrl).toHaveBeenCalledWith({ environmentId, resource: image });
     expect(fixture.fetch).toHaveBeenCalledWith(
-      "synara-resource://owned/handle",
+      "ramspace-resource://owned/handle",
       expect.objectContaining({
         method: "POST",
         credentials: "include",
@@ -62,7 +62,7 @@ describe("controller-owned workspace resources", () => {
     );
     await fixture.request({ kind: "attachment-cancel" }, { body: '{"attachmentId":"owned"}' });
     expect(fixture.fetch).toHaveBeenLastCalledWith(
-      "synara-resource://owned/handle",
+      "ramspace-resource://owned/handle",
       expect.objectContaining({
         method: "POST",
         headers: { "Content-Type": "application/json" },

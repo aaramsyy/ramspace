@@ -1,6 +1,6 @@
 /**
  * accountAuth - the credential file, token refresh, host linking, and the
- * `synara auth` (host link) / `synara status` CLI flows. Sign-in itself is
+ * `ramspace auth` (host link) / `ramspace status` CLI flows. Sign-in itself is
  * app-only.
  *
  * Plain async functions so the CLI handlers stay thin and the flows are
@@ -22,7 +22,7 @@ import {
   type AccountHostPlatform,
   EnvironmentId,
   type OrganizationSummary,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import {
   AccountApiError,
   ACCOUNT_URL_ENV_NAME,
@@ -30,7 +30,7 @@ import {
   OrganizationRequiredError,
   resolveConfiguredAccountUrl,
   type AccountClient,
-} from "@synara/shared/account";
+} from "@ramspace/shared/account";
 import { Effect, Path } from "effect";
 
 import { withCredentialFileLock } from "./accountCredentialLock";
@@ -62,11 +62,11 @@ export function accountApiIssuer(accountUrl: string): string {
 }
 
 /** What the user sees when a rotated refresh token can no longer be redeemed. */
-export const SESSION_EXPIRED_MESSAGE = "Session expired — sign in again from the Synara app.";
+export const SESSION_EXPIRED_MESSAGE = "Session expired — sign in again from the Ramspace app.";
 
 /** What the user sees when the workspace they signed in to is no longer theirs. */
 export const WORKSPACE_CHANGED_MESSAGE =
-  "Your workspace access changed — sign in again from the Synara app.";
+  "Your workspace access changed — sign in again from the Ramspace app.";
 
 /**
  * The stored account file. The user session and the public-key host link have
@@ -149,7 +149,7 @@ export function accountCredentialsPath(baseDir: string): string {
 /**
  * Reads the stored account file. A missing, unreadable, or malformed file is
  * reported as absent rather than an error: the CLI must always be able to
- * recover by running `synara auth` again.
+ * recover by running `ramspace auth` again.
  *
  * A pre-WorkOS file (identified by its `deviceToken`) is also treated as
  * absent. Those tokens were minted by an endpoint that no longer exists, so
@@ -251,7 +251,7 @@ export async function readAccountFile(baseDir: string): Promise<StoredAccountFil
  * refresh token is still live, but every renewal from it would produce an
  * org-less token the account refuses, so the user would see failures with no
  * hint that the file is the problem. Treating it as signed out sends them
- * through `synara auth`, which is the only thing that fixes it. The host
+ * through `ramspace auth`, which is the only thing that fixes it. The host
  * fields survive, exactly as they do after an ordinary session expiry.
  */
 export async function readAccountCredentials(
@@ -354,7 +354,7 @@ async function deleteAccountCredentialsIfPresent(baseDir: string): Promise<boole
 /**
  * The account service the CLI was pointed at, or `undefined` when it was
  * pointed at none. The CLI deliberately does not fall back to
- * `DEFAULT_ACCOUNT_URL`: `synara status` must be able to say "account features
+ * `DEFAULT_ACCOUNT_URL`: `ramspace status` must be able to say "account features
  * are not configured" rather than report on a hosted service the operator
  * never opted into. The in-app flow, which the user reaches by clicking sign
  * in, does take the default.
@@ -372,7 +372,7 @@ export function resolveAccountUrl(input: {
  * when the server has never started. Registering a host under a different id
  * would leave the account with a phantom host once the server does start.
  *
- * Creation is exclusive, not last-writer-wins: `synara auth` and a starting
+ * Creation is exclusive, not last-writer-wins: `ramspace auth` and a starting
  * server can both find the file missing and generate different UUIDs, and the
  * loser of a plain overwrite would register a host under an id nobody
  * persisted. Whoever creates the file first wins; everyone else reads the
@@ -487,7 +487,7 @@ export class SessionExpiredError extends Error {
  * Thrown when the account stops accepting the workspace this machine signed in
  * to — the membership was revoked, or the organization was removed. The stored
  * refresh token may well still be good, so this is not an expiry; what is
- * stale is the organization choice, and only a fresh `synara auth` can make a
+ * stale is the organization choice, and only a fresh `ramspace auth` can make a
  * new one.
  */
 export class WorkspaceAccessChangedError extends Error {
@@ -681,7 +681,7 @@ function generateHostIdentityForLink(
  * one that was rejected.
  *
  * The registration is kept because it is still real, and keeping it lets a
- * later `synara auth` re-link this machine instead of stranding a phantom
+ * later `ramspace auth` re-link this machine instead of stranding a phantom
  * host on the account. The organization goes with the session: it was chosen
  * for that sign-in, and carrying it into the next one would silently re-pick
  * a workspace the user may no longer have.
@@ -945,7 +945,7 @@ async function renewSession(
  * Runs `fn` with the stored access token, renewing it once if the account
  * rejects it, or before sending it once this process has seen it outlive its
  * own lifetime. WorkOS access tokens live about five minutes, so any CLI
- * command run more than a few minutes after `synara auth` needs this.
+ * command run more than a few minutes after `ramspace auth` needs this.
  *
  * Credentials are re-read per call rather than captured by the caller: a
  * rotation performed for one call must be visible to the next one, and the
@@ -1182,7 +1182,7 @@ async function linkThisHost(
     linked = await client.completeHostLink({ challengeId: challenge.challengeId, proof });
   } catch (error) {
     stdout(
-      `Signed in, but linking this host failed: ${describeError(error)}\nRun \`synara auth\` to try again.\n`,
+      `Signed in, but linking this host failed: ${describeError(error)}\nRun \`ramspace auth\` to try again.\n`,
     );
     return;
   }
@@ -1216,7 +1216,7 @@ async function linkThisHost(
   );
   if (saved === "missing") {
     stdout(
-      `Linked this host as "${linked.host.name}" (${linked.host.id}), but the local credentials file disappeared before the link could be saved.\nRun \`synara auth\` again; unlink the stale host if it lingers.\n`,
+      `Linked this host as "${linked.host.name}" (${linked.host.id}), but the local credentials file disappeared before the link could be saved.\nRun \`ramspace auth\` again; unlink the stale host if it lingers.\n`,
     );
     return;
   }
@@ -1292,7 +1292,7 @@ export async function ensureLocalAccountHostLinked(options: AccountFlowOptions):
 }
 
 /**
- * Which account URL `synara auth` must register the host against.
+ * Which account URL `ramspace auth` must register the host against.
  *
  * Once a session exists, the URL persisted at sign-in wins — exactly as
  * refresh, status, and logout resolve theirs — because the stored tokens were
@@ -1316,15 +1316,15 @@ export async function resolveAuthLoginAccountUrl(options: {
   if (!stored) return options.explicitUrl;
   if (options.explicitUrl !== undefined && options.explicitUrl !== stored.accountUrl) {
     throw new Error(
-      `This machine is signed in to ${stored.accountUrl}, but ${options.explicitUrl} was requested. Run \`synara auth logout\` first to link against a different account service.`,
+      `This machine is signed in to ${stored.accountUrl}, but ${options.explicitUrl} was requested. Run \`ramspace auth logout\` first to link against a different account service.`,
     );
   }
   return stored.accountUrl;
 }
 
 /**
- * `synara auth` — links this machine as a host using the app's signed-in
- * session. Sign-in itself is app-only (email OTP or SSO in the Synara UI);
+ * `ramspace auth` — links this machine as a host using the app's signed-in
+ * session. Sign-in itself is app-only (email OTP or SSO in the Ramspace UI);
  * the CLI and the app share the credentials file, so once the app has signed
  * in, this command has a session to register the host with.
  */
@@ -1335,7 +1335,7 @@ export async function runAuthLogin(options: AccountFlowOptions): Promise<void> {
   );
   if (!existing) {
     stdout(
-      "Not signed in — sign in from the Synara app first (account menu), then run `synara auth` to link this machine.\n",
+      "Not signed in — sign in from the Ramspace app first (account menu), then run `ramspace auth` to link this machine.\n",
     );
     return;
   }
@@ -1351,7 +1351,7 @@ export async function runAuthLogin(options: AccountFlowOptions): Promise<void> {
     (await readHostIdentity(hostIdentityPath))
   ) {
     stdout(
-      `Already signed in to ${existing.accountUrl} and this host is linked.\nRun \`synara auth logout\` first to link as someone else.\n`,
+      `Already signed in to ${existing.accountUrl} and this host is linked.\nRun \`ramspace auth logout\` first to link as someone else.\n`,
     );
     return;
   }
@@ -1552,7 +1552,7 @@ export async function refreshHostRegistration(
 
 /**
  * Sign-out talks to the account the credentials were minted against, never an
- * ambient one: unsetting `SYNARA_ACCOUNT_URL` after signing in must not strand
+ * ambient one: unsetting `RAMSPACE_ACCOUNT_URL` after signing in must not strand
  * a user with credentials they cannot revoke.
  */
 export interface LogoutOptions {
@@ -1585,7 +1585,7 @@ export async function runAuthLogout(options: LogoutOptions): Promise<void> {
     if (!credentials) {
       // A file that exists but does not parse as v2 is a leftover from a
       // previous version or a corrupt write. Deleting it is the whole point of
-      // logout, and leaving it behind would also keep `synara auth` from ever
+      // logout, and leaving it behind would also keep `ramspace auth` from ever
       // reporting a clean "Not signed in".
       const stale = await deleteAccountCredentialsIfPresent(
         accountStateDirectory(options.baseDir, options.devUrl),
@@ -1679,7 +1679,7 @@ export async function runStatus(options: StatusOptions): Promise<void> {
   const stdout = options.stdout ?? defaultStdout;
   if (!options.accountUrl) {
     stdout(
-      `Account features are not configured — set ${ACCOUNT_URL_ENV_NAME} (or pass --account-url) to point at a Synara account server.\n`,
+      `Account features are not configured — set ${ACCOUNT_URL_ENV_NAME} (or pass --account-url) to point at a Ramspace account server.\n`,
     );
     return;
   }
@@ -1688,7 +1688,7 @@ export async function runStatus(options: StatusOptions): Promise<void> {
     accountStateDirectory(options.baseDir, options.devUrl),
   );
   if (!credentials) {
-    stdout(`Not signed in to ${options.accountUrl} — sign in from the Synara app.\n`);
+    stdout(`Not signed in to ${options.accountUrl} — sign in from the Ramspace app.\n`);
     return;
   }
 
@@ -1740,7 +1740,7 @@ export async function runStatus(options: StatusOptions): Promise<void> {
       error instanceof AccountApiError && (error.status === 401 || error.status === 403);
     stdout(
       rejected
-        ? `Signed in to ${credentials.accountUrl}, but the account rejected the stored token: ${describeError(error)}\nRun \`synara auth logout\`, then sign in again from the Synara app.\n`
+        ? `Signed in to ${credentials.accountUrl}, but the account rejected the stored token: ${describeError(error)}\nRun \`ramspace auth logout\`, then sign in again from the Ramspace app.\n`
         : `Signed in to ${credentials.accountUrl}, but could not reach the account: ${describeError(error)}\n`,
     );
     return;
@@ -1764,7 +1764,7 @@ export async function runStatus(options: StatusOptions): Promise<void> {
   stdout(
     thisHost
       ? `This host: ${thisHost.name} (${thisHost.platform}, ${thisHost.kind}) — ${formatEndpoints(thisHost)}\n`
-      : "This host: not registered — run `synara auth` to register it.\n",
+      : "This host: not registered — run `ramspace auth` to register it.\n",
   );
 
   stdout(

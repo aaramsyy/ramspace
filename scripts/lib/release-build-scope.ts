@@ -64,7 +64,7 @@ export function resolveReleaseBuildScope(
   if (lane === "bridge" && platform === "linux-arm64")
     throw new Error("Linux arm64 is not part of the pinned compatibility lane.");
   if (flavor === "remote" && !["all", "mac-arm64", "linux-x64", "win-x64"].includes(platform))
-    throw new Error("Synara Remote supports mac-arm64, linux-x64 and win-x64.");
+    throw new Error("Ramspace Remote supports mac-arm64, linux-x64 and win-x64.");
   const selected = platforms.filter(
     (entry) =>
       (platform === "all" || platform === entry.id) &&

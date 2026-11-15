@@ -1,6 +1,6 @@
 // FILE: RemoteConnectionsAnnouncementHero.tsx
 // Purpose: Hero art for the Remote Connections launch sheet: a laptop and a desktop
-//          running Synara, linked over an abstract orange backdrop.
+//          running Ramspace, linked over an abstract orange backdrop.
 // Layer: Web hosts UI
 // Exports: RemoteConnectionsAnnouncementHero
 //
@@ -170,7 +170,7 @@ function FlowDot({ delayMs }: { delayMs: number }) {
   );
 }
 
-/** A Synara window in miniature: traffic lights, a sidebar, and the chat area. */
+/** A Ramspace window in miniature: traffic lights, a sidebar, and the chat area. */
 function MiniWindow({ children }: { children: ReactNode }) {
   return (
     <div className="flex flex-1 flex-col overflow-hidden rounded-[5px] bg-background">

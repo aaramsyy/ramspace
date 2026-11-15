@@ -9,8 +9,8 @@ import type {
   GetSyncKeyWrapResponse,
   PutHostSecretRequest,
   PutSyncKeyWrapRequest,
-} from "@synara/contracts";
-import { generateSyncKey, openHostSecret, sealHostSecret } from "@synara/shared/hostSecrets";
+} from "@ramspace/contracts";
+import { generateSyncKey, openHostSecret, sealHostSecret } from "@ramspace/shared/hostSecrets";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { HostSecretsCoordinator, type HostSecretsCoordinatorApi } from "./coordinator";
@@ -27,7 +27,7 @@ const roots: string[] = [];
 const PAIRING_CODE_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
 
 async function makeSyncKeyPath(label: string): Promise<string> {
-  const root = await fs.mkdtemp(path.join(os.tmpdir(), `synara-host-secrets-${label}-`));
+  const root = await fs.mkdtemp(path.join(os.tmpdir(), `ramspace-host-secrets-${label}-`));
   roots.push(root);
   return hostSecretsSyncKeyPath(path.join(root, "secrets"));
 }
@@ -153,7 +153,7 @@ describe("HostSecretsCoordinator pairing", () => {
       hostId: "host-1",
       ownerUserId: "user-1",
       version: 1,
-      secret: { launcher: "synara" },
+      secret: { launcher: "ramspace" },
     });
     await expect(
       openHostSecret({
@@ -163,7 +163,7 @@ describe("HostSecretsCoordinator pairing", () => {
         version: 1,
         envelope,
       }),
-    ).resolves.toEqual({ launcher: "synara" });
+    ).resolves.toEqual({ launcher: "ramspace" });
   });
 });
 

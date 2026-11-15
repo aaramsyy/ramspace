@@ -27,13 +27,13 @@ const HOST_B = "bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb";
 const SSH_HOST_SECRET = {
   ssh: {
     destination: "deploy@build-01.internal:2222",
-    identityFile: "~/.ssh/id_ed25519_synara",
+    identityFile: "~/.ssh/id_ed25519_ramspace",
     proxyJump: "bastion.internal",
   },
   launcher: {
-    command: "/opt/synara/bin/synara-server",
+    command: "/opt/ramspace/bin/ramspace-server",
     args: ["--port", "0"],
-    env: { SYNARA_HOME: "/var/lib/synara" },
+    env: { RAMSPACE_HOME: "/var/lib/ramspace" },
   },
   keyVerification: {
     policy: "pinned" as const,
@@ -56,7 +56,7 @@ function tamper(value: string, index: number): string {
  * domain string or the field order changing — and both are wire format that
  * ciphertext already in the account service's columns depends on.
  */
-const SEAL_AAD_DOMAIN = "synara.hostSecret.aad.v1";
+const SEAL_AAD_DOMAIN = "ramspace.hostSecret.aad.v1";
 
 function hostSecretAad(
   hostId: string,

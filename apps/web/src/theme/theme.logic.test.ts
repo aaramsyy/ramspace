@@ -28,9 +28,9 @@ const PROVIDED_THEME_STRING =
   'codex-theme-v1:{"codeThemeId":"linear","theme":{"accent":"#606acc","contrast":30,"fonts":{"code":"\\"Jetbrains Mono\\"","ui":"Inter"},"ink":"#e3e4e6","opaqueWindows":true,"semanticColors":{"diffAdded":"#69c967","diffRemoved":"#ff7e78","skill":"#c2a1ff"},"surface":"#0f0f11"},"variant":"dark"}';
 
 describe("parseStoredThemeState", () => {
-  it.each([null, undefined, ""])("uses Synara for an absent stored theme (%j)", (raw) => {
+  it.each([null, undefined, ""])("uses Ramspace for an absent stored theme (%j)", (raw) => {
     const state = parseStoredThemeState(raw);
-    expect(state.codeThemeIds).toEqual({ dark: "synara", light: "synara" });
+    expect(state.codeThemeIds).toEqual({ dark: "ramspace", light: "ramspace" });
     expect(state.chromeThemes.dark.accent).toBe("#f2612d");
     expect(state.chromeThemes.light.accent).toBe("#c74614");
     expect(state.mode).toBe("system");
@@ -49,7 +49,7 @@ describe("parseStoredThemeState", () => {
     },
   );
 
-  it.each(["codex", "linear", "synara"])(
+  it.each(["codex", "linear", "ramspace"])(
     "preserves saved %s colors and preferences without reapplying the preset",
     (codeThemeId) => {
       const saved = {
@@ -76,10 +76,10 @@ describe("parseStoredThemeState", () => {
     },
   );
 
-  it("resets only the selected variant to Synara when explicitly requested", () => {
+  it("resets only the selected variant to Ramspace when explicitly requested", () => {
     const saved = parseStoredThemeState("dark");
     const reset = resetThemeVariant(saved, "dark");
-    expect(reset.codeThemeIds).toEqual({ dark: "synara", light: "codex" });
+    expect(reset.codeThemeIds).toEqual({ dark: "ramspace", light: "codex" });
     expect(reset.chromeThemes.dark.accent).toBe("#f2612d");
     expect(reset.chromeThemes.light).toEqual(saved.chromeThemes.light);
     expect(reset.mode).toBe("dark");
@@ -171,7 +171,7 @@ describe("theme share strings", () => {
     );
 
     expect(parseThemeShareString(shareString)).toEqual({
-      codeThemeId: "synara",
+      codeThemeId: "ramspace",
       theme: resolveThemePack(DEFAULT_THEME_STATE, "dark").theme,
       variant: "dark",
     });

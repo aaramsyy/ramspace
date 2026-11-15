@@ -1,5 +1,5 @@
 import { assert, it } from "@effect/vitest";
-import type { ServerProviderStatus } from "@synara/contracts";
+import type { ServerProviderStatus } from "@ramspace/contracts";
 import { Effect } from "effect";
 import { vi } from "vitest";
 
@@ -59,7 +59,7 @@ it.effect(
         legacyToken: "desktop-secret",
         request: {
           headers: {},
-          cookies: { synara_session: "stale-browser-session" },
+          cookies: { ramspace_session: "stale-browser-session" },
           url: new URL("http://127.0.0.1/ws?token=desktop-secret"),
         },
         serverAuth: { authenticateWebSocketUpgrade },
@@ -158,7 +158,7 @@ it.effect("accepts an authenticated session on a non-loopback bind", () =>
       legacyToken: "remote-secret",
       request: {
         headers: {},
-        cookies: { "synara-session": "paired-session-credential" },
+        cookies: { "ramspace-session": "paired-session-credential" },
         url: new URL("http://192.168.1.50:3773/ws?token=remote-secret"),
       },
       serverAuth: { authenticateWebSocketUpgrade },
@@ -255,12 +255,12 @@ it.effect(
         config: {
           host: "127.0.0.1",
           authToken: "proxy-secret",
-          publicUrl: new URL("https://synara.example.test/"),
+          publicUrl: new URL("https://ramspace.example.test/"),
         },
         legacyToken: "proxy-secret",
         request: {
           headers: {},
-          cookies: { "synara-session": "paired-session-credential" },
+          cookies: { "ramspace-session": "paired-session-credential" },
           url: new URL("http://127.0.0.1:3773/ws?token=proxy-secret"),
         },
         serverAuth: { authenticateWebSocketUpgrade },

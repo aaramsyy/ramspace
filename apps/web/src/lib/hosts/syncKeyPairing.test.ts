@@ -2,7 +2,7 @@
 // Purpose: Locks down the transferable pairing request and the shared short-code input rules.
 // Layer: Web remote-access feature tests
 
-import type { SyncKeyPairingRequest } from "@synara/contracts";
+import type { SyncKeyPairingRequest } from "@ramspace/contracts";
 import { describe, expect, it } from "vitest";
 
 import {
@@ -45,7 +45,7 @@ describe("transferable Sync-Key pairing requests", () => {
     expect(() => decodeSyncKeyPairingRequest("not-a-pairing-request")).toThrow(/pairing request/i);
     expect(() =>
       decodeSyncKeyPairingRequest(
-        encodeSyncKeyPairingRequest(request).replace("synara-sync-v1:", "synara-sync-v2:"),
+        encodeSyncKeyPairingRequest(request).replace("ramspace-sync-v1:", "ramspace-sync-v2:"),
       ),
     ).toThrow(/pairing request/i);
   });

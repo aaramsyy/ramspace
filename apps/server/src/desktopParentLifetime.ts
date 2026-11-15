@@ -7,8 +7,8 @@ export function consumeDesktopParentInput(
   env: NodeJS.ProcessEnv,
   input: () => Readable,
 ): Readable | undefined {
-  const enabled = env.SYNARA_DESKTOP_PARENT_STDIN === "1";
-  delete env.SYNARA_DESKTOP_PARENT_STDIN;
+  const enabled = env.RAMSPACE_DESKTOP_PARENT_STDIN === "1";
+  delete env.RAMSPACE_DESKTOP_PARENT_STDIN;
   return enabled ? input() : undefined;
 }
 

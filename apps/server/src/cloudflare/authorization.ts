@@ -1,6 +1,6 @@
 import { setTimeout as delay } from "node:timers/promises";
-import { AccountApiError } from "@synara/shared/account";
-import type { HostAuthorizationSnapshot } from "@synara/contracts";
+import { AccountApiError } from "@ramspace/shared/account";
+import type { HostAuthorizationSnapshot } from "@ramspace/contracts";
 
 import { findAccountApiError, isRemoteAccessRefusal } from "../accountRefusal";
 import { exponentialBackoffMs, jitterMs } from "../backoff";

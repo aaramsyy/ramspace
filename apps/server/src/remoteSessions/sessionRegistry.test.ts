@@ -2,8 +2,8 @@ import { once } from "node:events";
 import WebSocket, { WebSocketServer } from "ws";
 import { HostDialError } from "../hostConnections/dialer";
 import { classifyConnectionFailure } from "../hostConnections/failure";
-import { HOST_SESSION_CLOSE_REVOKED } from "@synara/contracts";
-import type { HostAuthorizationSnapshot } from "@synara/contracts";
+import { HOST_SESSION_CLOSE_REVOKED } from "@ramspace/contracts";
+import type { HostAuthorizationSnapshot } from "@ramspace/contracts";
 import { describe, expect, it, vi } from "vitest";
 
 import { RemoteSessionRegistry } from "./sessionRegistry";

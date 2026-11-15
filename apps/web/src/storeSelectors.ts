@@ -2,10 +2,13 @@
 // Purpose: Stable Zustand selectors for entity lookups and lightweight sidebar projections.
 // Exports: Selector factories used by routes and sidebar-heavy components.
 
-import type { ProjectId, ThreadEnvironmentMode, ThreadId } from "@synara/contracts";
-import { isAutomationRunThread } from "@synara/shared/automationMode";
-import { isSidechatThread, sidechatContextMatchesGitHubItem } from "@synara/shared/sidechatThread";
-import { collectSubagentDescendants } from "@synara/shared/threadHierarchy";
+import type { ProjectId, ThreadEnvironmentMode, ThreadId } from "@ramspace/contracts";
+import { isAutomationRunThread } from "@ramspace/shared/automationMode";
+import {
+  isSidechatThread,
+  sidechatContextMatchesGitHubItem,
+} from "@ramspace/shared/sidechatThread";
+import { collectSubagentDescendants } from "@ramspace/shared/threadHierarchy";
 
 import type { AppState } from "./storeState";
 import { ACCOUNT_RATE_LIMIT_ACTIVITY_KINDS } from "./lib/rateLimits";

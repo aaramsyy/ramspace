@@ -1,5 +1,5 @@
 import type { ComponentProps, CSSProperties } from "react";
-import { CHAT_SURFACE_HEADER_HEIGHT_PX } from "@synara/shared/desktopChrome";
+import { CHAT_SURFACE_HEADER_HEIGHT_PX } from "@ramspace/shared/desktopChrome";
 import { SidebarProvider } from "./ui/sidebar";
 
 /** Local and remote content use the same shell surfaces and sidebar geometry. */

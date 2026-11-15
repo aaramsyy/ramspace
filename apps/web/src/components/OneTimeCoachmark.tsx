@@ -12,7 +12,7 @@ import { Tooltip, TooltipPopup, TooltipTrigger } from "./ui/tooltip";
 import { cn } from "~/lib/utils";
 import { useTranslation } from "~/i18n";
 
-export const ACTIVITY_COACHMARK_STORAGE_KEY = "synara:activity-onboarding:v1";
+export const ACTIVITY_COACHMARK_STORAGE_KEY = "ramspace:activity-onboarding:v1";
 
 function hasSeen(storageKey: string): boolean {
   try {
@@ -126,7 +126,7 @@ export function OneTimeCoachmark({
 }
 
 export const TASKS_COACHMARK = {
-  storageKey: "synara:tasks-onboarding:v1",
+  storageKey: "ramspace:tasks-onboarding:v1",
   title: "Tasks",
   titleKey: "chat:tasks",
   description: "Keep your to-dos in one place and hand them to an agent when you’re ready.",

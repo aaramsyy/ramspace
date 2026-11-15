@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { ProjectId, ThreadId } from "@synara/contracts";
+import { ProjectId, ThreadId } from "@ramspace/contracts";
 
 import type { SidebarThreadSummary, ThreadSession } from "../types";
 
@@ -602,7 +602,7 @@ describe("project filter", () => {
     ]);
   });
 
-  it("merges every project-less chat container into one Synara scope", () => {
+  it("merges every project-less chat container into one Ramspace scope", () => {
     const CHAT_PROJECT_A = ProjectId.makeUnsafe("chat-project-a");
     const CHAT_PROJECT_B = ProjectId.makeUnsafe("chat-project-b");
     const realProject = makeThread({
@@ -704,7 +704,7 @@ describe("resolveActivityScope", () => {
     { kind: "chats", projectIds: [OTHER_PROJECT_ID], threadCount: 1 },
   ];
 
-  it("expands the Synara chats scope to its container projects", () => {
+  it("expands the Ramspace chats scope to its container projects", () => {
     expect(resolveActivityScope("chats", options)).toEqual({
       scope: "chats",
       projectFilterIds: new Set([OTHER_PROJECT_ID]),
@@ -1167,7 +1167,7 @@ describe("agent-created child families", () => {
   const tid = (id: string) => ThreadId.makeUnsafe(id);
   const child = (id: string, sourceId: string) => ({
     ...makeThread({ id, latestTurn: completedTurn("2026-08-01T10:00:00.000Z") }),
-    creationSource: "synara_mcp" as const,
+    creationSource: "ramspace_mcp" as const,
     sourceThreadId: tid(sourceId),
   });
   const parent = makeThread({ id: "p", latestTurn: completedTurn("2026-08-01T10:00:00.000Z") });

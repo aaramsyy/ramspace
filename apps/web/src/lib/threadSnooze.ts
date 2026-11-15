@@ -5,7 +5,7 @@
 // Exports: SNOOZE_PRESETS, resolveSnoozeDeadline, formatSnoozeDeadline,
 //          toDateTimeLocalValue, parseFutureDateTimeLocalValue, dispatchThreadSnoozedUntil
 
-import type { ThreadId } from "@synara/contracts";
+import type { ThreadId } from "@ramspace/contracts";
 import { getFormatLocale, t } from "~/i18n";
 
 import { toastManager } from "../components/ui/toast";

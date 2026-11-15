@@ -2,7 +2,7 @@
 
 **Follow-up:** the user subsequently authorized full checks. Formatting, lint and all seven workspace type checks now pass, with additional pane-cancellation and unarchive fixes. The [final checks and comparison](final-checks-and-comparison.md) supersede the initial verification status recorded below.
 
-This refresh combines selected changes from [PR #822](https://github.com/Emanuele-web04/Synara/pull/822) at `bf70dfd0e7ee1e512a633da3cc6e814d2f791b0b` and [PR #1010](https://github.com/Emanuele-web04/Synara/pull/1010) at `32d62c28c39229a42f8d9f31b160bf61996e494a` with the existing Cua implementation. Those immutable heads were compared against the local source before integration. The original import history remains in [import-provenance.json](import-provenance.json).
+This refresh combines selected changes from [PR #822](https://github.com/aaramsyy/Ramspace/pull/822) at `bf70dfd0e7ee1e512a633da3cc6e814d2f791b0b` and [PR #1010](https://github.com/aaramsyy/Ramspace/pull/1010) at `32d62c28c39229a42f8d9f31b160bf61996e494a` with the existing Cua implementation. Those immutable heads were compared against the local source before integration. The original import history remains in [import-provenance.json](import-provenance.json).
 
 There is still one native backend: Cua. Shared improvements were adapted to its actual capabilities. The refreshed Swift helper has capabilities that Cua does not yet implement, so this integration does not claim that either backend is better in every respect.
 
@@ -25,7 +25,7 @@ The integration also closes local correctness gaps: calibrated scrolling now pas
 
 The release manifest and checked-in patch define the current native revision. The driver adds a side-effect-free `check_input_ready` tool, exact target/bounds admission, and current-Space invalidation during an action. Matching held-key/button releases remain permitted after invalidation or Stop. The authenticated cleanup acknowledgement and replacement-generation barrier remain in place.
 
-Synara's exposed AXPress and set-value paths choose their actuator before writing. A failed or uncertain AXPress, selection, numeric write or increment/decrement does not trigger a second actuator. The untargeted Safari JavaScript fallback is removed. Text entry retains the adapter's forced synthetic route; this does not qualify every unused raw upstream tool path. Foreground activation remains subject to explicit action approval and final native target checks.
+Ramspace's exposed AXPress and set-value paths choose their actuator before writing. A failed or uncertain AXPress, selection, numeric write or increment/decrement does not trigger a second actuator. The untargeted Safari JavaScript fallback is removed. Text entry retains the adapter's forced synthetic route; this does not qualify every unused raw upstream tool path. Foreground activation remains subject to explicit action approval and final native target checks.
 
 Native target checks and macOS delivery are separate operations. They reduce stale-target exposure but do not make input atomic against simultaneous human/window activity. A new Space change can still occur between the last check and an OS call. Unknown effects remain unknown and are not replayed.
 
@@ -59,7 +59,7 @@ The initial integration did not run `bun fmt`, `bun lint` or `bun typecheck` bec
 
 Revisions 6–9 change driver internals only; the integration-layer guarantees above are unchanged. The authoritative descriptions live in the [patch README](../../apps/desktop/patches/cua-driver/README.md). Verified live on the packaged app (signed build, real provider turns):
 
-- **Rev 6** — per-element AX attributes fetched in one `AXUIElementCopyMultipleAttributeValues` IPC; `SYNARA_CUA_BACKGROUND_OBSERVATION_MS` bounds background post-action observation.
+- **Rev 6** — per-element AX attributes fetched in one `AXUIElementCopyMultipleAttributeValues` IPC; `RAMSPACE_CUA_BACKGROUND_OBSERVATION_MS` bounds background post-action observation.
 - **Rev 7** — bounded parallel attribute fetch across sibling arrays, serial assembly order preserved: measured tree walks ~673 ms → ~207 ms on the test desktop.
 - **Rev 8** — `CUA_DRIVER_EMBEDDED_HOST_PID` liveness poll (`kill(pid, 0)`, 2 s) alongside stdin EOF; immune to leaked lifetime fds.
 - **Rev 9** — `catch_unwind` around the serve thread guarantees `exit(0)` runs; a panicking shutdown can no longer strand the process under the AppKit run loop.

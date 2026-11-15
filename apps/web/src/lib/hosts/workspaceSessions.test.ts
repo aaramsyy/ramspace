@@ -3,7 +3,7 @@ import type {
   AccountStatus,
   ExecutionEnvironmentDescriptor,
   ListHostConnectionsResponse,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 
 const descriptor = {
   environmentId: "local",

@@ -6,7 +6,7 @@ import type {
   RemoteDeviceEnrollment,
   RemotePairingDevice,
   RemoteTrustScope,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 
 export interface RemotePairingRecord {
   readonly id: string;
@@ -135,4 +135,4 @@ export interface AuthPairingLinkRepositoryShape {
 export class AuthPairingLinkRepository extends ServiceMap.Service<
   AuthPairingLinkRepository,
   AuthPairingLinkRepositoryShape
->()("synara/persistence/Services/AuthPairingLinks/AuthPairingLinkRepository") {}
+>()("ramspace/persistence/Services/AuthPairingLinks/AuthPairingLinkRepository") {}

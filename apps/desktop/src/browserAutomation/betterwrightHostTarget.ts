@@ -8,18 +8,18 @@ type HostTarget = NonNullable<BetterWrightOptions["hostTarget"]>;
 
 type OpenedConnection = Awaited<ReturnType<typeof openBetterwrightConnection>>;
 
-export interface SynaraHostTarget extends HostTarget {
+export interface RamspaceHostTarget extends HostTarget {
   run: NonNullable<HostTarget["run"]>;
   /** Immediately revoke every transport this adapter vended; callers race worker shutdown. */
   revokeAll(cancel?: boolean): Promise<void>;
 }
 
 /**
- * Synara's HostTarget adapter. Browser tabs share a persistent Electron
+ * Ramspace's HostTarget adapter. Browser tabs share a persistent Electron
  * session, whose persistent guard covers navigations, subresources, WebSockets,
  * and workers. Worker rotation revokes control without closing page requests.
  */
-export function synaraHostTarget(
+export function ramspaceHostTarget(
   contents: WebContents,
   options: {
     uploadFiles?: readonly string[] | undefined;
@@ -27,7 +27,7 @@ export function synaraHostTarget(
     expectAgentInput?: BrowserAutomationVisibleRuntime["expectAgentInput"] | undefined;
     signal?: AbortSignal | undefined;
   } = {},
-): SynaraHostTarget {
+): RamspaceHostTarget {
   const connections = new Set<OpenedConnection>();
   const pending = new Set<Promise<OpenedConnection>>();
   const networkGuard = getBetterwrightNetworkGuard(contents.session);

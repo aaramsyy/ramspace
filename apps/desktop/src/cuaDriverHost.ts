@@ -23,7 +23,7 @@ import {
   parseCuaComputerTask,
   parseCuaShieldArgs,
   cuaComputerTaskKey,
-} from "@synara/shared/cuaDriverProtocol";
+} from "@ramspace/shared/cuaDriverProtocol";
 import type { ComputerFrameTapHost } from "./computerFrameTap";
 import { linuxBrowserCallIsReadOnly, linuxCuaAdmissionRefusal } from "./linuxCuaAdmission";
 import {
@@ -36,7 +36,7 @@ import type { ComputerInputMonitorState, PhysicalComputerInput } from "./escapeK
 import {
   cuaActionDiagnosticMessage,
   parseCuaActionDiagnostics,
-} from "@synara/shared/cuaActionDiagnostics";
+} from "@ramspace/shared/cuaActionDiagnostics";
 
 interface TaskCursor {
   task: CuaComputerTask;
@@ -54,7 +54,7 @@ interface TaskRequest {
 export const CUA_CURSOR_IDLE_HIDE_MS = 60_000;
 /** A raw ENOENT names a path, not a remedy; source builds stage the driver themselves. */
 const CUA_DRIVER_MISSING_MESSAGE =
-  "Cua Driver is not bundled. Run the provisioning script (`node apps/desktop/scripts/provision-cua-driver.mjs`, needs the pinned Rust toolchain) in this checkout, then relaunch Synara.";
+  "Cua Driver is not bundled. Run the provisioning script (`node apps/desktop/scripts/provision-cua-driver.mjs`, needs the pinned Rust toolchain) in this checkout, then relaunch Ramspace.";
 
 interface ControlledTarget {
   pid: number;
@@ -154,7 +154,7 @@ const isClipboardToken = (value: unknown): value is string =>
  * so reuse after deletion cannot alias a different conversation's browser.
  */
 function browserSessionLabel(threadId: string): string {
-  return `synara-browser-${threadId}`;
+  return `ramspace-browser-${threadId}`;
 }
 
 /**
@@ -168,7 +168,7 @@ function browserSessionLabel(threadId: string): string {
  * session, so each concurrent agent gets a distinguishable cursor and two
  * threads that share a display label still get distinct cursors and tints.
  * The `agent·` prefix is compact because badge space is scarce, and it keeps
- * task-derived labels out of the `synara-browser-*` lifecycle namespace, the
+ * task-derived labels out of the `ramspace-browser-*` lifecycle namespace, the
  * anonymous `default` cursor, and the `__cua_runtime_` runtime-key space —
  * none of which can be spelled with the prefix in place.
  */
@@ -485,7 +485,7 @@ export class CuaDriverHost {
        * The `synara_native_revision` the spawned driver must report at
        * handshake. Defaults to {@link CUA_NATIVE_REVISION} — the patched
        * build the macOS desktop provisions. `null` expects a provisioned
-       * upstream driver: its metadata carries no Synara revision, so the
+       * upstream driver: its metadata carries no Ramspace revision, so the
        * revision check and the patch-only spawn flags are skipped, and the
        * driver runs with the safety set upstream ships.
        */
@@ -518,7 +518,7 @@ export class CuaDriverHost {
   }
 
   async listen(): Promise<string> {
-    this.directory = await mkdtemp(join(tmpdir(), "synara-cua-"));
+    this.directory = await mkdtemp(join(tmpdir(), "ramspace-cua-"));
     await chmod(this.directory, 0o700);
     await markCuaRuntimeDirectory(this.directory);
     // Named pipes are already private to the creating user on Windows; the
@@ -526,7 +526,7 @@ export class CuaDriverHost {
     const endpoint =
       this.options.hostEndpoint ??
       (process.platform === "win32"
-        ? `\\\\.\\pipe\\synara-cua-host-${randomUUID().slice(0, 8)}`
+        ? `\\\\.\\pipe\\ramspace-cua-host-${randomUUID().slice(0, 8)}`
         : join(this.directory, "host.sock"));
     const server = createServer((socket) => this.accept(socket));
     this.server = server;
@@ -1846,7 +1846,7 @@ export class CuaDriverHost {
   }
 
   /**
-   * `SYNARA_CUA_WARM_ON_FIRST_TOUCH=1` asks the host to run the spawn plus
+   * `RAMSPACE_CUA_WARM_ON_FIRST_TOUCH=1` asks the host to run the spawn plus
    * validated handshake on first touch, after known grants on a host with a
    * permission bridge. The initial check answers without the driver, so its
    * cold start can overlap subsequent work without caching pre-grant TCC. Warming
@@ -1858,7 +1858,7 @@ export class CuaDriverHost {
 
   private warm(): void {
     if (this.warmAttempted || this.closed || this.suspended) return;
-    const raw = process.env.SYNARA_CUA_WARM_ON_FIRST_TOUCH?.trim().toLowerCase();
+    const raw = process.env.RAMSPACE_CUA_WARM_ON_FIRST_TOUCH?.trim().toLowerCase();
     if (raw !== "1" && raw !== "true" && raw !== "on" && raw !== "yes") return;
     this.warmAttempted = true;
     void this.ensureSpawned().catch((error: unknown) => {
@@ -1949,7 +1949,7 @@ export class CuaDriverHost {
       }
       const endpoint =
         process.platform === "win32"
-          ? `\\\\.\\pipe\\synara-cua-driver-${randomUUID().slice(0, 8)}`
+          ? `\\\\.\\pipe\\ramspace-cua-driver-${randomUUID().slice(0, 8)}`
           : join(this.directory, `driver-${randomUUID().slice(0, 8)}.sock`);
       // Park the compact cursor between actions until end_task removes it,
       // with a one-minute native expiry if cleanup cannot be acknowledged.
@@ -2036,7 +2036,7 @@ export class CuaDriverHost {
         browserInputControl: false,
         child,
         socket: endpoint,
-        session: `synara-${randomUUID()}`,
+        session: `ramspace-${randomUUID()}`,
         exited,
         didExit: false,
         retired: false,
@@ -2045,7 +2045,7 @@ export class CuaDriverHost {
         inputTask: undefined,
         browserInputInFlight: false,
         inputEverDispatched: false,
-        controlSession: `synara-transport-${randomUUID()}`,
+        controlSession: `ramspace-transport-${randomUUID()}`,
         controlSocket: undefined,
         endedBrowserSessions: new Set<string>(),
         liveBrowserSessions: new Set<string>(),
@@ -2077,7 +2077,7 @@ export class CuaDriverHost {
           }
         }
         // `nativeRevision: null` expects an unpatched upstream driver — its
-        // metadata carries no Synara revision and the field must not be
+        // metadata carries no Ramspace revision and the field must not be
         // required. A patched build is still accepted there: a superset of
         // the expected identity is never a downgrade.
         const expectedNativeRevision =

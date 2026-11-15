@@ -33,7 +33,7 @@ export function Login({ onLogin }: { onLogin: () => void }) {
   return (
     <div className="login-wrap">
       <form className="login-form" onSubmit={submit}>
-        <h1 className="heading-24">Synara Beta diagnostics</h1>
+        <h1 className="heading-24">Ramspace Beta diagnostics</h1>
         <label className="label-13 secondary" htmlFor="login-password">
           Password
         </label>

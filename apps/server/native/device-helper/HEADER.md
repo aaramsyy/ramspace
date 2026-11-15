@@ -1,6 +1,6 @@
-# synara-device-helper
+# ramspace-device-helper
 
-The native side of Synara's Device Pane: a macOS program that mirrors and drives
+The native side of Ramspace's Device Pane: a macOS program that mirrors and drives
 a booted iOS Simulator without `Simulator.app`, using CoreSimulator and
 SimulatorKit private APIs.
 
@@ -8,7 +8,7 @@ Source ships in-repo and is compiled on the user's machine with their own Xcode
 (`build.sh`), because the private API surface moves with the toolchain. Cache the
 binary keyed by Xcode build version (`xcodebuild -version`), as
 `scripts/device-helper-smoke.ts` does under
-`~/Library/Caches/synara/device-helper/<build>/`.
+`~/Library/Caches/ramspace/device-helper/<build>/`.
 
 ## Design choices
 
@@ -234,6 +234,6 @@ The owner-boundary test uses a stub transport without loading a simulator:
 ```sh
 xcrun clang -fobjc-arc -fmodules -framework Foundation -framework CoreGraphics \
   Sources/HIDBridge.m Sources/DTUHIDTransport.m Tests/InputDeliveryTests.m \
-  -o /tmp/synara-device-input-tests
-/tmp/synara-device-input-tests
+  -o /tmp/ramspace-device-input-tests
+/tmp/ramspace-device-input-tests
 ```

@@ -6,8 +6,8 @@
 // generic fallback message — and never the `AccountErrorCode` the UI branches on
 // (`invalid_verification_code`, `handle_taken`, ...).
 
-import { WsRpcError } from "@synara/contracts";
-import { AccountApiError } from "@synara/shared/account";
+import { WsRpcError } from "@ramspace/contracts";
+import { AccountApiError } from "@ramspace/shared/account";
 import { Cause, Schema } from "effect";
 
 import { PairingVerificationError } from "./hostSecrets/coordinator";

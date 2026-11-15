@@ -1,5 +1,5 @@
-import type { Todo, TodoStreamEvent } from "@synara/contracts";
-import { applyTodoPatch } from "@synara/shared/todo";
+import type { Todo, TodoStreamEvent } from "@ramspace/contracts";
+import { applyTodoPatch } from "@ramspace/shared/todo";
 import { Effect, Layer, Option, PubSub, Stream } from "effect";
 
 import { TodoRepository } from "../../persistence/Services/TodoRepository.ts";

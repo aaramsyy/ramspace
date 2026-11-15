@@ -4,8 +4,8 @@ import path from "node:path";
 import { randomUUID } from "node:crypto";
 
 import { getRequestListener } from "@hono/node-server";
-import type { HostPublicKeyJwk } from "@synara/contracts";
-import { createAccountClient } from "@synara/shared/account";
+import type { HostPublicKeyJwk } from "@ramspace/contracts";
+import { createAccountClient } from "@ramspace/shared/account";
 
 import { HeadlessClient } from "../headlessClient";
 import { createApp } from "../../../api/src/app";
@@ -141,7 +141,7 @@ async function readHostRow(
 
 export async function createE2eFixture(databaseUrl: string): Promise<E2eFixture> {
   await ensureMigrations(databaseUrl);
-  const baseDir = await fs.mkdtemp(path.join(os.tmpdir(), "synara-slice-e2e-"));
+  const baseDir = await fs.mkdtemp(path.join(os.tmpdir(), "ramspace-slice-e2e-"));
   const apiHttp = await bindEphemeralHttpServer().catch(async (error) => {
     await fs.rm(baseDir, { recursive: true, force: true });
     throw error;

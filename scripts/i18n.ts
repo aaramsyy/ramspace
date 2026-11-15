@@ -1,7 +1,7 @@
 import { readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { UI_LOCALES } from "@synara/contracts";
+import { UI_LOCALES } from "@ramspace/contracts";
 import ts from "typescript";
 
 export type Catalogs = Record<string, Record<string, Record<string, string>>>;
@@ -24,7 +24,7 @@ export interface SourceInspection {
 
 // These are product/protocol identifiers, not untranslated application copy.
 export const PROTECTED_TOKENS = [
-  "Synara",
+  "Ramspace",
   "Codex",
   "Claude",
   "Cursor",
@@ -40,8 +40,8 @@ export const PROTECTED_TOKENS = [
 
 export const UI_LITERAL_ALLOWLIST: Readonly<Record<string, string>> = {
   ...Object.fromEntries(PROTECTED_TOKENS.map((value) => [value, "Product or protocol identifier"])),
-  "Synara Beta": "Product name",
-  "Synara Canary": "Product name",
+  "Ramspace Beta": "Product name",
+  "Ramspace Canary": "Product name",
   OpenAI: "Provider name",
   Anthropic: "Provider name",
   Gemini: "Provider name",
@@ -88,7 +88,7 @@ export const UI_LITERAL_ALLOWLIST: Readonly<Record<string, string>> = {
   "Alt+Left": "Keyboard shortcut",
   "Alt+Right": "Keyboard shortcut",
   "feature/my-change": "Git branch example",
-  "synara/feature-name": "Git branch example",
+  "ramspace/feature-name": "Git branch example",
   ".git/index.lock": "Git metadata path",
   '"JetBrains Mono"': "Font-family example",
   LinkedIn: "Service name",
@@ -174,7 +174,7 @@ function protectedTokens(value: string): string[] {
         !(token === "Cursor" && value === "Cursor colors"),
     ),
     ...[...value.matchAll(/`([^`\n]+)`/g)].map((match) => match[0]),
-    ...[...value.matchAll(/\bSYNARA_[A-Z0-9_]+\b/g)].map((match) => match[0]),
+    ...[...value.matchAll(/\bRAMSPACE_[A-Z0-9_]+\b/g)].map((match) => match[0]),
   ];
 }
 

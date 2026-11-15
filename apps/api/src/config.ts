@@ -1,4 +1,4 @@
-import type { AccountBillingEnvironment } from "@synara/contracts";
+import type { AccountBillingEnvironment } from "@ramspace/contracts";
 import { resolveTrustedProxyHops } from "./clientIp";
 import { createPrivateKey, randomBytes } from "node:crypto";
 import { parseWorkosIdentityMap, type WorkosIdentityMap } from "./identity/workosIdentityMap";
@@ -334,7 +334,7 @@ export type ApiConfigBase = {
   trustedProxyHops: number;
   /**
    * Shared secret the profiles SSR deployment sends as
-   * `x-synara-proxy-secret`, from PROFILE_PROXY_SECRET. When set and matched,
+   * `x-ramspace-proxy-secret`, from PROFILE_PROXY_SECRET. When set and matched,
    * the public-profile rate limit keys on the forwarded viewer IP instead of
    * the SSR deployment's egress IP. Undefined disables the channel — the
    * viewer header is ignored entirely.
@@ -352,7 +352,7 @@ export type WorkosApiConfig = ApiConfigBase & {
   identityProvider: "workos";
   workosApiKey: string;
   workosClientId: string;
-  /** Operator-approved old-to-current IDs; keeps existing Synara data ownership stable. */
+  /** Operator-approved old-to-current IDs; keeps existing Ramspace data ownership stable. */
   workosIdentityMap?: WorkosIdentityMap;
   /** WorkOS API origin, no trailing slash. Overridable so tests can point at a local server. */
   workosApiUrl: string;
@@ -387,7 +387,7 @@ export type WorkosApiConfig = ApiConfigBase & {
 
 /**
  * Configuration for the offline dev identity provider: an in-process identity
- * endpoint with codes printed to stdout, for hacking on Synara accounts with
+ * endpoint with codes printed to stdout, for hacking on Ramspace accounts with
  * no hosted-provider tenancy. Selected with IDENTITY_PROVIDER=dev and refused
  * outright in anything that looks like a deployment — see
  * {@link assertDevIdentityAllowed}.

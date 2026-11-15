@@ -9,8 +9,8 @@ import {
   type ProductAnalyticsMode,
   type ProductAnalyticsTurnFailure,
   type ReliabilityCode,
-} from "@synara/contracts";
-import { isBuiltInComposerSlashCommandName } from "@synara/shared/composerSlashCommands";
+} from "@ramspace/contracts";
+import { isBuiltInComposerSlashCommandName } from "@ramspace/shared/composerSlashCommands";
 import { readWorkspaceFrame } from "./hosts/workspaceFrame";
 
 /** Only trusted app workspace frames may use the controlling window's consent. */

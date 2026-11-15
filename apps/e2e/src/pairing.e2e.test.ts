@@ -5,7 +5,7 @@ import { expect, it } from "vitest";
 import { createE2eFixture } from "./harness/fixture";
 import { startWorkspace } from "./harness/workspace";
 import { workspaceRpc } from "./harness/rpc";
-import type { HostConnection } from "@synara/contracts";
+import type { HostConnection } from "@ramspace/contracts";
 import { requestLocalRemoteAccess } from "../../server/src/remotePairing/cli";
 
 async function settings(page: Page, origin: string) {
@@ -21,7 +21,7 @@ async function settings(page: Page, origin: string) {
   await page.getByRole("button", { name: "Add", exact: true }).waitFor();
 }
 
-it.skipIf(process.env.SYNARA_E2E_WORKSPACE !== "1")(
+it.skipIf(process.env.RAMSPACE_E2E_WORKSPACE !== "1")(
   "retries pairing after a connector outage through both browser screens and owner-verified approval",
   async () => {
     if (!process.env.TEST_DATABASE_URL) throw new Error("Isolated TEST_DATABASE_URL required");
@@ -70,7 +70,7 @@ it.skipIf(process.env.SYNARA_E2E_WORKSPACE !== "1")(
       await controllerPage
         .getByRole("checkbox", { name: "The identity matches on both computers" })
         .click();
-      const evidence = process.env.SYNARA_E2E_EVIDENCE;
+      const evidence = process.env.RAMSPACE_E2E_EVIDENCE;
       if (evidence) {
         await fs.mkdir(evidence, { recursive: true });
         await hostPage.screenshot({

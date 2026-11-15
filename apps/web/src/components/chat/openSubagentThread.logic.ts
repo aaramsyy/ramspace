@@ -8,7 +8,7 @@
 // Layer: Chat navigation logic (pure)
 // Exports: resolveSubagentOpenPlan, SubagentOpenPlan
 
-import type { ProjectId, ThreadId } from "@synara/contracts";
+import type { ProjectId, ThreadId } from "@ramspace/contracts";
 
 import { canSubdividePane, collectLeaves, findParentSplitNode } from "../../splitView.logic";
 import type { PaneId, SplitDirection, SplitView, SplitViewId } from "../../splitViewStore";

@@ -1,4 +1,4 @@
-import type { StatsGetRecapInput } from "@synara/contracts";
+import type { StatsGetRecapInput } from "@ramspace/contracts";
 
 export function resolveActivityDayStartMs(nowMs: number): number {
   const dayStart = new Date(nowMs);

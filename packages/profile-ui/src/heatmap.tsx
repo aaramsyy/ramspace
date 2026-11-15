@@ -11,7 +11,7 @@ import { Fragment, type CSSProperties, type ReactElement, type ReactNode } from 
 import { cn } from "./cn";
 import { formatCompact, formatShortDate } from "./formatting";
 
-// Structural mirror of `ProfileHeatmapCell` from @synara/contracts. Declared locally so
+// Structural mirror of `ProfileHeatmapCell` from @ramspace/contracts. Declared locally so
 // this package stays free of Effect/contracts dependencies; the contracts type is
 // assignable to it at every call site.
 export interface HeatmapCell {

@@ -6,7 +6,7 @@
 // Layer: Tasks UI hook
 // Exports: useTaskDelegation
 
-import type { ServerProviderStatus, ThreadId, Todo, TodoUpdateInput } from "@synara/contracts";
+import type { ServerProviderStatus, ThreadId, Todo, TodoUpdateInput } from "@ramspace/contracts";
 import { useNavigate } from "@tanstack/react-router";
 import { useRef, useState } from "react";
 import { useTranslation } from "~/i18n";

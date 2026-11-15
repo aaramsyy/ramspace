@@ -96,7 +96,7 @@ refusals remain active throughout these tests.
 
 ## Linux verification on September 21
 
-[The Linux CI run passed](https://github.com/Emanuele-web04/synara/actions/runs/35548988491)
+[The Linux CI run passed](https://github.com/aaramsyy/ramspace/actions/runs/35548988491)
 on Ubuntu 24.04 x64, using the pinned revision 34 source and both checked
 native/Linux patches. It compiled the Linux driver and cursor helper with
 Rust 1.97.1 and passed 741 regression tests: 175 desktop admission/host/Escape,
@@ -146,7 +146,7 @@ thresholds are acceptance targets, not measurements from this follow-up.
 | F9: menus         | Preserve explicit visible-use authorization.                                                                                                                                                                                                                                                                                                                                               |
 | F10: verification | Fix audit/repeat-prevention losing verified delivery and window identity when a result contains an image. Decode existing JSON and persist allowlisted observation evidence/scroll delta. Fresh or unchanged frames never prove an arbitrary click's intended outcome.                                                                                                                     |
 | P2-8: staleness   | Existing semantic targeting reads fresh state. Reject duplicate fresh field matches instead of selecting the first. Add re-observation guidance for stale token/geometry failures. Automatic label-based substitution/replay is intentionally excluded because it can select a replacement or underlying control.                                                                          |
-| P3-10: timings    | With `SYNARA_CUA_TIMING_LOG=1`, record per-turn first observation/write and observe-to-write call start/end. Label provider-start versus first-computer-call origin. Bounded state, terminal cleanup, no screen data, additional captures or model tokens. Opaque batches retain existing per-call timings, without invented first-write timestamps.                                       |
+| P3-10: timings    | With `RAMSPACE_CUA_TIMING_LOG=1`, record per-turn first observation/write and observe-to-write call start/end. Label provider-start versus first-computer-call origin. Bounded state, terminal cleanup, no screen data, additional captures or model tokens. Opaque batches retain existing per-call timings, without invented first-write timestamps.                                     |
 
 ### Mechanism and release boundaries
 

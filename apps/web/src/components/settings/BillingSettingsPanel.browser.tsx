@@ -1,5 +1,5 @@
 import "../../index.css";
-import { type AccountBillingStatus, type AccountStatus, WsRpcError } from "@synara/contracts";
+import { type AccountBillingStatus, type AccountStatus, WsRpcError } from "@ramspace/contracts";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { page } from "vitest/browser";
 import { beforeEach, describe, expect, it, vi } from "vitest";
@@ -84,7 +84,7 @@ beforeEach(() => {
   fixture.open.mockResolvedValue(true);
 });
 
-describe("Synara Alto settings", () => {
+describe("Ramspace Alto settings", () => {
   it("offers sign in without fetching billing while signed out", async () => {
     fixture.status = { state: "signed-out" };
     await render(panel(new QueryClient()));
@@ -111,7 +111,7 @@ describe("Synara Alto settings", () => {
     });
     await render(panel(new QueryClient()));
     await expect.element(page.getByText("$123.45", { exact: true })).toBeVisible();
-    await expect.element(page.getByText("Remote from any computer running Synara")).toBeVisible();
+    await expect.element(page.getByText("Remote from any computer running Ramspace")).toBeVisible();
     await choosePlan("yearly");
     await expect.poll(() => fixture.open.mock.calls.length).toBe(1);
     expect(fixture.checkout).toHaveBeenCalledWith({ interval: "year" });
@@ -293,21 +293,21 @@ describe("UsageSettingsPanel", () => {
     await render(usage(new QueryClient(), { billingEnabled: true, target: null }));
     await expect.element(page.getByText("Provider limits")).toBeVisible();
     await page.getByRole("radio", { name: "Billing" }).click();
-    await expect.element(page.getByText("Synara Alto (Pro)", { exact: true })).toBeVisible();
+    await expect.element(page.getByText("Ramspace Alto (Pro)", { exact: true })).toBeVisible();
     await expect.element(page.getByText("Provider limits")).not.toBeInTheDocument();
   });
 
   it("opens a plan deep link on Billing", async () => {
     await render(
-      usage(new QueryClient(), { billingEnabled: true, target: "settings-synara-plan" }),
+      usage(new QueryClient(), { billingEnabled: true, target: "settings-ramspace-plan" }),
     );
     await expect.element(page.getByRole("radio", { name: "Billing" })).toBeChecked();
-    await expect.element(page.getByText("Synara Alto (Pro)", { exact: true })).toBeVisible();
+    await expect.element(page.getByText("Ramspace Alto (Pro)", { exact: true })).toBeVisible();
   });
 
   it("leaves Billing out when billing is off", async () => {
     await render(
-      usage(new QueryClient(), { billingEnabled: false, target: "settings-synara-plan" }),
+      usage(new QueryClient(), { billingEnabled: false, target: "settings-ramspace-plan" }),
     );
     await expect.element(page.getByText("Provider limits")).toBeVisible();
     await expect.element(page.getByRole("radio", { name: "Analytics" })).toBeVisible();

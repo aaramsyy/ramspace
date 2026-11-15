@@ -1,10 +1,10 @@
 // FILE: PairingQrCode.tsx
 // Purpose: The pairing link as a QR code drawn with round modules, rounded finder
-//          squares and the Synara mark in its centre.
+//          squares and the Ramspace mark in its centre.
 // Layer: Settings UI components
 // Exports: PairingQrCode
 
-import { SynaraLogo } from "@synara/profile-ui/logo";
+import { RamspaceLogo } from "@ramspace/profile-ui/logo";
 import { useMemo } from "react";
 import { encode, QrCodeDataType } from "uqr";
 
@@ -101,7 +101,7 @@ export function PairingQrCode({
         className="absolute inset-0 m-auto flex items-center justify-center rounded-[28%] text-white"
         style={{ width: logoPixels, height: logoPixels, backgroundColor: INK }}
       >
-        <SynaraLogo className="w-1/2 text-white" />
+        <RamspaceLogo className="w-1/2 text-white" />
       </span>
     </div>
   );

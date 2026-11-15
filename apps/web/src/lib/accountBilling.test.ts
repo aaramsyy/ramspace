@@ -1,4 +1,4 @@
-import type { AccountStatus } from "@synara/contracts";
+import type { AccountStatus } from "@ramspace/contracts";
 import { describe, expect, it, vi } from "vitest";
 import { accountStatusScope } from "./hosts/controlQueryScope";
 import {

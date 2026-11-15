@@ -2,7 +2,7 @@
 // Purpose: Classify Codex text/JSON diagnostics consistently at ingestion and historical rendering.
 // Layer: Shared runtime utility; no logging or process ownership.
 
-import { MCP_CONNECTOR_SERVER_NAME_SUFFIX, SYNARA_MCP_SERVER_NAME } from "./mcpConnectors";
+import { MCP_CONNECTOR_SERVER_NAME_SUFFIX, RAMSPACE_MCP_SERVER_NAME } from "./mcpConnectors";
 import { stripTerminalControlSequences } from "./text";
 
 // Stored on persisted warning rows that came from Codex stderr.
@@ -96,7 +96,7 @@ export function classifyCodexStderr(
     )?.[1];
     if (
       server &&
-      server !== SYNARA_MCP_SERVER_NAME &&
+      server !== RAMSPACE_MCP_SERVER_NAME &&
       !server.endsWith(MCP_CONNECTOR_SERVER_NAME_SUFFIX)
     ) {
       return { kind: "user-mcp-oauth", server };

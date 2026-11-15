@@ -11,11 +11,11 @@ import type {
   ServerProviderUsageSnapshot,
   StatsGetRecapResult,
   ThreadId,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import {
   providerUsageDisplayName,
   selectVisibleProviderUsageSnapshots,
-} from "@synara/shared/providerUsage";
+} from "@ramspace/shared/providerUsage";
 import { pluralize } from "~/i18n/pluralize";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
@@ -47,7 +47,7 @@ import { useStore } from "~/store";
 import { createAccountRateLimitThreadsSelector } from "~/storeSelectors";
 import { useTasksSurfaceEnabled } from "~/tasksSurface";
 import type { Project } from "~/types";
-import { formatNumber } from "@synara/profile-ui/formatting";
+import { formatNumber } from "@ramspace/profile-ui/formatting";
 import { ProjectSidebarIcon } from "../ProjectSidebarIcon";
 import { ProviderIcon } from "../ProviderIcon";
 import { RouteInsetSurface } from "../RouteInsetSurface";
@@ -839,7 +839,7 @@ export default function InboxView() {
                     {isRecapUnavailableError(recapQuery.error) ? (
                       <Tile className="p-5 @lg:px-7 @lg:py-6">
                         <span className="text-ui text-muted-foreground">
-                          {t("common:theDayRecapNeedsANewerSynaraServer")}
+                          {t("common:theDayRecapNeedsANewerRamspaceServer")}
                         </span>
                       </Tile>
                     ) : (

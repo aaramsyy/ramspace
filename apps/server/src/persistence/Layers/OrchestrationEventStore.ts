@@ -12,7 +12,7 @@ import {
   ThreadId,
   TurnId,
   type ServerSettings,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import * as SqlClient from "effect/unstable/sql/SqlClient";
 import * as SqlSchema from "effect/unstable/sql/SqlSchema";
 import { Effect, Layer, Option, Schema, Stream } from "effect";

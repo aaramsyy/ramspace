@@ -10,8 +10,8 @@ import {
   type ProviderInstanceConfigMap,
   type ServerProviderStatus,
   type ServerProviderUsageSnapshot,
-} from "@synara/contracts";
-import { providerCliCommandName } from "@synara/shared/providerCliProfiles";
+} from "@ramspace/contracts";
+import { providerCliCommandName } from "@ramspace/shared/providerCliProfiles";
 import type { ReactNode } from "react";
 
 import {

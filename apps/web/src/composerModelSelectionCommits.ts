@@ -3,7 +3,7 @@
 //          composer, so a started chat can store them on the server right away.
 // Exports: onComposerModelSelectionCommitted, notifyComposerModelSelectionCommitted
 
-import type { ThreadId } from "@synara/contracts";
+import type { ThreadId } from "@ramspace/contracts";
 
 type ComposerModelSelectionCommitListener = (threadId: ThreadId) => void;
 

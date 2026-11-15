@@ -1,12 +1,12 @@
 // FILE: BillingSettingsPanel.tsx
-// Purpose: The "Synara Alto" section of the Usage Billing tab — monthly and yearly
+// Purpose: The "Ramspace Alto" section of the Usage Billing tab — monthly and yearly
 //          plan cards that each open their checkout plus what Alto includes, or the
 //          current plan with Manage and links to the features it unlocks. Checkout and
 //          the customer portal open in the browser through Polar, using the
 //          server-selected billing environment.
 // Layer: Web settings feature
 
-import type { AccountBillingStatus, AccountStatus } from "@synara/contracts";
+import type { AccountBillingStatus, AccountStatus } from "@ramspace/contracts";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
@@ -41,7 +41,7 @@ import { SettingsCard, SettingsListRow, SettingsSectionShell } from "./SettingsP
 
 type BillingPlan = AccountBillingStatus["plans"][number];
 
-/** What Alto adds on top of Free; mirrors the plan list on trysynara.com/pricing. */
+/** What Alto adds on top of Free; mirrors the plan list on tryramspace.com/pricing. */
 const ALTO_FEATURES: ReadonlyArray<{
   icon: typeof BellIcon;
   title: string;
@@ -50,7 +50,7 @@ const ALTO_FEATURES: ReadonlyArray<{
 }> = [
   {
     icon: DeviceComputerIcon,
-    title: "Remote from any computer running Synara",
+    title: "Remote from any computer running Ramspace",
     description: "Steer, approve and ship from another computer.",
   },
   {
@@ -60,39 +60,39 @@ const ALTO_FEATURES: ReadonlyArray<{
   },
   {
     icon: UserIcon,
-    title: "Your page at trysynara.com/@handle",
+    title: "Your page at tryramspace.com/@handle",
     description: "Share the activity, models and streaks from your usage.",
   },
   { icon: DeviceMobileIcon, title: "Remote from iPhone and iPad", soon: true },
-  { icon: BotIcon, title: "Synara Bots", soon: true },
+  { icon: BotIcon, title: "Ramspace Bots", soon: true },
 ];
 
 /** Deep-link target for "See plans" / plan links elsewhere in Settings. */
-export const SYNARA_PLAN_SECTION_ID = "settings-synara-plan";
+export const RAMSPACE_PLAN_SECTION_ID = "settings-ramspace-plan";
 
 /** Opens the plan section of Usage & limits. */
-export function useOpenSynaraPlan() {
+export function useOpenRamspacePlan() {
   const navigate = useNavigate();
   return () =>
     void navigate({
       to: "/settings",
-      search: { section: "usage", target: SYNARA_PLAN_SECTION_ID },
+      search: { section: "usage", target: RAMSPACE_PLAN_SECTION_ID },
     });
 }
 
 /**
- * The signed-in account's Synara plan for Settings › Profile. Null until the plan is
+ * The signed-in account's Ramspace plan for Settings › Profile. Null until the plan is
  * known — and in builds without billing, where it is never asked for — so the profile
  * never flashes a guess.
  */
-export function useSynaraPlan(): { readonly granted: boolean; readonly open: () => void } | null {
+export function useRamspacePlan(): { readonly granted: boolean; readonly open: () => void } | null {
   const { status } = useAccount();
   const signedIn = status?.state === "signed-in";
   const query = useQuery({
     ...accountBillingQueryOptions(status),
     enabled: ACCOUNT_BILLING_ENABLED && signedIn,
   });
-  const open = useOpenSynaraPlan();
+  const open = useOpenRamspacePlan();
   if (!ACCOUNT_BILLING_ENABLED || !signedIn || query.data?.available !== true) return null;
   return { granted: query.data.access === "granted", open };
 }
@@ -168,8 +168,8 @@ function BillingAccountPanel({ status, scope }: { status: AccountStatus | null; 
 
   return (
     <SettingsSectionShell
-      id={SYNARA_PLAN_SECTION_ID}
-      title="settings:synaraAltoPro"
+      id={RAMSPACE_PLAN_SECTION_ID}
+      title="settings:ramspaceAltoPro"
       action={
         sandbox ? (
           <Badge variant="outline">Sandbox</Badge>
@@ -439,7 +439,7 @@ function ActiveAltoCard(props: {
       />
       <SettingsListRow
         title="Public page"
-        description="Share your usage at trysynara.com/@handle."
+        description="Share your usage at tryramspace.com/@handle."
         actions={
           <Button variant="ghost" size="sm" onClick={() => props.onOpenSection("profile")}>
             Profile

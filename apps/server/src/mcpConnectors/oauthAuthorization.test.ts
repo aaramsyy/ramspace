@@ -3,7 +3,7 @@
 import { describe, expect, it, vi } from "vitest";
 
 const network = vi.hoisted(() => ({ request: vi.fn(), forward: vi.fn() }));
-vi.mock("@synara/shared/outboundHttp", () => ({ outboundHttp: { request: network.request } }));
+vi.mock("@ramspace/shared/outboundHttp", () => ({ outboundHttp: { request: network.request } }));
 vi.mock("./proxy.ts", async (importOriginal) => ({
   ...(await importOriginal<typeof import("./proxy.ts")>()),
   probeMcpConnector: async () => ({ kind: "oauth", scope: "openid" }),

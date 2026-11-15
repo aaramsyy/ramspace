@@ -9,7 +9,7 @@ import {
   type OrchestrationThread,
   type ServerSettings,
   type UsageLimitRecovery,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { assert, it } from "@effect/vitest";
 import { Effect, Layer, PubSub, Stream } from "effect";
 import { TestClock } from "effect/testing";

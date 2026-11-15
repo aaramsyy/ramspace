@@ -50,4 +50,4 @@ export interface ProviderRuntimeIngestionShape {
 export class ProviderRuntimeIngestionService extends ServiceMap.Service<
   ProviderRuntimeIngestionService,
   ProviderRuntimeIngestionShape
->()("synara/orchestration/Services/ProviderRuntimeIngestion/ProviderRuntimeIngestionService") {}
+>()("ramspace/orchestration/Services/ProviderRuntimeIngestion/ProviderRuntimeIngestionService") {}

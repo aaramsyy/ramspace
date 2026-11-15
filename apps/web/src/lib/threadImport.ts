@@ -6,7 +6,7 @@ import type {
   ProviderComposerCapabilities,
   ProviderInstanceId,
   ProviderKind,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 
 import type { ProviderInstanceOption } from "../appSettings";
 

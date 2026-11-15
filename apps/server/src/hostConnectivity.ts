@@ -1,6 +1,6 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import { isAbsolute, join } from "node:path";
-import { installCloudflared, CLOUDFLARED_VERSION } from "@synara/shared/cloudflared";
+import { installCloudflared, CLOUDFLARED_VERSION } from "@ramspace/shared/cloudflared";
 import { startCloudflareIngress } from "./cloudflare/ingress";
 import { startCloudflareConnector } from "./cloudflare/connector";
 import { requestAuthorizationSnapshot, startRemoteAuthorization } from "./cloudflare/authorization";
@@ -15,7 +15,7 @@ import type { AuthControlPlaneShape } from "./auth/Services/AuthControlPlane";
 import type { RemoteDeviceTrustRepositoryShape } from "./persistence/Services/RemoteDeviceTrust";
 import { acceptRemotePairing } from "./remotePairing/gateway";
 
-import { AccountApiError } from "@synara/shared/account";
+import { AccountApiError } from "@ramspace/shared/account";
 import { createServerAccountClient } from "./accountHttp";
 import WebSocket, { WebSocketServer } from "ws";
 import {
@@ -29,7 +29,7 @@ import {
   REMOTE_INNER_PAIRING_PATH,
 } from "./remoteTransport/tunnel";
 
-import { EnvironmentId, HOST_SESSION_CLOSE_REVOKED } from "@synara/contracts";
+import { EnvironmentId, HOST_SESSION_CLOSE_REVOKED } from "@ramspace/contracts";
 import {
   accountApiIssuer,
   readAccountFile,
@@ -353,7 +353,7 @@ export async function startHostConnectivity(
           // allocation is known, its ID also fences a delayed disable response.
           stops.push(() => disabling);
           void stop().catch(() =>
-            console.warn("[synara] Remote connector cleanup could not be verified."),
+            console.warn("[ramspace] Remote connector cleanup could not be verified."),
           );
         }
       }),
@@ -364,9 +364,9 @@ export async function startHostConnectivity(
           if (!controller.signal.aborted) tunnel.renew(renewed);
         })
         .catch(() => {
-          console.warn("[synara] Remote TLS identity unavailable; local re-pair is required.");
+          console.warn("[ramspace] Remote TLS identity unavailable; local re-pair is required.");
           void stop().catch(() =>
-            console.warn("[synara] Remote connector cleanup could not be verified."),
+            console.warn("[ramspace] Remote connector cleanup could not be verified."),
           );
         });
     }, 60 * 60_000);
@@ -407,7 +407,7 @@ export async function startHostConnectivity(
       // Revocations must reach open connections on the poll cadence; without any,
       // admission asks for a fresh snapshot and a slow poll keeps tombstones current.
       active: () => remoteSessions.remoteConnectionsOpen,
-      log: (message) => console.warn(`[synara] ${message}`),
+      log: (message) => console.warn(`[ramspace] ${message}`),
     });
     paidAdmissionAvailable = authorizationPoll.paidAvailable;
     ensureAdmission = authorizationPoll.ensureFresh;
@@ -436,9 +436,9 @@ export async function startHostConnectivity(
       executable:
         options.connectorExecutable ??
         ((signal) =>
-          (executable ??= process.env.SYNARA_CLOUDFLARED_PATH
-            ? isAbsolute(process.env.SYNARA_CLOUDFLARED_PATH)
-              ? Promise.resolve(process.env.SYNARA_CLOUDFLARED_PATH)
+          (executable ??= process.env.RAMSPACE_CLOUDFLARED_PATH
+            ? isAbsolute(process.env.RAMSPACE_CLOUDFLARED_PATH)
+              ? Promise.resolve(process.env.RAMSPACE_CLOUDFLARED_PATH)
               : Promise.reject(new Error("The connector override must be an absolute path"))
             : installCloudflared(
                 join(options.config.baseDir, "tools", "cloudflared", CLOUDFLARED_VERSION),

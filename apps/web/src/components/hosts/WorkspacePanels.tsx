@@ -36,7 +36,7 @@ import {
   ProjectId,
   ThreadId,
   type AutomationRun,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { appHistory } from "../../appNavigation";
 import { useHandleNewChat } from "../../hooks/useHandleNewChat";
 import { resolveNewChatDefault, useAppSettings } from "../../appSettings";
@@ -165,13 +165,13 @@ function WorkspacePanel({
       resourceLifetime.current?.abort();
       resourceLifetime.current = null;
       const previous = frameRef.current;
-      if (previous) delete previous.synaraWorkspace;
+      if (previous) delete previous.ramspaceWorkspace;
       frameRef.current = frame;
       if (!frame) return;
       const lifetime = new AbortController();
       resourceLifetime.current = lifetime;
       // Same-origin application code only. No repository HTML is ever loaded in this frame.
-      frame.synaraWorkspace = {
+      frame.ramspaceWorkspace = {
         host,
         registerConnectionRecovery: (recovery) => {
           const ownsFrame = () =>
@@ -333,7 +333,7 @@ function WorkspacePanel({
     >
       <iframe
         ref={bind}
-        title={`Synara workspace on ${host.hostName}`}
+        title={`Ramspace workspace on ${host.hostName}`}
         className="min-h-0 w-full flex-1 border-0"
         allow="clipboard-read; clipboard-write"
         // The bundled app needs its own storage and scripts. This isolates state, not security principals.

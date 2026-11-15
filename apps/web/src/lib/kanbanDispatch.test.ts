@@ -1,4 +1,4 @@
-import { ProjectId, ThreadId } from "@synara/contracts";
+import { ProjectId, ThreadId } from "@ramspace/contracts";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useComposerDraftStore } from "../composerDraftStore";
@@ -443,9 +443,9 @@ describe("kanbanDispatch oversized prompts and pasted text", () => {
 
     expect(result.kind).toBe("dispatched");
     const turnStart = dispatchedCommand<{ message: { text: string } }>("thread.turn.start");
-    expect(turnStart?.message.text).toMatch(/^Read this file: synara-prompt-.+\.md$/);
+    expect(turnStart?.message.text).toMatch(/^Read this file: ramspace-prompt-.+\.md$/);
     const staged = lastStagedFile();
-    expect(staged?.name).toMatch(/^synara-prompt-.+\.md$/);
+    expect(staged?.name).toMatch(/^ramspace-prompt-.+\.md$/);
     await expect(staged?.file.text() ?? Promise.resolve("")).resolves.toContain(prompt);
   });
 

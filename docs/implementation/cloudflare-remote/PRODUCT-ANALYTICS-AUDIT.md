@@ -7,7 +7,7 @@ note adds no deployment or native-client qualification.
 
 ## Remote lane — 17 October 2026
 
-- Synara Remote shares product events (`remote` channel) and diagnostics
+- Ramspace Remote shares product events (`remote` channel) and diagnostics
   (`flavor: "remote"`) by default; Settings → General → Privacy → **Share usage and
   diagnostics** stops both and clears unsent events. Stable stays default-off and
   sends no diagnostics; Remote never uploads raw crash dumps.

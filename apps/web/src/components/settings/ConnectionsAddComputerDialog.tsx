@@ -18,7 +18,7 @@ import {
   remoteAccessErrorMessage,
   type RemotePairingPreview,
 } from "~/lib/hosts/remoteAccess";
-import type { RemoteAccessRequest } from "@synara/contracts";
+import type { RemoteAccessRequest } from "@ramspace/contracts";
 import { ensureNativeApi } from "~/nativeApi";
 import { ShortCodeField } from "../hosts/ShortCodeField";
 import { Button } from "../ui/button";

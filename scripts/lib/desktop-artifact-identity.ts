@@ -1,13 +1,13 @@
 // FILE: desktop-artifact-identity.ts
 // Purpose: Keeps packaged metadata, native identity and artifact names aligned.
 import {
-  synaraDesktopIdentity,
-  type SynaraPackagedDesktopFlavor,
-} from "@synara/shared/desktopIdentity";
+  ramspaceDesktopIdentity,
+  type RamspacePackagedDesktopFlavor,
+} from "@ramspace/shared/desktopIdentity";
 
 export function createDesktopArtifactIdentity(input: {
   readonly platform: "mac" | "linux" | "win";
-  readonly flavor: SynaraPackagedDesktopFlavor;
+  readonly flavor: RamspacePackagedDesktopFlavor;
 }) {
   // Stable's NSIS GUID deliberately survives public bundle ID changes. An
   // experimental installer must not register itself as that same product;
@@ -15,14 +15,14 @@ export function createDesktopArtifactIdentity(input: {
   if (input.platform === "win" && !["production", "beta", "remote"].includes(input.flavor)) {
     throw new Error("Isolated desktop flavors are currently supported on macOS and Linux only.");
   }
-  const identity = synaraDesktopIdentity(input.flavor);
+  const identity = ramspaceDesktopIdentity(input.flavor);
   const suffix = input.flavor === "production" ? "" : `-${input.flavor}`;
   return {
     identity,
     packageMetadata: {
-      name: `synara-desktop${suffix}`,
+      name: `ramspace-desktop${suffix}`,
       productName: identity.displayName,
-      synaraDesktopFlavor: input.flavor,
+      ramspaceDesktopFlavor: input.flavor,
     },
     buildConfig: {
       appId: identity.bundleId,

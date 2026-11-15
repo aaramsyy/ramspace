@@ -1,6 +1,6 @@
 # Codex provider accounts
 
-Synara can run multiple Codex accounts side by side. Each account has its own
+Ramspace can run multiple Codex accounts side by side. Each account has its own
 sign-in, so you log in to each one **once** and never need to log out to switch.
 Sessions, model discovery, health checks, and git text generation all route to
 the account selected for the thread.
@@ -34,8 +34,8 @@ message will use.
 
 ## How isolation works
 
-Codex reads state from `CODEX_HOME`. Synara asynchronously prepares a generated
-overlay under `$SYNARA_HOME/codex-home-overlay` (or the corresponding Synara
+Codex reads state from `CODEX_HOME`. Ramspace asynchronously prepares a generated
+overlay under `$RAMSPACE_HOME/codex-home-overlay` (or the corresponding Ramspace
 runtime directory) and uses an account-specific subdirectory for isolated
 accounts:
 
@@ -46,7 +46,7 @@ accounts:
   account's **shadow auth home** instead. Missing files are allowed so Codex
   can create new account state lazily, while an existing private file that is
   itself a symlink is rejected to prevent accounts from aliasing credentials.
-- Synara writes the generated `config.toml` only inside the overlay and leaves
+- Ramspace writes the generated `config.toml` only inside the overlay and leaves
   the source configuration untouched.
 
 The default account uses the same overlay mechanism, with authentication and
@@ -54,7 +54,7 @@ other shared state sourced from the configured Codex home (`~/.codex` by
 default).
 
 Codex can rediscover the source `config.toml` as project-local configuration and
-warn that user-only keys such as `notify` were ignored there. Synara already
+warn that user-only keys such as `notify` were ignored there. Ramspace already
 loads those settings from its user-level overlay, so this duplicate diagnostic
 does not add a runtime-warning row. Warnings for other project configuration
 files and actual configuration errors remain visible.
@@ -65,14 +65,14 @@ files and actual configuration errors remain visible.
 2. Give it a label (e.g. "Work"). The account ID is filled in from the label
    (`codex_work`); it is the key threads use to find the account, so it cannot
    be changed later. Optionally pick an accent color.
-3. Leave **CODEX_HOME path** blank to let Synara keep the account's sign-in in
+3. Leave **CODEX_HOME path** blank to let Ramspace keep the account's sign-in in
    its own folder, then choose **Add account**.
-4. Select the new row and choose **Sign in**. Synara runs `codex login` in the
+4. Select the new row and choose **Sign in**. Ramspace runs `codex login` in the
    account's own environment; complete the browser prompts it opens. When the
-   login exits, Synara rechecks the account (choose **Check authentication**
+   login exits, Ramspace rechecks the account (choose **Check authentication**
    if the prompts finished outside the dialog). The row turns to
    `Authenticated` and the editor shows the signed-in email. The same login
-   also works from a Synara terminal through the account's **Terminal command**
+   also works from a Ramspace terminal through the account's **Terminal command**
    (`codex-work login` for an account with the ID `codex_work`), followed by
    **Refresh status** at the top of the Providers settings.
 
@@ -80,14 +80,14 @@ files and actual configuration errors remain visible.
    tab.
 
 To reuse a Codex home you already signed in to, choose **Import directory**
-instead of **Add account**; Synara references the directory without moving it.
+instead of **Add account**; Ramspace references the directory without moving it.
 
 ### Keeping the sign-in in a directory you control
 
 Set **Shadow auth home** in the account's editor to a directory such as
 `~/.codex_work` to keep only the account's sign-in there while it shares
 settings and history with the default account. The login persists in
-`~/.codex_work/auth.json`. Synara links it into the account overlay when
+`~/.codex_work/auth.json`. Ramspace links it into the account overlay when
 possible, with a file-copy fallback on systems where file symlinks are
 unavailable, and never logs its contents. The overlay is refreshed during
 asynchronous process-environment preparation before Codex launches.

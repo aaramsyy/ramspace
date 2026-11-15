@@ -170,7 +170,7 @@ export const UpdatableAvatarSource = Schema.Literals(["sso", "placeholder"]);
 export type UpdatableAvatarSource = typeof UpdatableAvatarSource.Type;
 
 /**
- * The part of a user's identity Synara owns, as opposed to what WorkOS knows.
+ * The part of a user's identity Ramspace owns, as opposed to what WorkOS knows.
  * Its existence is what "onboarding is finished" means — there is no separate
  * flag, so a profile row and a completed onboarding are the same fact.
  */
@@ -188,7 +188,7 @@ export const AccountProfile = Schema.Struct({
   /** The owner's published social usernames; absent (older servers) means none. */
   socialLinks: Schema.optional(Schema.NullOr(AccountProfileSocialLinks)),
   /**
-   * Whether the profile is served publicly at trysynara.com/@handle.
+   * Whether the profile is served publicly at tryramspace.com/@handle.
    * Optional-with-default rather than required so a client built before
    * visibility existed still decodes a server's answer; absent means
    * private, which is also the default for every new profile.
@@ -214,7 +214,7 @@ export const AccountMe = Schema.Struct({
   /** The organization the caller's token is scoped to; hosts belong to it. */
   organization: OrganizationSummary,
   /**
-   * The caller's Synara profile, or `null` when they have not onboarded.
+   * The caller's Ramspace profile, or `null` when they have not onboarded.
    * Optional rather than required so a client built before profiles existed
    * still decodes a response from a server that sends them.
    */
@@ -297,7 +297,7 @@ export type ListHostsResponse = typeof ListHostsResponse.Type;
  * What `/instance` publishes about this deployment's identity wiring.
  *
  * `clientId` and `workosApiUrl` are DEPRECATED: every provider call is
- * proxied through this service, so Synara's own clients no longer talk to
+ * proxied through this service, so Ramspace's own clients no longer talk to
  * the identity provider directly and need neither field. They stay in the
  * wire contract for stability — do not remove or repurpose them.
  */
@@ -476,7 +476,7 @@ export type OtpAuthenticateRequest = typeof OtpAuthenticateRequest.Type;
 // account service. Every path converges on the same session establishment.
 
 /**
- * Which identity provider an SSO button deep-links to. Deliberately Synara's
+ * Which identity provider an SSO button deep-links to. Deliberately Ramspace's
  * own vocabulary, not any vendor's spelling: the account service translates
  * to whatever its identity provider calls them.
  */

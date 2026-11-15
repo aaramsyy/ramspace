@@ -2,13 +2,13 @@
 // usernames out. A pasted profile link counts; anything else that doesn't parse is
 // reported back so the dialog can mark that field.
 
-import type { AccountProfileSocialLinks } from "@synara/contracts";
+import type { AccountProfileSocialLinks } from "@ramspace/contracts";
 import {
   normalizeSocialUsername,
   SOCIAL_LINK_PLATFORMS,
   type SocialLinkPlatform,
   type SocialLinks,
-} from "@synara/shared/socialLinks";
+} from "@ramspace/shared/socialLinks";
 
 /** Field text per platform, seeded from the stored usernames. */
 export function seedSocialLinkDrafts(

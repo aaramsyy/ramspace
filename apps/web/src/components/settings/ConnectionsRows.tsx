@@ -12,7 +12,7 @@ import type {
   HostConnection,
   HostSession,
   RemoteTrustedDevice,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 
 import { canManageHost, hostPlatformLabel } from "~/lib/hosts/api";
 import {

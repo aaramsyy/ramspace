@@ -1,11 +1,11 @@
 import { readExecutionContext } from "~/lib/hosts/executionContext";
-import { REMOTE_NATIVE_UNAVAILABLE } from "@synara/shared/remoteCapabilities";
+import { REMOTE_NATIVE_UNAVAILABLE } from "@ramspace/shared/remoteCapabilities";
 // FILE: OpenInPicker.tsx
 // Purpose: Render the chat/file header "Open In" controls for the active editor target.
 // Layer: Chat header action
 // Depends on: shared editor metadata, native shell bridge, and preferred editor state.
 
-import { type EditorId, type ResolvedKeybindingsConfig } from "@synara/contracts";
+import { type EditorId, type ResolvedKeybindingsConfig } from "@ramspace/contracts";
 import { useQuery } from "@tanstack/react-query";
 import { useState, type ReactNode } from "react";
 import { useEditorLaunchers, type EditorLaunchers } from "~/hooks/useEditorLaunchers";

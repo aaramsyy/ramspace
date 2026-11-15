@@ -10,15 +10,15 @@ import {
   type WsBootstrapNegotiateInput,
   type AccountHost,
   type Es256PublicKeyJwk,
-} from "@synara/contracts";
-import { signDpopProof, signMintRequest, type DeviceSigningKey } from "@synara/shared/deviceKey";
+} from "@ramspace/contracts";
+import { signDpopProof, signMintRequest, type DeviceSigningKey } from "@ramspace/shared/deviceKey";
 import {
   raceTransports,
   sortByTransportPreference,
   type TransportCandidate,
   type TransportKind,
   type TransportRaceResult,
-} from "@synara/shared/transportRace";
+} from "@ramspace/shared/transportRace";
 import { decodeJwt } from "jose";
 import WebSocket from "ws";
 import type { RemoteTlsAnchor } from "../remoteTransport/certificates";
@@ -29,7 +29,7 @@ import {
   REMOTE_OUTER_PATH,
 } from "../remoteTransport/tunnel";
 
-const SESSION_PRESENTATION_HTU = "synara://remote/session";
+const SESSION_PRESENTATION_HTU = "ramspace://remote/session";
 const HANDSHAKE_TIMEOUT_MS = 15_000;
 
 export interface DialIdentity {

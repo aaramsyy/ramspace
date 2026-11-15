@@ -22,7 +22,7 @@ import {
 export type WsSessionRole = "owner" | "client";
 
 export const CurrentWsSessionRole = ServiceMap.Reference<WsSessionRole>(
-  "synara/ws/CurrentSessionRole",
+  "ramspace/ws/CurrentSessionRole",
   { defaultValue: () => "client" },
 );
 
@@ -38,7 +38,7 @@ export interface WsConnectionSession {
  * upgrade value. withoutWsConnectionSessionHeaders also removes logical request
  * overrides before Effect merges request and upgrade headers.
  */
-export const WS_CONNECTION_SESSION_HEADER = "x-synara-ws-connection-session";
+export const WS_CONNECTION_SESSION_HEADER = "x-ramspace-ws-connection-session";
 
 /** Preserve protocol metadata while keeping connection identity transport-owned. */
 export function withoutWsConnectionSessionHeaders(
@@ -90,7 +90,7 @@ export interface WsConnectionSessionsShape {
 export class WsConnectionSessions extends ServiceMap.Service<
   WsConnectionSessions,
   WsConnectionSessionsShape
->()("synara/ws/WsConnectionSessions") {}
+>()("ramspace/ws/WsConnectionSessions") {}
 
 export const makeWsConnectionSessions = Effect.sync(() => {
   const sessions = new Map<

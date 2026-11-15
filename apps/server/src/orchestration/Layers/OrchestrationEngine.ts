@@ -5,10 +5,10 @@ import type {
   ProjectId,
   SpaceId,
   ThreadId,
-} from "@synara/contracts";
-import { OrchestrationCommand, ORCHESTRATION_WS_METHODS } from "@synara/contracts";
-import { makeKeyedDrainableWorker } from "@synara/shared/KeyedDrainableWorker";
-import { SIDECHAT_INACTIVITY_EXPIRY_MS, sidechatExpiryMs } from "@synara/shared/sidechatExpiry";
+} from "@ramspace/contracts";
+import { OrchestrationCommand, ORCHESTRATION_WS_METHODS } from "@ramspace/contracts";
+import { makeKeyedDrainableWorker } from "@ramspace/shared/KeyedDrainableWorker";
+import { SIDECHAT_INACTIVITY_EXPIRY_MS, sidechatExpiryMs } from "@ramspace/shared/sidechatExpiry";
 import {
   Cause,
   Deferred,
@@ -1992,7 +1992,7 @@ const makeOrchestrationEngine = Effect.gen(function* () {
                     commandId: "repair-local-state",
                     commandType: ORCHESTRATION_WS_METHODS.repairState,
                     detail:
-                      "Projection repair failed and its staged backup could not be restored. Restart Synara before retrying repair.",
+                      "Projection repair failed and its staged backup could not be restored. Restart Ramspace before retrying repair.",
                   }),
                 ),
               ),

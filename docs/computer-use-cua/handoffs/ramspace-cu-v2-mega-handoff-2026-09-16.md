@@ -1,9 +1,9 @@
-# Synara Computer Use V2 - Mega Handoff & Research Dossier
+# Ramspace Computer Use V2 - Mega Handoff & Research Dossier
 
 > **Created:** 2026-09-16, evening (local), by Kartik's agent (Aside session `I0UdxznQh9nis05h`), following the `handoff` skill (saved to the OS temp dir).
-> **Purpose:** one self-contained document with everything learned and researched so far about the Synara Computer Use effort, the macOS background-control research, the current implementation, and exactly how to continue.
+> **Purpose:** one self-contained document with everything learned and researched so far about the Ramspace Computer Use effort, the macOS background-control research, the current implementation, and exactly how to continue.
 > **Audience:** the next agent or engineer picking this up.
-> **Working basis:** branch `agent/computer-use-preview` @ `e2a1deb06` (2026-09-17; rebased driver, native revision 15) at PR `kartikkabadi/synara#1227` targeting `Emanuele-web04/synara`, clone at `/Users/user/synara-computer-use`.
+> **Working basis:** branch `agent/computer-use-preview` @ `e2a1deb06` (2026-09-17; rebased driver, native revision 15) at PR `kartikkabadi/ramspace#1227` targeting `aaramsyy/ramspace`, clone at `/Users/user/ramspace-computer-use`.
 > **Mode right now:** planning and research only. Kartik explicitly asked for "really good plans and stuff", not implementation, from this assistant. If you are the implementing agent, sections 5-8 are written for you.
 > **Redaction:** contains no secrets, tokens, or credentials.
 
@@ -17,7 +17,7 @@
 
 **State in one screen**
 
-- Clone `/Users/user/synara-computer-use`, branch `agent/computer-use-preview`, HEAD `e2a1deb06`, tree clean.
+- Clone `/Users/user/ramspace-computer-use`, branch `agent/computer-use-preview`, HEAD `e2a1deb06`, tree clean.
 - Three local commits on top of `bb7eb421c`, **not pushed**: PR #1227 still shows `bb7eb421c` on GitHub.
   - `25850f947` build(cua): rebase native driver patch onto 0.28.2
   - `52300a0b4` fix(computer): update Cua version copy to 0.28.2
@@ -26,7 +26,7 @@
 - `node_modules` removed again. `bun install --frozen-lockfile` restores in ~8 s. Before `bun run typecheck`, run `bun run postinstall` inside `apps/marketing` once; it generates the gitignored `.source` the typecheck needs.
 - Checks after the rebase: typecheck pass (7/7), lint 0 errors / 630 warnings, fmt:check pass, tests 5,751 pass / 1 fail / 20 skip. The one failure is pre-existing: `apps/server/src/codexAppServerManager.test.ts:97` expects "Split the script when new page state requires inspection", but `packages/shared/src/browserAutomationCatalogue.ts:103` now says "Split when new state needs inspection or a human decision". The stale phrase exists only in the test, also at `bb7eb421c`. One-line test fix, awaiting Kartik.
 - **Standing rule: no implementation, no push, no PR update until Kartik explicitly says go.**
-- Quick sanity check (five seconds): `shasum -a 256 apps/desktop/patches/cua-driver/0001-synara-native.patch` must equal `patchSha256` in `packages/shared/src/cuaDriverRelease.json`.
+- Quick sanity check (five seconds): `shasum -a 256 apps/desktop/patches/cua-driver/0001-ramspace-native.patch` must equal `patchSha256` in `packages/shared/src/cuaDriverRelease.json`.
 
 **Decisions made (Kartik, 2026-09-17)**
 
@@ -46,7 +46,7 @@
 **What the rebase changed, so nobody re-derives it**
 
 - Conflicts were only 6 files / 12 hunks: `input/mouse.rs` (7), `tools/click.rs`, `tools/set_value.rs`, `tools/type_text.rs`, `cursor/overlay.rs`, `cua-driver/src/serve.rs`. Everything else merged clean.
-- `MousePostMode::Both` now means one SkyLight-first post (Synara's single-transport rule); upstream's `PublicOnly` is used for foreground clicks. New helper `click_at_xy_native_with_window_local` keeps the non-Chromium synthetic background recipe. Synara's cancellation-gate wrapping, `semantic_only` lease selection and pid-less `set_value_blocking` are preserved.
+- `MousePostMode::Both` now means one SkyLight-first post (Ramspace's single-transport rule); upstream's `PublicOnly` is used for foreground clicks. New helper `click_at_xy_native_with_window_local` keeps the non-Chromium synthetic background recipe. Ramspace's cancellation-gate wrapping, `semantic_only` lease selection and pid-less `set_value_blocking` are preserved.
 - Full resolution record: `apps/desktop/patches/cua-driver/README.md` (Revision 15) and the findings doc, section 8.
 - To redo or extend the rebase: the findings doc, section 8, has the method (blobless clone with sparse checkout, materialize both tags, per-file three-way merge, bump the `serve.rs` literal, regenerate the patch, verify with `patch -p1` and `cargo build`).
 
@@ -77,14 +77,14 @@ Source checks prove the code builds and the contracts hold. They do not prove th
 
 - Still accurate: section 2 (paths), 3.2-3.7 (implementation map, read the pin values from this block), 4 (research corpus, apply the corrections above), 5 (plan; engine choice is now C), 6.1-6.3 (setup and verification tiers), 7 (risks).
 - Superseded: section 0 pin/state lines, 3.1 PR stats, 6.4 next steps, 6.6 open questions 1-3, 11.3 decision shortlist items 1-3.
-- New companion doc: `/tmp/synara-cu-v2-exploration-2026-09-17.md` (verified facts, corrections, the rebase record, the CPS table, the 26.4 probe, check results).
+- New companion doc: `/tmp/ramspace-cu-v2-exploration-2026-09-17.md` (verified facts, corrections, the rebase record, the CPS table, the 26.4 probe, check results).
 
 ---
 
 ## 0. Executive summary (the 10 things that matter most)
 
-1. **Goal:** the best open-source computer-use system for AI agents on macOS. Feature parity with OpenAI's Codex Computer Use first, then better (speed, scroll reliability, robustness, full local capability). Agents are the primary consumer; Synara is the first host.
-2. **Current work:** PR #1227 is the top of stack. It runs a heavily patched, pinned `cua-driver 0.28.2` (Synara native revision 15, rebased 2026-09-17) inside an Electron host, wrapped by a server-side `ComputerManager`/`CuaComputerBackend` layer, with a live in-chat preview UI built on top.
+1. **Goal:** the best open-source computer-use system for AI agents on macOS. Feature parity with OpenAI's Codex Computer Use first, then better (speed, scroll reliability, robustness, full local capability). Agents are the primary consumer; Ramspace is the first host.
+2. **Current work:** PR #1227 is the top of stack. It runs a heavily patched, pinned `cua-driver 0.28.2` (Ramspace native revision 15, rebased 2026-09-17) inside an Electron host, wrapped by a server-side `ComputerManager`/`CuaComputerBackend` layer, with a live in-chat preview UI built on top.
 3. **Biggest known weaknesses:** it is not fast; macOS scroll is quantized and unmeasured; some control paths are limited (foreground-only drag, no hover, no menu tool, no window-frame tool); and human-vs-agent input isolation has an admission gate but no certified isolation guarantee.
 4. **The single most important research finding:** there is no single "hidden API". Background, non-stealing input is a _combination_: per-process event delivery (`CGEventPostToPid` / SkyLight `SLEventPostToPid` + full CGEvent field stamping), a synthetic "you are active / you hold key focus" layer (AppKit-defined `NSEvent`s + private CPS process notifications + `_SLPSSetFrontProcessWithOptions`), NSEvent-first event construction (for AppKit identity bits), and optional visual masking when a real activation is unavoidable (Electron-class apps). See section 4.
 5. **Codex parity reference:** Codex's (closed-source) implementation is now well documented by third parties and by our own reverse-engineering. The shape: per-pid delivery + synthetic focus belief + AX-first actioning + settle/verify + virtual cursor + per-app approvals. We already have big parts of this in the patched cua driver; gaps are enumerated in section 5.4.
@@ -100,7 +100,7 @@ Source checks prove the code builds and the contracts hold. They do not prove th
 
 From the conversation with Kartik:
 
-- "I want to make the best open source computer use system for agents." Main use case: agents (Synara first, usable by others). "I don't want to make this for something else."
+- "I want to make the best open source computer use system for agents." Main use case: agents (Ramspace first, usable by others). "I don't want to make this for something else."
 - **Full macOS:** in theory the agent should be able to do anything a user can do. If no accessible API exists for something, that is an acceptable gap; but the default should not be an artificial sandbox. Sandboxing (VMs, containers) comes later as an option, not as the primary posture.
 - **Phase order:** first full capability parity with Codex Computer Use; then surpass it (speed, reliability, scroll, robustness).
 - **Open source:** "this is going to be open source... we should see what we should do and what we should not do." Boundary undecided; treat as a design decision (section 5.6).
@@ -114,7 +114,7 @@ From the conversation with Kartik:
 - Speed: measured targets for `get_state` round trip, click round trip, type round trip, host startup; no regressions in reliability budgets.
 - Reliability: no focus theft, no pointer hijack, fail-closed on ambiguity, deterministic cancellation, verified delivery where the platform can verify.
 - Isolation: human and agent can use the machine simultaneously; three concurrent agent targets work; off-Space operations never drag the user's desktop.
-- Open source: clean licensing/attribution (cua MIT + Synara MIT), guardrailed design (section 5.6), publishable docs.
+- Open source: clean licensing/attribution (cua MIT + Ramspace MIT), guardrailed design (section 5.6), publishable docs.
 
 ---
 
@@ -122,21 +122,21 @@ From the conversation with Kartik:
 
 ### 2.1 Repos and checkouts on this Mac
 
-| Path                                  | What it is                                                                                                                                                                    | State / notes                                                                           |
-| ------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
-| `/Users/user/synara`                  | Main Synara repo checkout (Kartik's fork).                                                                                                                                    | On `agent/pi-midstream-followup`, dirty with unrelated changes. Do not use for CU work. |
-| `/Users/user/synara-computer-use`     | Fresh clone made for this effort: `kartikkabadi/synara`, branch `agent/computer-use-preview` @ `bb7eb421c`. Partial clone (`blob:none`). `node_modules` removed to save disk. | The working base for CU v2. `bun install` restores deps (~8 s from cache).              |
-| `/Users/user/synara-cua`              | Older "Synara Cua" checkout, branch `cua-rebuild`, native rev ~5. Has the original `docs/computer-use-cua` corpus.                                                            | Historical reference.                                                                   |
-| `/Users/user/synara-wt/cua-port`      | Worktree of `agent/cua-port-1090` (PR #1090 era), ahead 8 / behind 30 vs upstream main.                                                                                       | Stale; not for new work.                                                                |
-| `/Users/user/synara-beta`             | Older beta checkout.                                                                                                                                                          | Not CU related.                                                                         |
-| `/Users/user/background-computer-use` | Separate Swift project: local macOS background computer-use API (loopback HTTP; no pointer stealing; window motion; session cursors).                                         | Clean. Best-in-class reference for background input + window movement.                  |
-| `/Users/user/pi-computer-use`         | Pi extension `@injaneity/pi-computer-use` v0.5.0 (macOS/Windows/Linux).                                                                                                       | Clean. Best reference for agent tool model + permission onboarding.                     |
-| `computer-use-sdk`                    | Private TS SDK repo on GitHub (`kartikkabadi/computer-use-sdk`), not cloned locally.                                                                                          | Wraps `cua-driver-rs`; reference only.                                                  |
+| Path                                  | What it is                                                                                                                                                                      | State / notes                                                                           |
+| ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| `/Users/user/ramspace`                | Main Ramspace repo checkout (Kartik's fork).                                                                                                                                    | On `agent/pi-midstream-followup`, dirty with unrelated changes. Do not use for CU work. |
+| `/Users/user/ramspace-computer-use`   | Fresh clone made for this effort: `kartikkabadi/ramspace`, branch `agent/computer-use-preview` @ `bb7eb421c`. Partial clone (`blob:none`). `node_modules` removed to save disk. | The working base for CU v2. `bun install` restores deps (~8 s from cache).              |
+| `/Users/user/ramspace-cua`            | Older "Ramspace Cua" checkout, branch `cua-rebuild`, native rev ~5. Has the original `docs/computer-use-cua` corpus.                                                            | Historical reference.                                                                   |
+| `/Users/user/ramspace-wt/cua-port`    | Worktree of `agent/cua-port-1090` (PR #1090 era), ahead 8 / behind 30 vs upstream main.                                                                                         | Stale; not for new work.                                                                |
+| `/Users/user/ramspace-beta`           | Older beta checkout.                                                                                                                                                            | Not CU related.                                                                         |
+| `/Users/user/background-computer-use` | Separate Swift project: local macOS background computer-use API (loopback HTTP; no pointer stealing; window motion; session cursors).                                           | Clean. Best-in-class reference for background input + window movement.                  |
+| `/Users/user/pi-computer-use`         | Pi extension `@injaneity/pi-computer-use` v0.5.0 (macOS/Windows/Linux).                                                                                                         | Clean. Best reference for agent tool model + permission onboarding.                     |
+| `computer-use-sdk`                    | Private TS SDK repo on GitHub (`kartikkabadi/computer-use-sdk`), not cloned locally.                                                                                            | Wraps `cua-driver-rs`; reference only.                                                  |
 
 ### 2.2 GitHub surface
 
-- Fork: `github.com/kartikkabadi/synara` (origin of the clone).
-- Upstream: `github.com/Emanuele-web04/synara` (public; MIT; PRs live here).
+- Fork: `github.com/kartikkabadi/ramspace` (origin of the clone).
+- Upstream: `github.com/aaramsyy/ramspace` (public; MIT; PRs live here).
 - **PR #1227**: "Ambient in-chat computer preview plus foreground focus restore" (draft; head `agent/computer-use-preview` @ kartikkabadi; base `main`; 92 commits per GitHub; updated 2026-09-16). Branch is 125 commits ahead of main, 652 files changed, +104,356 / -4,110 vs main.
 - PR #1090: earlier native macOS computer-use port (`agent/cua-port-1090`).
 - Branch `upstream/codex/computer-use-nativo-macos-con` on the upstream repo: older CU work that flows into #1227.
@@ -152,7 +152,7 @@ From the conversation with Kartik:
 
 - Account skills (agents on this Mac): `/Users/user/.agents/skills/` - notably `codex-computer-use`, `verify`, `research`/`link-research`, `hygiene`, `performance-engineer`, `thermo-nuclear-code-review` variants, `commit`, plus many `principle-*`/`caveman-*` helpers.
 - Repo-local skills: `.claude/skills/verify/SKILL.md` and `.claude/skills/react-doctor/SKILL.md` (present in both the main checkout and the clone).
-- Project memory: `/Users/user/synara/.mind/` - `python3 .mind/runtime.py recall|capture|confirm`. Already captured: CU v2 is planning-only; clone path; sandbox exec-kill; disk pressure warning.
+- Project memory: `/Users/user/ramspace/.mind/` - `python3 .mind/runtime.py recall|capture|confirm`. Already captured: CU v2 is planning-only; clone path; sandbox exec-kill; disk pressure warning.
 - Evidence and docs: `docs/computer-use-cua/` in the clone (see 3.5).
 
 ---
@@ -169,12 +169,12 @@ Implemented (per the PR comment and recon):
 - Multi-Space safety contract: active-Space routing for pointer, generic keyboard, scroll, drag, activation, and foreground actions; stable-membership routing only for exact retained semantic text targets; revalidation of identity/ownership/geometry/membership/AX ancestry; fail-closed refusal for ambiguous or stale targets; off-Space screenshot freshness explicitly unverified.
 - Per-thread browser/Computer tool guidance on first use and every tenth use (bounded LRU).
 - Removed the misleading right-sidebar Computer pane while keeping the ambient in-chat live preview and backend tools.
-- Foreground-only composer focus guard (pending focus waits for a real window-focus event instead of activating Synara after turns).
+- Foreground-only composer focus guard (pending focus waits for a real window-focus event instead of activating Ramspace after turns).
 - Rebuilt unsigned DMGs from the staged app (checksums in the PR comment).
 
 Source verification at PR time: `bun run fmt:check` pass; `bun run lint` 0 errors / 630 warnings; `bun run typecheck` pass (7 packages); `bun run windows-runtime:check` pass (249 files); `rustfmt --check` pass; `cargo check -p cua-driver` pass (one dead-code warning); React Doctor 65/100 (unchanged); `bun run test` run twice with timing flakes (reported as a verification gap, not a pass).
 
-Packaged artifacts at PR time: `Synara-0.8.4-arm64.dmg` + `.zip` (hashes in the PR comment; bundle `com.emanueledipietro.synara`, Cua Driver 0.24.0, upstream revision `4b3396d9...`, native revision 14, patch sha `3375ac1c...`). Unsigned; not notarized.
+Packaged artifacts at PR time: `Ramspace-0.8.4-arm64.dmg` + `.zip` (hashes in the PR comment; bundle `com.aaramsyy.ramspace`, Cua Driver 0.24.0, upstream revision `4b3396d9...`, native revision 14, patch sha `3375ac1c...`). Unsigned; not notarized.
 
 **Explicitly unproven** (needs a freshly packaged rev-14 app + new TCC grants; from the PR comment and repo docs):
 
@@ -189,7 +189,7 @@ Packaged artifacts at PR time: `Synara-0.8.4-arm64.dmg` + `.zip` (hashes in the 
 
 Pin (`packages/shared/src/cuaDriverRelease.json`): cua-driver `0.24.0`; upstream commit `4b3396d9fe4bd3cf723b0eb8db83c18a8764b520` (trycua/cua); archive sha `31790cb4...`; patch sha `3375ac1c...`; `nativeRevision 14`; Rust `1.97.1`.
 
-Patch: `apps/desktop/patches/cua-driver/0001-synara-native.patch` (~7,888 lines, 30 file hunks). The daemon stamps `synara_native_revision` from a literal in `serve.rs` (patch line ~455), NOT from the manifest. The patch README warns: bumping the manifest without the literal breaks the handshake and daemons get retired seconds after spawn.
+Patch: `apps/desktop/patches/cua-driver/0001-ramspace-native.patch` (~7,888 lines, 30 file hunks). The daemon stamps `ramspace_native_revision` from a literal in `serve.rs` (patch line ~455), NOT from the manifest. The patch README warns: bumping the manifest without the literal breaks the handshake and daemons get retired seconds after spawn.
 
 Revision recap:
 
@@ -197,7 +197,7 @@ Revision recap:
 - **rev 2**: read-only `check_input_ready` for exact PID/window; admission rechecks window ownership, active Space, visibility, optional observed bounds at dispatch; Space change invalidates the current action while held releases and focus restoration drain (generation survives); semantic AX distinguishes pre-dispatch refusal vs attempted/uncertain mutation; submitted selection/value writes never fall through to another actuator; exact foreground activation no longer requests all sibling windows.
 - **rev 3**: `window_points` coordinate space + `expected_window_bounds`; input frame resolution without extra captures (`tools/px_frame.rs`, `tools/scroll.rs`).
 - **rev 4-5**: `--compact-cursor` overlay (one replaceable pending bitmap, one queued presentation, CoreGraphics takes ownership); synthetic click/text delivery selection (native-app vs Chromium recipe from process metadata; single transport, no duplicate SkyLight/CoreGraphics submissions).
-- **rev 6**: `SYNARA_CUA_BACKGROUND_OBSERVATION_MS` bounds post-action window observation for background delivery; per-element AX attributes fetched in one `AXUIElementCopyMultipleAttributeValues` IPC call; per-attribute failures decoded via API error markers; `AXActionNames` fallback to the dedicated call.
+- **rev 6**: `RAMSPACE_CUA_BACKGROUND_OBSERVATION_MS` bounds post-action window observation for background delivery; per-element AX attributes fetched in one `AXUIElementCopyMultipleAttributeValues` IPC call; per-attribute failures decoded via API error markers; `AXActionNames` fallback to the dedicated call.
 - **rev 7**: bounded worker pool overlaps sibling-array AX IPC; assembly/ordering/budget/truncation stay serial on the walk thread; `CUA_AX_SERIAL_FETCH` restores inline fetch for comparison. (Live numbers: tree walk 673 -> 207 ms.)
 - **rev 8**: second liveness channel: daemon polls `CUA_DRIVER_EMBEDDED_HOST_PID` with `kill(pid, 0)` (2 s) alongside stdin EOF; leaked lifetime-fd duplicates can't orphan the daemon.
 - **rev 9**: `catch_unwind` around `run_serve_cmd` so a serve-thread panic still runs `exit(0)` (no immortal orphan with dead serve loop, live socket, and ghost overlay).
@@ -207,18 +207,18 @@ Revision recap:
 - **rev 13**: exact semantic lease survives Space moves when WindowServer ownership, stable Space membership, AX ancestry, and positive geometry stay valid; Active-Space changes still cancel pointer/synthetic-keyboard/foreground actions; off-Space pixels labeled freshness-unverified, unusable as live grounding.
 - **rev 14**: `get_window_state` reports exact layer-0 window Space metadata via the same Space-aware WindowServer lookup as admission (keeping an any-layer fallback for accessory surfaces).
 
-Gate scope note (README): the gate applies to the SDK tool path admitted by the Synara GUI host, not the separate interactive-worker API. An ack means release events were submitted and action contexts drained; fixture-owned event counts are the independent evidence that a target consumed them. SIGKILL/crash/OS failure have no cooperative guarantee.
+Gate scope note (README): the gate applies to the SDK tool path admitted by the Ramspace GUI host, not the separate interactive-worker API. An ack means release events were submitted and action contexts drained; fixture-owned event counts are the independent evidence that a target consumed them. SIGKILL/crash/OS failure have no cooperative guarantee.
 
 ### 3.3 Architecture map (files to know)
 
 **Desktop host (Electron)** - `apps/desktop/src/`:
 
-- `cuaDriverHost.ts` (~1065 lines): private 0700 dir + 0600 unix socket; one JSON line/connection, 1 MiB request cap; capability check via `timingSafeEqual` (>=32 bytes; fd handoff, never inherited); methods `stop`, `end_task`, `probe`, `setup`, `call` (allowlisted read/action tools only, desktop-pause refusal, serialized); driver spawn: `cua-driver serve --embedded --socket <ep> --compact-cursor --idle-hide-ms 900` with env `CUA_DRIVER_EMBEDDED=1`, `CUA_DRIVER_HOST_BUNDLE_ID`, `CUA_DRIVER_PERMISSION_MODE=standard`, telemetry/update-check disabled, `SYNARA_CUA_FOREGROUND_OBSERVATION_MS=100`, `SYNARA_CUA_BACKGROUND_OBSERVATION_MS=350`, `CUA_DRIVER_PARENT_LIVENESS_STDIN=1`, `CUA_DRIVER_EMBEDDED_HOST_PID`, `CUA_DRIVER_RS_HOME=<dir>/state`; handshake asserts version + nativeRevision + embedded + child pid; `start_session` + `set_agent_cursor_motion(glide 100ms, dwell 0)` within 5 s.
-- Retirement: `cancel_input{expected_pid}` (5 s); ack requires pid match + `input_admission_closed` + `cleanup_complete` + `pending_input==0`; never kills/replaces without ack when input was ever dispatched (barrier persists across resume); dead-during-input without ack -> `releaseHeldInput()` then fail closed; orphan sweep kills daemons whose embedded host pid is dead and reaps stale `synara-cua-*` tmpdirs.
+- `cuaDriverHost.ts` (~1065 lines): private 0700 dir + 0600 unix socket; one JSON line/connection, 1 MiB request cap; capability check via `timingSafeEqual` (>=32 bytes; fd handoff, never inherited); methods `stop`, `end_task`, `probe`, `setup`, `call` (allowlisted read/action tools only, desktop-pause refusal, serialized); driver spawn: `cua-driver serve --embedded --socket <ep> --compact-cursor --idle-hide-ms 900` with env `CUA_DRIVER_EMBEDDED=1`, `CUA_DRIVER_HOST_BUNDLE_ID`, `CUA_DRIVER_PERMISSION_MODE=standard`, telemetry/update-check disabled, `RAMSPACE_CUA_FOREGROUND_OBSERVATION_MS=100`, `RAMSPACE_CUA_BACKGROUND_OBSERVATION_MS=350`, `CUA_DRIVER_PARENT_LIVENESS_STDIN=1`, `CUA_DRIVER_EMBEDDED_HOST_PID`, `CUA_DRIVER_RS_HOME=<dir>/state`; handshake asserts version + nativeRevision + embedded + child pid; `start_session` + `set_agent_cursor_motion(glide 100ms, dwell 0)` within 5 s.
+- Retirement: `cancel_input{expected_pid}` (5 s); ack requires pid match + `input_admission_closed` + `cleanup_complete` + `pending_input==0`; never kills/replaces without ack when input was ever dispatched (barrier persists across resume); dead-during-input without ack -> `releaseHeldInput()` then fail closed; orphan sweep kills daemons whose embedded host pid is dead and reaps stale `ramspace-cua-*` tmpdirs.
 - `computerDesktopLifecycle.ts`: pause on lock/sleep/user-session resign, resume after.
 - `computerFrameTap.ts` + AppSnap helper (`stopNativeHelper.ts`): preview frames `[u32LE len][jpeg]` (4 MiB cap, ~12.5 fps measured) on `computerPreview.frame`; one helper per task+target; dead tap stays dead.
 - `cuaFixtures/{native,electron,gateway,live,cancellation}.ts`: real host+backend fixtures for verification (section 6.3).
-- `scripts/provision-cua-driver.mjs`: build-from-source + patch + provenance; requires `rustc 1.97.1` exactly; verifies patch sha before use; `--archive` rejected ("lacks Synara's native patch").
+- `scripts/provision-cua-driver.mjs`: build-from-source + patch + provenance; requires `rustc 1.97.1` exactly; verifies patch sha before use; `--archive` rejected ("lacks Ramspace's native patch").
 
 **Server** - `apps/server/src/computer/`:
 
@@ -451,7 +451,7 @@ Key mechanics and constants:
 
 **Problem.** "It's not fast." Candidate contributors: host startup (~5 s bound), action settle (300 ms), observation budgets (100/350 ms), screenshots and tree walks, preview stream work, per-call round trips.
 
-**Approach.** Define budgets first (p50/p95 for get*state, click, type, scroll, launch, turn start), instrument, then: prefer warm host at first touch; cut redundant captures (reuse frame registry); conditional settle (skip when a read-back already proves the effect); AX-only fast path for get_state when requested; check JPEG quality/size; consider prewarmed cursor; keep everything env-tunable (`SYNARA_CUA*\*` pattern) for A/B.
+**Approach.** Define budgets first (p50/p95 for get*state, click, type, scroll, launch, turn start), instrument, then: prefer warm host at first touch; cut redundant captures (reuse frame registry); conditional settle (skip when a read-back already proves the effect); AX-only fast path for get_state when requested; check JPEG quality/size; consider prewarmed cursor; keep everything env-tunable (`RAMSPACE_CUA*\*` pattern) for A/B.
 
 **Acceptance.** Before/after latency table on a fixed scenario set; no reliability regressions; budgets documented in the repo.
 
@@ -476,7 +476,7 @@ Decide with Kartik which of these are in the "parity first" milestone vs "later"
 
 ### 5.7 Workstream F: Open-source boundary and governance
 
-- Decide what ships open: likely the driver patch + host protocol + tools + docs (MIT/Apache), either as its own project or upstreamed into trycua/cua; Synara product code can stay whatever it is. Keep `CUA-LICENSE.txt` attribution; Synara repo is MIT (T3 Tools Inc + Emanuele Di Pietro).
+- Decide what ships open: likely the driver patch + host protocol + tools + docs (MIT/Apache), either as its own project or upstreamed into trycua/cua; Ramspace product code can stay whatever it is. Keep `CUA-LICENSE.txt` attribution; Ramspace repo is MIT (T3 Tools Inc + Emanuele Di Pietro).
 - Guardrails to ship with it: visible session state (like "ChatGPT is using your computer" + Esc stop), per-app approvals, password-manager denylist, audit log, kill switch, no evasion/anti-detection, no TCC bypass, and a disclosure process if a consent-bypass-class bug is ever found.
 - Earlier malware-risk assessment (keep the conclusion): the capability class has been public for a decade (FruitFly 2017 synthetic input, DevilRobber 2011, Wardle synthetic-click work 2018/19, Cua/pi/OSAurus open engines); the abuse bottleneck is TCC consent + distribution, neither changed by our code; marginal risk of open-sourcing is low; design for misuse resistance anyway.
 
@@ -494,9 +494,9 @@ Decide with Kartik which of these are in the "parity first" milestone vs "later"
 
 ### 6.1 Working copy and hygiene
 
-- Work in `/Users/user/synara-computer-use` (branch `agent/computer-use-preview`). `git fetch origin` + `git fetch upstream` to refresh; check for commits after `bb7eb421c`.
+- Work in `/Users/user/ramspace-computer-use` (branch `agent/computer-use-preview`). `git fetch origin` + `git fetch upstream` to refresh; check for commits after `bb7eb421c`.
 - `bun install --frozen-lockfile` to restore `node_modules` (~8 s from cache). Remove it again if disk gets tight.
-- Do not push to `kartikkabadi/synara` or update PR #1227 without Kartik's explicit go; keep commits local. The PR is his draft and the branch is shared with other workflows.
+- Do not push to `kartikkabadi/ramspace` or update PR #1227 without Kartik's explicit go; keep commits local. The PR is his draft and the branch is shared with other workflows.
 - No worktrees. Sequential subagents. Keep the home dir tidy (Kartik cares).
 
 ### 6.2 Sandbox rules (critical for this assistant context)
@@ -509,7 +509,7 @@ Decide with Kartik which of these are in the "parity first" milestone vs "later"
 
 - **Tier 0 - docs/static:** reading, matrix/spec updates, evidence review.
 - **Tier 1 - sandbox-safe:** `bun install --frozen-lockfile`; targeted Vitest suites (`apps/server`, `apps/web`, `apps/desktop` per package scripts); `cargo check -p cua-driver` inside a provisioned source tree (needs rustc 1.97.1 + patch applied); typecheck/lint/fmt only when authorized (bundle them once at the end).
-- **Tier 2 - user session, no input:** fake/unavailable backend suites; desktop host tests; boot the app with CU disabled; read logs (`~/.synara-cua/userdata/logs` on the older build; check current paths).
+- **Tier 2 - user session, no input:** fake/unavailable backend suites; desktop host tests; boot the app with CU disabled; read logs (`~/.ramspace-cua/userdata/logs` on the older build; check current paths).
 - **Tier 3 - user session, real input:** the cua fixtures (`apps/desktop/src/cuaFixtures/{native,electron,gateway,live,cancellation}.ts`): `electron.ts` builds a three-window fixture app through the real `CuaDriverHost` + `CuaComputerBackend`; `native.ts` requires pid + exact title + WindowServer-id agreement before any input; `gateway.ts` exercises the real gateway chain; `live.ts` runs the production server on loopback with a socket proxy restricting input to an owned window (≤1 background click). Then packaged signed-app runs for the certification list.
 - **Tier 4 - canonical harness:** Lume VM with SIP disabled + signing keychain + GUI + TCC grants (documented in `docs/computer-use-cua/README.md` and `qualification.md`).
 
@@ -549,7 +549,7 @@ Decide with Kartik which of these are in the "parity first" milestone vs "later"
 9. **Cursor/overlay**: adopt Codex-style motion + multi-cursor, or keep the compact cursor? (Visual identity decision.)
 10. **Chrome**: AX path vs CDP integration for browser control (Codex uses CDP; we currently rely on AX with `AXManualAccessibility` fallback).
 11. **Certification environment**: Lume harness availability (SIP-disabled VM, signing keychain) vs local signed-app runs only.
-12. **Upstream strategy**: keep the Synara patch as a patch file vs fork; contribute upstream fixes (like the input gate) to trycua/cua?
+12. **Upstream strategy**: keep the Ramspace patch as a patch file vs fork; contribute upstream fixes (like the input gate) to trycua/cua?
 
 ## 7. Risks and gotchas (keep this list visible)
 
@@ -582,22 +582,22 @@ Call these via the Skill tool as you work (account skills live in `/Users/user/.
 
 ### 9.1 Local paths
 
-- Working clone: `/Users/user/synara-computer-use` (branch `agent/computer-use-preview` @ `bb7eb421c`).
+- Working clone: `/Users/user/ramspace-computer-use` (branch `agent/computer-use-preview` @ `bb7eb421c`).
 - Docs: `docs/computer-use-cua/` (README, qualification, integration-refresh, capability-audit-2026-09-16, final-checks-and-comparison, permission-guide, permission-flow-fix, native-preview, task-invocation-and-consent, optimization-and-readiness-plan, CUA-LICENSE.txt, import-provenance.json, `evidence/`).
-- Patch + provisioning: `apps/desktop/patches/cua-driver/{0001-synara-native.patch,README.md}`; `apps/desktop/scripts/provision-cua-driver.mjs`.
+- Patch + provisioning: `apps/desktop/patches/cua-driver/{0001-ramspace-native.patch,README.md}`; `apps/desktop/scripts/provision-cua-driver.mjs`.
 - Host: `apps/desktop/src/{cuaDriverHost.ts,computerDesktopLifecycle.ts,computerFrameTap.ts,stopNativeHelper.ts}`, `apps/desktop/src/cuaFixtures/`.
 - Server: `apps/server/src/computer/*`, `apps/server/src/agentGateway/{computerTools.ts,computerGuidance.ts}`.
 - Web: `apps/web/src/components/computer/*`, `components/chat/Computer*`, stores/hooks/lib under `apps/web/src`.
 - Pins: `packages/shared/src/cuaDriverRelease.json`, `packages/shared/src/cuaDriverProtocol.ts`.
 - Codex on disk: `~/.codex/computer-use/Codex Computer Use.app`; `~/.codex/plugins/cache/openai-bundled/computer-use/`; `/Applications/ChatGPT.app/Contents/Resources/{cua_node,native}`.
 - Skills: `/Users/user/.agents/skills/`; repo `.claude/skills/`.
-- Memory: `/Users/user/synara/.mind/` (`python3 .mind/runtime.py recall|capture ...`).
-- Other checkouts: `~/synara-cua` (older rev-5 corpus), `~/synara-wt/cua-port` (stale), `~/background-computer-use`, `~/pi-computer-use`.
+- Memory: `/Users/user/ramspace/.mind/` (`python3 .mind/runtime.py recall|capture ...`).
+- Other checkouts: `~/ramspace-cua` (older rev-5 corpus), `~/ramspace-wt/cua-port` (stale), `~/background-computer-use`, `~/pi-computer-use`.
 
 ### 9.2 URLs
 
-- Synara PR #1227: `https://github.com/Emanuele-web04/synara/pull/1227` (head `kartikkabadi/synara:agent/computer-use-preview`).
-- Synara PR #1090: earlier native CU port.
+- Ramspace PR #1227: `https://github.com/aaramsyy/ramspace/pull/1227` (head `kartikkabadi/ramspace:agent/computer-use-preview`).
+- Ramspace PR #1090: earlier native CU port.
 - OpenAI Codex CU: `https://openai.com/index/codex-for-almost-everything`, `https://developers.openai.com/codex/app/computer-use`, `https://openai.com/index/introducing-the-codex-app`.
 - Codex CU issues: `openai/codex` #25321 (composer focus), #26293 (orphans), #28479 (CODEX_HOME), #18755 (macOS 14 crash), #32210 (Swift symbol crash), #35234 (sender auth).
 - trycua/cua: `https://github.com/trycua/cua` + `blog/inside-macos-window-internals.md`.
@@ -628,7 +628,7 @@ Call these via the Skill tool as you work (account skills live in `/Users/user/.
 - **CPS subtype tables (conflicting; verify)**: Operon - `KeyFocusTaken 0x8000`, `KeyFocusReturned 0xF102`; cua-rs - `KeyFocusReturned 0x8000`, `KeyFocusTaken 0x4000`, `KeyFocusChanged 0xF102`, `NewFront 2`, `LostKeyFocus 0x1000`. NSEvent type for process notifications = `21`.
 - **CGEvent fields**: 3 button; 7 subtype (=3); 40 target unix pid; 41 source unix pid; 51 window number (private); 91/92 window under mouse / can handle; private table 51,55,64,66,67,69,71,73 (availability-flagged).
 - **Timing/quantities**: humanClickInterval 0.1 s; scroll notch 120 px, max 50 notches, single-axis; settle 300 ms; foreground observation 100 ms / background 350 ms; paste restore 250 ms; scroll probe 48 px; host startup bound 5 s; cancel_input 5 s; frame cap 4 MiB; preview ~12.5 fps; approval caps 128/8; queue limit 64; frame queue 8 / 2 MiB.
-- **Host env**: `CUA_DRIVER_EMBEDDED`, `CUA_DRIVER_HOST_BUNDLE_ID`, `CUA_DRIVER_PERMISSION_MODE`, `CUA_DRIVER_RS_TELEMETRY_ENABLED=0`, `CUA_DRIVER_RS_UPDATE_CHECK=0`, `SYNARA_CUA_FOREGROUND_OBSERVATION_MS`, `SYNARA_CUA_BACKGROUND_OBSERVATION_MS`, `CUA_DRIVER_PARENT_LIVENESS_STDIN`, `CUA_DRIVER_EMBEDDED_HOST_PID`, `CUA_DRIVER_RS_HOME`.
+- **Host env**: `CUA_DRIVER_EMBEDDED`, `CUA_DRIVER_HOST_BUNDLE_ID`, `CUA_DRIVER_PERMISSION_MODE`, `CUA_DRIVER_RS_TELEMETRY_ENABLED=0`, `CUA_DRIVER_RS_UPDATE_CHECK=0`, `RAMSPACE_CUA_FOREGROUND_OBSERVATION_MS`, `RAMSPACE_CUA_BACKGROUND_OBSERVATION_MS`, `CUA_DRIVER_PARENT_LIVENESS_STDIN`, `CUA_DRIVER_EMBEDDED_HOST_PID`, `CUA_DRIVER_RS_HOME`.
 - **Retire ack fields**: `input_admission_closed`, `cleanup_complete`, `pending_input == 0`, `pid == expected_pid`.
 - **Tools**: perception `list_windows/get_state/screenshot/get_screen_size/wait`; mutating (approval) `read_clipboard/launch_app/click/double_click/triple_click/right_click/move_cursor/drag/scroll/type_text/press_key/hotkey/write_clipboard/set_value/perform_action/paste/run/activate_window`.
 
@@ -640,14 +640,14 @@ Call these via the Skill tool as you work (account skills live in `/Users/user/.
 
 ### Appendix C: prompt seeds for implementers
 
-1. **Parity matrix author:** "Read `/tmp/synara-cu-v2-mega-handoff-2026-09-16.md` sections 3-5 and the repo at `/Users/user/synara-computer-use`. Produce `docs/computer-use-cua/v2-parity-matrix.md`: one row per Codex CU capability (incl. behaviors: background input, focus handling, skyshot/settle, cursor, approvals, spaces, locked use, Chrome/CDP), with columns Codex / ours / gap / target / evidence / notes. Cite files and docs. Mark every unverified claim."
+1. **Parity matrix author:** "Read `/tmp/ramspace-cu-v2-mega-handoff-2026-09-16.md` sections 3-5 and the repo at `/Users/user/ramspace-computer-use`. Produce `docs/computer-use-cua/v2-parity-matrix.md`: one row per Codex CU capability (incl. behaviors: background input, focus handling, skyshot/settle, cursor, approvals, spaces, locked use, Chrome/CDP), with columns Codex / ours / gap / target / evidence / notes. Cite files and docs. Mark every unverified claim."
 2. **Focus-enforcer feasibility (pre-implementation):** "Read sections 4.1 and 4.3. In the user's session, write a small signed helper (or use osascript probes) to (a) confirm the safe argument order of `SLEventPostToPid` vs `SLEventPostToPSN` on macOS 26.5.1 by posting a harmless event to a scratch app, and (b) empirically resolve the CPS subtype constants by testing the AppKit-defined/processNotification events against a fixture app. Return a short report with exact constants and any crashes."
 3. **Scroll v2 spec:** "Read sections 3.3, 3.6, 4.1 (scroll) and the current code (`CuaComputerBackend.scroll`, `ComputerManager.scrollCalibrated`, `scrollCalibration.ts`, `scrollUnits.ts`, driver `tools/scroll.rs` + `input/mouse.rs` in the patch). Produce a spec: measurement-on-macOS design (budgets + fallbacks), 2-axis/modifier support, per-app gearing persistence, acceptance matrix (AppKit/Electron/webview), and the test plan. Do not implement yet."
 
 ### Appendix D: provenance and maintenance
 
-- Produced by the Aside agent session `I0UdxznQh9nis05h` on 2026-09-16, from: (1) the full conversation research (Codex internals + macOS private APIs + prior art), (2) three read-only recon passes over `/Users/user/synara-computer-use` (native/host; server/web; prior-art repos), (3) live symbol probing on this Mac.
-- Copies: `/tmp/synara-cu-v2-mega-handoff-2026-09-16.md` (this file) and the Aside session artifacts copy.
+- Produced by the Aside agent session `I0UdxznQh9nis05h` on 2026-09-16, from: (1) the full conversation research (Codex internals + macOS private APIs + prior art), (2) three read-only recon passes over `/Users/user/ramspace-computer-use` (native/host; server/web; prior-art repos), (3) live symbol probing on this Mac.
+- Copies: `/tmp/ramspace-cu-v2-mega-handoff-2026-09-16.md` (this file) and the Aside session artifacts copy.
 - Maintenance: when re-verify items are closed (26.4 hazard, CPS constants), update sections 4.3/6.6 and bump a revision note here. When rev-14 certification lands, update Appendix B.
 
 ## 11. Addendum (late 2026-09-16): agent Spaces, background windows, decision shortlist
@@ -690,7 +690,7 @@ Consolidated from section 6.6, with a recommended default so work can proceed if
 
 - The "no compiled binaries" restriction in section 6.2 applies to the sandboxed assistant that wrote this doc. An implementer running as a normal process on this Mac (Terminal, Codex CLI, Claude Code) can build and run native code; verify once, then treat verification tiers 2 through 4 as available.
 - Clone needs `bun install --frozen-lockfile`; native provisioning needs rustc exactly 1.97.1; disk headroom is tight, so clean caches and node_modules when done and never leave stray binaries in the repo.
-- Branch discipline unchanged: local commits only; no pushes to the shared fork (kartikkabadi/synara) or PR updates without the user's explicit go-ahead.
+- Branch discipline unchanged: local commits only; no pushes to the shared fork (kartikkabadi/ramspace) or PR updates without the user's explicit go-ahead.
 - Section 6.5 (check-first checklist) stays the gate for week one: the macOS 26.4 hazard, the CPS constants, the scroll baseline, and the Chrome fixture test.
 
 ---

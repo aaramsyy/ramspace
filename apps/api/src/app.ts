@@ -7,7 +7,7 @@ import { createLiveActivityService } from "./liveActivities/service";
 import { createCloudflareClient } from "./remote/cloudflare";
 import { createPairingRendezvous } from "./remote/pairing";
 import { createTunnelCoordinator } from "./remote/tunnels";
-import type { AccountErrorBody } from "@synara/contracts";
+import type { AccountErrorBody } from "@ramspace/contracts";
 import { Hono } from "hono";
 import type { Context } from "hono";
 import { bodyLimit } from "hono/body-limit";
@@ -37,7 +37,7 @@ export async function createApp(
   config: ApiConfig,
   dependencies: {
     createTunnels?: typeof createTunnelCoordinator;
-    /** Opt-in instrumentation (SYNARA_API_PERF=1); absent means no overhead and no headers. */
+    /** Opt-in instrumentation (RAMSPACE_API_PERF=1); absent means no overhead and no headers. */
     perf?: PerfRecorder;
   } = {},
 ): Promise<{
@@ -197,7 +197,7 @@ export async function createApp(
       return c.json(body, 404);
     }
     return c.text(
-      "Synara account API. Sign in from the Synara app. See https://github.com/Emanuele-web04/synara",
+      "Ramspace account API. Sign in from the Ramspace app. See https://github.com/aaramsyy/ramspace",
       200,
     );
   });

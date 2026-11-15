@@ -1,5 +1,5 @@
 import { readExecutionContext } from "~/lib/hosts/executionContext";
-import type { ThreadId } from "@synara/contracts";
+import type { ThreadId } from "@ramspace/contracts";
 import { useEffect, useEffectEvent } from "react";
 
 export function useBrowserPanelDesktopBridge(input: {

@@ -3,7 +3,7 @@ import { t } from "~/i18n";
 // Purpose: Serializes image preparation, exposes pending UI state, and cancels stale draft work.
 // Layer: Web composer hook
 
-import { PROVIDER_SEND_TURN_MAX_ATTACHMENTS, type ThreadId } from "@synara/contracts";
+import { PROVIDER_SEND_TURN_MAX_ATTACHMENTS, type ThreadId } from "@ramspace/contracts";
 import { useCallback, useEffect, useMemo, useSyncExternalStore } from "react";
 
 import type { ComposerImageAttachment } from "../composerDraftStore";
@@ -82,7 +82,7 @@ export class ComposerImageIntakeQueue {
         if (this.#isStale(generation)) return;
         this.#failureCount += 1;
         job.onError(
-          cause instanceof Error ? cause.message : t("common:synaraCouldNotPrepareImage"),
+          cause instanceof Error ? cause.message : t("common:ramspaceCouldNotPrepareImage"),
         );
       })
       .finally(() => {

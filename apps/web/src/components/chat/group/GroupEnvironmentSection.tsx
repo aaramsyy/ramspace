@@ -1,4 +1,4 @@
-import type { ProjectId } from "@synara/contracts";
+import type { ProjectId } from "@ramspace/contracts";
 import { useMemo, useState } from "react";
 
 import type { Project } from "~/types";

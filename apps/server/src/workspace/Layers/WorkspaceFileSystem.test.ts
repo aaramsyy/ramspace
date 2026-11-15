@@ -2,7 +2,7 @@
 // Special-file cases protect native I/O workers from uninterruptible FIFO opens.
 import * as NodeFs from "node:fs/promises";
 import { closeSync, constants, openSync } from "node:fs";
-import { execProcessFile } from "@synara/shared/processRuntime";
+import { execProcessFile } from "@ramspace/shared/processRuntime";
 
 import * as NodeServices from "@effect/platform-node/NodeServices";
 import { describe, expect } from "vitest";
@@ -32,7 +32,7 @@ const TestLayer = Layer.empty.pipe(
 
 const makeTempDir = Effect.gen(function* () {
   const fileSystem = yield* FileSystem.FileSystem;
-  return yield* fileSystem.makeTempDirectoryScoped({ prefix: "synara-workspace-files-" });
+  return yield* fileSystem.makeTempDirectoryScoped({ prefix: "ramspace-workspace-files-" });
 });
 
 const writeTextFile = Effect.fn(function* (cwd: string, relativePath: string, contents = "") {

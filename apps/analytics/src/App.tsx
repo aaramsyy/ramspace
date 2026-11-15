@@ -93,7 +93,7 @@ export function App() {
       </a>
       <header>
         <div className="masthead">
-          <span className="label-16 strong">Synara</span>
+          <span className="label-16 strong">Ramspace</span>
           <span className="label-16 secondary">Insights</span>
           <div className="masthead-meta">
             <LastEvent onAuthError={onAuthError} />

@@ -11,10 +11,13 @@ import {
   type ProviderListModelsResult,
   type ProviderModelDescriptor,
   type ServerProviderAuthStatus,
-  type SynaraProviderInstanceCatalog,
-} from "@synara/contracts";
-import { getClaudeContextWindowSuffix, stripClaudeContextWindowSuffix } from "@synara/shared/model";
-import { defaultInstanceIdForProvider } from "@synara/shared/providerInstances";
+  type RamspaceProviderInstanceCatalog,
+} from "@ramspace/contracts";
+import {
+  getClaudeContextWindowSuffix,
+  stripClaudeContextWindowSuffix,
+} from "@ramspace/shared/model";
+import { defaultInstanceIdForProvider } from "@ramspace/shared/providerInstances";
 import { Effect } from "effect";
 
 import type { ProviderDiscoveryServiceShape } from "../provider/Services/ProviderDiscoveryService.ts";
@@ -40,7 +43,7 @@ export interface AgentGatewayProviderCatalog {
   readonly provider: ProviderKind;
   readonly defaultModel: string | null;
   readonly models: ReadonlyArray<ProviderModelDescriptor>;
-  readonly instances?: ReadonlyArray<SynaraProviderInstanceCatalog>;
+  readonly instances?: ReadonlyArray<RamspaceProviderInstanceCatalog>;
   readonly enabled: boolean;
   readonly available: boolean;
   readonly authStatus?: ServerProviderAuthStatus;
@@ -57,7 +60,7 @@ export interface AgentGatewayProviderAvailability {
   readonly instances?: ReadonlyArray<AgentGatewayProviderInstanceAvailability>;
 }
 
-export interface AgentGatewayProviderInstanceAvailability extends SynaraProviderInstanceCatalog {
+export interface AgentGatewayProviderInstanceAvailability extends RamspaceProviderInstanceCatalog {
   /** Undefined means health has not produced a trustworthy snapshot yet. */
   readonly available?: boolean;
   readonly authStatus?: ServerProviderAuthStatus;
@@ -296,7 +299,7 @@ export function loadAgentGatewayProviderCatalog(input: {
   );
   const unavailableReason =
     availability.enabled === false
-      ? `Provider "${input.provider}" is disabled in Synara settings.`
+      ? `Provider "${input.provider}" is disabled in Ramspace settings.`
       : availability.available === false
         ? (availability.message ?? `Provider "${input.provider}" is not available.`)
         : availability.authStatus === "unauthenticated"
@@ -691,7 +694,7 @@ export function resolveAgentGatewayTarget(input: {
         return yield* Effect.fail(
           new AgentGatewayTargetError(
             "provider_unavailable",
-            `Provider instance "${requestedInstanceId}" is not configured for provider "${input.target.provider}". Choose an instance from synara_capabilities providers[].instances[].`,
+            `Provider instance "${requestedInstanceId}" is not configured for provider "${input.target.provider}". Choose an instance from ramspace_capabilities providers[].instances[].`,
             {
               provider: input.target.provider,
               instanceId: requestedInstanceId,
@@ -704,7 +707,7 @@ export function resolveAgentGatewayTarget(input: {
         return yield* Effect.fail(
           new AgentGatewayTargetError(
             "provider_unavailable",
-            `Provider instance "${requestedInstanceId}" is disabled in Synara settings.`,
+            `Provider instance "${requestedInstanceId}" is disabled in Ramspace settings.`,
             { provider: input.target.provider, instanceId: requestedInstanceId },
           ),
         );
@@ -780,7 +783,7 @@ export function resolveAgentGatewayTarget(input: {
       return yield* Effect.fail(
         new AgentGatewayTargetError(
           "model_unavailable",
-          `Model "${input.target.model}" is not available for ${input.target.provider}. Use an exact slug from synara_capabilities.`,
+          `Model "${input.target.model}" is not available for ${input.target.provider}. Use an exact slug from ramspace_capabilities.`,
           {
             provider: input.target.provider,
             requestedModel: input.target.model,

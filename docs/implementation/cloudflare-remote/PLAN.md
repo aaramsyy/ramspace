@@ -1,23 +1,23 @@
-# Synara Remote MVP — Cloudflare Tunnel e abbinamento con codice
+# Ramspace Remote MVP — Cloudflare Tunnel e abbinamento con codice
 
 Piano di continuazione del 28 settembre 2026. Modello richiesto dall'utente: GPT-6 Astra, reasoning effort High.
 
 ## Obiettivo e decisioni dell'utente
 
-Realizzare un MVP desktop funzionante MacBook ↔ Mac Mini: stesso account Synara, codice breve monouso, approvazione esplicita sul Mini, computer ricordato e connessione successiva con un clic. Le sessioni sul Mini continuano quando il controller si disconnette; il controller recupera lo stato senza duplicare comandi o perdere il lavoro.
+Realizzare un MVP desktop funzionante MacBook ↔ Mac Mini: stesso account Ramspace, codice breve monouso, approvazione esplicita sul Mini, computer ricordato e connessione successiva con un clic. Le sessioni sul Mini continuano quando il controller si disconnette; il controller recupera lo stato senza duplicare comandi o perdere il lavoro.
 
 La decisione è passare ORA a Cloudflare Tunnel, prima del lancio. È superato il precedente consiglio di mantenere il relay Bun su Railway per l'MVP. Prima si implementano trasporto e pairing, poi si collegano Cloudflare, WorkOS e il database di test e si qualificano i due Mac reali.
 
-Synara iOS esiste già, secondo l'utente, in una repository privata derivata da Remodex. La sua integrazione account e il QR su iPhone sono una fase successiva: non richiedere di ricreare l'app, non modificare quella repository in questa task. Il protocollo di pairing deve poter essere usato successivamente anche da iOS senza progettare ora un secondo sistema.
+Ramspace iOS esiste già, secondo l'utente, in una repository privata derivata da Remodex. La sua integrazione account e il QR su iPhone sono una fase successiva: non richiedere di ricreare l'app, non modificare quella repository in questa task. Il protocollo di pairing deve poter essere usato successivamente anche da iOS senza progettare ora un secondo sistema.
 
 La funzionalità finale sarà riservata agli utenti paganti. Il gate Beta/Canary presente oggi non è una verifica dell'abbonamento: questa differenza deve rimanere esplicita.
 
 ## Punto di partenza verificato
 
 - Host: Macmini-di-Emanuele.local.
-- Progetto Codex locale: synara, projectId 891716f8-5446-481c-9665-67608c7f6c2f.
-- Repository salvata: /Volumes/Crucial X10/Developer/synara.
-- Worktree della conversazione di origine: /Users/emanueledipietro-macmini/.codex/worktrees/6b82/synara.
+- Progetto Codex locale: ramspace, projectId 891716f8-5446-481c-9665-67608c7f6c2f.
+- Repository salvata: /Volumes/Crucial X10/Developer/ramspace.
+- Worktree della conversazione di origine: /Users/aaramsyy-macmini/.codex/worktrees/6b82/ramspace.
 - Branch di partenza: codex/remote-v2-completion.
 - Commit di partenza: 42aa8fb4f093f78fe7a1f7be5525f67571086ebf, già pubblicato su origin.
 - Titolo del commit: Complete local remote v2 qualification and settle interrupted turns.
@@ -28,7 +28,7 @@ La nuova task deve usare un worktree isolato del progetto sul Mini a partire dal
 
 Dossier precedente, da leggere in modo mirato:
 
-- /Users/emanueledipietro-macmini/Documents/Codex/2026-09-28/synara-remote-continuation/synara-remote-audit-1065/implementation-plan/STATUS.md
+- /Users/aaramsyy-macmini/Documents/Codex/2026-09-28/ramspace-remote-continuation/ramspace-remote-audit-1065/implementation-plan/STATUS.md
 - Nella stessa directory: QUALIFICATION.md e ACCEPTANCE-EVIDENCE.md.
 - Evidenze: evidence/mini-final-2026-09-28/.
 
@@ -52,9 +52,9 @@ Aggiornare uno stato persistente per fase con risultato, file modificati, comand
 ## Architettura di destinazione
 
 Percorso dati:
-MacBook/controller Synara → WebSocket HTTPS pubblico Cloudflare → tunnel gestito da cloudflared sul Mini → ingresso remoto dedicato → TLS interno già verificato → RPC e risorse del Mini.
+MacBook/controller Ramspace → WebSocket HTTPS pubblico Cloudflare → tunnel gestito da cloudflared sul Mini → ingresso remoto dedicato → TLS interno già verificato → RPC e risorse del Mini.
 
-Cloudflare sostituisce il trasporto del relay proprietario. Account, directory dei computer, grant, approvazione locale, revoca e identità dei dispositivi rimangono responsabilità di Synara.
+Cloudflare sostituisce il trasporto del relay proprietario. Account, directory dei computer, grant, approvazione locale, revoca e identità dei dispositivi rimangono responsabilità di Ramspace.
 
 Riutilizzare inizialmente l'API account esistente per coordinare i tunnel, a meno che un vincolo verificato richieda diversamente. Cloudflare Tunnel non obbliga a riscrivere l'API in Workers. Non mantenere un servizio Railway relay necessario nel percorso finale. L'eventuale hosting dell'API e del Postgres è una decisione distinta; non promettere che ogni uso di Railway scompaia.
 
@@ -80,7 +80,7 @@ Leggere in particolare:
 - apps/desktop/src/remoteResourceBroker.ts e gli attuali owner del packaging/processo.
 - apps/e2e/src/harness/workspace.ts e workspace.e2e.test.ts.
 
-Fatti già osservati: gli endpoint pubblicati oggi sono lan/tailscale; il dialer aggiunge il relay da SYNARA_RELAY_URL; il processo host tiene il socket di controllo relay e riceve anche revoche; l'API WorkOS richiede ancora RELAY_SERVICE_TOKEN. La migrazione interessa tutte queste dipendenze, non soltanto un URL.
+Fatti già osservati: gli endpoint pubblicati oggi sono lan/tailscale; il dialer aggiunge il relay da RAMSPACE_RELAY_URL; il processo host tiene il socket di controllo relay e riceve anche revoche; l'API WorkOS richiede ancora RELAY_SERVICE_TOKEN. La migrazione interessa tutte queste dipendenze, non soltanto un URL.
 
 Produrre una mappa corta del ciclo login → registrazione host → tunnel → discovery → pairing → grant → sessione → revoca. Elencare gli invarianti conservati e le differenze di bootstrap introdotte dal codice breve.
 
@@ -88,13 +88,13 @@ Uscita: piano aggiornato con file reali e criteri di accettazione, senza riaprir
 
 ## Confronto obbligatorio con il riferimento upstream
 
-Prima di scegliere gli innesti concreti, consultare l'implementazione corrente del [riferimento upstream](UPSTREAM-COMPATIBILITY.md) e registrare il commit esaminato. Leggere le quattro guide elencate nel record di provenienza, poi seguire soltanto i simboli necessari nel codice. Usare una consultazione in lettura o un checkout separato; non importare in blocco l'upstream nel branch Synara.
+Prima di scegliere gli innesti concreti, consultare l'implementazione corrente del [riferimento upstream](UPSTREAM-COMPATIBILITY.md) e registrare il commit esaminato. Leggere le quattro guide elencate nel record di provenienza, poi seguire soltanto i simboli necessari nel codice. Usare una consultazione in lettura o un checkout separato; non importare in blocco l'upstream nel branch Ramspace.
 
-Produrre una tabella di compatibilità con queste colonne: funzione, come la realizza upstream, owner attuale in Synara, differenza rilevante, decisione di riuso/adattamento, test che la giustifica. Le righe minime sono provisioning tunnel/DNS, distribuzione e lifecycle cloudflared, auth/account/workspace, discovery/presenza, pairing/root trust, trasporto RPC/risorse, rinnovo/reconnect, revoca/unlink e cleanup.
+Produrre una tabella di compatibilità con queste colonne: funzione, come la realizza upstream, owner attuale in Ramspace, differenza rilevante, decisione di riuso/adattamento, test che la giustifica. Le righe minime sono provisioning tunnel/DNS, distribuzione e lifecycle cloudflared, auth/account/workspace, discovery/presenza, pairing/root trust, trasporto RPC/risorse, rinnovo/reconnect, revoca/unlink e cleanup.
 
-È un riferimento utile soprattutto per tunnel, avvio connector, gestione degli hostname e recupero dagli errori. Verificare nei sorgenti se il loro servizio chiamato relay coordina il collegamento o trasporta realmente i dati: il nome non implica Railway né equivalenza con il relay Bun Synara.
+È un riferimento utile soprattutto per tunnel, avvio connector, gestione degli hostname e recupero dagli errori. Verificare nei sorgenti se il loro servizio chiamato relay coordina il collegamento o trasporta realmente i dati: il nome non implica Railway né equivalenza con il relay Bun Ramspace.
 
-Conservare i contratti e gli owner di Synara: WorkOS già integrato, controller locale distinto dall'execution host, TLS interno pinned, approvazione dell'esatta chiave dispositivo, revoche durabili e risorse remote. Non introdurre Clerk, PlanetScale, Workers o una riscrittura delle sessioni solo perché compaiono nell'esempio upstream.
+Conservare i contratti e gli owner di Ramspace: WorkOS già integrato, controller locale distinto dall'execution host, TLS interno pinned, approvazione dell'esatta chiave dispositivo, revoche durabili e risorse remote. Non introdurre Clerk, PlanetScale, Workers o una riscrittura delle sessioni solo perché compaiono nell'esempio upstream.
 
 Se un pezzo upstream è compatibile, riutilizzarne il pattern o il codice consentito dalla licenza con provenienza chiara. Se non è compatibile, descrivere il motivo concreto e implementare l'adattamento minimo nello stack attuale. Una differenza architetturale ordinaria non richiede di bloccare il lavoro o di riproporre la scelta del trasporto all'utente.
 
@@ -142,13 +142,13 @@ Su revoca dispositivo chiudere RPC e risorse e rendere durevole il divieto. Su u
 
 Rendere esplicito il ritardo massimo di revoca online e la politica offline; il rinnovo delle credenziali non deve prolungare indefinitamente l'accesso durante un guasto dell'API. Chiudere prima quanto è già certamente revocato e poi effettuare le chiamate di refresh.
 
-Uscita: test di revoca online/offline, API 5xx, host cancellato, restart, acknowledgement perso e chiusura selettiva. Rimuovere il warning fuorviante che equipara assenza di SYNARA_RELAY_URL ad assenza di revoca.
+Uscita: test di revoca online/offline, API 5xx, host cancellato, restart, acknowledgement perso e chiusura selettiva. Rimuovere il warning fuorviante che equipara assenza di RAMSPACE_RELAY_URL ad assenza di revoca.
 
 ## Fase 5 — Abbinamento breve e sicuro
 
 Esperienza richiesta:
 
-1. Stesso account Synara sui due Mac.
+1. Stesso account Ramspace sui due Mac.
 2. Sul Mini: Collega un dispositivo.
 3. Codice leggibile a breve scadenza, ad esempio ABCD-1234 come formato illustrativo.
 4. Sul MacBook: Aggiungi computer → inserisci codice.
@@ -183,7 +183,7 @@ Uscita: prova browser del percorso codice → approvazione → Connect → chat 
 
 Quando le fasi precedenti sono coperte, rimuovere dal percorso MVP supervisor/splice/ticket e deploy/config del servizio relay non più necessari. Verificare i consumer prima di rimuovere apps/relay o parti di packages/relay-protocol: conservare i contratti ancora usati da sessioni e crittografia.
 
-Adeguare l'API, che attualmente richiede RELAY_SERVICE_TOKEN per WorkOS, e la propagazione di SYNARA_RELAY_URL in desktop/server. La configurazione Cloudflare deve fallire in modo esplicito se parziale; nessun fallback silenzioso al vecchio servizio.
+Adeguare l'API, che attualmente richiede RELAY_SERVICE_TOKEN per WorkOS, e la propagazione di RAMSPACE_RELAY_URL in desktop/server. La configurazione Cloudflare deve fallire in modo esplicito se parziale; nessun fallback silenzioso al vecchio servizio.
 
 Aggiornare ADR e guida operativa: la decisione del settembre 2026 supera il rifiuto di Cloudflare contenuto nell'ADR 0008. Conservare evidenza storica senza lasciare istruzioni contraddittorie per la nuova architettura.
 
@@ -261,4 +261,4 @@ Non confondere questi stati e non segnare completato ciò che è rimasto simulat
 - Creazione tramite API: https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/get-started/create-remote-tunnel-api/
 - [Riferimento architetturale upstream e provenienza](UPSTREAM-COMPATIBILITY.md), da verificare sul commit corrente.
 
-Codex è un riferimento di esperienza utente, non un backend da riutilizzare. Il progetto upstream è un riferimento architetturale, non prova automatica di compatibilità o costi per Synara. Durante l'implementazione ricontrollare documentazione ufficiale, versioni e licenze del codice eventualmente riusato.
+Codex è un riferimento di esperienza utente, non un backend da riutilizzare. Il progetto upstream è un riferimento architetturale, non prova automatica di compatibilità o costi per Ramspace. Durante l'implementazione ricontrollare documentazione ufficiale, versioni e licenze del codice eventualmente riusato.

@@ -1,26 +1,26 @@
 // Shared page chrome for every route this app serves (profile, not-found): the
-// full-width top nav with the Synara lockup and the hairline footer. Pure SSR.
+// full-width top nav with the Ramspace lockup and the hairline footer. Pure SSR.
 
 import type { ReactNode } from "react";
-import { SynaraLogo } from "@synara/profile-ui/logo";
+import { RamspaceLogo } from "@ramspace/profile-ui/logo";
 import { ThemeToggle } from "./ThemeToggle";
 
 export function SiteNav() {
   return (
     <nav className="flex w-full items-center justify-between px-6 py-5 sm:px-8">
-      <a href="https://trysynara.com" className="flex items-center gap-2.5">
-        <SynaraLogo className="h-[22px] w-auto" aria-label="Synara" />
-        <span className="font-display text-lg leading-none">Synara</span>
+      <a href="https://tryramspace.com" className="flex items-center gap-2.5">
+        <RamspaceLogo className="h-[22px] w-auto" aria-label="Ramspace" />
+        <span className="font-display text-lg leading-none">Ramspace</span>
       </a>
       <div className="flex items-center gap-2">
         <ThemeToggle />
         <a
-          href="https://trysynara.com/install"
+          href="https://tryramspace.com/install"
           target="_blank"
           rel="noopener"
           className="text-sm text-muted-foreground transition-colors hover:text-foreground"
         >
-          Get Synara
+          Get Ramspace
         </a>
       </div>
     </nav>
@@ -34,14 +34,14 @@ export function SiteFooter({ width = "max-w-[720px]" }: { width?: string }) {
         className={`mx-auto flex w-full ${width} flex-col items-start justify-between gap-3 px-5 py-6 sm:flex-row sm:items-center sm:gap-4 sm:px-6`}
       >
         <p className="flex min-w-0 items-center gap-2 text-xs leading-relaxed text-muted-foreground/80">
-          <SynaraLogo className="h-3.5 w-auto shrink-0 opacity-60" />
-          <span>Built with Synara — the open workspace for coding agents</span>
+          <RamspaceLogo className="h-3.5 w-auto shrink-0 opacity-60" />
+          <span>Built with Ramspace — the open workspace for coding agents</span>
         </p>
         <a
-          href="https://trysynara.com"
+          href="https://tryramspace.com"
           className="shrink-0 text-xs text-muted-foreground/80 transition-colors hover:text-foreground"
         >
-          trysynara.com
+          tryramspace.com
         </a>
       </div>
     </footer>

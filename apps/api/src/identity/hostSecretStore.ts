@@ -11,7 +11,7 @@ import {
   HOST_SECRET_HISTORY_LIMIT,
   type StoredHostSecret,
   type SyncKeyWrap,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { and, desc, eq, lt } from "drizzle-orm";
 import type { NodePgDatabase } from "drizzle-orm/node-postgres";
 import type * as schema from "../db/schema";

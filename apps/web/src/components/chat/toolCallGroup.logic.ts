@@ -81,7 +81,7 @@ export function isSummarizableToolCallEntry(entry: WorkLogEntry): boolean {
         entry.toolStatus === "failed" &&
         entry.activityKind?.startsWith("tool.") === true)) &&
     !(entry.toolCallId && isReasoningUpdateWorkEntry(entry)) &&
-    !entry.synaraThreadCreation &&
+    !entry.ramspaceThreadCreation &&
     !entry.automation &&
     !entry.connectorProposalId &&
     !entry.subagentAction &&

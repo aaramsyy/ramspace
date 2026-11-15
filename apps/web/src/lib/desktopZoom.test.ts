@@ -8,7 +8,7 @@ it("follows controller zoom changes in a workspace without native APIs", () => {
   const listeners = new Set<(zoomFactor: number) => void>();
   vi.stubGlobal("window", {
     frameElement: {
-      synaraWorkspace: {
+      ramspaceWorkspace: {
         controller: {
           presentation: {
             readZoomFactor: () => zoomFactor,

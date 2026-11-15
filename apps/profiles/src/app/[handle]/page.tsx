@@ -1,17 +1,17 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { ProfileAvatar } from "@synara/profile-ui/avatar";
-import { APP_HEATMAP_INTENSITY_CLASSES } from "@synara/profile-ui/heatmap";
-import { deriveInitials, formatCompact } from "@synara/profile-ui/formatting";
-import { PROVIDER_GLYPHS, providerIconToneClassName } from "@synara/profile-ui/provider-icon";
-import { SOCIAL_GLYPHS } from "@synara/profile-ui/social-icon";
+import { ProfileAvatar } from "@ramspace/profile-ui/avatar";
+import { APP_HEATMAP_INTENSITY_CLASSES } from "@ramspace/profile-ui/heatmap";
+import { deriveInitials, formatCompact } from "@ramspace/profile-ui/formatting";
+import { PROVIDER_GLYPHS, providerIconToneClassName } from "@ramspace/profile-ui/provider-icon";
+import { SOCIAL_GLYPHS } from "@ramspace/profile-ui/social-icon";
 import {
   SOCIAL_LINK_PLATFORMS,
   type SocialLinkPlatform,
   sanitizeSocialLinks,
   socialLinkLabel,
   socialProfileUrl,
-} from "@synara/shared/socialLinks";
+} from "@ramspace/shared/socialLinks";
 import { SiteFooter, SiteNav } from "../../components/chrome";
 import { ProfileSection, Stat } from "../../components/ProfileCard";
 import {
@@ -46,9 +46,9 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   if (!handle) return {};
   const profile = await fetchPublicProfile(handle).catch(() => null);
   if (!profile) return {};
-  const description = `${formatCompact(profile.lifetimeTokens)} tokens · ${formatCompact(profile.lifetimePrompts)} prompts on Synara`;
+  const description = `${formatCompact(profile.lifetimeTokens)} tokens · ${formatCompact(profile.lifetimePrompts)} prompts on Ramspace`;
   return {
-    title: `${profile.displayName} (@${profile.handle}) · Synara`,
+    title: `${profile.displayName} (@${profile.handle}) · Ramspace`,
     description,
     openGraph: {
       title: `${profile.displayName} (@${profile.handle})`,
@@ -121,7 +121,7 @@ export default async function ProfilePage({ params }: Params) {
               </div>
               <ShareProfileButton
                 handle={profile.handle}
-                title={`${profile.displayName} on Synara`}
+                title={`${profile.displayName} on Ramspace`}
               />
             </div>
             <div className="flex flex-wrap items-center gap-x-4 gap-y-2 lg:hidden">

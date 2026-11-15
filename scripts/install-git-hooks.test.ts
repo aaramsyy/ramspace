@@ -28,7 +28,7 @@ const temporary: string[] = [];
 const developer = { CI: undefined };
 
 function makeDirectory(): string {
-  const directory = mkdtempSync(join(tmpdir(), "synara-git-hooks-"));
+  const directory = mkdtempSync(join(tmpdir(), "ramspace-git-hooks-"));
   temporary.push(directory);
   return directory;
 }

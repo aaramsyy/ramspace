@@ -8,15 +8,15 @@
 // signed-out experience, neither migrated nor deleted.
 // Layer: web profile feature.
 
-import type { AccountProfile, UpdatableAvatarSource } from "@synara/contracts";
-import { deriveInitials } from "@synara/profile-ui/formatting";
+import type { AccountProfile, UpdatableAvatarSource } from "@ramspace/contracts";
+import { deriveInitials } from "@ramspace/profile-ui/formatting";
 import { useAccount } from "~/hooks/useAccount";
 import { avatarDataUrlToUpload } from "./avatarImage";
 import { useProfileAvatarColor } from "./useProfileAvatarColor";
 import { useProfileAvatarImage } from "./useProfileAvatarImage";
 import { useProfileHandle } from "./useProfileHandle";
 import { useProfileName } from "./useProfileName";
-import type { SocialLinks } from "@synara/shared/socialLinks";
+import type { SocialLinks } from "@ramspace/shared/socialLinks";
 
 export interface ProfileIdentityDraft {
   readonly name: string;

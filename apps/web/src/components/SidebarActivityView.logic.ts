@@ -1,11 +1,11 @@
-import { resolveActivityDayStartMs } from "@synara/shared/inboxDay";
-export { resolveActivityDayStartMs } from "@synara/shared/inboxDay";
+import { resolveActivityDayStartMs } from "@ramspace/shared/inboxDay";
+export { resolveActivityDayStartMs } from "@ramspace/shared/inboxDay";
 // FILE: SidebarActivityView.logic.ts
 // Purpose: Pure grouping/sorting model for the sidebar Activity view (threads as tasks).
 // Exports: eligibility, stable ordering, settle helpers, the view-model builder, and the
 //          Priority ranking behind the section, the bell's dot, and "next needing attention".
 
-import type { ProjectId, ThreadId } from "@synara/contracts";
+import type { ProjectId, ThreadId } from "@ramspace/contracts";
 import type { SidebarThreadSummary } from "../types";
 import {
   groupSidebarThreadFamilies,
@@ -309,7 +309,7 @@ export type ActivityScopeOption =
 
 /**
  * Scope menu entries: every real project with eligible activity, busiest first.
- * Project-less chats (chat/group-kind containers) collapse into ONE "Synara"
+ * Project-less chats (chat/group-kind containers) collapse into ONE "Ramspace"
  * entry instead of one look-alike row per hidden container project.
  */
 export function collectActivityScopeOptions(

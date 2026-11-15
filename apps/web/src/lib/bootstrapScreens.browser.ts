@@ -30,8 +30,8 @@ const screens = [
   {
     name: "signed-out",
     path: AUTH_SIGNED_OUT_PATH,
-    title: "Signed out · Synara",
-    heading: "This browser no longer controls Synara.",
+    title: "Signed out · Ramspace",
+    heading: "This browser no longer controls Ramspace.",
     messageKey: "sessionClosed",
     async bootstrap() {
       expect(bootstrapSignedOutScreen()).toBe(true);
@@ -40,7 +40,7 @@ const screens = [
   {
     name: "pairing failure",
     path: "/pair#token=PAIRING-SECRET",
-    title: "Pairing failed · Synara",
+    title: "Pairing failed · Ramspace",
     heading: "This pairing link could not be used.",
     messageKey: "securePairingInterrupted",
     async bootstrap() {

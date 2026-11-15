@@ -2,7 +2,7 @@
 // Purpose: Keeps a remote frame recoverable before its execution transport exists.
 // Layer: Controller/execution bootstrap tests
 
-import { WS_METHODS } from "@synara/contracts";
+import { WS_METHODS } from "@ramspace/contracts";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { WorkspaceConnectionRecovery } from "./workspaceFrame";
 
@@ -69,7 +69,7 @@ beforeEach(() => {
   cleanup = undefined;
   vi.stubGlobal("window", {
     frameElement: {
-      synaraWorkspace: {
+      ramspaceWorkspace: {
         host: selected,
         registerConnectionRecovery: (value: WorkspaceConnectionRecovery) => {
           recovery = value;

@@ -12,8 +12,8 @@ import {
   type ProviderKind,
   type ServerProviderStatus,
   type ServerProviderUsageSnapshot,
-} from "@synara/contracts";
-import { providerImportedDirectoryConfig } from "@synara/shared/providerInstances";
+} from "@ramspace/contracts";
+import { providerImportedDirectoryConfig } from "@ramspace/shared/providerInstances";
 import { useState } from "react";
 
 import {
@@ -73,7 +73,7 @@ function providerAccountIdentityFields(
         key: "homePath",
         label: t("settings:providers_codexHomePath"),
         placeholder: "~/.codex-work",
-        description: t("settings:leaveBlankAndSynaraKeepsThisAccountSSign"),
+        description: t("settings:leaveBlankAndRamspaceKeepsThisAccountSSign"),
       },
     ];
   }
@@ -84,7 +84,7 @@ function providerAccountIdentityFields(
         label: t("settings:claudeConfigDirectory"),
         placeholder: "~/.claude-work",
         description:
-          "Leave blank and Synara keeps this account's sign-in in its own folder. " +
+          "Leave blank and Ramspace keeps this account's sign-in in its own folder. " +
           "Set a directory to use a Claude config folder you already signed in to.",
       },
     ];
@@ -196,7 +196,7 @@ export function ProviderAccountsList(props: {
     toastManager.add({
       type: "success",
       title: t("settings:accountImported", { value0: providerLabel }),
-      description: t("settings:synaraReferencesTheSelectedDirectoryNoFilesWereMoved"),
+      description: t("settings:ramspaceReferencesTheSelectedDirectoryNoFilesWereMoved"),
     });
   };
 
@@ -293,7 +293,7 @@ export function ProviderAccountsList(props: {
             disabled={typeof window === "undefined" || !window.desktopBridge}
             title={
               typeof window === "undefined" || !window.desktopBridge
-                ? t("settings:directoryImportIsAvailableInTheSynaraDesktopApp")
+                ? t("settings:directoryImportIsAvailableInTheRamspaceDesktopApp")
                 : t("settings:useAnExistingDirectoryAsANewAccountWithout", {
                     value0: providerLabel,
                   })

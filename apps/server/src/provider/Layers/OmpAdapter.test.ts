@@ -1,9 +1,9 @@
-import { TurnId } from "@synara/contracts";
+import { TurnId } from "@ramspace/contracts";
 import * as NodeServices from "@effect/platform-node/NodeServices";
 import { Effect, FileSystem, Sink, Stream } from "effect";
 import { ChildProcessSpawner } from "effect/unstable/process";
 import { describe, expect, it } from "vitest";
-import { SYNARA_HARNESS_POLICY_MARKER } from "../../agentGateway/harnessPolicy.ts";
+import { RAMSPACE_HARNESS_POLICY_MARKER } from "../../agentGateway/harnessPolicy.ts";
 import { ServerConfig } from "../../config.ts";
 
 import {
@@ -14,16 +14,16 @@ import {
   scopeOmpRuntimeItemIdForTurn,
   scopeOmpToolCallStateForTurn,
   shouldIgnoreOmpInterrupt,
-  takeOmpSynaraHarnessPolicyTextPart,
+  takeOmpRamspaceHarnessPolicyTextPart,
 } from "./OmpAdapter.ts";
 
-describe("OMP Synara harness policy", () => {
+describe("OMP Ramspace harness policy", () => {
   it("delivers private scoped host context once", () => {
     const state: { harnessPolicyDelivered?: boolean } = {};
-    expect(takeOmpSynaraHarnessPolicyTextPart(state, true)?.text).toContain(
-      SYNARA_HARNESS_POLICY_MARKER,
+    expect(takeOmpRamspaceHarnessPolicyTextPart(state, true)?.text).toContain(
+      RAMSPACE_HARNESS_POLICY_MARKER,
     );
-    expect(takeOmpSynaraHarnessPolicyTextPart(state, true)).toBeNull();
+    expect(takeOmpRamspaceHarnessPolicyTextPart(state, true)).toBeNull();
   });
 });
 

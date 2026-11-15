@@ -2,9 +2,9 @@
 // Purpose: Pure selection rules for the provider usage rings at the bottom of the app rail.
 
 import { t } from "~/i18n";
-import type { ProviderInstanceId, ProviderKind } from "@synara/contracts";
-import type { ResolvedProviderInstance } from "@synara/shared/providerInstances";
-import { PROVIDER_USAGE_PROVIDERS, providerUsageDisplayName } from "@synara/shared/providerUsage";
+import type { ProviderInstanceId, ProviderKind } from "@ramspace/contracts";
+import type { ResolvedProviderInstance } from "@ramspace/shared/providerInstances";
+import { PROVIDER_USAGE_PROVIDERS, providerUsageDisplayName } from "@ramspace/shared/providerUsage";
 
 import type { RailUsageWindow } from "~/appSettings";
 import { providerAccountQualifiedLabel } from "~/lib/providerInstancePresentation";

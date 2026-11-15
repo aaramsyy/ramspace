@@ -3,8 +3,8 @@
 //          download map (macOS arm64/x64, Windows, Linux x64/arm64) for /install.
 // Layer: Server utility
 // Depends on: GitHub Releases API, optional GITHUB_TOKEN, shared asset mapping
-// Note: The repo was renamed from its previous identity to synara. We hit the
-//       canonical "synara" slug
+// Note: The repo was renamed from its previous identity to ramspace. We hit the
+//       canonical "ramspace" slug
 //       directly so we don't depend on the API following GitHub's 301 redirect.
 
 import "server-only";
@@ -14,10 +14,10 @@ import {
   parseReleaseDownloadsSnapshot,
   type GitHubReleaseAssets,
   type ReleaseDownloads,
-} from "@synara/shared/releaseDownloads";
+} from "@ramspace/shared/releaseDownloads";
 import storedLatestReleaseDownloads from "@/data/latest-release-downloads.json";
 
-const REPO = "Emanuele-web04/synara";
+const REPO = "aaramsyy/ramspace";
 const LATEST_RELEASE_API_URL = `https://api.github.com/repos/${REPO}/releases/latest`;
 
 export const RELEASES_URL = `https://github.com/${REPO}/releases`;

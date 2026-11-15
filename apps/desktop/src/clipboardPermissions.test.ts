@@ -23,11 +23,11 @@ describe("clipboard permissions", () => {
     ).toBe(true);
   });
   it.each([
-    "synara://app",
-    "synara-canary://app",
-    "synara-cua://app",
-    "synara-beta://app",
-    "synara-remote://app",
+    "ramspace://app",
+    "ramspace-canary://app",
+    "ramspace-cua://app",
+    "ramspace-beta://app",
+    "ramspace-remote://app",
   ])("allows foreground copy buttons on the %s desktop origin", (origin) => {
     const url = `${origin}/index.html`;
     expect(
@@ -40,12 +40,12 @@ describe("clipboard permissions", () => {
     ).toBe(true);
   });
   it.each([
-    "synara-beta://app",
-    "synara-remote://evil.test",
-    "synara-remote://app:8080",
-    "synara-remote://user@app",
+    "ramspace-beta://app",
+    "ramspace-remote://evil.test",
+    "ramspace-remote://app:8080",
+    "ramspace-remote://user@app",
   ])("rejects foreign clipboard request metadata from %s", (origin) => {
-    const page = requester("synara-remote://app/index.html");
+    const page = requester("ramspace-remote://app/index.html");
     expect(isClipboardWritePermission(page, "clipboard-sanitized-write", {}, origin)).toBe(false);
     expect(
       isClipboardWritePermission(page, "clipboard-sanitized-write", { requestingUrl: origin }),
@@ -67,11 +67,11 @@ describe("clipboard permissions", () => {
       requester("http://example.com"),
       requester("file:///tmp/page.html"),
       requester("bad-url"),
-      requester("synara-remote://evil.test"),
-      requester("synara-remote://app.evil.test"),
-      requester("synara-remote://app:8080"),
-      requester("synara-remote://user@app"),
-      requester("synara-remotes://app"),
+      requester("ramspace-remote://evil.test"),
+      requester("ramspace-remote://app.evil.test"),
+      requester("ramspace-remote://app:8080"),
+      requester("ramspace-remote://user@app"),
+      requester("ramspace-remotes://app"),
     ])
       expect(isClipboardWritePermission(source, "clipboard-sanitized-write", {})).toBe(false);
     for (const details of [

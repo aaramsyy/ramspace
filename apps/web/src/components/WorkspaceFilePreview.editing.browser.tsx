@@ -9,7 +9,7 @@ import type {
   ProjectFileChangeEvent,
   ProjectReadFileResult,
   ProjectWatchFileInput,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { StrictMode } from "react";
 import { QueryClient, QueryClientProvider, useQuery } from "@tanstack/react-query";
 import { page, userEvent } from "vitest/browser";
@@ -76,7 +76,7 @@ async function previewEditor(fileName = FILE_PATH) {
   const find = () =>
     monaco.editor.getEditors().find((editor) => {
       const uri = editor.getModel()?.uri;
-      return uri?.scheme === "synara-workspace" && uri.path === `/${fileName}`;
+      return uri?.scheme === "ramspace-workspace" && uri.path === `/${fileName}`;
     });
   await expect.poll(find, { timeout: 10_000 }).toBeDefined();
   const editor = find()!;

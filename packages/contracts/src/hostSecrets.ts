@@ -52,7 +52,7 @@ const Iv = Base64Url.check(Schema.isLengthBetween(HOST_SECRET_IV_LENGTH, HOST_SE
 
 /**
  * One host's sealed configuration, exactly as `sealHostSecret` produced it
- * (`@synara/shared/hostSecrets`). The account service round-trips these three
+ * (`@ramspace/shared/hostSecrets`). The account service round-trips these three
  * fields and never decodes the first two — `version` is the only one it acts
  * on, and only to compare.
  *
@@ -125,7 +125,7 @@ export type HostSecretConflictBody = typeof HostSecretConflictBody.Type;
 
 /**
  * The pairing hand-off blob, mirroring `WrappedSyncKey` in
- * `@synara/shared/hostSecrets` field for field. The service relays it and
+ * `@ramspace/shared/hostSecrets` field for field. The service relays it and
  * cannot open it: the Sync Key is wrapped under a key derived from an ECDH
  * shared secret whose private halves never leave the two devices.
  */

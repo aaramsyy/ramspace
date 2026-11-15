@@ -6,10 +6,10 @@ import {
   TurnId,
   WS_METHODS,
   RemoteAgentCall,
-  SynaraCreateThreadsResult,
+  RamspaceCreateThreadsResult,
   type OrchestrationThreadShell,
-} from "@synara/contracts";
-import { parseComputerInvocation } from "@synara/shared/computerInvocation";
+} from "@ramspace/contracts";
+import { parseComputerInvocation } from "@ramspace/shared/computerInvocation";
 import { Effect, Option, Schema } from "effect";
 import type { ServerEnvironmentShape } from "../environment/Services/ServerEnvironment";
 import type { HostConnectionRegistry } from "../hostConnections/registry";
@@ -26,23 +26,23 @@ import {
 } from "./toolRuntime";
 
 const REMOTE_TOOLS = new Set([
-  "synara_capabilities",
-  "synara_list_projects",
-  "synara_list_threads",
-  "synara_read_thread",
-  "synara_read_thread_activity",
-  "synara_read_thread_events",
-  "synara_read_thread_runtime_events",
-  "synara_diagnose_thread",
-  "synara_wait_for_threads",
-  "synara_create_thread",
-  "synara_create_threads",
-  "synara_send_message",
-  "synara_interrupt_thread",
-  "synara_set_thread_title",
-  "synara_set_thread_pull_request",
-  "synara_set_thread_archived",
-  "synara_set_thread_goal",
+  "ramspace_capabilities",
+  "ramspace_list_projects",
+  "ramspace_list_threads",
+  "ramspace_read_thread",
+  "ramspace_read_thread_activity",
+  "ramspace_read_thread_events",
+  "ramspace_read_thread_runtime_events",
+  "ramspace_diagnose_thread",
+  "ramspace_wait_for_threads",
+  "ramspace_create_thread",
+  "ramspace_create_threads",
+  "ramspace_send_message",
+  "ramspace_interrupt_thread",
+  "ramspace_set_thread_title",
+  "ramspace_set_thread_pull_request",
+  "ramspace_set_thread_archived",
+  "ramspace_set_thread_goal",
 ]);
 
 /** Qualify only gateway-owned metadata, never text, diagnostics or arbitrary user objects. */
@@ -75,18 +75,18 @@ function qualifyGatewayResult(result: McpToolCallResult, environmentId: string):
 function forwardedCreationResult(
   toolName: string,
   result: McpToolCallResult,
-): SynaraCreateThreadsResult | null {
+): RamspaceCreateThreadsResult | null {
   if (
-    (toolName !== "synara_create_thread" && toolName !== "synara_create_threads") ||
+    (toolName !== "ramspace_create_thread" && toolName !== "ramspace_create_threads") ||
     result.isError ||
     result.content.length !== 1 ||
     result.content[0]?.type !== "text"
   )
     return null;
   const value = JSON.parse(result.content[0].text);
-  // synara_create_thread flattens its single thread into the result.
+  // ramspace_create_thread flattens its single thread into the result.
   const batch =
-    toolName === "synara_create_threads"
+    toolName === "ramspace_create_threads"
       ? value
       : {
           operationId: value.operationId,
@@ -96,7 +96,7 @@ function forwardedCreationResult(
           threadIds: [value.threadId],
           threads: [value],
         };
-  const decoded = Option.getOrNull(Schema.decodeUnknownOption(SynaraCreateThreadsResult)(batch));
+  const decoded = Option.getOrNull(Schema.decodeUnknownOption(RamspaceCreateThreadsResult)(batch));
   return decoded && decoded.threads.length > 0 ? decoded : null;
 }
 
@@ -116,11 +116,11 @@ export function makeRemoteAwareTools(input: RemoteGatewayDependencies): readonly
   const discovery: ToolEntry = {
     requiredCapability: "thread:read",
     definition: {
-      name: "synara_list_connections",
+      name: "ramspace_list_connections",
       description:
-        "Discover this computer and its paired execution connections. Use the returned environmentId on Synara project/thread tools. Lists connections owned by this server, not every device in the account. Does not connect or pair devices.",
+        "Discover this computer and its paired execution connections. Use the returned environmentId on Ramspace project/thread tools. Lists connections owned by this server, not every device in the account. Does not connect or pair devices.",
       inputSchema: { type: "object", properties: {}, additionalProperties: false },
-      annotations: { title: "List Synara computers", ...READ_ONLY_TOOL_ANNOTATIONS },
+      annotations: { title: "List Ramspace computers", ...READ_ONLY_TOOL_ANNOTATIONS },
     },
     handler: () =>
       Effect.gen(function* () {
@@ -158,14 +158,14 @@ export function makeRemoteAwareTools(input: RemoteGatewayDependencies): readonly
         definition: REMOTE_TOOLS.has(tool.definition.name)
           ? {
               ...tool.definition,
-              description: `${tool.definition.description} Optional environmentId selects a computer from synara_list_connections; omission stays on this computer.${tool.definition.name.startsWith("synara_create_thread") ? " Remote creation requires projectId; notifyCreatorOnComplete is unavailable remotely." : ""}`,
+              description: `${tool.definition.description} Optional environmentId selects a computer from ramspace_list_connections; omission stays on this computer.${tool.definition.name.startsWith("ramspace_create_thread") ? " Remote creation requires projectId; notifyCreatorOnComplete is unavailable remotely." : ""}`,
               inputSchema: {
                 ...tool.definition.inputSchema,
                 properties: {
                   ...(tool.definition.inputSchema.properties as object),
                   environmentId: {
                     type: "string",
-                    description: "Computer environment ID returned by synara_list_connections.",
+                    description: "Computer environment ID returned by ramspace_list_connections.",
                   },
                 },
               },
@@ -179,7 +179,7 @@ export function makeRemoteAwareTools(input: RemoteGatewayDependencies): readonly
             if (targetId === undefined || targetId === local.environmentId) {
               const result = yield* tool.handler(localArgs, context);
               return REMOTE_TOOLS.has(tool.definition.name) ||
-                tool.definition.name === "synara_context"
+                tool.definition.name === "ramspace_context"
                 ? qualifyGatewayResult(result, local.environmentId)
                 : result;
             }
@@ -197,7 +197,7 @@ export function makeRemoteAwareTools(input: RemoteGatewayDependencies): readonly
               return gatewayToolErrorResult(
                 new GatewayToolError(
                   "remote_unavailable",
-                  "No verified connection to this computer. Connect it in Synara Settings first.",
+                  "No verified connection to this computer. Connect it in Ramspace Settings first.",
                 ),
               );
             if (tool.requiresActiveTurn) yield* context.assertCallerTurnActive();
@@ -349,7 +349,7 @@ export function receiveRemoteTool(input: {
           "Remote writes require an active caller turn.",
         ),
       );
-    if (input.call.tool.startsWith("synara_set_thread_") && !readStringArg(args, "threadId"))
+    if (input.call.tool.startsWith("ramspace_set_thread_") && !readStringArg(args, "threadId"))
       return gatewayToolErrorResult(
         new GatewayToolError("thread_not_found", "Remote mutations require an explicit threadId."),
       );

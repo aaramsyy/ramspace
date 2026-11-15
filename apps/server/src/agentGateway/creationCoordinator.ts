@@ -16,16 +16,16 @@ import {
   type ProviderInteractionMode,
   type ProviderKind,
   type RuntimeMode,
-  type SynaraCreateThreadsInput,
-  type SynaraCreateThreadsResult,
-} from "@synara/contracts";
-import { buildPromptThreadTitleFallback } from "@synara/shared/chatThreads";
-import { WORKTREE_BRANCH_PREFIX } from "@synara/shared/git";
-import { parseGitHubRepositoryNameWithOwnerFromPullRequestUrl } from "@synara/shared/githubRepository";
+  type RamspaceCreateThreadsInput,
+  type RamspaceCreateThreadsResult,
+} from "@ramspace/contracts";
+import { buildPromptThreadTitleFallback } from "@ramspace/shared/chatThreads";
+import { WORKTREE_BRANCH_PREFIX } from "@ramspace/shared/git";
+import { parseGitHubRepositoryNameWithOwnerFromPullRequestUrl } from "@ramspace/shared/githubRepository";
 import {
   autoRuntimeModeSelectionIssue,
   runtimeModeEscalatesPrivilege,
-} from "@synara/shared/runtimeMode";
+} from "@ramspace/shared/runtimeMode";
 import { Cause, Effect, Option, Semaphore } from "effect";
 
 import type { ServerConfigShape } from "../config.ts";
@@ -95,7 +95,7 @@ function parsePullRequestSelector(ref: string): PullRequestSelector | null {
 export interface ThreadCreationRecapInput {
   readonly callerThreadId: string;
   readonly callerTurnId: string;
-  readonly result: SynaraCreateThreadsResult;
+  readonly result: RamspaceCreateThreadsResult;
   /** Set when the threads were created on another paired computer. */
   readonly remote?: { readonly environmentId: string; readonly hostName: string };
 }
@@ -124,10 +124,10 @@ export function appendThreadCreationRecap(
       activity: {
         id: EventId.makeUnsafe(`gateway:${marker}:threads-created-recap`),
         tone: "info",
-        kind: "synara.threads.created",
-        summary: `Created ${input.result.createdCount} Synara ${threadLabel}`,
+        kind: "ramspace.threads.created",
+        summary: `Created ${input.result.createdCount} Ramspace ${threadLabel}`,
         payload: {
-          source: "synara_mcp",
+          source: "ramspace_mcp",
           ...(input.remote
             ? { environmentId: input.remote.environmentId, hostName: input.remote.hostName }
             : {}),
@@ -352,13 +352,13 @@ export const makeCreateThreadsHandler = Effect.fn(function* (
       return yield* Effect.fail(
         new GatewayToolError(
           "operation_failed",
-          "The original thread-creation operation is still in progress. Retry only with the same request id; Synara will not create replacement threads.",
+          "The original thread-creation operation is still in progress. Retry only with the same request id; Ramspace will not create replacement threads.",
           { operationId, status: operation?.status ?? "missing" },
         ),
       );
     });
 
-  const run = (input: typeof SynaraCreateThreadsInput.Type, context: GatewayCreationContext) => {
+  const run = (input: typeof RamspaceCreateThreadsInput.Type, context: GatewayCreationContext) => {
     return Effect.gen(function* () {
       if (context.kind === "provider-session" && context.callerTurnId === null) {
         return yield* Effect.fail(
@@ -552,7 +552,7 @@ export const makeCreateThreadsHandler = Effect.fn(function* (
       if (deprecatedBranchName) {
         return yield* Effect.fail(
           new ToolInputError(
-            '"branchName" is no longer supported for managed worktrees. Synara creates a managed temporary branch and renames it after the first prompt; create additional branches inside the new thread if needed.',
+            '"branchName" is no longer supported for managed worktrees. Ramspace creates a managed temporary branch and renames it after the first prompt; create additional branches inside the new thread if needed.',
           ),
         );
       }
@@ -740,7 +740,7 @@ export const makeCreateThreadsHandler = Effect.fn(function* (
             if (existsSync(plannedWorktreePath)) {
               return yield* Effect.fail(
                 new ToolInputError(
-                  `Worktree path "${plannedWorktreePath}" already exists. Synara will not reuse or remove a pre-existing path.`,
+                  `Worktree path "${plannedWorktreePath}" already exists. Ramspace will not reuse or remove a pre-existing path.`,
                 ),
               );
             }
@@ -759,7 +759,7 @@ export const makeCreateThreadsHandler = Effect.fn(function* (
             copyChangesFrom,
             // Deterministic like the planned path: an exact-plan retry must
             // resolve to the same branch, and recovery reclaims it by name.
-            // The 8-hex-digit token keeps it a temporary synara/* branch.
+            // The 8-hex-digit token keeps it a temporary ramspace/* branch.
             newBranch:
               environment === "worktree"
                 ? `${WORKTREE_BRANCH_PREFIX}/${stableGatewayDigest({ operationId, index, resource: "worktree-branch" }, 8)}`
@@ -861,7 +861,7 @@ export const makeCreateThreadsHandler = Effect.fn(function* (
                             worktree.branch === null
                               ? Effect.void
                               : // The branch is this operation's own deterministic
-                                // synara/* name and its worktree was just force-removed.
+                                // ramspace/* name and its worktree was just force-removed.
                                 // A non-forced delete would fail whenever the pinned
                                 // ref is not merged into the root HEAD (e.g. PR heads),
                                 // stranding the name and blocking exact-plan retries.
@@ -960,7 +960,7 @@ export const makeCreateThreadsHandler = Effect.fn(function* (
             });
             return new GatewayToolError(
               "operation_failed",
-              "Synara could not dispatch the exact creation plan and cleanup is still pending. The durable operation remains compensating and will never create replacements.",
+              "Ramspace could not dispatch the exact creation plan and cleanup is still pending. The durable operation remains compensating and will never create replacements.",
               { operationId, ...failure, compensationPending: true },
             );
           }
@@ -996,13 +996,13 @@ export const makeCreateThreadsHandler = Effect.fn(function* (
               );
             return new GatewayToolError(
               "operation_failed",
-              "Synara compensated the created resources but could not persist a terminal operation status. The operation remains compensating and will never create replacements.",
+              "Ramspace compensated the created resources but could not persist a terminal operation status. The operation remains compensating and will never create replacements.",
               { operationId, ...failure, compensationPending: true },
             );
           }
           return new GatewayToolError(
             "operation_failed",
-            "Synara could not dispatch the exact creation plan. Created operation-owned resources were compensated; no replacements were created.",
+            "Ramspace could not dispatch the exact creation plan. Created operation-owned resources were compensated; no replacements were created.",
             { operationId, ...failure },
           );
         });
@@ -1226,7 +1226,7 @@ export const makeCreateThreadsHandler = Effect.fn(function* (
                       branch,
                       worktreePath,
                       creationSource:
-                        context.kind === "external-client" ? "external_mcp" : "synara_mcp",
+                        context.kind === "external-client" ? "external_mcp" : "ramspace_mcp",
                       ...(context.kind !== "external-client" &&
                       !(context.kind === "provider-session" && context.remoteCaller)
                         ? {
@@ -1326,7 +1326,7 @@ export const makeCreateThreadsHandler = Effect.fn(function* (
             createdCount: results.length,
             threadIds: results.map((entry) => entry.threadId),
             threads: results,
-          } satisfies SynaraCreateThreadsResult;
+          } satisfies RamspaceCreateThreadsResult;
           const promptByThreadId = new Map(
             createdThreads.map((entry) => [entry.ids.threadId, entry.spec.prompt]),
           );

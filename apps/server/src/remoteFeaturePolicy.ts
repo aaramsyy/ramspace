@@ -1,7 +1,7 @@
 import { existsSync } from "node:fs";
 import { join } from "node:path";
-import { resolveConfiguredAccountUrl } from "@synara/shared/account";
-import { desktopFlavorFromBundleId } from "@synara/shared/betaFeatures";
+import { resolveConfiguredAccountUrl } from "@ramspace/shared/account";
+import { desktopFlavorFromBundleId } from "@ramspace/shared/betaFeatures";
 
 export const REMOTE_IMPORT_SUSPENSION_FILE = "remote-suspended-after-import.json";
 
@@ -9,13 +9,13 @@ export const REMOTE_IMPORT_SUSPENSION_FILE = "remote-suspended-after-import.json
 const REMOTE_V2_QUALIFIED = true;
 
 export function remoteConnectionsUnavailableReason(stateDir?: string): string | undefined {
-  const flavor = desktopFlavorFromBundleId(process.env.SYNARA_DESKTOP_BUNDLE_ID);
+  const flavor = desktopFlavorFromBundleId(process.env.RAMSPACE_DESKTOP_BUNDLE_ID);
   if (flavor === "production") {
     // Stable needs both an explicit opt-in and a configured HTTPS account origin.
     const configuredAccountUrl = resolveConfiguredAccountUrl({});
     const accountUrl = configuredAccountUrl ? URL.parse(configuredAccountUrl) : null;
     if (
-      process.env.SYNARA_REMOTE_CONNECTIONS !== "1" ||
+      process.env.RAMSPACE_REMOTE_CONNECTIONS !== "1" ||
       accountUrl?.protocol !== "https:" ||
       (configuredAccountUrl !== accountUrl.origin &&
         configuredAccountUrl !== `${accountUrl.origin}/`)
@@ -24,8 +24,8 @@ export function remoteConnectionsUnavailableReason(stateDir?: string): string | 
   }
   if (process.versions.bun || Number(process.versions.node.split(".")[0]) !== 24)
     return "Remote connections require the Node 24 server runtime.";
-  if (flavor === "unknown" && process.env.SYNARA_REMOTE_CONNECTIONS !== "1")
-    return "Set SYNARA_REMOTE_CONNECTIONS=1 to opt in to remote connections.";
+  if (flavor === "unknown" && process.env.RAMSPACE_REMOTE_CONNECTIONS !== "1")
+    return "Set RAMSPACE_REMOTE_CONNECTIONS=1 to opt in to remote connections.";
   if (stateDir && existsSync(join(stateDir, REMOTE_IMPORT_SUSPENSION_FILE)))
     return "Reconnect this installation after the data import.";
   if (!REMOTE_V2_QUALIFIED)
@@ -35,7 +35,7 @@ export function remoteConnectionsUnavailableReason(stateDir?: string): string | 
 
 // Keep existing non-Stable reporting behavior while applying the Stable rollout policy.
 export function accountLiveActivityEnabled(stateDir?: string): boolean {
-  const flavor = desktopFlavorFromBundleId(process.env.SYNARA_DESKTOP_BUNDLE_ID);
+  const flavor = desktopFlavorFromBundleId(process.env.RAMSPACE_DESKTOP_BUNDLE_ID);
   return flavor !== "production" || remoteConnectionsUnavailableReason(stateDir) === undefined;
 }
 
@@ -45,15 +45,15 @@ export function requireRemoteConnections(stateDir?: string): void {
 }
 
 export function accountProfileSyncUnavailableReason(): string | undefined {
-  const flavor = desktopFlavorFromBundleId(process.env.SYNARA_DESKTOP_BUNDLE_ID);
+  const flavor = desktopFlavorFromBundleId(process.env.RAMSPACE_DESKTOP_BUNDLE_ID);
   // Stable and Remote offer account profiles on sign-in. Other hosts retain
   // operator opt-in, and an explicit opt-out is honored in every flavor.
   const enabled =
-    process.env.SYNARA_ACCOUNT_PROFILE_SYNC === "1" ||
+    process.env.RAMSPACE_ACCOUNT_PROFILE_SYNC === "1" ||
     ((flavor === "production" || flavor === "remote") &&
-      process.env.SYNARA_ACCOUNT_PROFILE_SYNC === undefined);
+      process.env.RAMSPACE_ACCOUNT_PROFILE_SYNC === undefined);
   if (!enabled)
-    return "Account profile sync is unavailable until SYNARA_ACCOUNT_PROFILE_SYNC=1 is set.";
+    return "Account profile sync is unavailable until RAMSPACE_ACCOUNT_PROFILE_SYNC=1 is set.";
   return undefined;
 }
 

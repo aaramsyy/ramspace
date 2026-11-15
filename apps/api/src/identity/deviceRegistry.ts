@@ -2,9 +2,9 @@ import {
   DEVICE_REGISTER_JWT_TYP,
   DEVICE_REGISTER_MAX_AGE_SECONDS,
   DeviceRegisterClaims,
-  SYNARA_DEVICE_ISSUER,
+  RAMSPACE_DEVICE_ISSUER,
   type AccountDevice,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { and, desc, eq, inArray, isNotNull, isNull, or, sql } from "drizzle-orm";
 import type { NodePgDatabase } from "drizzle-orm/node-postgres";
 import { Schema } from "effect";
@@ -48,13 +48,13 @@ export function createDeviceRegistry(
       let jkt: string;
       try {
         claims = Schema.decodeUnknownSync(DeviceRegisterClaims)(decodeJwt(proof));
-        if (claims.sub !== userId || claims.iss !== SYNARA_DEVICE_ISSUER) {
+        if (claims.sub !== userId || claims.iss !== RAMSPACE_DEVICE_ISSUER) {
           throw new Error("Device proof identity does not match the session");
         }
         await verifyJwtWithEmbeddedJwk(proof, {
           typ: DEVICE_REGISTER_JWT_TYP,
           audience: apiIssuer,
-          issuer: SYNARA_DEVICE_ISSUER,
+          issuer: RAMSPACE_DEVICE_ISSUER,
           algorithms: ["ES256", "EdDSA"],
           maxAgeSeconds: DEVICE_REGISTER_MAX_AGE_SECONDS,
           publicKeyJwk: claims.publicKeyJwk,

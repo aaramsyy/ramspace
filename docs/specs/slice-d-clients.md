@@ -5,7 +5,7 @@
 ## 1. Device identity (`packages/shared/src/deviceKey.ts`, new)
 
 - Generate a **non-extractable** keypair in the platform keystore: WebCrypto `ECDSA P-256` (`extractable: false`) in the browser/Electron renderer, persisted by handle in IndexedDB; Desktop main may use the OS keychain where available. ES256 is required — Secure Enclave and WebCrypto cannot do Ed25519 (Slice A already allows ES256 for device keys).
-- `POST /devices` with a `synara-device-register+jwt` proof of possession (Slice A §9), then cache `{deviceId, jkt}` locally. Re-register idempotently on launch; a revoked device re-registers as a fresh row.
+- `POST /devices` with a `ramspace-device-register+jwt` proof of possession (Slice A §9), then cache `{deviceId, jkt}` locally. Re-register idempotently on launch; a revoked device re-registers as a fresh row.
 - DPoP proofs (`typ: dpop+jwt`, `htu`/`htm`/`jti`/`iat`/`ath`) are minted per request from the same key for session-credential use.
 
 ## 2. Transport selection (`packages/shared/src/transportRace.ts`, new)
@@ -23,15 +23,15 @@ Implements ADR 0007 exactly: build the candidate list, probe concurrently, pick 
 
 1. `POST /hosts/:id/grant` with the device `jkt` (Slice A §4.4).
 2. Connect over the winning transport (relay: `wss://relay/client/session?grant=…`; direct: the host's own URL).
-3. Present `synara-mint-request+jwt` wrapping the grant + DPoP proof; receive the host-minted `synara-session-credential+jwt` (~1h).
-4. Speak the normal Synara WS protocol; on expiry, fetch a fresh grant and re-mint.
-5. Close codes from `@synara/relay-protocol` drive retry semantics: `4401`/`4403` ⇒ re-grant, `4404` ⇒ host offline (surface it, retry with backoff), `1013` ⇒ back off.
+3. Present `ramspace-mint-request+jwt` wrapping the grant + DPoP proof; receive the host-minted `ramspace-session-credential+jwt` (~1h).
+4. Speak the normal Ramspace WS protocol; on expiry, fetch a fresh grant and re-mint.
+5. Close codes from `@ramspace/relay-protocol` drive retry semantics: `4401`/`4403` ⇒ re-grant, `4404` ⇒ host offline (surface it, retry with backoff), `1013` ⇒ back off.
 
-## 4. UI (Synara design system; Paper references)
+## 4. UI (Ramspace design system; Paper references)
 
 Per the repo's UI conventions: **all open/close motion via `apps/web/src/lib/disclosureMotion.ts`** — no bespoke transitions. Follow existing Sidebar/Settings patterns.
 
-**Paper state (checked 2026-08-13, file `Synara`):** the `Architecture` page holds the Remote Access diagram (the architecture reference used throughout this epic); `Profile` holds the shipped profile/share dialogs; the **`Connections` page is empty**. So there is no host-UI artboard to match — this slice designs it fresh against the token system below, and the user's follow-up pass is where visual polish lands.
+**Paper state (checked 2026-08-13, file `Ramspace`):** the `Architecture` page holds the Remote Access diagram (the architecture reference used throughout this epic); `Profile` holds the shipped profile/share dialogs; the **`Connections` page is empty**. So there is no host-UI artboard to match — this slice designs it fresh against the token system below, and the user's follow-up pass is where visual polish lands.
 
 Design tokens (from Paper; mirror whatever the web app already defines rather than hardcoding):
 
@@ -60,7 +60,7 @@ The user will do a polish pass afterward; this slice aims for correct structure,
 
 ## 5. mDNS (Desktop only)
 
-Advertise `_synara._tcp` from the host and browse from Desktop clients; discovered addresses join the probe candidate list. Web clients cannot use mDNS and rely on directory endpoints + relay.
+Advertise `_ramspace._tcp` from the host and browse from Desktop clients; discovered addresses join the probe candidate list. Web clients cannot use mDNS and rely on directory endpoints + relay.
 
 ## 6. Tests
 

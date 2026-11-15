@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-// Single-domain dev deployment (synara.vrbty.dev): this app owns the domain;
+// Single-domain dev deployment (ramspace.vrbty.dev): this app owns the domain;
 // non-profile pages proxy to the marketing site. /_next is shared by both
 // apps and Next reserves it (config rewrites never fire there), so asset
 // requests resolve local-first via a guarded self-probe: a local hit serves

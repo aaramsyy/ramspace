@@ -9,7 +9,7 @@ import {
   type DesktopMenuShortcutCommand,
   type DesktopMenuShortcuts,
   type ResolvedKeybindingsConfig,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import {
   resolveKeybindingForCommand,
   shortcutConflictKey,

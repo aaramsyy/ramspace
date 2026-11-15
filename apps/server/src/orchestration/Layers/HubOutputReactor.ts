@@ -25,10 +25,13 @@ import {
   ThreadId,
   type ProviderRuntimeEvent,
   type TurnId,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { Cause, Effect, FileSystem, Layer, Option, Path, Stream } from "effect";
-import { makeDrainableWorker, startDrainableWorkerProducers } from "@synara/shared/DrainableWorker";
-import { isGroupContainerKind } from "@synara/shared/projectContainers";
+import {
+  makeDrainableWorker,
+  startDrainableWorkerProducers,
+} from "@ramspace/shared/DrainableWorker";
+import { isGroupContainerKind } from "@ramspace/shared/projectContainers";
 
 import {
   checkpointRefForThreadMessageStart,

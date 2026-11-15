@@ -29,7 +29,7 @@ export function ProjectImportDialog() {
         <DialogHeader className="gap-1 px-5 pb-0 pt-5">
           <DialogTitle>{t("workspace:importProjects")}</DialogTitle>
           <DialogDescription className="text-ui">
-            {t("workspace:continueYourCodexAndClaudeCodeProjectsInSynara")}
+            {t("workspace:continueYourCodexAndClaudeCodeProjectsInRamspace")}
           </DialogDescription>
         </DialogHeader>
         <div className="flex min-h-0 flex-1 flex-col px-5 pt-3.5 pb-3">

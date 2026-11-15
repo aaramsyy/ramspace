@@ -7,10 +7,10 @@ import {
   type ProviderRuntimeEvent,
   ThreadId,
   TurnId,
-} from "@synara/contracts";
-import { CODEX_STDERR_NATIVE_EVENT_TYPE } from "@synara/shared/codexStderr";
-import { nonEmptyTrimmed } from "@synara/shared/text";
-import { sanitizeUserFacingErrorMessage } from "@synara/shared/errorMessages";
+} from "@ramspace/contracts";
+import { CODEX_STDERR_NATIVE_EVENT_TYPE } from "@ramspace/shared/codexStderr";
+import { nonEmptyTrimmed } from "@ramspace/shared/text";
+import { sanitizeUserFacingErrorMessage } from "@ramspace/shared/errorMessages";
 import { providerRuntimeCommandProgressKey } from "./providerRuntimeProgressCoalescing.ts";
 
 import {
@@ -29,7 +29,7 @@ const MAX_REASONING_DETAIL_CHARS = 8_000;
 const MAX_ACTIVITY_DATA_ARRAY_ITEMS = 24;
 const MAX_ACTIVITY_DATA_OBJECT_KEYS = 64;
 const MAX_INLINE_ACTIVITY_FINGERPRINT_CHARS = 1_024;
-const ACTIVITY_DATA_TRUNCATION_MARKER = "__synaraTruncated";
+const ACTIVITY_DATA_TRUNCATION_MARKER = "__ramspaceTruncated";
 
 type ActivityPayload = OrchestrationThreadActivity["payload"];
 

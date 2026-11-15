@@ -43,7 +43,7 @@ readline.createInterface({ input: process.stdin }).on("line", (line) => {
   if (request.method.startsWith("thread/")) {
     if (request.method === "thread/start" || request.method === "thread/resume") {
       gatewayAuthorization =
-        request.params?.config?.mcp_servers?.synara?.http_headers?.Authorization;
+        request.params?.config?.mcp_servers?.ramspace?.http_headers?.Authorization;
     }
     threadId = request.params?.threadId ?? threadId;
     return reply({ thread: { id: threadId, cwd: request.params?.cwd, turns: [] } });

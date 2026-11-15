@@ -1,4 +1,4 @@
-import type { AuthPairingLink, ServerAuthBootstrapMethod } from "@synara/contracts";
+import type { AuthPairingLink, ServerAuthBootstrapMethod } from "@ramspace/contracts";
 import { Data, DateTime, Duration, ServiceMap } from "effect";
 import type { Effect, Stream } from "effect";
 import type { AuthAccessOrigin } from "./SessionCredentialService";
@@ -57,4 +57,4 @@ export interface BootstrapCredentialServiceShape {
 export class BootstrapCredentialService extends ServiceMap.Service<
   BootstrapCredentialService,
   BootstrapCredentialServiceShape
->()("synara/auth/Services/BootstrapCredentialService") {}
+>()("ramspace/auth/Services/BootstrapCredentialService") {}

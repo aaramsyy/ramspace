@@ -7,8 +7,8 @@ import { page } from "vitest/browser";
 import { expect, it, vi } from "vitest";
 
 // Resolve the real feature policy as a packaged Stable host, independent of HTTP test hosting.
-vi.mock("@synara/shared/betaFeatures", async (importOriginal) => ({
-  ...(await importOriginal<typeof import("@synara/shared/betaFeatures")>()),
+vi.mock("@ramspace/shared/betaFeatures", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@ramspace/shared/betaFeatures")>()),
   desktopFlavorFromProtocol: () => "production",
 }));
 import { render } from "vitest-browser-react";

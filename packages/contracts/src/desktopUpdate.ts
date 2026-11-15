@@ -63,7 +63,7 @@ export const ServerDesktopUpdateResult = Schema.Struct({
 export type ServerDesktopUpdateResult = typeof ServerDesktopUpdateResult.Type;
 
 export const DesktopUpdateIpcRequest = Schema.Struct({
-  type: Schema.Literal("synara:desktop-update:request"),
+  type: Schema.Literal("ramspace:desktop-update:request"),
   id: boundedTrimmedNonEmptyString(128),
   authority: boundedTrimmedNonEmptyString(256),
   action: Schema.Literals(["status", "check", "download", "install"]),
@@ -73,7 +73,7 @@ export const DesktopUpdateIpcRequest = Schema.Struct({
 export type DesktopUpdateIpcRequest = typeof DesktopUpdateIpcRequest.Type;
 
 export const DesktopUpdateIpcResponse = Schema.Struct({
-  type: Schema.Literal("synara:desktop-update:response"),
+  type: Schema.Literal("ramspace:desktop-update:response"),
   id: boundedTrimmedNonEmptyString(128),
   result: ServerDesktopUpdateResult,
 });

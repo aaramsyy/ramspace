@@ -4,10 +4,10 @@ import type {
   PullRequestListEntry,
   PullRequestMergeCapabilities,
   PullRequestMergeMethod,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 
 import type { GitHubInboxPullRequest } from "./git/Services/GitHubCli.ts";
-export { isValidGitHubRepositoryNameWithOwner } from "@synara/shared/githubRepository";
+export { isValidGitHubRepositoryNameWithOwner } from "@ramspace/shared/githubRepository";
 
 /** Repository-wide PR identity used to coalesce the same remote lookup across local projects. */
 export function repositoryPullRequestIdentityKey(input: {

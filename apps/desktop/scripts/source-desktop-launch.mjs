@@ -4,11 +4,11 @@ import { homedir } from "node:os";
 import { basename, dirname, join, resolve } from "node:path";
 
 import {
-  resolveSynaraDesktopFlavor,
-  SYNARA_SOURCE_DESKTOP_BUILD_MARKER,
-  synaraDesktopIdentity,
-} from "@synara/shared/desktopIdentity";
-import { readWindowsPersistentEnvironment } from "@synara/shared/shell";
+  resolveRamspaceDesktopFlavor,
+  RAMSPACE_SOURCE_DESKTOP_BUILD_MARKER,
+  ramspaceDesktopIdentity,
+} from "@ramspace/shared/desktopIdentity";
+import { readWindowsPersistentEnvironment } from "@ramspace/shared/shell";
 
 function environmentValue(environment, name, caseInsensitive) {
   const exactValue = environment[name];
@@ -22,12 +22,12 @@ function environmentValue(environment, name, caseInsensitive) {
 
 function configuredSourceDesktopHome(environment, platform, readWindowsEnvironment) {
   const isWindows = platform === "win32";
-  const inheritedHome = environmentValue(environment, "SYNARA_HOME", isWindows)?.trim();
+  const inheritedHome = environmentValue(environment, "RAMSPACE_HOME", isWindows)?.trim();
   if (inheritedHome) return inheritedHome;
   if (!isWindows) return undefined;
 
   try {
-    return environmentValue(readWindowsEnvironment(), "SYNARA_HOME", true)?.trim();
+    return environmentValue(readWindowsEnvironment(), "RAMSPACE_HOME", true)?.trim();
   } catch {
     return undefined;
   }
@@ -39,23 +39,23 @@ export function createSourceDesktopEnvironment({
   platform = process.platform,
   readWindowsEnvironment = readWindowsPersistentEnvironment,
 } = {}) {
-  const flavor = resolveSynaraDesktopFlavor({
+  const flavor = resolveRamspaceDesktopFlavor({
     isDevelopment: true,
-    requestedFlavor: environment.SYNARA_DESKTOP_FLAVOR,
+    requestedFlavor: environment.RAMSPACE_DESKTOP_FLAVOR,
   });
-  const identity = synaraDesktopIdentity(flavor);
+  const identity = ramspaceDesktopIdentity(flavor);
   // Remote must never inherit Stable's data home, even in a developer shell.
   const configuredHome =
     flavor === "remote"
-      ? environment.SYNARA_REMOTE_HOME?.trim()
+      ? environment.RAMSPACE_REMOTE_HOME?.trim()
       : configuredSourceDesktopHome(environment, platform, readWindowsEnvironment);
   const childEnvironment = {
     ...environment,
-    SYNARA_DESKTOP_FLAVOR: flavor,
-    SYNARA_HOME: configuredHome || join(homeDirectory, identity.defaultHomeDirectoryName),
-    SYNARA_SOURCE_DESKTOP_BUILD_MARKER,
+    RAMSPACE_DESKTOP_FLAVOR: flavor,
+    RAMSPACE_HOME: configuredHome || join(homeDirectory, identity.defaultHomeDirectoryName),
+    RAMSPACE_SOURCE_DESKTOP_BUILD_MARKER,
   };
-  if (flavor === "remote") childEnvironment.SYNARA_REMOTE_HOME = childEnvironment.SYNARA_HOME;
+  if (flavor === "remote") childEnvironment.RAMSPACE_REMOTE_HOME = childEnvironment.RAMSPACE_HOME;
   delete childEnvironment.ELECTRON_RUN_AS_NODE;
   return childEnvironment;
 }
@@ -63,7 +63,7 @@ export function createSourceDesktopEnvironment({
 function assertCurrentSourceDesktopBuild(desktopDirectory, readBuiltMain) {
   const builtMainPath = join(desktopDirectory, "dist-electron/main.js");
   const builtMain = readBuiltMain(builtMainPath, "utf8");
-  if (!builtMain.includes(SYNARA_SOURCE_DESKTOP_BUILD_MARKER)) {
+  if (!builtMain.includes(RAMSPACE_SOURCE_DESKTOP_BUILD_MARKER)) {
     throw new Error(
       "Source desktop build is stale. Run `bun run build:desktop`, then launch it again.",
     );

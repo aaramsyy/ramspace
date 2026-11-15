@@ -1,5 +1,5 @@
 {
-  "name": "@synara/shared",
+  "name": "@ramspace/shared",
   "version": "0.0.0-alpha.1",
   "private": true,
   "type": "module",
@@ -116,9 +116,9 @@
       "types": "./src/loginShellEnvironment.ts",
       "import": "./src/loginShellEnvironment.ts"
     },
-    "./synaraHome": {
-      "types": "./src/synaraHome.ts",
-      "import": "./src/synaraHome.ts"
+    "./ramspaceHome": {
+      "types": "./src/ramspaceHome.ts",
+      "import": "./src/ramspaceHome.ts"
     },
     "./staticSnapshot": {
       "types": "./src/staticSnapshot.ts",
@@ -552,7 +552,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@synara/contracts": "workspace:*",
+    "@ramspace/contracts": "workspace:*",
     "effect": "catalog:",
     "jose": "^6.1.0"
   },

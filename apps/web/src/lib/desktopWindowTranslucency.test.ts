@@ -35,7 +35,7 @@ describe("readDesktopWindowTranslucency", () => {
       const pane = {
         desktopBridge: { windowTranslucency: "native" },
         frameElement: {
-          synaraWorkspace: {
+          ramspaceWorkspace: {
             controller: {
               desktop: true,
               presentation: { readWindowTranslucency: () => backing },
@@ -57,7 +57,7 @@ describe("readDesktopWindowTranslucency", () => {
     ({ platform, desktop, expected }) => {
       vi.stubGlobal("navigator", { platform });
       (globalThis as WindowSlot).window = {
-        frameElement: { synaraWorkspace: { controller: { desktop, presentation: {} } } },
+        frameElement: { ramspaceWorkspace: { controller: { desktop, presentation: {} } } },
       };
       expect(readDesktopWindowTranslucency()).toBe(expected);
     },
@@ -69,7 +69,7 @@ describe("readDesktopWindowTranslucency", () => {
     expect(readDesktopWindowTranslucency()).toBeNull();
     (globalThis as WindowSlot).window = {
       frameElement: {
-        synaraWorkspace: {
+        ramspaceWorkspace: {
           controller: {
             desktop: false,
             presentation: { readWindowTranslucency: () => "native" },

@@ -9,13 +9,13 @@ Diagnostics should answer a specific question: what state was projected, what du
 
 The diagnostic tools below are explicit reads of workspace evidence. They are separate from automatic product analytics and Beta/Remote release diagnostics.
 
-Product analytics use a random installation identifier unrelated to login or billing. They exclude prompts, chat content, files, paths, project/repository names, credentials and free text. Stable and Beta default to off. Synara Remote from version **1.0.6-remote.18** and iPhone/iPad from **build 139** default to on, with a local **Share usage and diagnostics** switch; an existing off choice is preserved. Active counts represent installations in rolling 24-hour, 7-day and 30-day windows, not people or calendar periods.
+Product analytics use a random installation identifier unrelated to login or billing. They exclude prompts, chat content, files, paths, project/repository names, credentials and free text. Stable and Beta default to off. Ramspace Remote from version **1.0.6-remote.18** and iPhone/iPad from **build 139** default to on, with a local **Share usage and diagnostics** switch; an existing off choice is preserved. Active counts represent installations in rolling 24-hour, 7-day and 30-day windows, not people or calendar periods.
 
 Turning product sharing off stops collection, cancels active sends and deletes unsent events and the local analytics identifier. Re-enabling creates a fresh random identifier without linking it through an account. Switching off cannot recall events already received. Raw product events are scheduled for deletion 30 days after receipt; capped daily cleanup can take longer when there is a large backlog.
 
 Beta crash and release diagnostics are separate and always on, but follow the same content-exclusion rule as other telemetry. Beta and Remote send fixed error/issue categories, numeric source positions, release health and bounded usage counts; neither sends error prose, function/file names, log excerpts or raw crash memory. Remote desktop diagnostics follow the sharing switch. Older installed clients used broader diagnostics; the receiving service rejects raw dumps and strips legacy text. Historical storage cleanup is a separate operator task, and new code is not proof that it has run. Extracted provider/turn rows are scheduled for deletion 90 days after receipt with capped cleanup. Host usage reports sample a rolling 24 hours and are separate from account and billing records.
 
-See [Privacy](/privacy) for local storage, provider, account and transport boundaries, and the [automatic diagnostics field and storage reference](https://github.com/Emanuele-web04/synara/blob/main/docs/diagnostics.md) for the detailed allowlists and retention rules.
+See [Privacy](/privacy) for local storage, provider, account and transport boundaries, and the [automatic diagnostics field and storage reference](https://github.com/aaramsyy/ramspace/blob/main/docs/diagnostics.md) for the detailed allowlists and retention rules.
 
 ## Diagnostic sources
 
@@ -23,10 +23,10 @@ Authorized Agent Gateway sessions can expose four complementary tools:
 
 | Tool                                | Source                                           | Best for                                                 |
 | ----------------------------------- | ------------------------------------------------ | -------------------------------------------------------- |
-| `synara_diagnose_thread`            | Bounded forensic snapshot across several sources | First-pass triage of a stuck or inconsistent task        |
-| `synara_read_thread_activity`       | Projected task activity                          | What Synara presented as user-facing task activity       |
-| `synara_read_thread_events`         | Durable orchestration event journal              | Authoritative ordering of persisted orchestration events |
-| `synara_read_thread_runtime_events` | Retained provider-runtime events                 | What the provider adapter emitted before projection      |
+| `ramspace_diagnose_thread`            | Bounded forensic snapshot across several sources | First-pass triage of a stuck or inconsistent task        |
+| `ramspace_read_thread_activity`       | Projected task activity                          | What Ramspace presented as user-facing task activity       |
+| `ramspace_read_thread_events`         | Durable orchestration event journal              | Authoritative ordering of persisted orchestration events |
+| `ramspace_read_thread_runtime_events` | Retained provider-runtime events                 | What the provider adapter emitted before projection      |
 
 No single source answers every question.
 
@@ -35,7 +35,7 @@ No single source answers every question.
 Use:
 
 ```text
-synara_diagnose_thread({ threadId })
+ramspace_diagnose_thread({ threadId })
 ```
 
 It combines a bounded view of:
@@ -51,7 +51,7 @@ Use the result to choose the next narrow read. Do not paste the full snapshot pu
 
 ## Read projected activity
 
-Use `synara_read_thread_activity` when the question is:
+Use `ramspace_read_thread_activity` when the question is:
 
 - What appeared in the task transcript?
 - Which approval, tool, status, or user-input activity was projected?
@@ -63,7 +63,7 @@ A projected activity can be absent because projection failed even when a durable
 
 ## Read durable thread events
 
-Use `synara_read_thread_events` when ordering and durable persistence matter.
+Use `ramspace_read_thread_events` when ordering and durable persistence matter.
 
 The event journal:
 
@@ -77,7 +77,7 @@ When `durableSourceComplete` is true for the requested high-water mark, absence 
 
 ## Read provider-runtime events
 
-Use `synara_read_thread_runtime_events` when the question is:
+Use `ramspace_read_thread_runtime_events` when the question is:
 
 - Did the provider emit an item or completion event?
 - Which provider event IDs or request IDs appeared?
@@ -135,7 +135,7 @@ Keep the smallest useful page and filter to a relevant turn or event type.
 
 ## Built-in redaction and bounds
 
-Synara’s diagnostic sanitizer:
+Ramspace’s diagnostic sanitizer:
 
 - Redacts fields whose keys resemble authorization, cookies, credentials, passwords, secrets, tokens, or API keys
 - Redacts common secret assignments, authorization headers, credential-bearing URLs, and sensitive query parameters
@@ -191,14 +191,14 @@ Do not “reconcile” the evidence by inventing a missing event.
 
 For most task-runtime problems, collect:
 
-1. Synara version and build type
+1. Ramspace version and build type
 2. Operating system
 3. Provider executable path and version
 4. Provider/model/options
 5. Task status and environment type
 6. Exact error text and time range
 7. `git status --short --branch`
-8. A redacted `synara_diagnose_thread` result
+8. A redacted `ramspace_diagnose_thread` result
 9. One narrow follow-up source page when needed
 10. Reproduction steps and expected behavior
 

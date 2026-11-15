@@ -6,7 +6,7 @@
 // without the dialog, embedded by the first-run onboarding right after sign-in.
 // Layer: Web account feature.
 
-import type { AccountMe } from "@synara/contracts";
+import type { AccountMe } from "@ramspace/contracts";
 import { useId, useState } from "react";
 import { Button } from "~/components/ui/button";
 import { Dialog, DialogPopup, DialogTitle } from "~/components/ui/dialog";
@@ -20,7 +20,7 @@ import { Input } from "~/components/ui/input";
 import { Spinner } from "~/components/ui/spinner";
 import { toastManager } from "~/components/ui/toast";
 import { dialogFieldLabelClassName } from "~/components/ui/dialog";
-import { ProfileAvatar } from "@synara/profile-ui/avatar";
+import { ProfileAvatar } from "@ramspace/profile-ui/avatar";
 import { PROFILE_AVATAR_COLORS } from "~/components/profile/useProfileAvatarColor";
 import { useAccount } from "~/hooks/useAccount";
 import {

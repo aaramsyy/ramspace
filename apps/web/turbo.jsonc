@@ -3,7 +3,7 @@
   "extends": ["//"],
   "tasks": {
     "build": {
-      "env": ["VITE_SYNARA_BILLING_ENABLED", "VITE_SYNARA_BILLING_SANDBOX"],
+      "env": ["VITE_RAMSPACE_BILLING_ENABLED", "VITE_RAMSPACE_BILLING_SANDBOX"],
     },
     "dev": {
       "persistent": true,

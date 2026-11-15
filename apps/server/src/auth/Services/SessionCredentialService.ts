@@ -3,7 +3,7 @@ import type {
   AuthClientSession,
   AuthSessionId,
   ServerAuthSessionMethod,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { Data, DateTime, Duration, ServiceMap } from "effect";
 import type { Effect, Stream } from "effect";
 
@@ -98,4 +98,4 @@ export interface SessionCredentialServiceShape {
 export class SessionCredentialService extends ServiceMap.Service<
   SessionCredentialService,
   SessionCredentialServiceShape
->()("synara/auth/Services/SessionCredentialService") {}
+>()("ramspace/auth/Services/SessionCredentialService") {}

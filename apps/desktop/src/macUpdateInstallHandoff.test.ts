@@ -45,7 +45,7 @@ describe("macOS update install handoff", () => {
 
     expect(native.quitAndInstall).not.toHaveBeenCalled();
     expect(otherDownloadedListener).toHaveBeenCalledOnce();
-    await expect(handoff.prepare(15_000)).rejects.toThrow("Restart Synara");
+    await expect(handoff.prepare(15_000)).rejects.toThrow("Restart Ramspace");
     expect(native.checkForUpdates).toHaveBeenCalledOnce();
   });
 
@@ -59,7 +59,7 @@ describe("macOS update install handoff", () => {
       await result;
       native.emit("update-downloaded");
       expect(native.quitAndInstall).not.toHaveBeenCalled();
-      expect(handoff.blockedReason).toContain("Restart Synara");
+      expect(handoff.blockedReason).toContain("Restart Ramspace");
     } finally {
       vi.useRealTimers();
     }
@@ -85,7 +85,7 @@ describe("macOS update install handoff", () => {
         await prepared;
         expect(() => handoff.quitAndInstall()).toThrow(error);
       }
-      expect(handoff.blockedReason).toContain("Restart Synara");
+      expect(handoff.blockedReason).toContain("Restart Ramspace");
       native.emit("update-downloaded");
       expect(native.quitAndInstall).toHaveBeenCalledTimes(stage === "check" ? 0 : 1);
     },

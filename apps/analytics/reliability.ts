@@ -5,7 +5,7 @@ import {
   isReliabilityPlatform,
   isReliabilityReleaseVersion,
   type ReliabilityRecord,
-} from "@synara/contracts/reliability";
+} from "@ramspace/contracts/reliability";
 
 const DAY_MS = 86_400_000;
 export const RELIABILITY_RECEIPT_RETENTION_DAYS = 14;

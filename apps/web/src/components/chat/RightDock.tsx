@@ -1,5 +1,5 @@
 import { readExecutionContext } from "~/lib/hosts/executionContext";
-import { REMOTE_NATIVE_UNAVAILABLE } from "@synara/shared/remoteCapabilities";
+import { REMOTE_NATIVE_UNAVAILABLE } from "@ramspace/shared/remoteCapabilities";
 // FILE: RightDock.tsx
 // Purpose: Tabbed multi-pane right sidebar shell (browser, diff, terminal, sidechat, git).
 // Layer: Chat right-dock UI

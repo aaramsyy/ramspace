@@ -127,7 +127,7 @@ describe("isSummarizableToolCallEntry", () => {
       isSummarizableToolCallEntry(
         workEntry({
           id: "threads",
-          synaraThreadCreation: {
+          ramspaceThreadCreation: {
             operationId: "op",
             requestedCount: 1,
             createdCount: 1,

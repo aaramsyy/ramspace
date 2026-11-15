@@ -22,7 +22,7 @@ export function remotePairingLink(
       fingerprint: invitation.rootFingerprint,
       expires: invitation.expiresAt,
     });
-    return `synara://connect#${payload}`;
+    return `ramspace://connect#${payload}`;
   } catch {
     return null;
   }

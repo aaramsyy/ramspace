@@ -6,7 +6,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { readActiveHost, readLegacyActiveHost } from "./activeHost";
 
-const KEY = "synara:active-host:v1";
+const KEY = "ramspace:active-host:v1";
 
 function createMemoryStorage(): Storage {
   const values = new Map<string, string>();

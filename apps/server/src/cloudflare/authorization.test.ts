@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { AccountApiError, createAccountClient } from "@synara/shared/account";
-import type { AccountErrorCode, HostAuthorizationSnapshot } from "@synara/contracts";
+import { AccountApiError, createAccountClient } from "@ramspace/shared/account";
+import type { AccountErrorCode, HostAuthorizationSnapshot } from "@ramspace/contracts";
 import {
   REMOTE_AUTHORIZATION_LEASE_MS,
   REMOTE_PERMANENT_DENIAL_MS,

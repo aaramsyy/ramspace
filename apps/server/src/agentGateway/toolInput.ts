@@ -1,10 +1,10 @@
 import {
   DEFAULT_MODEL_BY_PROVIDER,
-  SynaraCreateThreadsInput,
-  SynaraWaitForThreadsInput,
+  RamspaceCreateThreadsInput,
+  RamspaceWaitForThreadsInput,
   type ModelSelection,
   type ProviderKind,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { Schema } from "effect";
 
 import { AGENT_GATEWAY_TARGET_OPTIONS_DESCRIPTION } from "./targetResolver.ts";
@@ -30,11 +30,11 @@ export const MODEL_SELECTION_INPUT_SCHEMA = {
     instanceId: {
       type: "string",
       description:
-        "Exact provider instance ID from synara_capabilities providers[].instances[].instanceId. Omit to use the provider's default account.",
+        "Exact provider instance ID from ramspace_capabilities providers[].instances[].instanceId. Omit to use the provider's default account.",
     },
     model: {
       type: "string",
-      description: "Exact model slug from synara_capabilities providers[].models[].slug.",
+      description: "Exact model slug from ramspace_capabilities providers[].models[].slug.",
     },
     options: {
       type: "object",
@@ -208,16 +208,16 @@ export function buildModelSelection(
 
 export function decodeCreateThreadsInput(value: unknown) {
   try {
-    return Schema.decodeUnknownSync(SynaraCreateThreadsInput)(value);
+    return Schema.decodeUnknownSync(RamspaceCreateThreadsInput)(value);
   } catch (error) {
-    throw new ToolInputError(`Invalid Synara creation plan: ${errorText(error)}`);
+    throw new ToolInputError(`Invalid Ramspace creation plan: ${errorText(error)}`);
   }
 }
 
 export function decodeWaitForThreadsInput(value: unknown) {
   try {
-    return Schema.decodeUnknownSync(SynaraWaitForThreadsInput)(value);
+    return Schema.decodeUnknownSync(RamspaceWaitForThreadsInput)(value);
   } catch (error) {
-    throw new ToolInputError(`Invalid Synara wait request: ${errorText(error)}`);
+    throw new ToolInputError(`Invalid Ramspace wait request: ${errorText(error)}`);
   }
 }

@@ -19,8 +19,8 @@ import type {
   ServerProviderUsageLimit,
   ServerProviderUsageLine,
   ServerProviderUsageSnapshot,
-} from "@synara/contracts";
-import { execProcessFile } from "@synara/shared/processRuntime";
+} from "@ramspace/contracts";
+import { execProcessFile } from "@ramspace/shared/processRuntime";
 
 import { createLogger } from "../../logger";
 import { acquireClaudeAuthStatusLock } from "../../provider/claudeAuthStatusLock";

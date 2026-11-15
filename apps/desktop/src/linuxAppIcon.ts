@@ -12,7 +12,10 @@
 import * as FS from "node:fs";
 import * as Path from "node:path";
 
-import { synaraDesktopIdentity, type SynaraDesktopFlavor } from "@synara/shared/desktopIdentity";
+import {
+  ramspaceDesktopIdentity,
+  type RamspaceDesktopFlavor,
+} from "@ramspace/shared/desktopIdentity";
 
 /** Sizes the hicolor index declares under `apps`; larger artwork would be ignored. */
 export const LINUX_APP_ICON_SIZES = [16, 24, 32, 48, 64, 96, 128, 256, 512] as const;
@@ -47,7 +50,7 @@ export function desktopEntryIconName(contents: string): string | null {
 export function resolveLinuxDesktopIconName(input: {
   readonly env: NodeJS.ProcessEnv;
   readonly homeDir: string;
-  readonly flavor: SynaraDesktopFlavor;
+  readonly flavor: RamspaceDesktopFlavor;
 }): string | null {
   const dataHome = linuxDataHome(input.env, input.homeDir);
   const dataDirs = (input.env.XDG_DATA_DIRS?.trim() || "/usr/local/share:/usr/share")
@@ -55,7 +58,7 @@ export function resolveLinuxDesktopIconName(input: {
     .filter((directory) => Path.isAbsolute(directory));
   // Packaging uses this identity for both the executable/desktop filename and Icon= name.
   // Never repaint another flavor or an unrelated icon named by a user-customized entry.
-  const iconName = synaraDesktopIdentity(input.flavor).userDataDirectoryName;
+  const iconName = ramspaceDesktopIdentity(input.flavor).userDataDirectoryName;
   const fileName = `${iconName}.desktop`;
   for (const directory of [dataHome, ...dataDirs]) {
     let contents: string;

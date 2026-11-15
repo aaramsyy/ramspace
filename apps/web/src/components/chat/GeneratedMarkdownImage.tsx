@@ -12,7 +12,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { type MouseEvent, useEffect, useMemo, useRef, useState } from "react";
 
 import { DownloadIcon, Loader2Icon, Maximize2 } from "~/lib/icons";
-import type { ProjectCreateLocalFilePreviewGrantResult } from "@synara/contracts";
+import type { ProjectCreateLocalFilePreviewGrantResult } from "@ramspace/contracts";
 import { buildLocalImageUrl, normalizeMarkdownImagePath } from "~/lib/localImageUrls";
 import { toAttachmentPreviewUrl } from "~/lib/wsHttpUrl";
 import {

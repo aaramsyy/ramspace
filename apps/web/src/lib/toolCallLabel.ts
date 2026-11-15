@@ -2,11 +2,11 @@
 // Purpose: Normalizes generic tool-call titles and humanizes command executions for timeline rows.
 // Layer: UI utility
 // Exports: deriveReadableToolTitle, deriveReadableCommandDisplay, deriveFriendlyCommandTarget, command icon classifiers, deriveInlineCommandCall, deriveLiteralCommand, deriveCommandReadTargets, normalizeCompactToolLabel, isGenericToolTitle, extractWebFetchUrl
-// Depends on: @synara/contracts tool lifecycle item types
+// Depends on: @ramspace/contracts tool lifecycle item types
 
-import type { ToolLifecycleItemType } from "@synara/contracts";
+import type { ToolLifecycleItemType } from "@ramspace/contracts";
 import { t } from "~/i18n";
-import { BROWSER_TOOL_TITLES } from "@synara/shared/browserAutomationPresentation";
+import { BROWSER_TOOL_TITLES } from "@ramspace/shared/browserAutomationPresentation";
 import {
   COMPUTER_TOOL_TITLE_KEYS,
   computerToolName,
@@ -122,13 +122,13 @@ export interface ReadableToolTitleInput {
   readonly isRunning?: boolean;
 }
 
-interface SynaraMcpToolSourcePresentation {
+interface RamspaceMcpToolSourcePresentation {
   readonly running: string;
   readonly completed: string;
   readonly failed: string;
 }
 
-type SynaraMcpToolPresentation = Readonly<Record<SynaraMcpToolStatus, string>>;
+type RamspaceMcpToolPresentation = Readonly<Record<RamspaceMcpToolStatus, string>>;
 
 // Historical messages still contain retired tools; presentation does not expose them to agents.
 const BROWSER_HISTORY_TITLES = {
@@ -147,1040 +147,1055 @@ const BROWSER_HISTORY_TITLES = {
   browser_evaluate: "Evaluate browser expression",
 } as const;
 type BrowserHistoryToolName = keyof typeof BROWSER_HISTORY_TITLES;
-type SynaraBrowserToolName = `synara_${BrowserHistoryToolName}`;
+type RamspaceBrowserToolName = `ramspace_${BrowserHistoryToolName}`;
 const BROWSER_HISTORY_TOOL_NAMES = Object.keys(BROWSER_HISTORY_TITLES) as BrowserHistoryToolName[];
 const BROWSER_TOOL_NAME_SET = new Set<string>(BROWSER_HISTORY_TOOL_NAMES);
 
-const SYNARA_BROWSER_TOOL_PRESENTATIONS = Object.fromEntries(
+const RAMSPACE_BROWSER_TOOL_PRESENTATIONS = Object.fromEntries(
   BROWSER_HISTORY_TOOL_NAMES.map((toolName) => {
     const title = BROWSER_HISTORY_TITLES[toolName];
-    return [`synara_${toolName}`, { running: title, completed: title, failed: title }];
+    return [`ramspace_${toolName}`, { running: title, completed: title, failed: title }];
   }),
-) as Record<SynaraBrowserToolName, SynaraMcpToolSourcePresentation>;
+) as Record<RamspaceBrowserToolName, RamspaceMcpToolSourcePresentation>;
 
 /**
  * The desktop tools, spoken. Every browser tool had a curated presentation and
  * every computer tool had none, so the most consequential rows in the
  * transcript — an agent moving a pointer on the user's own machine — fell
- * through to the invented "Synara is handling computer click" fallback.
+ * through to the invented "Ramspace is handling computer click" fallback.
  *
  * The wording deliberately keeps the machine in the sentence ("this computer's
  * desktop") rather than saying "the desktop", because on the backends that
  * matter it is the user's own.
  */
-const SYNARA_COMPUTER_TOOL_PRESENTATIONS = {
-  synara_computer_screenshot: presentComputerTool("taking a screenshot", "took a screenshot"),
-  synara_computer_get_state: presentComputerTool("reading the screen", "read the screen"),
-  synara_computer_get_screen_size: presentComputerTool(
+const RAMSPACE_COMPUTER_TOOL_PRESENTATIONS = {
+  ramspace_computer_screenshot: presentComputerTool("taking a screenshot", "took a screenshot"),
+  ramspace_computer_get_state: presentComputerTool("reading the screen", "read the screen"),
+  ramspace_computer_get_screen_size: presentComputerTool(
     "measuring the screen",
     "measured the screen",
   ),
-  synara_computer_list_windows: presentComputerTool("listing windows", "listed the windows"),
-  synara_computer_list_apps: presentComputerTool("listing apps", "listed the apps"),
-  synara_computer_verify_state: presentComputerTool(
+  ramspace_computer_list_windows: presentComputerTool("listing windows", "listed the windows"),
+  ramspace_computer_list_apps: presentComputerTool("listing apps", "listed the apps"),
+  ramspace_computer_verify_state: presentComputerTool(
     "checking desktop state",
     "checked desktop state",
   ),
-  synara_computer_zoom: presentComputerTool("zooming into a window", "zoomed into a window"),
-  synara_computer_get_accessibility_tree: presentComputerTool(
+  ramspace_computer_zoom: presentComputerTool("zooming into a window", "zoomed into a window"),
+  ramspace_computer_get_accessibility_tree: presentComputerTool(
     "listing apps and windows",
     "listed apps and windows",
   ),
-  synara_computer_get_cursor_position: presentComputerTool(
+  ramspace_computer_get_cursor_position: presentComputerTool(
     "reading the cursor position",
     "read the cursor position",
   ),
-  synara_computer_help: presentComputerTool(
+  ramspace_computer_help: presentComputerTool(
     "reading the Computer playbook",
     "read the Computer playbook",
   ),
-  synara_computer_click: presentComputerTool("clicking the desktop", "clicked the desktop"),
-  synara_computer_move_cursor: presentComputerTool("moving the cursor", "moved the cursor"),
-  synara_computer_drag: presentComputerTool("dragging on the desktop", "dragged on the desktop"),
-  synara_computer_scroll: presentComputerTool("scrolling the desktop", "scrolled the desktop"),
-  synara_computer_type_text: presentComputerTool("typing on the desktop", "typed on the desktop"),
-  synara_computer_press_key: presentComputerTool("pressing a key", "pressed a key"),
-  synara_computer_set_value: presentComputerTool("setting a field", "set a field"),
-  synara_computer_select_text: presentComputerTool("selecting text", "selected text"),
-  synara_computer_perform_action: presentComputerTool(
+  ramspace_computer_click: presentComputerTool("clicking the desktop", "clicked the desktop"),
+  ramspace_computer_move_cursor: presentComputerTool("moving the cursor", "moved the cursor"),
+  ramspace_computer_drag: presentComputerTool("dragging on the desktop", "dragged on the desktop"),
+  ramspace_computer_scroll: presentComputerTool("scrolling the desktop", "scrolled the desktop"),
+  ramspace_computer_type_text: presentComputerTool("typing on the desktop", "typed on the desktop"),
+  ramspace_computer_press_key: presentComputerTool("pressing a key", "pressed a key"),
+  ramspace_computer_set_value: presentComputerTool("setting a field", "set a field"),
+  ramspace_computer_select_text: presentComputerTool("selecting text", "selected text"),
+  ramspace_computer_perform_action: presentComputerTool(
     "activating a control",
     "activated a control",
   ),
-  synara_computer_launch_app: presentComputerTool("opening an app", "opened an app"),
-  synara_computer_activate_window: presentComputerTool("activating a window", "activated a window"),
-  synara_computer_set_window_frame: presentComputerTool(
+  ramspace_computer_launch_app: presentComputerTool("opening an app", "opened an app"),
+  ramspace_computer_activate_window: presentComputerTool(
+    "activating a window",
+    "activated a window",
+  ),
+  ramspace_computer_set_window_frame: presentComputerTool(
     "moving or resizing a window",
     "moved or resized a window",
   ),
-  synara_computer_invoke_menu: presentComputerTool("invoking a menu item", "invoked a menu item"),
-  synara_computer_kill_app: presentComputerTool("force-quitting an app", "force-quit an app"),
-  synara_computer_set_window_minimized: presentComputerTool(
+  ramspace_computer_invoke_menu: presentComputerTool("invoking a menu item", "invoked a menu item"),
+  ramspace_computer_kill_app: presentComputerTool("force-quitting an app", "force-quit an app"),
+  ramspace_computer_set_window_minimized: presentComputerTool(
     "changing a window's visibility",
     "changed a window's visibility",
   ),
-  synara_computer_set_app_visibility: presentComputerTool(
+  ramspace_computer_set_app_visibility: presentComputerTool(
     "changing an app's visibility",
     "changed an app's visibility",
   ),
-  synara_computer_wait: presentComputerTool("waiting for the desktop", "waited for the desktop"),
-  synara_computer_read_clipboard: presentComputerTool(
+  ramspace_computer_wait: presentComputerTool("waiting for the desktop", "waited for the desktop"),
+  ramspace_computer_read_clipboard: presentComputerTool(
     "reading the clipboard",
     "read the clipboard",
   ),
-  synara_computer_write_clipboard: presentComputerTool(
+  ramspace_computer_write_clipboard: presentComputerTool(
     "writing to the clipboard",
     "wrote to the clipboard",
   ),
-  synara_computer_paste: presentComputerTool("pasting text", "pasted text"),
-  synara_computer_run: presentComputerTool("running a desktop sequence", "ran a desktop sequence"),
-  synara_computer_inspect: presentComputerTool("inspecting the computer", "inspected the computer"),
-  synara_computer_spaces: presentComputerTool(
+  ramspace_computer_paste: presentComputerTool("pasting text", "pasted text"),
+  ramspace_computer_run: presentComputerTool(
+    "running a desktop sequence",
+    "ran a desktop sequence",
+  ),
+  ramspace_computer_inspect: presentComputerTool(
+    "inspecting the computer",
+    "inspected the computer",
+  ),
+  ramspace_computer_spaces: presentComputerTool(
     "inspecting desktop Spaces",
     "inspected desktop Spaces",
   ),
-  synara_computer_browser_state: presentComputerTool(
+  ramspace_computer_browser_state: presentComputerTool(
     "reading the browser page",
     "read the browser page",
   ),
-  synara_computer_browser_prepare: presentComputerTool("preparing a browser", "prepared a browser"),
-  synara_computer_browser_navigate: presentComputerTool(
+  ramspace_computer_browser_prepare: presentComputerTool(
+    "preparing a browser",
+    "prepared a browser",
+  ),
+  ramspace_computer_browser_navigate: presentComputerTool(
     "opening a browser page",
     "opened a browser page",
   ),
-  synara_computer_browser_click: presentComputerTool(
+  ramspace_computer_browser_click: presentComputerTool(
     "clicking in the browser",
     "clicked in the browser",
   ),
-  synara_computer_browser_type: presentComputerTool(
+  ramspace_computer_browser_type: presentComputerTool(
     "typing in a browser field",
     "typed in a browser field",
   ),
-  synara_computer_browser_dialog: presentComputerTool(
+  ramspace_computer_browser_dialog: presentComputerTool(
     "handling a browser dialog",
     "handled a browser dialog",
   ),
-  synara_computer_browser_upload: presentComputerTool(
+  ramspace_computer_browser_upload: presentComputerTool(
     "attaching files in the browser",
     "attached files in the browser",
   ),
-  synara_computer_browser_download: presentComputerTool("downloading a file", "downloaded a file"),
-  synara_computer_browser_pointer: presentComputerTool(
+  ramspace_computer_browser_download: presentComputerTool(
+    "downloading a file",
+    "downloaded a file",
+  ),
+  ramspace_computer_browser_pointer: presentComputerTool(
     "using the pointer in the browser",
     "used the pointer in the browser",
   ),
-  synara_computer_browser_press: presentComputerTool(
+  ramspace_computer_browser_press: presentComputerTool(
     "pressing Enter in the browser",
     "pressed Enter in the browser",
   ),
-} as const satisfies Record<`synara_${ComputerToolName}`, SynaraMcpToolSourcePresentation>;
+} as const satisfies Record<`ramspace_${ComputerToolName}`, RamspaceMcpToolSourcePresentation>;
 
-function presentComputerTool(present: string, past: string): SynaraMcpToolSourcePresentation {
+function presentComputerTool(present: string, past: string): RamspaceMcpToolSourcePresentation {
   return {
-    running: `Synara is ${present}`,
-    completed: `Synara ${past}`,
-    failed: `Synara couldn't finish ${present}`,
+    running: `Ramspace is ${present}`,
+    completed: `Ramspace ${past}`,
+    failed: `Ramspace couldn't finish ${present}`,
   };
 }
 
-const SYNARA_MCP_TOOL_PRESENTATIONS = {
-  synara_context: {
-    running: "Synara is checking its context",
-    completed: "Synara checked its context",
-    failed: "Synara couldn't check its context",
+const RAMSPACE_MCP_TOOL_PRESENTATIONS = {
+  ramspace_context: {
+    running: "Ramspace is checking its context",
+    completed: "Ramspace checked its context",
+    failed: "Ramspace couldn't check its context",
   },
-  synara_capabilities: {
-    running: "Synara is checking available agents",
-    completed: "Synara checked available agents",
-    failed: "Synara couldn't check available agents",
+  ramspace_capabilities: {
+    running: "Ramspace is checking available agents",
+    completed: "Ramspace checked available agents",
+    failed: "Ramspace couldn't check available agents",
   },
-  synara_overview: {
-    running: "Synara is gathering an overview",
-    completed: "Synara gathered an overview",
-    failed: "Synara couldn't gather an overview",
+  ramspace_overview: {
+    running: "Ramspace is gathering an overview",
+    completed: "Ramspace gathered an overview",
+    failed: "Ramspace couldn't gather an overview",
   },
-  synara_list_allowed_projects: {
-    running: "Synara is listing allowed projects",
-    completed: "Synara listed allowed projects",
-    failed: "Synara couldn't list allowed projects",
+  ramspace_list_allowed_projects: {
+    running: "Ramspace is listing allowed projects",
+    completed: "Ramspace listed allowed projects",
+    failed: "Ramspace couldn't list allowed projects",
   },
-  synara_create_task: {
-    running: "Synara is creating a task",
-    completed: "Synara created a task",
-    failed: "Synara couldn't create a task",
+  ramspace_create_task: {
+    running: "Ramspace is creating a task",
+    completed: "Ramspace created a task",
+    failed: "Ramspace couldn't create a task",
   },
-  synara_wait_for_task: {
-    running: "Synara is waiting for a task",
-    completed: "Synara finished waiting for a task",
-    failed: "Synara couldn't wait for a task",
+  ramspace_wait_for_task: {
+    running: "Ramspace is waiting for a task",
+    completed: "Ramspace finished waiting for a task",
+    failed: "Ramspace couldn't wait for a task",
   },
-  synara_read_task: {
-    running: "Synara is reading a task",
-    completed: "Synara read a task",
-    failed: "Synara couldn't read a task",
+  ramspace_read_task: {
+    running: "Ramspace is reading a task",
+    completed: "Ramspace read a task",
+    failed: "Ramspace couldn't read a task",
   },
-  synara_list_projects: {
-    running: "Synara is listing projects",
-    completed: "Synara listed projects",
-    failed: "Synara couldn't list projects",
+  ramspace_list_projects: {
+    running: "Ramspace is listing projects",
+    completed: "Ramspace listed projects",
+    failed: "Ramspace couldn't list projects",
   },
-  synara_list_threads: {
-    running: "Synara is listing threads",
-    completed: "Synara listed threads",
-    failed: "Synara couldn't list threads",
+  ramspace_list_threads: {
+    running: "Ramspace is listing threads",
+    completed: "Ramspace listed threads",
+    failed: "Ramspace couldn't list threads",
   },
-  synara_read_thread: {
-    running: "Synara is reading a thread",
-    completed: "Synara read a thread",
-    failed: "Synara couldn't read a thread",
+  ramspace_read_thread: {
+    running: "Ramspace is reading a thread",
+    completed: "Ramspace read a thread",
+    failed: "Ramspace couldn't read a thread",
   },
-  synara_read_thread_activity: {
-    running: "Synara is reading thread activity",
-    completed: "Synara read thread activity",
-    failed: "Synara couldn't read thread activity",
+  ramspace_read_thread_activity: {
+    running: "Ramspace is reading thread activity",
+    completed: "Ramspace read thread activity",
+    failed: "Ramspace couldn't read thread activity",
   },
-  synara_read_thread_events: {
-    running: "Synara is reading thread events",
-    completed: "Synara read thread events",
-    failed: "Synara couldn't read thread events",
+  ramspace_read_thread_events: {
+    running: "Ramspace is reading thread events",
+    completed: "Ramspace read thread events",
+    failed: "Ramspace couldn't read thread events",
   },
-  synara_read_thread_runtime_events: {
-    running: "Synara is reading thread runtime events",
-    completed: "Synara read thread runtime events",
-    failed: "Synara couldn't read thread runtime events",
+  ramspace_read_thread_runtime_events: {
+    running: "Ramspace is reading thread runtime events",
+    completed: "Ramspace read thread runtime events",
+    failed: "Ramspace couldn't read thread runtime events",
   },
-  synara_diagnose_thread: {
-    running: "Synara is diagnosing a thread",
-    completed: "Synara diagnosed a thread",
-    failed: "Synara couldn't diagnose a thread",
+  ramspace_diagnose_thread: {
+    running: "Ramspace is diagnosing a thread",
+    completed: "Ramspace diagnosed a thread",
+    failed: "Ramspace couldn't diagnose a thread",
   },
-  synara_create_thread: {
-    running: "Synara is creating a thread",
-    completed: "Synara created a thread",
-    failed: "Synara couldn't create a thread",
+  ramspace_create_thread: {
+    running: "Ramspace is creating a thread",
+    completed: "Ramspace created a thread",
+    failed: "Ramspace couldn't create a thread",
   },
-  synara_create_threads: {
-    running: "Synara is creating threads",
-    completed: "Synara created threads",
-    failed: "Synara couldn't create threads",
+  ramspace_create_threads: {
+    running: "Ramspace is creating threads",
+    completed: "Ramspace created threads",
+    failed: "Ramspace couldn't create threads",
   },
-  synara_wait_for_threads: {
-    running: "Synara is waiting for threads",
-    completed: "Synara finished waiting for threads",
-    failed: "Synara couldn't wait for threads",
+  ramspace_wait_for_threads: {
+    running: "Ramspace is waiting for threads",
+    completed: "Ramspace finished waiting for threads",
+    failed: "Ramspace couldn't wait for threads",
   },
-  synara_send_message: {
-    running: "Synara is sending a message",
-    completed: "Synara sent a message",
-    failed: "Synara couldn't send a message",
+  ramspace_send_message: {
+    running: "Ramspace is sending a message",
+    completed: "Ramspace sent a message",
+    failed: "Ramspace couldn't send a message",
   },
-  synara_read_kanban_board: {
-    running: "Synara is reading the board",
-    completed: "Synara read the board",
-    failed: "Synara couldn't read the board",
+  ramspace_read_kanban_board: {
+    running: "Ramspace is reading the board",
+    completed: "Ramspace read the board",
+    failed: "Ramspace couldn't read the board",
   },
-  synara_read_kanban_card: {
-    running: "Synara is reading a board card",
-    completed: "Synara read a board card",
-    failed: "Synara couldn't read a board card",
+  ramspace_read_kanban_card: {
+    running: "Ramspace is reading a board card",
+    completed: "Ramspace read a board card",
+    failed: "Ramspace couldn't read a board card",
   },
-  synara_create_kanban_task: {
-    running: "Synara is creating a board task",
-    completed: "Synara created a board task",
-    failed: "Synara couldn't create a board task",
+  ramspace_create_kanban_task: {
+    running: "Ramspace is creating a board task",
+    completed: "Ramspace created a board task",
+    failed: "Ramspace couldn't create a board task",
   },
-  synara_move_kanban_card: {
-    running: "Synara is moving a board card",
-    completed: "Synara moved a board card",
-    failed: "Synara couldn't move a board card",
+  ramspace_move_kanban_card: {
+    running: "Ramspace is moving a board card",
+    completed: "Ramspace moved a board card",
+    failed: "Ramspace couldn't move a board card",
   },
-  synara_show_visual: {
-    running: "Synara is showing a visual",
-    completed: "Synara showed a visual",
-    failed: "Synara couldn't show a visual",
+  ramspace_show_visual: {
+    running: "Ramspace is showing a visual",
+    completed: "Ramspace showed a visual",
+    failed: "Ramspace couldn't show a visual",
   },
-  synara_create_todo: {
-    running: "Synara is adding a to-do",
-    completed: "Synara added a to-do",
-    failed: "Synara couldn't add a to-do",
+  ramspace_create_todo: {
+    running: "Ramspace is adding a to-do",
+    completed: "Ramspace added a to-do",
+    failed: "Ramspace couldn't add a to-do",
   },
-  synara_list_todos: {
-    running: "Synara is reading your to-dos",
-    completed: "Synara read your to-dos",
-    failed: "Synara couldn't read your to-dos",
+  ramspace_list_todos: {
+    running: "Ramspace is reading your to-dos",
+    completed: "Ramspace read your to-dos",
+    failed: "Ramspace couldn't read your to-dos",
   },
-  synara_update_todo: {
-    running: "Synara is updating a to-do",
-    completed: "Synara updated a to-do",
-    failed: "Synara couldn't update a to-do",
+  ramspace_update_todo: {
+    running: "Ramspace is updating a to-do",
+    completed: "Ramspace updated a to-do",
+    failed: "Ramspace couldn't update a to-do",
   },
-  synara_interrupt_thread: {
-    running: "Synara is interrupting a thread",
-    completed: "Synara interrupted a thread",
-    failed: "Synara couldn't interrupt a thread",
+  ramspace_interrupt_thread: {
+    running: "Ramspace is interrupting a thread",
+    completed: "Ramspace interrupted a thread",
+    failed: "Ramspace couldn't interrupt a thread",
   },
-  synara_set_thread_title: {
-    running: "Synara is renaming a thread",
-    completed: "Synara renamed a thread",
-    failed: "Synara couldn't rename a thread",
+  ramspace_set_thread_title: {
+    running: "Ramspace is renaming a thread",
+    completed: "Ramspace renamed a thread",
+    failed: "Ramspace couldn't rename a thread",
   },
-  synara_set_thread_archived: {
-    running: "Synara is updating a thread",
-    completed: "Synara updated a thread",
-    failed: "Synara couldn't update a thread",
+  ramspace_set_thread_archived: {
+    running: "Ramspace is updating a thread",
+    completed: "Ramspace updated a thread",
+    failed: "Ramspace couldn't update a thread",
   },
-  synara_create_automation: {
-    running: "Synara is creating an automation",
-    completed: "Synara created an automation",
-    failed: "Synara couldn't create an automation",
+  ramspace_create_automation: {
+    running: "Ramspace is creating an automation",
+    completed: "Ramspace created an automation",
+    failed: "Ramspace couldn't create an automation",
   },
-  synara_list_automations: {
-    running: "Synara is listing automations",
-    completed: "Synara listed automations",
-    failed: "Synara couldn't list automations",
+  ramspace_list_automations: {
+    running: "Ramspace is listing automations",
+    completed: "Ramspace listed automations",
+    failed: "Ramspace couldn't list automations",
   },
-  synara_view_automation: {
-    running: "Synara is viewing an automation",
-    completed: "Synara viewed an automation",
-    failed: "Synara couldn't view an automation",
+  ramspace_view_automation: {
+    running: "Ramspace is viewing an automation",
+    completed: "Ramspace viewed an automation",
+    failed: "Ramspace couldn't view an automation",
   },
-  synara_update_automation: {
-    running: "Synara is updating an automation",
-    completed: "Synara updated an automation",
-    failed: "Synara couldn't update an automation",
+  ramspace_update_automation: {
+    running: "Ramspace is updating an automation",
+    completed: "Ramspace updated an automation",
+    failed: "Ramspace couldn't update an automation",
   },
-  synara_update_automation_memory: {
-    running: "Synara is updating automation memory",
-    completed: "Synara updated automation memory",
-    failed: "Synara couldn't update automation memory",
+  ramspace_update_automation_memory: {
+    running: "Ramspace is updating automation memory",
+    completed: "Ramspace updated automation memory",
+    failed: "Ramspace couldn't update automation memory",
   },
-  synara_report_automation_result: {
-    running: "Synara is reporting an automation result",
-    completed: "Synara reported an automation result",
-    failed: "Synara couldn't report an automation result",
+  ramspace_report_automation_result: {
+    running: "Ramspace is reporting an automation result",
+    completed: "Ramspace reported an automation result",
+    failed: "Ramspace couldn't report an automation result",
   },
-  synara_cancel_automation: {
-    running: "Synara is stopping an automation",
-    completed: "Synara stopped an automation",
-    failed: "Synara couldn't stop an automation",
+  ramspace_cancel_automation: {
+    running: "Ramspace is stopping an automation",
+    completed: "Ramspace stopped an automation",
+    failed: "Ramspace couldn't stop an automation",
   },
-  ...SYNARA_BROWSER_TOOL_PRESENTATIONS,
-  ...SYNARA_COMPUTER_TOOL_PRESENTATIONS,
-} as const satisfies Record<string, SynaraMcpToolSourcePresentation>;
+  ...RAMSPACE_BROWSER_TOOL_PRESENTATIONS,
+  ...RAMSPACE_COMPUTER_TOOL_PRESENTATIONS,
+} as const satisfies Record<string, RamspaceMcpToolSourcePresentation>;
 
 // Semantic presentation IDs are separate from the source titles used to classify historical events.
-const SYNARA_MCP_TOOL_PRESENTATION_KEYS = {
-  synara_computer_screenshot: {
-    running: "common:synaraIsTakingAScreenshot",
-    completed: "common:synaraTookAScreenshot",
-    failed: "common:synaraCouldnTFinishTakingAScreenshot",
-    cancelled: "common:synaraStoppedTakingAScreenshot",
-  },
-  synara_computer_get_state: {
-    running: "common:synaraIsReadingTheScreen",
-    completed: "common:synaraReadTheScreen",
-    failed: "common:synaraCouldnTFinishReadingTheScreen",
-    cancelled: "common:synaraStoppedReadingTheScreen",
-  },
-  synara_computer_get_screen_size: {
-    running: "common:synaraIsMeasuringTheScreen",
-    completed: "common:synaraMeasuredTheScreen",
-    failed: "common:synaraCouldnTFinishMeasuringTheScreen",
-    cancelled: "common:synaraStoppedMeasuringTheScreen",
-  },
-  synara_computer_list_windows: {
-    running: "common:synaraIsListingWindows",
-    completed: "common:synaraListedTheWindows",
-    failed: "common:synaraCouldnTFinishListingWindows",
-    cancelled: "common:synaraStoppedListingWindows",
-  },
-  synara_computer_list_apps: {
-    running: "common:synaraIsListingApps",
-    completed: "common:synaraListedTheApps",
-    failed: "common:synaraCouldnTFinishListingApps",
-    cancelled: "common:synaraStoppedListingApps",
-  },
-  synara_computer_verify_state: {
-    running: "common:synaraIsCheckingDesktopState",
-    completed: "common:synaraCheckedDesktopState",
-    failed: "common:synaraCouldnTFinishCheckingDesktopState",
-    cancelled: "common:synaraStoppedCheckingDesktopState",
-  },
-  synara_computer_zoom: {
-    running: "common:synaraIsZoomingIntoAWindow",
-    completed: "common:synaraZoomedIntoAWindow",
-    failed: "common:synaraCouldnTFinishZoomingIntoAWindow",
-    cancelled: "common:synaraStoppedZoomingIntoAWindow",
-  },
-  synara_computer_get_accessibility_tree: {
-    running: "common:synaraIsListingAppsAndWindows",
-    completed: "common:synaraListedAppsAndWindows",
-    failed: "common:synaraCouldnTFinishListingAppsAndWindows",
-    cancelled: "common:synaraStoppedListingAppsAndWindows",
-  },
-  synara_computer_get_cursor_position: {
-    running: "common:synaraIsReadingTheCursorPosition",
-    completed: "common:synaraReadTheCursorPosition",
-    failed: "common:synaraCouldnTFinishReadingTheCursorPosition",
-    cancelled: "common:synaraStoppedReadingTheCursorPosition",
-  },
-  synara_computer_help: {
-    running: "common:synaraIsReadingTheComputerPlaybook",
-    completed: "common:synaraReadTheComputerPlaybook",
-    failed: "common:synaraCouldnTFinishReadingTheComputerPlaybook",
-    cancelled: "common:synaraStoppedReadingTheComputerPlaybook",
-  },
-  synara_computer_click: {
-    running: "common:synaraIsClickingTheDesktop",
-    completed: "common:synaraClickedTheDesktop",
-    failed: "common:synaraCouldnTFinishClickingTheDesktop",
-    cancelled: "common:synaraStoppedClickingTheDesktop",
-  },
-  synara_computer_move_cursor: {
-    running: "common:synaraIsMovingTheCursor",
-    completed: "common:synaraMovedTheCursor",
-    failed: "common:synaraCouldnTFinishMovingTheCursor",
-    cancelled: "common:synaraStoppedMovingTheCursor",
-  },
-  synara_computer_drag: {
-    running: "common:synaraIsDraggingOnTheDesktop",
-    completed: "common:synaraDraggedOnTheDesktop",
-    failed: "common:synaraCouldnTFinishDraggingOnTheDesktop",
-    cancelled: "common:synaraStoppedDraggingOnTheDesktop",
-  },
-  synara_computer_scroll: {
-    running: "common:synaraIsScrollingTheDesktop",
-    completed: "common:synaraScrolledTheDesktop",
-    failed: "common:synaraCouldnTFinishScrollingTheDesktop",
-    cancelled: "common:synaraStoppedScrollingTheDesktop",
-  },
-  synara_computer_type_text: {
-    running: "common:synaraIsTypingOnTheDesktop",
-    completed: "common:synaraTypedOnTheDesktop",
-    failed: "common:synaraCouldnTFinishTypingOnTheDesktop",
-    cancelled: "common:synaraStoppedTypingOnTheDesktop",
-  },
-  synara_computer_press_key: {
-    running: "common:synaraIsPressingAKey",
-    completed: "common:synaraPressedAKey",
-    failed: "common:synaraCouldnTFinishPressingAKey",
-    cancelled: "common:synaraStoppedPressingAKey",
-  },
-  synara_computer_set_value: {
-    running: "common:synaraIsSettingAField",
-    completed: "common:synaraSetAField",
-    failed: "common:synaraCouldnTFinishSettingAField",
-    cancelled: "common:synaraStoppedSettingAField",
-  },
-  synara_computer_select_text: {
-    running: "common:synaraIsSelectingText",
-    completed: "common:synaraSelectedText",
-    failed: "common:synaraCouldnTFinishSelectingText",
-    cancelled: "common:synaraStoppedSelectingText",
-  },
-  synara_computer_perform_action: {
-    running: "common:synaraIsActivatingAControl",
-    completed: "common:synaraActivatedAControl",
-    failed: "common:synaraCouldnTFinishActivatingAControl",
-    cancelled: "common:synaraStoppedActivatingAControl",
-  },
-  synara_computer_launch_app: {
-    running: "common:synaraIsOpeningAnApp",
-    completed: "common:synaraOpenedAnApp",
-    failed: "common:synaraCouldnTFinishOpeningAnApp",
-    cancelled: "common:synaraStoppedOpeningAnApp",
-  },
-  synara_computer_activate_window: {
-    running: "common:synaraIsActivatingAWindow",
-    completed: "common:synaraActivatedAWindow",
-    failed: "common:synaraCouldnTFinishActivatingAWindow",
-    cancelled: "common:synaraStoppedActivatingAWindow",
-  },
-  synara_computer_set_window_frame: {
-    running: "common:synaraIsMovingOrResizingAWindow",
-    completed: "common:synaraMovedOrResizedAWindow",
-    failed: "common:synaraCouldnTFinishMovingOrResizingAWindow",
-    cancelled: "common:synaraStoppedMovingOrResizingAWindow",
-  },
-  synara_computer_invoke_menu: {
-    running: "common:synaraIsInvokingAMenuItem",
-    completed: "common:synaraInvokedAMenuItem",
-    failed: "common:synaraCouldnTFinishInvokingAMenuItem",
-    cancelled: "common:synaraStoppedInvokingAMenuItem",
-  },
-  synara_computer_kill_app: {
-    running: "common:synaraIsForceQuittingAnApp",
-    completed: "common:synaraForceQuitAnApp",
-    failed: "common:synaraCouldnTFinishForceQuittingAnApp",
-    cancelled: "common:synaraStoppedForceQuittingAnApp",
-  },
-  synara_computer_set_window_minimized: {
-    running: "common:synaraIsChangingAWindowSVisibility",
-    completed: "common:synaraChangedAWindowSVisibility",
-    failed: "common:synaraCouldnTFinishChangingAWindowSVisibility",
-    cancelled: "common:synaraStoppedChangingAWindowSVisibility",
-  },
-  synara_computer_set_app_visibility: {
-    running: "common:synaraIsChangingAnAppSVisibility",
-    completed: "common:synaraChangedAnAppSVisibility",
-    failed: "common:synaraCouldnTFinishChangingAnAppSVisibility",
-    cancelled: "common:synaraStoppedChangingAnAppSVisibility",
-  },
-  synara_computer_wait: {
-    running: "common:synaraIsWaitingForTheDesktop",
-    completed: "common:synaraWaitedForTheDesktop",
-    failed: "common:synaraCouldnTFinishWaitingForTheDesktop",
-    cancelled: "common:synaraStoppedWaitingForTheDesktop",
-  },
-  synara_computer_read_clipboard: {
-    running: "common:synaraIsReadingTheClipboard",
-    completed: "common:synaraReadTheClipboard",
-    failed: "common:synaraCouldnTFinishReadingTheClipboard",
-    cancelled: "common:synaraStoppedReadingTheClipboard",
-  },
-  synara_computer_write_clipboard: {
-    running: "common:synaraIsWritingToTheClipboard",
-    completed: "common:synaraWroteToTheClipboard",
-    failed: "common:synaraCouldnTFinishWritingToTheClipboard",
-    cancelled: "common:synaraStoppedWritingToTheClipboard",
-  },
-  synara_computer_paste: {
-    running: "common:synaraIsPastingText",
-    completed: "common:synaraPastedText",
-    failed: "common:synaraCouldnTFinishPastingText",
-    cancelled: "common:synaraStoppedPastingText",
-  },
-  synara_computer_run: {
-    running: "common:synaraIsRunningADesktopSequence",
-    completed: "common:synaraRanADesktopSequence",
-    failed: "common:synaraCouldnTFinishRunningADesktopSequence",
-    cancelled: "common:synaraStoppedRunningADesktopSequence",
-  },
-  synara_computer_inspect: {
-    running: "common:synaraIsInspectingTheComputer",
-    completed: "common:synaraInspectedTheComputer",
-    failed: "common:synaraCouldnTFinishInspectingTheComputer",
-    cancelled: "common:synaraStoppedInspectingTheComputer",
-  },
-  synara_computer_spaces: {
-    running: "common:synaraIsInspectingDesktopSpaces",
-    completed: "common:synaraInspectedDesktopSpaces",
-    failed: "common:synaraCouldnTFinishInspectingDesktopSpaces",
-    cancelled: "common:synaraStoppedInspectingDesktopSpaces",
-  },
-  synara_computer_browser_state: {
-    running: "common:synaraIsReadingTheBrowserPage",
-    completed: "common:synaraReadTheBrowserPage",
-    failed: "common:synaraCouldnTFinishReadingTheBrowserPage",
-    cancelled: "common:synaraStoppedReadingTheBrowserPage",
-  },
-  synara_computer_browser_prepare: {
-    running: "common:synaraIsPreparingABrowser",
-    completed: "common:synaraPreparedABrowser",
-    failed: "common:synaraCouldnTFinishPreparingABrowser",
-    cancelled: "common:synaraStoppedPreparingABrowser",
-  },
-  synara_computer_browser_navigate: {
-    running: "common:synaraIsOpeningABrowserPage",
-    completed: "common:synaraOpenedABrowserPage",
-    failed: "common:synaraCouldnTFinishOpeningABrowserPage",
-    cancelled: "common:synaraStoppedOpeningABrowserPage",
-  },
-  synara_computer_browser_click: {
-    running: "common:synaraIsClickingInTheBrowser",
-    completed: "common:synaraClickedInTheBrowser",
-    failed: "common:synaraCouldnTFinishClickingInTheBrowser",
-    cancelled: "common:synaraStoppedClickingInTheBrowser",
-  },
-  synara_computer_browser_type: {
-    running: "common:synaraIsTypingInABrowserField",
-    completed: "common:synaraTypedInABrowserField",
-    failed: "common:synaraCouldnTFinishTypingInABrowserField",
-    cancelled: "common:synaraStoppedTypingInABrowserField",
-  },
-  synara_computer_browser_dialog: {
-    running: "common:synaraIsHandlingABrowserDialog",
-    completed: "common:synaraHandledABrowserDialog",
-    failed: "common:synaraCouldnTFinishHandlingABrowserDialog",
-    cancelled: "common:synaraStoppedHandlingABrowserDialog",
-  },
-  synara_computer_browser_upload: {
-    running: "common:synaraIsAttachingFilesInTheBrowser",
-    completed: "common:synaraAttachedFilesInTheBrowser",
-    failed: "common:synaraCouldnTFinishAttachingFilesInTheBrowser",
-    cancelled: "common:synaraStoppedAttachingFilesInTheBrowser",
-  },
-  synara_computer_browser_download: {
-    running: "common:synaraIsDownloadingAFile",
-    completed: "common:synaraDownloadedAFile",
-    failed: "common:synaraCouldnTFinishDownloadingAFile",
-    cancelled: "common:synaraStoppedDownloadingAFile",
-  },
-  synara_computer_browser_pointer: {
-    running: "common:synaraIsUsingThePointerInTheBrowser",
-    completed: "common:synaraUsedThePointerInTheBrowser",
-    failed: "common:synaraCouldnTFinishUsingThePointerInThe",
-    cancelled: "common:synaraStoppedUsingThePointerInTheBrowser",
-  },
-  synara_computer_browser_press: {
-    running: "common:synaraIsPressingEnterInTheBrowser",
-    completed: "common:synaraPressedEnterInTheBrowser",
-    failed: "common:synaraCouldnTFinishPressingEnterInTheBrowser",
-    cancelled: "common:synaraStoppedPressingEnterInTheBrowser",
-  },
-  synara_context: {
-    running: "chat:synaraIsCheckingItsContext",
-    completed: "chat:synaraCheckedItsContext",
-    failed: "chat:synaraCouldnTCheckItsContext",
-    cancelled: "common:synaraStoppedCheckingItsContext",
-  },
-  synara_capabilities: {
-    running: "chat:synaraIsCheckingAvailableAgents",
-    completed: "chat:synaraCheckedAvailableAgents",
-    failed: "chat:synaraCouldnTCheckAvailableAgents",
-    cancelled: "common:synaraStoppedCheckingAvailableAgents",
-  },
-  synara_overview: {
-    running: "chat:synaraIsGatheringAnOverview",
-    completed: "chat:synaraGatheredAnOverview",
-    failed: "chat:synaraCouldnTGatherAnOverview",
-    cancelled: "common:synaraStoppedGatheringAnOverview",
-  },
-  synara_list_allowed_projects: {
-    running: "chat:synaraIsListingAllowedProjects",
-    completed: "chat:synaraListedAllowedProjects",
-    failed: "chat:synaraCouldnTListAllowedProjects",
-    cancelled: "common:synaraStoppedListingAllowedProjects",
-  },
-  synara_create_task: {
-    running: "chat:synaraIsCreatingATask",
-    completed: "chat:synaraCreatedATask",
-    failed: "chat:synaraCouldnTCreateATask",
-    cancelled: "common:synaraStoppedCreatingATask",
-  },
-  synara_wait_for_task: {
-    running: "chat:synaraIsWaitingForATask",
-    completed: "chat:synaraFinishedWaitingForATask",
-    failed: "chat:synaraCouldnTWaitForATask",
-    cancelled: "common:synaraStoppedWaitingForATask",
-  },
-  synara_read_task: {
-    running: "chat:synaraIsReadingATask",
-    completed: "chat:synaraReadATask",
-    failed: "chat:synaraCouldnTReadATask",
-    cancelled: "common:synaraStoppedReadingATask",
-  },
-  synara_list_projects: {
-    running: "chat:synaraIsListingProjects",
-    completed: "chat:synaraListedProjects",
-    failed: "chat:synaraCouldnTListProjects",
-    cancelled: "common:synaraStoppedListingProjects",
-  },
-  synara_list_threads: {
-    running: "chat:synaraIsListingThreads",
-    completed: "chat:synaraListedThreads",
-    failed: "chat:synaraCouldnTListThreads",
-    cancelled: "common:synaraStoppedListingThreads",
-  },
-  synara_read_thread: {
-    running: "chat:synaraIsReadingAThread",
-    completed: "chat:synaraReadAThread",
-    failed: "chat:synaraCouldnTReadAThread",
-    cancelled: "common:synaraStoppedReadingAThread",
-  },
-  synara_read_thread_activity: {
-    running: "chat:synaraIsReadingThreadActivity",
-    completed: "chat:synaraReadThreadActivity",
-    failed: "chat:synaraCouldnTReadThreadActivity",
-    cancelled: "common:synaraStoppedReadingThreadActivity",
-  },
-  synara_read_thread_events: {
-    running: "chat:synaraIsReadingThreadEvents",
-    completed: "chat:synaraReadThreadEvents",
-    failed: "chat:synaraCouldnTReadThreadEvents",
-    cancelled: "common:synaraStoppedReadingThreadEvents",
-  },
-  synara_read_thread_runtime_events: {
-    running: "chat:synaraIsReadingThreadRuntimeEvents",
-    completed: "chat:synaraReadThreadRuntimeEvents",
-    failed: "chat:synaraCouldnTReadThreadRuntimeEvents",
-    cancelled: "common:synaraStoppedReadingThreadRuntimeEvents",
-  },
-  synara_diagnose_thread: {
-    running: "chat:synaraIsDiagnosingAThread",
-    completed: "chat:synaraDiagnosedAThread",
-    failed: "chat:synaraCouldnTDiagnoseAThread",
-    cancelled: "common:synaraStoppedDiagnosingAThread",
-  },
-  synara_create_thread: {
-    running: "chat:synaraIsCreatingAThread",
-    completed: "chat:synaraCreatedAThread",
-    failed: "chat:synaraCouldnTCreateAThread",
-    cancelled: "common:synaraStoppedCreatingAThread",
-  },
-  synara_create_threads: {
-    running: "chat:synaraIsCreatingThreads",
-    completed: "chat:synaraCreatedThreads",
-    failed: "chat:synaraCouldnTCreateThreads",
-    cancelled: "common:synaraStoppedCreatingThreads",
-  },
-  synara_wait_for_threads: {
-    running: "chat:synaraIsWaitingForThreads",
-    completed: "chat:synaraFinishedWaitingForThreads",
-    failed: "chat:synaraCouldnTWaitForThreads",
-    cancelled: "common:synaraStoppedWaitingForThreads",
-  },
-  synara_send_message: {
-    running: "chat:synaraIsSendingAMessage",
-    completed: "chat:synaraSentAMessage",
-    failed: "chat:synaraCouldnTSendAMessage",
-    cancelled: "common:synaraStoppedSendingAMessage",
-  },
-  synara_read_kanban_board: {
-    running: "chat:synaraIsReadingTheBoard",
-    completed: "chat:synaraReadTheBoard",
-    failed: "chat:synaraCouldnTReadTheBoard",
-    cancelled: "common:synaraStoppedReadingTheBoard",
-  },
-  synara_read_kanban_card: {
-    running: "chat:synaraIsReadingABoardCard",
-    completed: "chat:synaraReadABoardCard",
-    failed: "chat:synaraCouldnTReadABoardCard",
-    cancelled: "common:synaraStoppedReadingABoardCard",
-  },
-  synara_create_kanban_task: {
-    running: "chat:synaraIsCreatingABoardTask",
-    completed: "chat:synaraCreatedABoardTask",
-    failed: "chat:synaraCouldnTCreateABoardTask",
-    cancelled: "common:synaraStoppedCreatingABoardTask",
-  },
-  synara_move_kanban_card: {
-    running: "chat:synaraIsMovingABoardCard",
-    completed: "chat:synaraMovedABoardCard",
-    failed: "chat:synaraCouldnTMoveABoardCard",
-    cancelled: "common:synaraStoppedMovingABoardCard",
-  },
-  synara_show_visual: {
-    running: "chat:synaraIsShowingAVisual",
-    completed: "chat:synaraShowedAVisual",
-    failed: "chat:synaraCouldnTShowAVisual",
-    cancelled: "common:synaraStoppedShowingAVisual",
-  },
-  synara_create_todo: {
-    running: "chat:synaraIsAddingAToDo",
-    completed: "chat:synaraAddedAToDo",
-    failed: "chat:synaraCouldnTAddAToDo",
-    cancelled: "common:synaraStoppedAddingAToDo",
-  },
-  synara_list_todos: {
-    running: "chat:synaraIsReadingYourToDos",
-    completed: "chat:synaraReadYourToDos",
-    failed: "chat:synaraCouldnTReadYourToDos",
-    cancelled: "common:synaraStoppedReadingYourToDos",
-  },
-  synara_update_todo: {
-    running: "chat:synaraIsUpdatingAToDo",
-    completed: "chat:synaraUpdatedAToDo",
-    failed: "chat:synaraCouldnTUpdateAToDo",
-    cancelled: "common:synaraStoppedUpdatingAToDo",
-  },
-  synara_interrupt_thread: {
-    running: "chat:synaraIsInterruptingAThread",
-    completed: "chat:synaraInterruptedAThread",
-    failed: "chat:synaraCouldnTInterruptAThread",
-    cancelled: "common:synaraStoppedInterruptingAThread",
-  },
-  synara_set_thread_title: {
-    running: "chat:synaraIsRenamingAThread",
-    completed: "chat:synaraRenamedAThread",
-    failed: "chat:synaraCouldnTRenameAThread",
-    cancelled: "common:synaraStoppedRenamingAThread",
-  },
-  synara_set_thread_archived: {
-    running: "chat:synaraIsUpdatingAThread",
-    completed: "chat:synaraUpdatedAThread",
-    failed: "chat:synaraCouldnTUpdateAThread",
-    cancelled: "common:synaraStoppedUpdatingAThread",
-  },
-  synara_create_automation: {
-    running: "chat:synaraIsCreatingAnAutomation",
-    completed: "chat:synaraCreatedAnAutomation",
-    failed: "chat:synaraCouldnTCreateAnAutomation",
-    cancelled: "common:synaraStoppedCreatingAnAutomation",
-  },
-  synara_list_automations: {
-    running: "chat:synaraIsListingAutomations",
-    completed: "chat:synaraListedAutomations",
-    failed: "chat:synaraCouldnTListAutomations",
-    cancelled: "common:synaraStoppedListingAutomations",
-  },
-  synara_view_automation: {
-    running: "chat:synaraIsViewingAnAutomation",
-    completed: "chat:synaraViewedAnAutomation",
-    failed: "chat:synaraCouldnTViewAnAutomation",
-    cancelled: "common:synaraStoppedViewingAnAutomation",
-  },
-  synara_update_automation: {
-    running: "chat:synaraIsUpdatingAnAutomation",
-    completed: "chat:synaraUpdatedAnAutomation",
-    failed: "chat:synaraCouldnTUpdateAnAutomation",
-    cancelled: "common:synaraStoppedUpdatingAnAutomation",
-  },
-  synara_update_automation_memory: {
-    running: "chat:synaraIsUpdatingAutomationMemory",
-    completed: "chat:synaraUpdatedAutomationMemory",
-    failed: "chat:synaraCouldnTUpdateAutomationMemory",
-    cancelled: "common:synaraStoppedUpdatingAutomationMemory",
-  },
-  synara_report_automation_result: {
-    running: "chat:synaraIsReportingAnAutomationResult",
-    completed: "chat:synaraReportedAnAutomationResult",
-    failed: "chat:synaraCouldnTReportAnAutomationResult",
-    cancelled: "common:synaraStoppedReportingAnAutomationResult",
-  },
-  synara_cancel_automation: {
-    running: "chat:synaraIsStoppingAnAutomation",
-    completed: "chat:synaraStoppedAnAutomation",
-    failed: "chat:synaraCouldnTStopAnAutomation",
-    cancelled: "common:synaraStoppedStoppingAnAutomation",
-  },
-  synara_browser_status: {
+const RAMSPACE_MCP_TOOL_PRESENTATION_KEYS = {
+  ramspace_computer_screenshot: {
+    running: "common:ramspaceIsTakingAScreenshot",
+    completed: "common:ramspaceTookAScreenshot",
+    failed: "common:ramspaceCouldnTFinishTakingAScreenshot",
+    cancelled: "common:ramspaceStoppedTakingAScreenshot",
+  },
+  ramspace_computer_get_state: {
+    running: "common:ramspaceIsReadingTheScreen",
+    completed: "common:ramspaceReadTheScreen",
+    failed: "common:ramspaceCouldnTFinishReadingTheScreen",
+    cancelled: "common:ramspaceStoppedReadingTheScreen",
+  },
+  ramspace_computer_get_screen_size: {
+    running: "common:ramspaceIsMeasuringTheScreen",
+    completed: "common:ramspaceMeasuredTheScreen",
+    failed: "common:ramspaceCouldnTFinishMeasuringTheScreen",
+    cancelled: "common:ramspaceStoppedMeasuringTheScreen",
+  },
+  ramspace_computer_list_windows: {
+    running: "common:ramspaceIsListingWindows",
+    completed: "common:ramspaceListedTheWindows",
+    failed: "common:ramspaceCouldnTFinishListingWindows",
+    cancelled: "common:ramspaceStoppedListingWindows",
+  },
+  ramspace_computer_list_apps: {
+    running: "common:ramspaceIsListingApps",
+    completed: "common:ramspaceListedTheApps",
+    failed: "common:ramspaceCouldnTFinishListingApps",
+    cancelled: "common:ramspaceStoppedListingApps",
+  },
+  ramspace_computer_verify_state: {
+    running: "common:ramspaceIsCheckingDesktopState",
+    completed: "common:ramspaceCheckedDesktopState",
+    failed: "common:ramspaceCouldnTFinishCheckingDesktopState",
+    cancelled: "common:ramspaceStoppedCheckingDesktopState",
+  },
+  ramspace_computer_zoom: {
+    running: "common:ramspaceIsZoomingIntoAWindow",
+    completed: "common:ramspaceZoomedIntoAWindow",
+    failed: "common:ramspaceCouldnTFinishZoomingIntoAWindow",
+    cancelled: "common:ramspaceStoppedZoomingIntoAWindow",
+  },
+  ramspace_computer_get_accessibility_tree: {
+    running: "common:ramspaceIsListingAppsAndWindows",
+    completed: "common:ramspaceListedAppsAndWindows",
+    failed: "common:ramspaceCouldnTFinishListingAppsAndWindows",
+    cancelled: "common:ramspaceStoppedListingAppsAndWindows",
+  },
+  ramspace_computer_get_cursor_position: {
+    running: "common:ramspaceIsReadingTheCursorPosition",
+    completed: "common:ramspaceReadTheCursorPosition",
+    failed: "common:ramspaceCouldnTFinishReadingTheCursorPosition",
+    cancelled: "common:ramspaceStoppedReadingTheCursorPosition",
+  },
+  ramspace_computer_help: {
+    running: "common:ramspaceIsReadingTheComputerPlaybook",
+    completed: "common:ramspaceReadTheComputerPlaybook",
+    failed: "common:ramspaceCouldnTFinishReadingTheComputerPlaybook",
+    cancelled: "common:ramspaceStoppedReadingTheComputerPlaybook",
+  },
+  ramspace_computer_click: {
+    running: "common:ramspaceIsClickingTheDesktop",
+    completed: "common:ramspaceClickedTheDesktop",
+    failed: "common:ramspaceCouldnTFinishClickingTheDesktop",
+    cancelled: "common:ramspaceStoppedClickingTheDesktop",
+  },
+  ramspace_computer_move_cursor: {
+    running: "common:ramspaceIsMovingTheCursor",
+    completed: "common:ramspaceMovedTheCursor",
+    failed: "common:ramspaceCouldnTFinishMovingTheCursor",
+    cancelled: "common:ramspaceStoppedMovingTheCursor",
+  },
+  ramspace_computer_drag: {
+    running: "common:ramspaceIsDraggingOnTheDesktop",
+    completed: "common:ramspaceDraggedOnTheDesktop",
+    failed: "common:ramspaceCouldnTFinishDraggingOnTheDesktop",
+    cancelled: "common:ramspaceStoppedDraggingOnTheDesktop",
+  },
+  ramspace_computer_scroll: {
+    running: "common:ramspaceIsScrollingTheDesktop",
+    completed: "common:ramspaceScrolledTheDesktop",
+    failed: "common:ramspaceCouldnTFinishScrollingTheDesktop",
+    cancelled: "common:ramspaceStoppedScrollingTheDesktop",
+  },
+  ramspace_computer_type_text: {
+    running: "common:ramspaceIsTypingOnTheDesktop",
+    completed: "common:ramspaceTypedOnTheDesktop",
+    failed: "common:ramspaceCouldnTFinishTypingOnTheDesktop",
+    cancelled: "common:ramspaceStoppedTypingOnTheDesktop",
+  },
+  ramspace_computer_press_key: {
+    running: "common:ramspaceIsPressingAKey",
+    completed: "common:ramspacePressedAKey",
+    failed: "common:ramspaceCouldnTFinishPressingAKey",
+    cancelled: "common:ramspaceStoppedPressingAKey",
+  },
+  ramspace_computer_set_value: {
+    running: "common:ramspaceIsSettingAField",
+    completed: "common:ramspaceSetAField",
+    failed: "common:ramspaceCouldnTFinishSettingAField",
+    cancelled: "common:ramspaceStoppedSettingAField",
+  },
+  ramspace_computer_select_text: {
+    running: "common:ramspaceIsSelectingText",
+    completed: "common:ramspaceSelectedText",
+    failed: "common:ramspaceCouldnTFinishSelectingText",
+    cancelled: "common:ramspaceStoppedSelectingText",
+  },
+  ramspace_computer_perform_action: {
+    running: "common:ramspaceIsActivatingAControl",
+    completed: "common:ramspaceActivatedAControl",
+    failed: "common:ramspaceCouldnTFinishActivatingAControl",
+    cancelled: "common:ramspaceStoppedActivatingAControl",
+  },
+  ramspace_computer_launch_app: {
+    running: "common:ramspaceIsOpeningAnApp",
+    completed: "common:ramspaceOpenedAnApp",
+    failed: "common:ramspaceCouldnTFinishOpeningAnApp",
+    cancelled: "common:ramspaceStoppedOpeningAnApp",
+  },
+  ramspace_computer_activate_window: {
+    running: "common:ramspaceIsActivatingAWindow",
+    completed: "common:ramspaceActivatedAWindow",
+    failed: "common:ramspaceCouldnTFinishActivatingAWindow",
+    cancelled: "common:ramspaceStoppedActivatingAWindow",
+  },
+  ramspace_computer_set_window_frame: {
+    running: "common:ramspaceIsMovingOrResizingAWindow",
+    completed: "common:ramspaceMovedOrResizedAWindow",
+    failed: "common:ramspaceCouldnTFinishMovingOrResizingAWindow",
+    cancelled: "common:ramspaceStoppedMovingOrResizingAWindow",
+  },
+  ramspace_computer_invoke_menu: {
+    running: "common:ramspaceIsInvokingAMenuItem",
+    completed: "common:ramspaceInvokedAMenuItem",
+    failed: "common:ramspaceCouldnTFinishInvokingAMenuItem",
+    cancelled: "common:ramspaceStoppedInvokingAMenuItem",
+  },
+  ramspace_computer_kill_app: {
+    running: "common:ramspaceIsForceQuittingAnApp",
+    completed: "common:ramspaceForceQuitAnApp",
+    failed: "common:ramspaceCouldnTFinishForceQuittingAnApp",
+    cancelled: "common:ramspaceStoppedForceQuittingAnApp",
+  },
+  ramspace_computer_set_window_minimized: {
+    running: "common:ramspaceIsChangingAWindowSVisibility",
+    completed: "common:ramspaceChangedAWindowSVisibility",
+    failed: "common:ramspaceCouldnTFinishChangingAWindowSVisibility",
+    cancelled: "common:ramspaceStoppedChangingAWindowSVisibility",
+  },
+  ramspace_computer_set_app_visibility: {
+    running: "common:ramspaceIsChangingAnAppSVisibility",
+    completed: "common:ramspaceChangedAnAppSVisibility",
+    failed: "common:ramspaceCouldnTFinishChangingAnAppSVisibility",
+    cancelled: "common:ramspaceStoppedChangingAnAppSVisibility",
+  },
+  ramspace_computer_wait: {
+    running: "common:ramspaceIsWaitingForTheDesktop",
+    completed: "common:ramspaceWaitedForTheDesktop",
+    failed: "common:ramspaceCouldnTFinishWaitingForTheDesktop",
+    cancelled: "common:ramspaceStoppedWaitingForTheDesktop",
+  },
+  ramspace_computer_read_clipboard: {
+    running: "common:ramspaceIsReadingTheClipboard",
+    completed: "common:ramspaceReadTheClipboard",
+    failed: "common:ramspaceCouldnTFinishReadingTheClipboard",
+    cancelled: "common:ramspaceStoppedReadingTheClipboard",
+  },
+  ramspace_computer_write_clipboard: {
+    running: "common:ramspaceIsWritingToTheClipboard",
+    completed: "common:ramspaceWroteToTheClipboard",
+    failed: "common:ramspaceCouldnTFinishWritingToTheClipboard",
+    cancelled: "common:ramspaceStoppedWritingToTheClipboard",
+  },
+  ramspace_computer_paste: {
+    running: "common:ramspaceIsPastingText",
+    completed: "common:ramspacePastedText",
+    failed: "common:ramspaceCouldnTFinishPastingText",
+    cancelled: "common:ramspaceStoppedPastingText",
+  },
+  ramspace_computer_run: {
+    running: "common:ramspaceIsRunningADesktopSequence",
+    completed: "common:ramspaceRanADesktopSequence",
+    failed: "common:ramspaceCouldnTFinishRunningADesktopSequence",
+    cancelled: "common:ramspaceStoppedRunningADesktopSequence",
+  },
+  ramspace_computer_inspect: {
+    running: "common:ramspaceIsInspectingTheComputer",
+    completed: "common:ramspaceInspectedTheComputer",
+    failed: "common:ramspaceCouldnTFinishInspectingTheComputer",
+    cancelled: "common:ramspaceStoppedInspectingTheComputer",
+  },
+  ramspace_computer_spaces: {
+    running: "common:ramspaceIsInspectingDesktopSpaces",
+    completed: "common:ramspaceInspectedDesktopSpaces",
+    failed: "common:ramspaceCouldnTFinishInspectingDesktopSpaces",
+    cancelled: "common:ramspaceStoppedInspectingDesktopSpaces",
+  },
+  ramspace_computer_browser_state: {
+    running: "common:ramspaceIsReadingTheBrowserPage",
+    completed: "common:ramspaceReadTheBrowserPage",
+    failed: "common:ramspaceCouldnTFinishReadingTheBrowserPage",
+    cancelled: "common:ramspaceStoppedReadingTheBrowserPage",
+  },
+  ramspace_computer_browser_prepare: {
+    running: "common:ramspaceIsPreparingABrowser",
+    completed: "common:ramspacePreparedABrowser",
+    failed: "common:ramspaceCouldnTFinishPreparingABrowser",
+    cancelled: "common:ramspaceStoppedPreparingABrowser",
+  },
+  ramspace_computer_browser_navigate: {
+    running: "common:ramspaceIsOpeningABrowserPage",
+    completed: "common:ramspaceOpenedABrowserPage",
+    failed: "common:ramspaceCouldnTFinishOpeningABrowserPage",
+    cancelled: "common:ramspaceStoppedOpeningABrowserPage",
+  },
+  ramspace_computer_browser_click: {
+    running: "common:ramspaceIsClickingInTheBrowser",
+    completed: "common:ramspaceClickedInTheBrowser",
+    failed: "common:ramspaceCouldnTFinishClickingInTheBrowser",
+    cancelled: "common:ramspaceStoppedClickingInTheBrowser",
+  },
+  ramspace_computer_browser_type: {
+    running: "common:ramspaceIsTypingInABrowserField",
+    completed: "common:ramspaceTypedInABrowserField",
+    failed: "common:ramspaceCouldnTFinishTypingInABrowserField",
+    cancelled: "common:ramspaceStoppedTypingInABrowserField",
+  },
+  ramspace_computer_browser_dialog: {
+    running: "common:ramspaceIsHandlingABrowserDialog",
+    completed: "common:ramspaceHandledABrowserDialog",
+    failed: "common:ramspaceCouldnTFinishHandlingABrowserDialog",
+    cancelled: "common:ramspaceStoppedHandlingABrowserDialog",
+  },
+  ramspace_computer_browser_upload: {
+    running: "common:ramspaceIsAttachingFilesInTheBrowser",
+    completed: "common:ramspaceAttachedFilesInTheBrowser",
+    failed: "common:ramspaceCouldnTFinishAttachingFilesInTheBrowser",
+    cancelled: "common:ramspaceStoppedAttachingFilesInTheBrowser",
+  },
+  ramspace_computer_browser_download: {
+    running: "common:ramspaceIsDownloadingAFile",
+    completed: "common:ramspaceDownloadedAFile",
+    failed: "common:ramspaceCouldnTFinishDownloadingAFile",
+    cancelled: "common:ramspaceStoppedDownloadingAFile",
+  },
+  ramspace_computer_browser_pointer: {
+    running: "common:ramspaceIsUsingThePointerInTheBrowser",
+    completed: "common:ramspaceUsedThePointerInTheBrowser",
+    failed: "common:ramspaceCouldnTFinishUsingThePointerInThe",
+    cancelled: "common:ramspaceStoppedUsingThePointerInTheBrowser",
+  },
+  ramspace_computer_browser_press: {
+    running: "common:ramspaceIsPressingEnterInTheBrowser",
+    completed: "common:ramspacePressedEnterInTheBrowser",
+    failed: "common:ramspaceCouldnTFinishPressingEnterInTheBrowser",
+    cancelled: "common:ramspaceStoppedPressingEnterInTheBrowser",
+  },
+  ramspace_context: {
+    running: "chat:ramspaceIsCheckingItsContext",
+    completed: "chat:ramspaceCheckedItsContext",
+    failed: "chat:ramspaceCouldnTCheckItsContext",
+    cancelled: "common:ramspaceStoppedCheckingItsContext",
+  },
+  ramspace_capabilities: {
+    running: "chat:ramspaceIsCheckingAvailableAgents",
+    completed: "chat:ramspaceCheckedAvailableAgents",
+    failed: "chat:ramspaceCouldnTCheckAvailableAgents",
+    cancelled: "common:ramspaceStoppedCheckingAvailableAgents",
+  },
+  ramspace_overview: {
+    running: "chat:ramspaceIsGatheringAnOverview",
+    completed: "chat:ramspaceGatheredAnOverview",
+    failed: "chat:ramspaceCouldnTGatherAnOverview",
+    cancelled: "common:ramspaceStoppedGatheringAnOverview",
+  },
+  ramspace_list_allowed_projects: {
+    running: "chat:ramspaceIsListingAllowedProjects",
+    completed: "chat:ramspaceListedAllowedProjects",
+    failed: "chat:ramspaceCouldnTListAllowedProjects",
+    cancelled: "common:ramspaceStoppedListingAllowedProjects",
+  },
+  ramspace_create_task: {
+    running: "chat:ramspaceIsCreatingATask",
+    completed: "chat:ramspaceCreatedATask",
+    failed: "chat:ramspaceCouldnTCreateATask",
+    cancelled: "common:ramspaceStoppedCreatingATask",
+  },
+  ramspace_wait_for_task: {
+    running: "chat:ramspaceIsWaitingForATask",
+    completed: "chat:ramspaceFinishedWaitingForATask",
+    failed: "chat:ramspaceCouldnTWaitForATask",
+    cancelled: "common:ramspaceStoppedWaitingForATask",
+  },
+  ramspace_read_task: {
+    running: "chat:ramspaceIsReadingATask",
+    completed: "chat:ramspaceReadATask",
+    failed: "chat:ramspaceCouldnTReadATask",
+    cancelled: "common:ramspaceStoppedReadingATask",
+  },
+  ramspace_list_projects: {
+    running: "chat:ramspaceIsListingProjects",
+    completed: "chat:ramspaceListedProjects",
+    failed: "chat:ramspaceCouldnTListProjects",
+    cancelled: "common:ramspaceStoppedListingProjects",
+  },
+  ramspace_list_threads: {
+    running: "chat:ramspaceIsListingThreads",
+    completed: "chat:ramspaceListedThreads",
+    failed: "chat:ramspaceCouldnTListThreads",
+    cancelled: "common:ramspaceStoppedListingThreads",
+  },
+  ramspace_read_thread: {
+    running: "chat:ramspaceIsReadingAThread",
+    completed: "chat:ramspaceReadAThread",
+    failed: "chat:ramspaceCouldnTReadAThread",
+    cancelled: "common:ramspaceStoppedReadingAThread",
+  },
+  ramspace_read_thread_activity: {
+    running: "chat:ramspaceIsReadingThreadActivity",
+    completed: "chat:ramspaceReadThreadActivity",
+    failed: "chat:ramspaceCouldnTReadThreadActivity",
+    cancelled: "common:ramspaceStoppedReadingThreadActivity",
+  },
+  ramspace_read_thread_events: {
+    running: "chat:ramspaceIsReadingThreadEvents",
+    completed: "chat:ramspaceReadThreadEvents",
+    failed: "chat:ramspaceCouldnTReadThreadEvents",
+    cancelled: "common:ramspaceStoppedReadingThreadEvents",
+  },
+  ramspace_read_thread_runtime_events: {
+    running: "chat:ramspaceIsReadingThreadRuntimeEvents",
+    completed: "chat:ramspaceReadThreadRuntimeEvents",
+    failed: "chat:ramspaceCouldnTReadThreadRuntimeEvents",
+    cancelled: "common:ramspaceStoppedReadingThreadRuntimeEvents",
+  },
+  ramspace_diagnose_thread: {
+    running: "chat:ramspaceIsDiagnosingAThread",
+    completed: "chat:ramspaceDiagnosedAThread",
+    failed: "chat:ramspaceCouldnTDiagnoseAThread",
+    cancelled: "common:ramspaceStoppedDiagnosingAThread",
+  },
+  ramspace_create_thread: {
+    running: "chat:ramspaceIsCreatingAThread",
+    completed: "chat:ramspaceCreatedAThread",
+    failed: "chat:ramspaceCouldnTCreateAThread",
+    cancelled: "common:ramspaceStoppedCreatingAThread",
+  },
+  ramspace_create_threads: {
+    running: "chat:ramspaceIsCreatingThreads",
+    completed: "chat:ramspaceCreatedThreads",
+    failed: "chat:ramspaceCouldnTCreateThreads",
+    cancelled: "common:ramspaceStoppedCreatingThreads",
+  },
+  ramspace_wait_for_threads: {
+    running: "chat:ramspaceIsWaitingForThreads",
+    completed: "chat:ramspaceFinishedWaitingForThreads",
+    failed: "chat:ramspaceCouldnTWaitForThreads",
+    cancelled: "common:ramspaceStoppedWaitingForThreads",
+  },
+  ramspace_send_message: {
+    running: "chat:ramspaceIsSendingAMessage",
+    completed: "chat:ramspaceSentAMessage",
+    failed: "chat:ramspaceCouldnTSendAMessage",
+    cancelled: "common:ramspaceStoppedSendingAMessage",
+  },
+  ramspace_read_kanban_board: {
+    running: "chat:ramspaceIsReadingTheBoard",
+    completed: "chat:ramspaceReadTheBoard",
+    failed: "chat:ramspaceCouldnTReadTheBoard",
+    cancelled: "common:ramspaceStoppedReadingTheBoard",
+  },
+  ramspace_read_kanban_card: {
+    running: "chat:ramspaceIsReadingABoardCard",
+    completed: "chat:ramspaceReadABoardCard",
+    failed: "chat:ramspaceCouldnTReadABoardCard",
+    cancelled: "common:ramspaceStoppedReadingABoardCard",
+  },
+  ramspace_create_kanban_task: {
+    running: "chat:ramspaceIsCreatingABoardTask",
+    completed: "chat:ramspaceCreatedABoardTask",
+    failed: "chat:ramspaceCouldnTCreateABoardTask",
+    cancelled: "common:ramspaceStoppedCreatingABoardTask",
+  },
+  ramspace_move_kanban_card: {
+    running: "chat:ramspaceIsMovingABoardCard",
+    completed: "chat:ramspaceMovedABoardCard",
+    failed: "chat:ramspaceCouldnTMoveABoardCard",
+    cancelled: "common:ramspaceStoppedMovingABoardCard",
+  },
+  ramspace_show_visual: {
+    running: "chat:ramspaceIsShowingAVisual",
+    completed: "chat:ramspaceShowedAVisual",
+    failed: "chat:ramspaceCouldnTShowAVisual",
+    cancelled: "common:ramspaceStoppedShowingAVisual",
+  },
+  ramspace_create_todo: {
+    running: "chat:ramspaceIsAddingAToDo",
+    completed: "chat:ramspaceAddedAToDo",
+    failed: "chat:ramspaceCouldnTAddAToDo",
+    cancelled: "common:ramspaceStoppedAddingAToDo",
+  },
+  ramspace_list_todos: {
+    running: "chat:ramspaceIsReadingYourToDos",
+    completed: "chat:ramspaceReadYourToDos",
+    failed: "chat:ramspaceCouldnTReadYourToDos",
+    cancelled: "common:ramspaceStoppedReadingYourToDos",
+  },
+  ramspace_update_todo: {
+    running: "chat:ramspaceIsUpdatingAToDo",
+    completed: "chat:ramspaceUpdatedAToDo",
+    failed: "chat:ramspaceCouldnTUpdateAToDo",
+    cancelled: "common:ramspaceStoppedUpdatingAToDo",
+  },
+  ramspace_interrupt_thread: {
+    running: "chat:ramspaceIsInterruptingAThread",
+    completed: "chat:ramspaceInterruptedAThread",
+    failed: "chat:ramspaceCouldnTInterruptAThread",
+    cancelled: "common:ramspaceStoppedInterruptingAThread",
+  },
+  ramspace_set_thread_title: {
+    running: "chat:ramspaceIsRenamingAThread",
+    completed: "chat:ramspaceRenamedAThread",
+    failed: "chat:ramspaceCouldnTRenameAThread",
+    cancelled: "common:ramspaceStoppedRenamingAThread",
+  },
+  ramspace_set_thread_archived: {
+    running: "chat:ramspaceIsUpdatingAThread",
+    completed: "chat:ramspaceUpdatedAThread",
+    failed: "chat:ramspaceCouldnTUpdateAThread",
+    cancelled: "common:ramspaceStoppedUpdatingAThread",
+  },
+  ramspace_create_automation: {
+    running: "chat:ramspaceIsCreatingAnAutomation",
+    completed: "chat:ramspaceCreatedAnAutomation",
+    failed: "chat:ramspaceCouldnTCreateAnAutomation",
+    cancelled: "common:ramspaceStoppedCreatingAnAutomation",
+  },
+  ramspace_list_automations: {
+    running: "chat:ramspaceIsListingAutomations",
+    completed: "chat:ramspaceListedAutomations",
+    failed: "chat:ramspaceCouldnTListAutomations",
+    cancelled: "common:ramspaceStoppedListingAutomations",
+  },
+  ramspace_view_automation: {
+    running: "chat:ramspaceIsViewingAnAutomation",
+    completed: "chat:ramspaceViewedAnAutomation",
+    failed: "chat:ramspaceCouldnTViewAnAutomation",
+    cancelled: "common:ramspaceStoppedViewingAnAutomation",
+  },
+  ramspace_update_automation: {
+    running: "chat:ramspaceIsUpdatingAnAutomation",
+    completed: "chat:ramspaceUpdatedAnAutomation",
+    failed: "chat:ramspaceCouldnTUpdateAnAutomation",
+    cancelled: "common:ramspaceStoppedUpdatingAnAutomation",
+  },
+  ramspace_update_automation_memory: {
+    running: "chat:ramspaceIsUpdatingAutomationMemory",
+    completed: "chat:ramspaceUpdatedAutomationMemory",
+    failed: "chat:ramspaceCouldnTUpdateAutomationMemory",
+    cancelled: "common:ramspaceStoppedUpdatingAutomationMemory",
+  },
+  ramspace_report_automation_result: {
+    running: "chat:ramspaceIsReportingAnAutomationResult",
+    completed: "chat:ramspaceReportedAnAutomationResult",
+    failed: "chat:ramspaceCouldnTReportAnAutomationResult",
+    cancelled: "common:ramspaceStoppedReportingAnAutomationResult",
+  },
+  ramspace_cancel_automation: {
+    running: "chat:ramspaceIsStoppingAnAutomation",
+    completed: "chat:ramspaceStoppedAnAutomation",
+    failed: "chat:ramspaceCouldnTStopAnAutomation",
+    cancelled: "common:ramspaceStoppedStoppingAnAutomation",
+  },
+  ramspace_browser_status: {
     running: "common:checkBrowserStatus",
     completed: "common:checkBrowserStatus",
     failed: "common:checkBrowserStatus",
     cancelled: "common:cancelledCheckBrowserStatus",
   },
-  synara_browser_tabs: {
+  ramspace_browser_tabs: {
     running: "common:listBrowserTabs",
     completed: "common:listBrowserTabs",
     failed: "common:listBrowserTabs",
     cancelled: "common:cancelledListBrowserTabs",
   },
-  synara_browser_open: {
+  ramspace_browser_open: {
     running: "common:openBrowserTab",
     completed: "common:openBrowserTab",
     failed: "common:openBrowserTab",
     cancelled: "common:cancelledOpenBrowserTab",
   },
-  synara_browser_navigate: {
+  ramspace_browser_navigate: {
     running: "common:navigateBrowserTab",
     completed: "common:navigateBrowserTab",
     failed: "common:navigateBrowserTab",
     cancelled: "common:cancelledNavigateBrowserTab",
   },
-  synara_browser_back: {
+  ramspace_browser_back: {
     running: "common:goBackInBrowserHistory",
     completed: "common:goBackInBrowserHistory",
     failed: "common:goBackInBrowserHistory",
     cancelled: "common:cancelledGoBackInBrowserHistory",
   },
-  synara_browser_forward: {
+  ramspace_browser_forward: {
     running: "common:goForwardInBrowserHistory",
     completed: "common:goForwardInBrowserHistory",
     failed: "common:goForwardInBrowserHistory",
     cancelled: "common:cancelledGoForwardInBrowserHistory",
   },
-  synara_browser_reload: {
+  ramspace_browser_reload: {
     running: "common:reloadBrowserPage",
     completed: "common:reloadBrowserPage",
     failed: "common:reloadBrowserPage",
     cancelled: "common:cancelledReloadBrowserPage",
   },
-  synara_browser_resize: {
+  ramspace_browser_resize: {
     running: "common:resizeBrowserViewport",
     completed: "common:resizeBrowserViewport",
     failed: "common:resizeBrowserViewport",
     cancelled: "common:cancelledResizeBrowserViewport",
   },
-  synara_browser_screenshot: {
+  ramspace_browser_screenshot: {
     running: "common:captureBrowserScreenshot",
     completed: "common:captureBrowserScreenshot",
     failed: "common:captureBrowserScreenshot",
     cancelled: "common:cancelledCaptureBrowserScreenshot",
   },
-  synara_browser_logs: {
+  ramspace_browser_logs: {
     running: "common:readBrowserDiagnostics",
     completed: "common:readBrowserDiagnostics",
     failed: "common:readBrowserDiagnostics",
     cancelled: "common:cancelledReadBrowserDiagnostics",
   },
-  synara_browser_upload: {
+  ramspace_browser_upload: {
     running: "common:uploadWorkspaceFiles",
     completed: "common:uploadWorkspaceFiles",
     failed: "common:uploadWorkspaceFiles",
     cancelled: "common:cancelledUploadWorkspaceFiles",
   },
-  synara_browser_run: {
+  ramspace_browser_run: {
     running: "common:runBrowserActions",
     completed: "common:runBrowserActions",
     failed: "common:runBrowserActions",
     cancelled: "common:cancelledRunBrowserActions",
   },
-  synara_browser_close: {
+  ramspace_browser_close: {
     running: "common:closeBrowserTab",
     completed: "common:closeBrowserTab",
     failed: "common:closeBrowserTab",
     cancelled: "common:cancelledCloseBrowserTab",
   },
-  synara_browser_snapshot: {
+  ramspace_browser_snapshot: {
     running: "chat:snapshotBrowserPage",
     completed: "chat:snapshotBrowserPage",
     failed: "chat:snapshotBrowserPage",
     cancelled: "common:cancelledSnapshotBrowserPage",
   },
-  synara_browser_webmcp_tools: {
+  ramspace_browser_webmcp_tools: {
     running: "chat:discoverPageWebMCPTools",
     completed: "chat:discoverPageWebMCPTools",
     failed: "chat:discoverPageWebMCPTools",
     cancelled: "common:cancelledDiscoverPageWebMCPTools",
   },
-  synara_browser_webmcp_call: {
+  ramspace_browser_webmcp_call: {
     running: "chat:callPageWebMCPTool",
     completed: "chat:callPageWebMCPTool",
     failed: "chat:callPageWebMCPTool",
     cancelled: "common:cancelledCallPageWebMCPTool",
   },
-  synara_browser_click: {
+  ramspace_browser_click: {
     running: "chat:clickBrowserTarget",
     completed: "chat:clickBrowserTarget",
     failed: "chat:clickBrowserTarget",
     cancelled: "common:cancelledClickBrowserTarget",
   },
-  synara_browser_hover: {
+  ramspace_browser_hover: {
     running: "chat:hoverBrowserTarget",
     completed: "chat:hoverBrowserTarget",
     failed: "chat:hoverBrowserTarget",
     cancelled: "common:cancelledHoverBrowserTarget",
   },
-  synara_browser_drag: {
+  ramspace_browser_drag: {
     running: "chat:dragBetweenBrowserTargets",
     completed: "chat:dragBetweenBrowserTargets",
     failed: "chat:dragBetweenBrowserTargets",
     cancelled: "common:cancelledDragBetweenBrowserTargets",
   },
-  synara_browser_type: {
+  ramspace_browser_type: {
     running: "chat:typeIntoBrowserTarget",
     completed: "chat:typeIntoBrowserTarget",
     failed: "chat:typeIntoBrowserTarget",
     cancelled: "common:cancelledTypeIntoBrowserTarget",
   },
-  synara_browser_select: {
+  ramspace_browser_select: {
     running: "chat:selectBrowserOptions",
     completed: "chat:selectBrowserOptions",
     failed: "chat:selectBrowserOptions",
     cancelled: "common:cancelledSelectBrowserOptions",
   },
-  synara_browser_press: {
+  ramspace_browser_press: {
     running: "chat:pressBrowserKeys",
     completed: "chat:pressBrowserKeys",
     failed: "chat:pressBrowserKeys",
     cancelled: "common:cancelledPressBrowserKeys",
   },
-  synara_browser_scroll: {
+  ramspace_browser_scroll: {
     running: "chat:scrollBrowserPage",
     completed: "chat:scrollBrowserPage",
     failed: "chat:scrollBrowserPage",
     cancelled: "common:cancelledScrollBrowserPage",
   },
-  synara_browser_wait: {
+  ramspace_browser_wait: {
     running: "chat:waitForBrowserCondition",
     completed: "chat:waitForBrowserCondition",
     failed: "chat:waitForBrowserCondition",
     cancelled: "common:cancelledWaitForBrowserCondition",
   },
-  synara_browser_evaluate: {
+  ramspace_browser_evaluate: {
     running: "chat:evaluateBrowserExpression",
     completed: "chat:evaluateBrowserExpression",
     failed: "chat:evaluateBrowserExpression",
     cancelled: "common:cancelledEvaluateBrowserExpression",
   },
 } as const satisfies Record<
-  keyof typeof SYNARA_MCP_TOOL_PRESENTATIONS,
-  Record<SynaraMcpToolStatus, string>
+  keyof typeof RAMSPACE_MCP_TOOL_PRESENTATIONS,
+  Record<RamspaceMcpToolStatus, string>
 >;
 
-function normalizeSynaraMcpIdentifier(value: string): string {
+function normalizeRamspaceMcpIdentifier(value: string): string {
   return value
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "_")
     .replace(/^_+|_+$/g, "");
 }
 
-const SYNARA_BROWSER_TOOL_NAME_BY_PRESENTATION = new Map<string, SynaraBrowserToolName>(
+const RAMSPACE_BROWSER_TOOL_NAME_BY_PRESENTATION = new Map<string, RamspaceBrowserToolName>(
   BROWSER_HISTORY_TOOL_NAMES.map((toolName) => [
-    normalizeSynaraMcpIdentifier(BROWSER_HISTORY_TITLES[toolName]),
-    `synara_${toolName}`,
+    normalizeRamspaceMcpIdentifier(BROWSER_HISTORY_TITLES[toolName]),
+    `ramspace_${toolName}`,
   ]),
 );
 
-const SYNARA_MCP_TOOL_PRESENTATION_ENTRIES = Object.entries(SYNARA_MCP_TOOL_PRESENTATIONS).map(
+const RAMSPACE_MCP_TOOL_PRESENTATION_ENTRIES = Object.entries(RAMSPACE_MCP_TOOL_PRESENTATIONS).map(
   ([toolName, presentation]) => ({
     toolName,
     presentation,
-    normalizedRunning: normalizeSynaraMcpIdentifier(presentation.running),
-    normalizedCompleted: normalizeSynaraMcpIdentifier(presentation.completed),
-    normalizedFailed: normalizeSynaraMcpIdentifier(presentation.failed),
+    normalizedRunning: normalizeRamspaceMcpIdentifier(presentation.running),
+    normalizedCompleted: normalizeRamspaceMcpIdentifier(presentation.completed),
+    normalizedFailed: normalizeRamspaceMcpIdentifier(presentation.failed),
   }),
 );
 
-function extractSynaraMcpToolName(normalizedCandidate: string): string | null {
+function extractRamspaceMcpToolName(normalizedCandidate: string): string | null {
   if (BROWSER_TOOL_NAME_SET.has(normalizedCandidate)) {
-    return `synara_${normalizedCandidate}`;
+    return `ramspace_${normalizedCandidate}`;
   }
-  if (normalizedCandidate.startsWith("mcp_synara_synara_")) {
-    return normalizedCandidate.slice("mcp_synara_".length);
+  if (normalizedCandidate.startsWith("mcp_ramspace_ramspace_")) {
+    return normalizedCandidate.slice("mcp_ramspace_".length);
   }
-  if (normalizedCandidate.startsWith("mcp_synara_")) {
-    return `synara_${normalizedCandidate.slice("mcp_synara_".length)}`;
+  if (normalizedCandidate.startsWith("mcp_ramspace_")) {
+    return `ramspace_${normalizedCandidate.slice("mcp_ramspace_".length)}`;
   }
-  if (normalizedCandidate.startsWith("synara_synara_")) {
-    return normalizedCandidate.slice("synara_".length);
+  if (normalizedCandidate.startsWith("ramspace_ramspace_")) {
+    return normalizedCandidate.slice("ramspace_".length);
   }
-  if (normalizedCandidate.startsWith("synara_")) {
+  if (normalizedCandidate.startsWith("ramspace_")) {
     return normalizedCandidate;
   }
   return null;
 }
 
-function resolveSynaraBrowserToolName(
+function resolveRamspaceBrowserToolName(
   candidates: ReadonlyArray<string | null | undefined>,
-): SynaraBrowserToolName | null {
+): RamspaceBrowserToolName | null {
   for (const candidate of candidates) {
     if (!candidate) continue;
-    const normalizedCandidate = normalizeSynaraMcpIdentifier(candidate);
-    const extractedToolName = extractSynaraMcpToolName(normalizedCandidate);
+    const normalizedCandidate = normalizeRamspaceMcpIdentifier(candidate);
+    const extractedToolName = extractRamspaceMcpToolName(normalizedCandidate);
     const candidateToolName =
       extractedToolName ??
-      SYNARA_BROWSER_TOOL_NAME_BY_PRESENTATION.get(normalizedCandidate) ??
+      RAMSPACE_BROWSER_TOOL_NAME_BY_PRESENTATION.get(normalizedCandidate) ??
       normalizedCandidate;
-    if (candidateToolName in SYNARA_BROWSER_TOOL_PRESENTATIONS) {
-      return candidateToolName as SynaraBrowserToolName;
+    if (candidateToolName in RAMSPACE_BROWSER_TOOL_PRESENTATIONS) {
+      return candidateToolName as RamspaceBrowserToolName;
     }
   }
   return null;
 }
 
-function fallbackSynaraMcpToolPresentation(
+function fallbackRamspaceMcpToolPresentation(
   toolName: string,
   translate: typeof t,
-): SynaraMcpToolPresentation {
+): RamspaceMcpToolPresentation {
   const action =
     toolName
-      .replace(/^synara_/, "")
+      .replace(/^ramspace_/, "")
       .replace(/_+/g, " ")
       .trim() || translate("chat:anAction");
   return {
-    running: translate("chat:synaraIsHandling", { action }),
-    completed: translate("chat:synaraHandled", { action }),
-    failed: translate("chat:synaraCouldnTHandle", { action }),
-    cancelled: translate("chat:synaraStoppedHandling", { action }),
+    running: translate("chat:ramspaceIsHandling", { action }),
+    completed: translate("chat:ramspaceHandled", { action }),
+    failed: translate("chat:ramspaceCouldnTHandle", { action }),
+    cancelled: translate("chat:ramspaceStoppedHandling", { action }),
   };
 }
 
-function localizeSynaraMcpToolPresentation(
-  toolName: keyof typeof SYNARA_MCP_TOOL_PRESENTATIONS,
+function localizeRamspaceMcpToolPresentation(
+  toolName: keyof typeof RAMSPACE_MCP_TOOL_PRESENTATIONS,
   translate: typeof t,
-): SynaraMcpToolPresentation {
-  const keys = SYNARA_MCP_TOOL_PRESENTATION_KEYS[toolName];
+): RamspaceMcpToolPresentation {
+  const keys = RAMSPACE_MCP_TOOL_PRESENTATION_KEYS[toolName];
   return {
     running: translate(keys.running),
     completed: translate(keys.completed),
@@ -1189,92 +1204,94 @@ function localizeSynaraMcpToolPresentation(
   };
 }
 
-function resolveSynaraMcpToolPresentation(
+function resolveRamspaceMcpToolPresentation(
   candidates: ReadonlyArray<string | null | undefined>,
   translate: typeof t,
-): SynaraMcpToolPresentation | null {
+): RamspaceMcpToolPresentation | null {
   for (const candidate of candidates) {
     if (!candidate) {
       continue;
     }
-    const normalizedCandidate = normalizeSynaraMcpIdentifier(candidate);
-    for (const entry of SYNARA_MCP_TOOL_PRESENTATION_ENTRIES) {
+    const normalizedCandidate = normalizeRamspaceMcpIdentifier(candidate);
+    for (const entry of RAMSPACE_MCP_TOOL_PRESENTATION_ENTRIES) {
       if (
         normalizedCandidate === entry.normalizedRunning ||
         normalizedCandidate === entry.normalizedCompleted ||
         normalizedCandidate === entry.normalizedFailed
       ) {
-        return localizeSynaraMcpToolPresentation(
-          entry.toolName as keyof typeof SYNARA_MCP_TOOL_PRESENTATIONS,
+        return localizeRamspaceMcpToolPresentation(
+          entry.toolName as keyof typeof RAMSPACE_MCP_TOOL_PRESENTATIONS,
           translate,
         );
       }
     }
-    const toolName = extractSynaraMcpToolName(normalizedCandidate);
+    const toolName = extractRamspaceMcpToolName(normalizedCandidate);
     const knownPresentation = toolName
-      ? (SYNARA_MCP_TOOL_PRESENTATIONS[toolName as keyof typeof SYNARA_MCP_TOOL_PRESENTATIONS] as
-          | SynaraMcpToolSourcePresentation
-          | undefined)
+      ? (RAMSPACE_MCP_TOOL_PRESENTATIONS[
+          toolName as keyof typeof RAMSPACE_MCP_TOOL_PRESENTATIONS
+        ] as RamspaceMcpToolSourcePresentation | undefined)
       : undefined;
     if (knownPresentation) {
-      return localizeSynaraMcpToolPresentation(
-        toolName as keyof typeof SYNARA_MCP_TOOL_PRESENTATIONS,
+      return localizeRamspaceMcpToolPresentation(
+        toolName as keyof typeof RAMSPACE_MCP_TOOL_PRESENTATIONS,
         translate,
       );
     }
     // Free-text summaries (e.g. reconciler activity lines) can begin with the
-    // word "Synara" and normalize into a fake tool identifier; only
+    // word "Ramspace" and normalize into a fake tool identifier; only
     // identifier-shaped candidates may take an invented fallback presentation.
     if (/\s/.test(candidate.trim())) {
       continue;
     }
-    if (normalizedCandidate.startsWith("synara_is_handling_")) {
-      return fallbackSynaraMcpToolPresentation(
-        `synara_${normalizedCandidate.slice("synara_is_handling_".length)}`,
+    if (normalizedCandidate.startsWith("ramspace_is_handling_")) {
+      return fallbackRamspaceMcpToolPresentation(
+        `ramspace_${normalizedCandidate.slice("ramspace_is_handling_".length)}`,
         translate,
       );
     }
-    if (normalizedCandidate.startsWith("synara_handled_")) {
-      return fallbackSynaraMcpToolPresentation(
-        `synara_${normalizedCandidate.slice("synara_handled_".length)}`,
+    if (normalizedCandidate.startsWith("ramspace_handled_")) {
+      return fallbackRamspaceMcpToolPresentation(
+        `ramspace_${normalizedCandidate.slice("ramspace_handled_".length)}`,
         translate,
       );
     }
-    if (normalizedCandidate.startsWith("synara_couldn_t_handle_")) {
-      return fallbackSynaraMcpToolPresentation(
-        `synara_${normalizedCandidate.slice("synara_couldn_t_handle_".length)}`,
+    if (normalizedCandidate.startsWith("ramspace_couldn_t_handle_")) {
+      return fallbackRamspaceMcpToolPresentation(
+        `ramspace_${normalizedCandidate.slice("ramspace_couldn_t_handle_".length)}`,
         translate,
       );
     }
     if (!toolName) {
       continue;
     }
-    return fallbackSynaraMcpToolPresentation(toolName, translate);
+    return fallbackRamspaceMcpToolPresentation(toolName, translate);
   }
   return null;
 }
 
-export type SynaraMcpToolStatus = "running" | "completed" | "failed" | "cancelled";
+export type RamspaceMcpToolStatus = "running" | "completed" | "failed" | "cancelled";
 
-export interface SynaraMcpToolTitleInput {
+export interface RamspaceMcpToolTitleInput {
   readonly toolName?: string | null | undefined;
   readonly title?: string | null | undefined;
   readonly fallbackLabel?: string | null | undefined;
-  readonly status?: SynaraMcpToolStatus | undefined;
+  readonly status?: RamspaceMcpToolStatus | undefined;
 }
 
-export function isSynaraBrowserToolCall(input: SynaraMcpToolTitleInput): boolean {
-  return resolveSynaraBrowserToolName([input.toolName, input.title, input.fallbackLabel]) !== null;
+export function isRamspaceBrowserToolCall(input: RamspaceMcpToolTitleInput): boolean {
+  return (
+    resolveRamspaceBrowserToolName([input.toolName, input.title, input.fallbackLabel]) !== null
+  );
 }
 
-// Every provider exposes Synara's MCP tools differently: MCP, dynamic, and even
+// Every provider exposes Ramspace's MCP tools differently: MCP, dynamic, and even
 // file-change rows can all represent the same gateway action. Normalize by tool
 // identity instead of provider item type so transport details never reach the UI.
-export function deriveSynaraMcpToolTitle(
-  input: SynaraMcpToolTitleInput,
+export function deriveRamspaceMcpToolTitle(
+  input: RamspaceMcpToolTitleInput,
   translate: typeof t = t,
 ): string | null {
-  const presentation = resolveSynaraMcpToolPresentation(
+  const presentation = resolveRamspaceMcpToolPresentation(
     [input.toolName, input.title, input.fallbackLabel],
     translate,
   );
@@ -1284,17 +1301,17 @@ export function deriveSynaraMcpToolTitle(
   return presentation[input.status ?? "completed"];
 }
 
-export function sanitizeSynaraMcpToolPreview(
+export function sanitizeRamspaceMcpToolPreview(
   input: {
     readonly preview?: string | null | undefined;
     readonly heading: string;
-    readonly status?: SynaraMcpToolStatus | undefined;
+    readonly status?: RamspaceMcpToolStatus | undefined;
   },
   translate: typeof t = t,
 ): string | null {
   const preview = input.preview?.trim();
   if (!preview) return null;
-  const previewTitle = deriveSynaraMcpToolTitle(
+  const previewTitle = deriveRamspaceMcpToolTitle(
     { title: preview, status: input.status },
     translate,
   );

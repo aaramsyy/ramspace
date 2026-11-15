@@ -1,21 +1,21 @@
 // FILE: opengraph-image.tsx
 // Purpose: The social link preview for /@handle — the in-app ShareCard's design
 // (apps/web/src/components/profile/ShareCard.tsx) recomposed at 1200×630 with
-// next/og. Same white card, slate ink, identity header with the Synara brand on
+// next/og. Same white card, slate ink, identity header with the Ramspace brand on
 // the right, a trailing ~26-week heatmap strip, and a four-column stat row.
 // Unknown/private handles get a generic brand card, indistinguishable from one
 // another by design (like the page's 404).
 // Layer: profiles app route (Next.js file-convention OG image).
 
 import { ImageResponse } from "next/og";
-import { formatCompact, formatDays } from "@synara/profile-ui/formatting";
-import { SYNARA_LOGO_PATHS } from "@synara/profile-ui/logo";
+import { formatCompact, formatDays } from "@ramspace/profile-ui/formatting";
+import { RAMSPACE_LOGO_PATHS } from "@ramspace/profile-ui/logo";
 import { buildHeatmapCells } from "../../lib/heatmapCells";
 import { fetchPublicProfile, type PublicProfile } from "../../lib/publicProfile";
 import { handleFromParam } from "../../lib/handleParam";
 import { drawableAvatar } from "../../lib/imageAvatar";
 
-export const alt = "Synara profile";
+export const alt = "Ramspace profile";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -36,16 +36,16 @@ const GAP = 6;
 
 type Params = { params: Promise<{ handle: string }> };
 
-function SynaraMark({ edge }: { edge: number }) {
+function RamspaceMark({ edge }: { edge: number }) {
   return (
     <svg
-      viewBox="0 0 470 504"
+      viewBox="0 0 135 139"
       width={edge}
       height={Math.round(edge * (504 / 470))}
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      {SYNARA_LOGO_PATHS.map((path) => (
+      {RAMSPACE_LOGO_PATHS.map((path) => (
         <path key={path} d={path} fill="#334155" />
       ))}
     </svg>
@@ -55,8 +55,8 @@ function SynaraMark({ edge }: { edge: number }) {
 function BrandCluster() {
   return (
     <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-      <SynaraMark edge={40} />
-      <span style={{ fontSize: 34, color: "#475569", letterSpacing: "-0.02em" }}>Synara</span>
+      <RamspaceMark edge={40} />
+      <span style={{ fontSize: 34, color: "#475569", letterSpacing: "-0.02em" }}>Ramspace</span>
     </div>
   );
 }
@@ -75,8 +75,8 @@ function genericCard() {
       }}
     >
       <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
-        <SynaraMark edge={72} />
-        <span style={{ fontSize: 64, color: INK, letterSpacing: "-0.02em" }}>Synara</span>
+        <RamspaceMark edge={72} />
+        <span style={{ fontSize: 64, color: INK, letterSpacing: "-0.02em" }}>Ramspace</span>
       </div>
     </div>,
     { ...size, headers: { "Cache-Control": "private, no-store" } },

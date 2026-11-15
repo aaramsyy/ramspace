@@ -1,6 +1,6 @@
 import { createInstance } from "i18next";
-import { nativeLocalizationResources } from "@synara/shared/nativeLocalizationResources";
-import { UI_LOCALES, isUiMessageKey } from "@synara/shared/uiLocale";
+import { nativeLocalizationResources } from "@ramspace/shared/nativeLocalizationResources";
+import { UI_LOCALES, isUiMessageKey } from "@ramspace/shared/uiLocale";
 
 // The interface is English-only: native copy always reads the English catalog.
 const instance = createInstance();

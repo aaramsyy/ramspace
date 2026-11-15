@@ -9,13 +9,13 @@ import {
   PROVIDER_DISPLAY_NAMES,
   type ProviderKind,
   type StatsGetRecapResult,
-} from "@synara/contracts";
-import { formatModelDisplayName } from "@synara/shared/model";
-import { pluralize } from "@synara/shared/text";
+} from "@ramspace/contracts";
+import { formatModelDisplayName } from "@ramspace/shared/model";
+import { pluralize } from "@ramspace/shared/text";
 
 import type { ProviderUsageProgressTrackProps } from "~/lib/providerUsageDisplay";
 import { formatClockDuration } from "../../session-logic";
-import { formatCompact, formatNumber } from "@synara/profile-ui/formatting";
+import { formatCompact, formatNumber } from "@ramspace/profile-ui/formatting";
 import {
   compareWithYesterday,
   modelIconProvider,

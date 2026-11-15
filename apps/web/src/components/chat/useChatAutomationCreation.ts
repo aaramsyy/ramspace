@@ -6,13 +6,13 @@ import {
   type AutomationSchedule,
   type ModelSelection,
   type ProviderStartOptions,
-} from "@synara/contracts";
-import { automationRequiresTargetThread } from "@synara/shared/automationMode";
+} from "@ramspace/contracts";
+import { automationRequiresTargetThread } from "@ramspace/shared/automationMode";
 import {
   GENERIC_CHAT_THREAD_TITLE,
   buildPromptThreadTitleFallback,
-} from "@synara/shared/chatThreads";
-import { deriveAssociatedWorktreeMetadata } from "@synara/shared/threadWorkspace";
+} from "@ramspace/shared/chatThreads";
+import { deriveAssociatedWorktreeMetadata } from "@ramspace/shared/threadWorkspace";
 import type { QueryClient } from "@tanstack/react-query";
 import { useCallback } from "react";
 import { promoteThreadCreate } from "~/lib/threadCreatePromotion";
@@ -194,7 +194,7 @@ export function useChatAutomationCreation({
                 type: "warning",
                 title: "Thread note not added",
                 description:
-                  "The automation was created, but Synara could not add the activity note.",
+                  "The automation was created, but Ramspace could not add the activity note.",
               });
             }
           })();
@@ -214,7 +214,7 @@ export function useChatAutomationCreation({
             type: "error",
             title: "Could not create automation",
             description:
-              error instanceof Error ? error.message : "Synara could not save the automation.",
+              error instanceof Error ? error.message : "Ramspace could not save the automation.",
           });
           return false;
         })
@@ -290,7 +290,7 @@ export function useChatAutomationCreation({
           toastManager.add({
             type: "error",
             title: "Could not create chat",
-            description: "Synara could not promote this draft before saving the automation.",
+            description: "Ramspace could not promote this draft before saving the automation.",
           });
           return null;
         }
@@ -317,7 +317,7 @@ export function useChatAutomationCreation({
           description:
             error instanceof Error
               ? error.message
-              : "Synara could not promote this draft before saving the automation.",
+              : "Ramspace could not promote this draft before saving the automation.",
         });
         return null;
       }

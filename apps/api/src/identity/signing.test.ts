@@ -3,7 +3,7 @@ import { randomUUID } from "node:crypto";
 import { decodeProtectedHeader, exportJWK, generateKeyPair, SignJWT } from "jose";
 import { describe, expect, it } from "vitest";
 
-import { GRANT_JWT_TYP, HOST_PROOF_JWT_TYP } from "@synara/contracts";
+import { GRANT_JWT_TYP, HOST_PROOF_JWT_TYP } from "@ramspace/contracts";
 import { createApiSigningService, verifyBoundedJwt, verifyJwtWithEmbeddedJwk } from "./signing";
 
 const seed = (byte: number) => Buffer.alloc(32, byte).toString("base64url");
@@ -26,8 +26,8 @@ describe("API signing", () => {
     expect(new Set(service.jwks.keys.map((key) => key.kid)).size).toBe(2);
 
     const jwt = await service.sign({
-      typ: "synara-grant+jwt",
-      audience: "synara-relay",
+      typ: "ramspace-grant+jwt",
+      audience: "ramspace-relay",
       subject: "user_1",
       expiresInSeconds: 60,
       claims: { hostId: randomUUID() },
@@ -46,15 +46,15 @@ describe("API signing", () => {
       previousSeed: seed(3),
     });
     const token = await previous.sign({
-      typ: "synara-grant+jwt",
-      audience: "synara-relay",
+      typ: "ramspace-grant+jwt",
+      audience: "ramspace-relay",
       subject: "user_1",
       expiresInSeconds: 60,
     });
     await expect(
       rotated.verify(token, {
-        typ: "synara-grant+jwt",
-        audience: "synara-relay",
+        typ: "ramspace-grant+jwt",
+        audience: "ramspace-relay",
         maxAgeSeconds: 60,
       }),
     ).resolves.toMatchObject({ sub: "user_1" });
@@ -65,8 +65,8 @@ describe("API signing", () => {
     const publicKeyJwk = await exportJWK(publicKey);
     const now = Math.floor(Date.now() / 1000);
     const token = await new SignJWT({ publicKeyJwk })
-      .setProtectedHeader({ alg: "ES256", typ: "synara-device-register+jwt" })
-      .setIssuer("synara-device")
+      .setProtectedHeader({ alg: "ES256", typ: "ramspace-device-register+jwt" })
+      .setIssuer("ramspace-device")
       .setSubject("user_1")
       .setAudience("https://api.example")
       .setJti(randomUUID())
@@ -75,7 +75,7 @@ describe("API signing", () => {
       .sign(privateKey);
 
     const verified = await verifyJwtWithEmbeddedJwk(token, {
-      typ: "synara-device-register+jwt",
+      typ: "ramspace-device-register+jwt",
       audience: "https://api.example",
       maxAgeSeconds: 60,
       publicKeyJwk: publicKeyJwk as {
@@ -94,7 +94,7 @@ describe("API signing", () => {
     const now = Math.floor(Date.now() / 1000);
     const token = await new SignJWT({ keyGeneration: 1 })
       .setProtectedHeader({ alg: "EdDSA", typ: HOST_PROOF_JWT_TYP })
-      .setIssuer("synara-host:env-1")
+      .setIssuer("ramspace-host:env-1")
       .setSubject(randomUUID())
       .setAudience("https://api.example")
       .setJti(randomUUID())
@@ -120,7 +120,7 @@ describe("API signing", () => {
     const now = Math.floor(Date.now() / 1000);
     const token = await new SignJWT({ keyGeneration: 1 })
       .setProtectedHeader({ alg: "EdDSA", typ: GRANT_JWT_TYP })
-      .setIssuer("synara-host:env-1")
+      .setIssuer("ramspace-host:env-1")
       .setSubject(randomUUID())
       .setAudience("https://api.example")
       .setJti(randomUUID())
@@ -137,7 +137,7 @@ describe("API signing", () => {
       }),
     ).rejects.toThrow(`JWT typ must be ${HOST_PROOF_JWT_TYP}`);
     // Both sides of the wire read this constant; pin the literal too.
-    expect(HOST_PROOF_JWT_TYP).toBe("synara-host-proof+jwt");
+    expect(HOST_PROOF_JWT_TYP).toBe("ramspace-host-proof+jwt");
   });
 
   it("rejects a host proof forged without iat or exp claims", async () => {
@@ -149,7 +149,7 @@ describe("API signing", () => {
     const publicKeyJwk = { kty: "OKP", crv: "Ed25519", x: jwk.x as string } as const;
     const token = await new SignJWT({ keyGeneration: 1 })
       .setProtectedHeader({ alg: "EdDSA", typ: HOST_PROOF_JWT_TYP })
-      .setIssuer("synara-host:env-1")
+      .setIssuer("ramspace-host:env-1")
       .setSubject("host-1")
       .setAudience("https://api.example")
       .sign(keys.privateKey);
@@ -158,7 +158,7 @@ describe("API signing", () => {
       verifyJwtWithEmbeddedJwk(token, {
         typ: HOST_PROOF_JWT_TYP,
         audience: "https://api.example",
-        issuer: "synara-host:env-1",
+        issuer: "ramspace-host:env-1",
         algorithms: ["EdDSA"],
         maxAgeSeconds: 60,
         publicKeyJwk,
@@ -174,7 +174,7 @@ describe("API signing", () => {
     const now = Math.floor(Date.now() / 1000);
     const token = await new SignJWT({ keyGeneration: 1 })
       .setProtectedHeader({ alg: "EdDSA", typ: HOST_PROOF_JWT_TYP })
-      .setIssuer("synara-host:env-1")
+      .setIssuer("ramspace-host:env-1")
       .setSubject("host-1")
       .setAudience("https://api.example")
       .setIssuedAt(now + 0.5)
@@ -185,7 +185,7 @@ describe("API signing", () => {
       verifyJwtWithEmbeddedJwk(token, {
         typ: HOST_PROOF_JWT_TYP,
         audience: "https://api.example",
-        issuer: "synara-host:env-1",
+        issuer: "ramspace-host:env-1",
         algorithms: ["EdDSA"],
         maxAgeSeconds: 60,
         publicKeyJwk,
@@ -200,15 +200,15 @@ describe("API signing", () => {
     const a = await createApiSigningService({ issuer: "https://a.example", seed: seed(3) });
     const b = await createApiSigningService({ issuer: "https://b.example", seed: seed(3) });
     const token = await b.sign({
-      typ: "synara-grant+jwt",
-      audience: "synara-relay",
+      typ: "ramspace-grant+jwt",
+      audience: "ramspace-relay",
       subject: "user_1",
       expiresInSeconds: 60,
     });
     await expect(
       a.verify(token, {
-        typ: "synara-grant+jwt",
-        audience: "synara-relay",
+        typ: "ramspace-grant+jwt",
+        audience: "ramspace-relay",
         maxAgeSeconds: 60,
       }),
     ).rejects.toThrow();
@@ -217,8 +217,8 @@ describe("API signing", () => {
     // not make verify() trust it over A's own pinned issuer.
     await expect(
       a.verify(token, {
-        typ: "synara-grant+jwt",
-        audience: "synara-relay",
+        typ: "ramspace-grant+jwt",
+        audience: "ramspace-relay",
         maxAgeSeconds: 60,
         issuer: "https://b.example",
       } as Parameters<typeof a.verify>[1]),
@@ -237,7 +237,7 @@ describe("API signing", () => {
     const sign = (iat: number, exp: number) =>
       new SignJWT({ keyGeneration: 1 })
         .setProtectedHeader({ alg: "EdDSA", typ: HOST_PROOF_JWT_TYP })
-        .setIssuer("synara-host:env-1")
+        .setIssuer("ramspace-host:env-1")
         .setSubject("host-1")
         .setAudience("https://api.example")
         .setIssuedAt(iat)
@@ -247,7 +247,7 @@ describe("API signing", () => {
       now,
       typ: HOST_PROOF_JWT_TYP,
       audience: "https://api.example",
-      issuer: "synara-host:env-1",
+      issuer: "ramspace-host:env-1",
       algorithms: ["EdDSA"],
       maxAgeSeconds: 60,
       publicKeyJwk,

@@ -1,7 +1,7 @@
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 
-import type { AccountHostEndpoint } from "@synara/contracts";
+import type { AccountHostEndpoint } from "@ramspace/contracts";
 
 const execFileAsync = promisify(execFile);
 

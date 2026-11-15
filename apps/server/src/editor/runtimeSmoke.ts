@@ -6,13 +6,13 @@ import { join } from "node:path";
 import { EditorLanguageService } from "./languageService";
 
 export async function verifyEditorLanguageRuntime(): Promise<void> {
-  const root = await mkdtemp(join(tmpdir(), "synara-editor-runtime-smoke-"));
+  const root = await mkdtemp(join(tmpdir(), "ramspace-editor-runtime-smoke-"));
   const service = new EditorLanguageService();
   try {
     // The valid chain needs Array, Number and String declarations. The final,
     // deliberate error also proves the worker evaluated the supplied document.
     const contents =
-      'export const rounded: string = [1, 2].map(value => value.toFixed(1)).join(",");\nrounded.synaraMissingMember();\n';
+      'export const rounded: string = [1, 2].map(value => value.toFixed(1)).join(",");\nrounded.ramspaceMissingMember();\n';
     await writeFile(
       join(root, "tsconfig.json"),
       JSON.stringify({ compilerOptions: { strict: true, target: "ES2022", lib: ["ES2022"] } }),
@@ -29,7 +29,7 @@ export async function verifyEditorLanguageRuntime(): Promise<void> {
     const errors = result.diagnostics?.filter((item) => item.severity === "error");
     assert.deepEqual(
       errors?.map(({ code, start }) => [code, start]),
-      [[2339, contents.lastIndexOf("synaraMissingMember")]],
+      [[2339, contents.lastIndexOf("ramspaceMissingMember")]],
       "Packaged editor worker must report the deliberate type error with standard libraries loaded.",
     );
   } finally {

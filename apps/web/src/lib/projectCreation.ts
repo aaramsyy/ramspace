@@ -8,7 +8,7 @@ import {
   type OrchestrationShellSnapshot,
   type ProjectId,
   type SpaceId,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 
 import type { NewChatDefault } from "../appSettings";
 import { readActiveSpaceId } from "../spacesUiStore";
@@ -28,7 +28,7 @@ export const PROJECT_CREATE_EXISTING_SYNC_ERROR =
 export const PROJECT_CREATE_MULTI_FOLDER_DUPLICATE_ERROR =
   "The primary folder already belongs to a project. Make another folder primary, or remove that project first.";
 export const PROJECT_CREATE_SYNC_ERROR =
-  "The project was created, but it has not synced into Synara yet. Try again in a moment.";
+  "The project was created, but it has not synced into Ramspace yet. Try again in a moment.";
 
 function buildProjectTitleFromWorkspaceRoot(workspaceRoot: string): string {
   return workspaceRoot.split(/[/\\]/).findLast((segment) => segment.length > 0) ?? workspaceRoot;

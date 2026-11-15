@@ -17,15 +17,15 @@ describe("remote access policy", () => {
         ...remoteBase,
         host: "127.0.0.1",
         authToken: undefined,
-        publicUrl: new URL("https://synara.example.test/"),
+        publicUrl: new URL("https://ramspace.example.test/"),
       }),
-    ).toContain("without SYNARA_AUTH_TOKEN");
+    ).toContain("without RAMSPACE_AUTH_TOKEN");
   });
 
   it("rejects invalid public URLs in the shared embedded-server policy", () => {
     for (const publicUrl of [
-      new URL("http://synara.example.test/"),
-      new URL("https://synara.example.test/app"),
+      new URL("http://ramspace.example.test/"),
+      new URL("https://ramspace.example.test/app"),
     ]) {
       expect(
         remoteAccessPolicyError({
@@ -38,15 +38,15 @@ describe("remote access policy", () => {
   });
 
   it("accepts only credential-free HTTPS root origins", () => {
-    expect(normalizeHttpsPublicOrigin(new URL("https://synara.example.test/"))?.origin).toBe(
-      "https://synara.example.test",
+    expect(normalizeHttpsPublicOrigin(new URL("https://ramspace.example.test/"))?.origin).toBe(
+      "https://ramspace.example.test",
     );
     for (const value of [
-      "http://synara.example.test/",
-      "https://user:pass@synara.example.test/",
-      "https://synara.example.test/app",
-      "https://synara.example.test/?query=1",
-      "https://synara.example.test/#fragment",
+      "http://ramspace.example.test/",
+      "https://user:pass@ramspace.example.test/",
+      "https://ramspace.example.test/app",
+      "https://ramspace.example.test/?query=1",
+      "https://ramspace.example.test/#fragment",
     ]) {
       expect(normalizeHttpsPublicOrigin(new URL(value))).toBeNull();
     }

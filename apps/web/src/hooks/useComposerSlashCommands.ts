@@ -11,8 +11,8 @@ import {
   type RuntimeMode,
   type ThreadGoalStartBehavior,
   type ThreadId,
-} from "@synara/contracts";
-import { deriveAssociatedWorktreeMetadata } from "@synara/shared/threadWorkspace";
+} from "@ramspace/contracts";
+import { deriveAssociatedWorktreeMetadata } from "@ramspace/shared/threadWorkspace";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { newCommandId, newMessageId, newThreadId } from "../lib/utils";
 import { readNativeApi } from "../nativeApi";
@@ -67,7 +67,7 @@ import {
   sendSidechatPrompt,
   type SidechatCreationFlight,
 } from "../lib/sidechatCreation";
-import { isSidechatThread } from "@synara/shared/sidechatThread";
+import { isSidechatThread } from "@ramspace/shared/sidechatThread";
 import { useTranslation } from "~/i18n";
 
 type ComposerSnapshot = {
@@ -856,7 +856,7 @@ export function useComposerSlashCommands(input: {
     }
     void downloadUrlAsBlob({
       url: resolveExecutionResource({ kind: "thread-export", threadId }),
-      filename: `synara-thread-${threadId}.zip`,
+      filename: `ramspace-thread-${threadId}.zip`,
     }).catch((error: unknown) => {
       toastManager.add({
         type: "error",

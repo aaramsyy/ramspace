@@ -1,4 +1,4 @@
-import type { AuthClientSession, AuthPairingLink } from "@synara/contracts";
+import type { AuthClientSession, AuthPairingLink } from "@ramspace/contracts";
 import { DateTime, Effect, Layer } from "effect";
 import { AuthPairingLinkRepository } from "../../persistence/Services/AuthPairingLinks";
 import { AuthPairingLinkRepositoryLive } from "../../persistence/Layers/AuthPairingLinks";

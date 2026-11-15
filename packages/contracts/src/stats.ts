@@ -1,6 +1,6 @@
 // FILE: stats.ts
 // Purpose: Schemas for the local profile-stats RPCs that power the Profile page and
-// the shareable activity card. All metrics are backed by Synara's local DB
+// the shareable activity card. All metrics are backed by Ramspace's local DB
 // projections; no provider archive or cloud data is part of this contract.
 // Metrics are lifetime totals: deleting a thread or project from the app never
 // subtracts the work it already contributed to the profile.
@@ -93,7 +93,7 @@ export const ProfileActivity = Schema.Struct({
   totalThreads: NonNegativeInt,
   promptsToday: NonNegativeInt,
   // Activity heatmap counts native user prompts per local day (same source as
-  // totalPromptsSent), i.e. days the user actually used Synara.
+  // totalPromptsSent), i.e. days the user actually used Ramspace.
   heatmapMetric: Schema.Literal("prompts"),
   heatmap: Schema.Array(ProfileHeatmapCell),
 });
@@ -152,7 +152,7 @@ export type ProfileStats = typeof ProfileStats.Type;
 export const StatsGetProfileStatsResult = ProfileStats;
 export type StatsGetProfileStatsResult = typeof StatsGetProfileStatsResult.Type;
 
-// Token totals come from Synara's projected context-window updates. `available`
+// Token totals come from Ramspace's projected context-window updates. `available`
 // is false when the DB has not recorded token totals yet.
 export const ProfileTokenStats = Schema.Struct({
   available: Schema.Boolean,
@@ -262,9 +262,9 @@ export type StatsGetRecapResult = typeof StatsGetRecapResult.Type;
 // A year plus a week of slack lets the client ask for whole local days.
 export const STATS_USAGE_ANALYTICS_MAX_WINDOW_MS = 373 * 24 * 60 * 60 * 1000;
 
-// `synara`: chats run in Synara. `mac`: also Claude Code and Codex sessions run
+// `ramspace`: chats run in Ramspace. `mac`: also Claude Code and Codex sessions run
 // anywhere on this Mac, read from their own session files.
-export const StatsUsageAnalyticsScope = Schema.Literals(["synara", "mac"]);
+export const StatsUsageAnalyticsScope = Schema.Literals(["ramspace", "mac"]);
 export type StatsUsageAnalyticsScope = typeof StatsUsageAnalyticsScope.Type;
 
 export const StatsGetUsageAnalyticsInput = Schema.Struct({
@@ -357,7 +357,7 @@ export const StatsGetUsageAnalyticsResult = Schema.Struct({
   pricing: StatsUsageAnalyticsPricing,
   scope: StatsUsageAnalyticsScope,
   // In the `mac` scope, providers read from their own session files instead of
-  // Synara's records.
+  // Ramspace's records.
   sessionFileProviders: Schema.Array(ProviderKind),
   projects: Schema.Array(StatsUsageAnalyticsProject),
   // Providers with turns in the window whose adapters report no token usage.

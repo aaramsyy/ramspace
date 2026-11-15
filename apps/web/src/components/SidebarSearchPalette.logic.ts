@@ -4,7 +4,7 @@
 // Server message hits cover threads whose messages this client has not loaded.
 import type { ComponentType } from "react";
 
-import type { ProviderKind } from "@synara/contracts";
+import type { ProviderKind } from "@ramspace/contracts";
 import { basenameOfPath } from "../file-icons";
 import type { ProjectAppearance } from "../lib/projectAppearance";
 import type { WorkspaceSession } from "../lib/hosts/workspaceSessions";

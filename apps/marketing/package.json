@@ -1,5 +1,5 @@
 {
-  "name": "@synara/marketing",
+  "name": "@ramspace/marketing",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -25,7 +25,7 @@
   },
   "dependencies": {
     "@base-ui/react": "^1.6.0",
-    "@synara/shared": "workspace:*",
+    "@ramspace/shared": "workspace:*",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "fumadocs-core": "16.11.5",

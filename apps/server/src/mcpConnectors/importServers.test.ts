@@ -11,7 +11,7 @@ vi.mock("node:os", async (original) => ({
 const { importMcpServerCandidates } = await import("./importServers.ts");
 
 it("discovers user/project Claude, Codex, workspace and Desktop servers without running them", async () => {
-  home.path = await mkdtemp(Path.join(tmpdir(), "synara-import-mcp-"));
+  home.path = await mkdtemp(Path.join(tmpdir(), "ramspace-import-mcp-"));
   const workspace = Path.join(home.path, "project");
   try {
     await mkdir(workspace);

@@ -13,7 +13,7 @@ import type {
   ProviderSkillReference,
   ProviderStartOptions,
   ThreadId,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import {
   useEffect,
   useState,

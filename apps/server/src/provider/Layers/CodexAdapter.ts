@@ -32,10 +32,10 @@ import {
   ProviderItemId,
   ThreadId,
   TurnId,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { Cause, Effect, Layer, Option, Queue, Schema, ServiceMap, Stream } from "effect";
-import { sanitizeUserFacingErrorMessage } from "@synara/shared/errorMessages";
-import { isCodexUnstableFeaturesWarning } from "@synara/shared/codexStderr";
+import { sanitizeUserFacingErrorMessage } from "@ramspace/shared/errorMessages";
+import { isCodexUnstableFeaturesWarning } from "@ramspace/shared/codexStderr";
 
 import {
   ProviderAdapterProcessError,
@@ -95,7 +95,7 @@ import {
 import { extractProposedPlanMarkdown } from "../planMode.ts";
 import { isProviderEdgeBlockedText, PROVIDER_EDGE_BLOCKED_ERROR_CODE } from "../edgeBlock.ts";
 import { appendFileAttachmentsPromptBlock } from "../attachmentProjection.ts";
-import { synaraSkillsDir } from "../skillsCatalog.ts";
+import { ramspaceSkillsDir } from "../skillsCatalog.ts";
 import { makeBoundedCallbackIngress } from "../boundedCallbackIngress.ts";
 import { assignDerivedProviderRuntimeEventIds } from "../providerRuntimeEventIdentity.ts";
 import {
@@ -121,9 +121,9 @@ const CODEX_RUNTIME_WARNING_METHODS = new Set(["guardianWarning", "warning"]);
 // activity at all for this long, abort it instead of showing "Working" forever.
 // Every turn-scoped event (reasoning, tool output, deltas) resets the clock and
 // a pending question/approval pauses it, so only a wedged child trips this.
-// Generous by design; override with SYNARA_CODEX_TURN_IDLE_TIMEOUT_MS.
+// Generous by design; override with RAMSPACE_CODEX_TURN_IDLE_TIMEOUT_MS.
 const CODEX_TURN_IDLE_TIMEOUT_MS = resolveAcpTurnIdleTimeoutMs({
-  envVar: "SYNARA_CODEX_TURN_IDLE_TIMEOUT_MS",
+  envVar: "RAMSPACE_CODEX_TURN_IDLE_TIMEOUT_MS",
   defaultMs: 900_000,
 });
 const CODEX_TURN_WATCHDOG_INTERVAL_MS = 15_000;
@@ -165,7 +165,7 @@ function compactCodexNativeEventForIngress(event: ProviderEvent): {
   const compactedEvent: ProviderEvent = {
     ...event,
     payload: {
-      synaraTruncated: true,
+      ramspaceTruncated: true,
       reason: "Codex native event exceeded the callback ingress size limit",
       originalBytes,
     },
@@ -1110,7 +1110,7 @@ function withSanitizedHookRaw(
     raw: {
       source: eventRawSource(event),
       method: event.method,
-      payload: { synaraSanitized: true },
+      payload: { ramspaceSanitized: true },
     },
   };
 }
@@ -1201,7 +1201,7 @@ function mapUnmappedCodexEvent(
     raw: {
       source: eventRawSource(event),
       method: nativeType,
-      payload: { synaraSanitized: true },
+      payload: { ramspaceSanitized: true },
     },
     type: "event.unmapped",
     payload: {
@@ -2135,7 +2135,7 @@ const makeCodexAdapter = (options?: CodexAdapterLiveOptions) =>
   Effect.gen(function* () {
     const serverConfig = yield* Effect.service(ServerConfig);
     // Optional so adapter tests can run without the gateway layer; when
-    // present, every session gets the synara_* MCP tools.
+    // present, every session gets the ramspace_* MCP tools.
     const agentGatewayCredentials = Option.getOrUndefined(
       yield* Effect.serviceOption(AgentGatewayCredentials),
     );
@@ -2156,7 +2156,7 @@ const makeCodexAdapter = (options?: CodexAdapterLiveOptions) =>
         return (
           options?.makeManager?.(services) ??
           new CodexAppServerManager(services, {
-            synaraSkillsDir: synaraSkillsDir(serverConfig.baseDir),
+            ramspaceSkillsDir: ramspaceSkillsDir(serverConfig.baseDir),
             ...(agentGatewayCredentials
               ? {
                   agentGatewayMcp: {
@@ -2339,8 +2339,8 @@ const makeCodexAdapter = (options?: CodexAdapterLiveOptions) =>
           ? { additionalDirectories: input.additionalDirectories }
           : {}),
         agentGatewayCapabilityInput: captureAgentGatewayCapabilityInput(input),
-        ...(input.autoApproveSynaraTools !== undefined
-          ? { autoApproveSynaraTools: input.autoApproveSynaraTools }
+        ...(input.autoApproveRamspaceTools !== undefined
+          ? { autoApproveRamspaceTools: input.autoApproveRamspaceTools }
           : {}),
         runtimeMode: input.runtimeMode,
         ...codexModelSelectionOverrides(input.modelSelection),

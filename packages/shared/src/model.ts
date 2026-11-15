@@ -26,7 +26,7 @@ import {
   type OmpThinkingLevel,
   type ProviderKind,
   type ProviderWithDefaultModel,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { humanizeModelSlug } from "./modelName";
 
 export { humanizeModelSlug, normalizeModelDisplayName } from "./modelName";
@@ -517,7 +517,7 @@ export function getModelCapabilities(
   return EMPTY_MODEL_CAPABILITIES;
 }
 
-// Claude Code ships new models before Synara's catalog lists them. Catalog
+// Claude Code ships new models before Ramspace's catalog lists them. Catalog
 // entries always win; only an id that is newer than every catalog model of its
 // family borrows that family's newest capabilities. Older or unrecognized ids
 // keep the empty fallback so custom and legacy selections do not gain options.

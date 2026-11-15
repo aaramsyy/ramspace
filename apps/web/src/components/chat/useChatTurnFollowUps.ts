@@ -1,7 +1,7 @@
-import { MessageId, ThreadId, type ProviderKind, type TurnId } from "@synara/contracts";
-import { resolveTailUserMessageEditTarget } from "@synara/shared/conversationEdit";
-import { providerSupportsNativeTurnSteering } from "@synara/shared/providerMetadata";
-import { deriveAssociatedWorktreeMetadata } from "@synara/shared/threadWorkspace";
+import { MessageId, ThreadId, type ProviderKind, type TurnId } from "@ramspace/contracts";
+import { resolveTailUserMessageEditTarget } from "@ramspace/shared/conversationEdit";
+import { providerSupportsNativeTurnSteering } from "@ramspace/shared/providerMetadata";
+import { deriveAssociatedWorktreeMetadata } from "@ramspace/shared/threadWorkspace";
 import { useNavigate } from "@tanstack/react-router";
 import {
   COMPOSER_TURN_UNCERTAIN,

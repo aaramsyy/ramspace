@@ -70,7 +70,7 @@ These are implemented and unit-tested but have no path a user can reach:
    refused because a revoked device cannot be the surviving rotator.
    **Presentation SHIPPED 2026-08-14** (later withdrawn from the Connections
    pane while host secrets sync stays disabled). A "Sync host secrets" section ran both halves of the flow; the pairing request travels
-   as a versioned `synara-sync-v1:` base64url blob (device id + public JWK,
+   as a versioned `ramspace-sync-v1:` base64url blob (device id + public JWK,
    no secret material) so the whole exchange is two copy/pastes and needs no
    route, dependency or extra RPC. The attempt cap is enforced in
    `HostSecretsCoordinator`, not the UI — a client-side cap is not a cap —
@@ -117,7 +117,7 @@ These are implemented and unit-tested but have no path a user can reach:
 8. ~~**Revocation delivery hinges on optional config.**~~ **DONE** — a linked
    host with no relay URL now warns loudly at startup. Original finding: `relayUrl` is optional,
    but direct and ssh-forward sessions are accepted regardless — so a linked
-   host without `SYNARA_RELAY_URL` serves remote sessions that outlive every
+   host without `RAMSPACE_RELAY_URL` serves remote sessions that outlive every
    revocation kind. At minimum warn loudly; better, treat linked-but-relayless
    as misconfiguration.
 9. ~~**Relay reachability is service-level, not per-host.**~~ **DONE** — the

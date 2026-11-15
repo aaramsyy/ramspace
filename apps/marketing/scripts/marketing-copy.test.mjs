@@ -179,7 +179,7 @@ test("privacy copy states both the local workspace boundary and provider boundar
   for (const marker of [
     "Workspace state stays on your machine",
     "Provider traffic goes to the selected provider",
-    "No Synara account is required",
+    "No Ramspace account is required",
     "Analytics choices stay with each installation",
     "provider sessions receive the context",
   ]) {
@@ -201,7 +201,7 @@ test("install and metadata surfaces share the new category", () => {
   const seo = read("src/lib/seo.ts");
 
   assert.ok(install.includes("PRODUCT_CATEGORY"));
-  assert.ok(install.includes("Download Synara — Coding Agent Workspace"));
+  assert.ok(install.includes("Download Ramspace — Coding Agent Workspace"));
   assert.ok(seo.includes("PRODUCT_HERO_TITLE"));
   assert.ok(seo.includes("PRODUCT_META_DESCRIPTION"));
   assert.ok(seo.includes("Coding agent workspace and control plane"));

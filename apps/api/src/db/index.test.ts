@@ -23,7 +23,7 @@ beforeAll(async () => {
   await new Promise<void>((resolve) => silent.listen(0, "127.0.0.1", resolve));
   const address = silent.address();
   if (!address || typeof address === "string") throw new Error("no port");
-  databaseUrl = `postgres://synthetic:synthetic-secret@127.0.0.1:${address.port}/synara`;
+  databaseUrl = `postgres://synthetic:synthetic-secret@127.0.0.1:${address.port}/ramspace`;
 });
 
 afterAll(async () => {

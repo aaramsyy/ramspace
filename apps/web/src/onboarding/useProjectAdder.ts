@@ -4,7 +4,7 @@
 //          the shared create-or-recover flow.
 // Layer: Web UI hook
 
-import type { ProjectId } from "@synara/contracts";
+import type { ProjectId } from "@ramspace/contracts";
 import { useEffect, useState } from "react";
 
 import { resolveNewChatDefault, useAppSettings } from "~/appSettings";

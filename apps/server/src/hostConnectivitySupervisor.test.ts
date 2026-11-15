@@ -5,7 +5,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 
-import { AccountApiError } from "@synara/shared/account";
+import { AccountApiError } from "@ramspace/shared/account";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { writeAccountCredentials, type StoredAccountFile } from "./accountAuth";
@@ -34,7 +34,7 @@ afterEach(async () => {
 });
 
 async function tempDir(): Promise<string> {
-  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "synara-connectivity-"));
+  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "ramspace-connectivity-"));
   cleanups.push(() => fs.rm(dir, { recursive: true, force: true }));
   return dir;
 }
@@ -186,7 +186,7 @@ describe("superviseHostConnectivity", () => {
         code,
         message:
           code === "subscription_required"
-            ? "Remote access requires an active Synara Alto subscription"
+            ? "Remote access requires an active Ramspace Alto subscription"
             : "Remote test access is not enabled for this account",
       });
     });

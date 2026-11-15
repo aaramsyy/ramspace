@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { truncateToContextBudget } from "@synara/shared/projectAgent";
+import { truncateToContextBudget } from "@ramspace/shared/projectAgent";
 
 import {
   HUB_CONTEXT_PACKET_PROVENANCE_LEGEND,

@@ -1,7 +1,7 @@
-# Synara Computer Use V2 - independent exploration findings
+# Ramspace Computer Use V2 - independent exploration findings
 
 > **Created:** 2026-09-17, early morning (local), by the agent session that read
-> `/tmp/synara-cu-v2-mega-handoff-2026-09-16.md` in full and then verified/explored the ground truth.
+> `/tmp/ramspace-cu-v2-mega-handoff-2026-09-16.md` in full and then verified/explored the ground truth.
 > **Purpose:** corrections, confirmations, and newly closed questions against the handoff. The handoff
 > remains the master document; this file only records what exploration changed or proved.
 > **Scope discipline:** read-only. No repo writes, no pushes, no builds, no compiled binaries executed.
@@ -16,7 +16,7 @@ are resolved from Codex's shipping binary), one claim was corrected (Codex does 
 
 ## 1. What was verified as accurate
 
-- Clone `/Users/user/synara-computer-use`: branch `agent/computer-use-preview`, HEAD `bb7eb421c`,
+- Clone `/Users/user/ramspace-computer-use`: branch `agent/computer-use-preview`, HEAD `bb7eb421c`,
   clean tree, zero commits after `bb7eb421c`. PR #1227 is open, draft, head = `bb7eb421c`,
   updated 2026-09-16T14:41Z.
 - File sizes: `ComputerManager.ts` 3569, `CuaComputerBackend.ts` 1277, `cuaDriverHost.ts` 1064,
@@ -140,7 +140,7 @@ PSN fallback until a crash is observed. The pinned driver would need a `SLEventP
   - #3897 - preserve uncertainty in macOS text outcomes (replay/retry advice for unknown AX effects).
   - #3842 - settle the macOS AX write's read-back before calling it partial (wrong `type_text_incomplete`
     delivered counts).
-  - #2874 - window-scoped click duplicates mouse events (both SkyLight and `CGEventPostToPid`; Synara's
+  - #2874 - window-scoped click duplicates mouse events (both SkyLight and `CGEventPostToPid`; Ramspace's
     patch already posts once instead).
     Any pin bump must bump the `nativeRevision` literal in `serve.rs` as well as the manifest.
 - **Driver build toolchain.** `provision-cua-driver.mjs` asserts `rustc 1.97.1` exactly. The upstream
@@ -148,7 +148,7 @@ PSN fallback until a crash is observed. The pinned driver would need a `SLEventP
   present in the 0.24.0 and 0.28.2 trees), so rustup honors it automatically when the script runs
   rustc from that directory. No `RUSTUP_TOOLCHAIN` override is needed. (An earlier draft of this
   note claimed the file was absent; that was wrong.)
-- **Installed app is 0.8.4 without the driver**: `/Applications/Synara.app` contains no `cua-driver`
+- **Installed app is 0.8.4 without the driver**: `/Applications/Ramspace.app` contains no `cua-driver`
   (only `app.asar.unpacked/node_modules`), consistent with CU living only in the PR artifacts.
 - **Codex CU tool surface** (from the shipped plugin 1.0.1001067 `computer-use-node-repl.md`):
   `click`, `drag`, `get_app_state`, `list_apps`, `paste`, `perform_secondary_action`, `press_key`,
@@ -178,8 +178,8 @@ PSN fallback until a crash is observed. The pinned driver would need a `SLEventP
 
 ```sh
 # clone state
-cd ~/synara-computer-use && git log --oneline -1 && git status -sb && git rev-list --count origin/main..HEAD
-gh pr view 1227 --repo Emanuele-web04/synara --json headRefOid,additions,deletions,changedFiles,updatedAt
+cd ~/ramspace-computer-use && git log --oneline -1 && git status -sb && git rev-list --count origin/main..HEAD
+gh pr view 1227 --repo aaramsyy/ramspace --json headRefOid,additions,deletions,changedFiles,updatedAt
 
 # Codex constants: disassemble the daemon, then read the initializer at 0x100717e14 etc.
 xcrun -f llvm-objdump
@@ -194,7 +194,7 @@ xcrun -f llvm-objdump
 
 ## 7. Follow-up (2026-09-17): the upstream drift in detail
 
-Correction first: the new fixes/commits are on **cua** (trycua/cua, the driver repo). Synara is not the
+Correction first: the new fixes/commits are on **cua** (trycua/cua, the driver repo). Ramspace is not the
 source of any of them; `origin/main` moved 1 commit since the CU branch's merge-base
 (`72414a843 chore(orb): prepare orbs with pinned toolchain and dependencies`), and the CU branch itself
 has no new commits.
@@ -253,7 +253,7 @@ Landed in the clone as working-tree changes (not committed, not pushed):
 
 | File                                                         | Change                                                                                                                                             |
 | ------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `apps/desktop/patches/cua-driver/0001-synara-native.patch`   | regenerated against 0.28.2, 7,956 lines, sha256 `94261ed962199becebe450f226d5a80bbae88c8730cd39d1a002bde9353c749a`                                 |
+| `apps/desktop/patches/cua-driver/0001-ramspace-native.patch` | regenerated against 0.28.2, 7,956 lines, sha256 `94261ed962199becebe450f226d5a80bbae88c8730cd39d1a002bde9353c749a`                                 |
 | `packages/shared/src/cuaDriverRelease.json`                  | version `0.28.2`, source `fc188250b4ca8549b8e61f937fdb1fb560770e86`, upstream binary archive sha `386db225...`, nativeRevision `15`, new patch sha |
 | `apps/desktop/patches/cua-driver/README.md`                  | revision 15 note (inherited upstream fixes, judgment calls)                                                                                        |
 | `apps/server/src/computer/CuaComputerBackend.ts`             | 3 user-facing version strings 0.24.0 -> 0.28.2 (capability claims re-verified in the rebased driver)                                               |
@@ -264,18 +264,18 @@ Landed in the clone as working-tree changes (not committed, not pushed):
 
 Conflicts and resolutions (6 files, 12 hunks):
 
-- `input/mouse.rs` (7): adopted upstream's `MousePostMode`/`post_mode` threading, kept Synara's
+- `input/mouse.rs` (7): adopted upstream's `MousePostMode`/`post_mode` threading, kept Ramspace's
   cancellation-gate wrapping (`press`/`pause`/`post`) and made `MousePostMode::Both` mean one
   SkyLight-first submission instead of the upstream duplicate SkyLight + public post.
 - `tools/click.rs` (1): kept the `fg || force_synthetic && !chromium_mouse` recipe selection; added
   `click_at_xy_native_with_window_local` in mouse.rs so the background native recipe survives
   upstream's `WindowClickDelivery` split.
-- `tools/set_value.rs` (1): kept Synara's pid-less `set_value_blocking` (the osascript fallback
+- `tools/set_value.rs` (1): kept Ramspace's pid-less `set_value_blocking` (the osascript fallback
   removal) over upstream's retained-guard call.
-- `tools/type_text.rs` (1): kept Synara's `semantic_only` lease selection and added upstream's
+- `tools/type_text.rs` (1): kept Ramspace's `semantic_only` lease selection and added upstream's
   `RetainedElement` guard around the pointer.
-- `cursor/overlay.rs` (1): both imports (`AtomicU32` from upstream, `Arc` from Synara).
-- `cua-driver/src/serve.rs` (1): kept both match arms (`cancel_input` from Synara,
+- `cursor/overlay.rs` (1): both imports (`AtomicU32` from upstream, `Arc` from Ramspace).
+- `cua-driver/src/serve.rs` (1): kept both match arms (`cancel_input` from Ramspace,
   `mcp_envelope_stream` from upstream).
 
 Verification performed:

@@ -37,17 +37,17 @@ function createAppHistory(): RouterHistory {
   const push = history.push.bind(history);
   const replace = history.replace.bind(history);
   history.push = (href, state, options) =>
-    push(href, { ...state, synaraExecution: scope }, options);
+    push(href, { ...state, ramspaceExecution: scope }, options);
   history.replace = (href, state, options) =>
-    replace(href, { ...state, synaraExecution: scope }, options);
-  const previousScope = history.location.state.synaraExecution;
+    replace(href, { ...state, ramspaceExecution: scope }, options);
+  const previousScope = history.location.state.ramspaceExecution;
   const remembered = executionSessionStorage.getItem("last-route:v1");
   if (previousScope !== scope && remembered?.startsWith("/") && !remembered.startsWith("//"))
     history.replace(remembered);
   else history.replace(previousScope && previousScope !== scope ? "/" : history.location.href);
   history.flush();
   history.subscribe(() => {
-    if (history.location.state.synaraExecution !== scope) {
+    if (history.location.state.ramspaceExecution !== scope) {
       history.replace("/");
       return;
     }
@@ -154,6 +154,6 @@ export function useAppNavigationState(): AppNavigationState {
 
 declare module "@tanstack/react-router" {
   interface HistoryState {
-    synaraExecution?: string;
+    ramspaceExecution?: string;
   }
 }

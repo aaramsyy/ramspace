@@ -8,7 +8,7 @@ import type {
   ProjectId,
   ResolvedKeybindingsConfig,
   ThreadId,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import type { ShortcutMatchContext } from "../../keybindings";
 import type { WorkspaceSession } from "./workspaceSessions";
 import type { ActiveHost } from "./activeHost";
@@ -136,14 +136,14 @@ export interface WorkspaceFrameBinding {
 }
 
 export interface WorkspaceFrameElement extends HTMLIFrameElement {
-  synaraWorkspace?: WorkspaceFrameBinding;
+  ramspaceWorkspace?: WorkspaceFrameBinding;
 }
 
 /** A frame is an execution instance, not a selectable global execution pointer. */
 export function readWorkspaceFrame(): WorkspaceFrameBinding | undefined {
   if (typeof window === "undefined") return undefined;
   try {
-    return (window.frameElement as WorkspaceFrameElement | null)?.synaraWorkspace;
+    return (window.frameElement as WorkspaceFrameElement | null)?.ramspaceWorkspace;
   } catch {
     return undefined;
   }
@@ -158,7 +158,7 @@ export function workspaceRoute(environmentId: string, path = "/"): string {
   return `/remote?${new URLSearchParams({ environment: environmentId, path })}`;
 }
 
-export const OPEN_CREATE_PROJECT_EVENT = "synara:open-create-project";
+export const OPEN_CREATE_PROJECT_EVENT = "ramspace:open-create-project";
 export function requestCreateProjectDialog(): void {
   const frame = readWorkspaceFrame();
   if (frame) frame.controller.createProject();

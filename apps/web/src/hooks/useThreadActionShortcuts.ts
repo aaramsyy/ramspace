@@ -1,4 +1,4 @@
-import type { ResolvedKeybindingsConfig, ThreadId } from "@synara/contracts";
+import type { ResolvedKeybindingsConfig, ThreadId } from "@ramspace/contracts";
 import { useEffect } from "react";
 
 import { MODEL_PICKER_POPUP_ATTRIBUTE } from "../components/chat/ComposerModelPicker.logic";

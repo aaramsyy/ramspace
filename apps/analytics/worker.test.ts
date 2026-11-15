@@ -301,8 +301,8 @@ describe("trusted forwarder rate-limit keys", () => {
         method: "POST",
         headers: {
           "cf-connecting-ip": cloudflareIp,
-          "x-synara-client-ip": forwardedIp,
-          "x-synara-forwarder-secret": proof,
+          "x-ramspace-client-ip": forwardedIp,
+          "x-ramspace-forwarder-secret": proof,
         },
         body: "not-json\n",
       }),
@@ -421,7 +421,7 @@ describe("releaseHealth bands", () => {
 describe("dashboard API", () => {
   const authed = async (env: Env) => {
     const token = await signSession("k", Math.floor(Date.now() / 1000) + 3600);
-    return { cookie: `synara_beta_dash=${token}` };
+    return { cookie: `ramspace_beta_dash=${token}` };
   };
 
   // Records every query; canned results keep the handler paths exercised.
@@ -600,7 +600,7 @@ describe("dashboard API", () => {
       id: 9,
       event: "beta.installed",
       issueKey: null,
-      title: "New install (copied from Synara)",
+      title: "New install (copied from Ramspace)",
       appVersion: "0.9.4-beta.1",
       platform: "darwin",
     });
@@ -620,7 +620,7 @@ describe("session cookie", () => {
     const secret = "test-session-key";
     const expiresAt = Math.floor(Date.now() / 1000) + 3600;
     const token = await signSession(secret, expiresAt);
-    expect(await verifySessionCookie(`synara_beta_dash=${token}`, secret)).toBe(true);
+    expect(await verifySessionCookie(`ramspace_beta_dash=${token}`, secret)).toBe(true);
   });
 
   it("rejects expired, tampered, and wrong-key sessions", async () => {
@@ -628,10 +628,10 @@ describe("session cookie", () => {
     const future = Math.floor(Date.now() / 1000) + 3600;
     const token = await signSession(secret, future);
     const [expiry] = token.split(".");
-    expect(await verifySessionCookie(`synara_beta_dash=${expiry}.badbadbad`, secret)).toBe(false);
-    expect(await verifySessionCookie(`synara_beta_dash=${token}`, "other-key")).toBe(false);
+    expect(await verifySessionCookie(`ramspace_beta_dash=${expiry}.badbadbad`, secret)).toBe(false);
+    expect(await verifySessionCookie(`ramspace_beta_dash=${token}`, "other-key")).toBe(false);
     const expired = await signSession(secret, Math.floor(Date.now() / 1000) - 10);
-    expect(await verifySessionCookie(`synara_beta_dash=${expired}`, secret)).toBe(false);
+    expect(await verifySessionCookie(`ramspace_beta_dash=${expired}`, secret)).toBe(false);
     expect(await verifySessionCookie(null, secret)).toBe(false);
     expect(await verifySessionCookie("other=1", secret)).toBe(false);
   });
@@ -657,7 +657,7 @@ describe("password login", () => {
     for (const password of ["primary-pw", "secondary-pw"]) {
       const res = await postLogin(env, password);
       expect(res.status).toBe(200);
-      expect(res.headers.get("set-cookie")).toContain("synara_beta_dash=");
+      expect(res.headers.get("set-cookie")).toContain("ramspace_beta_dash=");
     }
   });
 
@@ -669,7 +669,7 @@ describe("password login", () => {
 });
 
 describe("verifyAccessJwt", () => {
-  const TEAM = "https://synara.cloudflareaccess.com";
+  const TEAM = "https://ramspace.cloudflareaccess.com";
   const AUD = "test-aud-tag";
 
   const b64url = (bytes: Uint8Array) =>
@@ -878,7 +878,7 @@ describe("issue key + status endpoint validation", () => {
 
   const authed = async (env: Env) => {
     const token = await signSession("k", Math.floor(Date.now() / 1000) + 3600);
-    return { cookie: `synara_beta_dash=${token}` };
+    return { cookie: `ramspace_beta_dash=${token}` };
   };
 
   it("accepts valid keys, rejects traversal, overlong, and bad prefixes", async () => {

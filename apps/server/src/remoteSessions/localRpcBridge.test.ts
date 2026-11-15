@@ -74,7 +74,7 @@ class TestRelaySocket extends EventEmitter {
 
 function stubSessions(revoked: string[] = []): SessionCredentialServiceShape {
   return {
-    cookieName: "synara-test",
+    cookieName: "ramspace-test",
     issue: () =>
       Effect.succeed({
         sessionId: "session-1",

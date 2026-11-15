@@ -6,7 +6,7 @@
 -- the generated `ADD COLUMN ... NOT NULL` without a default cannot run over
 -- populated rows anyway. This service is pre-release with no data worth
 -- keeping, so every host is dropped and re-registered by its CLI on the next
--- `synara auth`. The cascade takes host_tokens with it, which is correct — a
+-- `ramspace auth`. The cascade takes host_tokens with it, which is correct — a
 -- host token names a host row that no longer exists.
 --
 -- This is deliberately destructive. Do not copy the pattern once the service

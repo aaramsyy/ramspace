@@ -1,5 +1,5 @@
-import { ComputerId } from "@synara/contracts";
-import type { ComputerFrame } from "@synara/shared/computerFrame";
+import { ComputerId } from "@ramspace/contracts";
+import type { ComputerFrame } from "@ramspace/shared/computerFrame";
 import { useRef } from "react";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import { render } from "vitest-browser-react";

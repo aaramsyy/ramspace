@@ -373,7 +373,7 @@ describe("Polar protocol boundary", () => {
       products: [config.yearlyProductId],
       external_customer_id: userId,
       customer_email: "verified@example.com",
-      metadata: { synara_checkout_attempt_id: "attempt-created" },
+      metadata: { ramspace_checkout_attempt_id: "attempt-created" },
       customer_ip_address: "127.0.0.1",
       success_url: config.checkoutSuccessUrl,
       return_url: config.portalReturnUrl,
@@ -417,7 +417,7 @@ describe("Polar protocol boundary", () => {
     const options = {
       status: "canceled",
       granted: false,
-      subscriptionMetadata: { synara_checkout_attempt_id: attemptId },
+      subscriptionMetadata: { ramspace_checkout_attempt_id: attemptId },
     };
     upstream(options);
     const provider = createPolarBillingProvider(config);
@@ -438,7 +438,7 @@ describe("Polar protocol boundary", () => {
           id: randomUUID(),
           organization_id: config.organizationId,
           external_customer_id: userId,
-          metadata: { synara_checkout_attempt_id: "attempt-recovered" },
+          metadata: { ramspace_checkout_attempt_id: "attempt-recovered" },
           products: [{ id: config.monthlyProductId }],
           product_id: config.monthlyProductId,
           status: "open",
@@ -463,7 +463,7 @@ describe("Polar protocol boundary", () => {
       organization_id: config.organizationId,
       external_customer_id: userId,
       customer_id: null,
-      metadata: { synara_checkout_attempt_id: attemptId },
+      metadata: { ramspace_checkout_attempt_id: attemptId },
       products: [{ id: config.monthlyProductId }],
       product_id: config.monthlyProductId,
       status: "open",
@@ -473,7 +473,7 @@ describe("Polar protocol boundary", () => {
     const other = {
       ...pending,
       external_customer_id: "other_user",
-      metadata: { synara_checkout_attempt_id: randomUUID() },
+      metadata: { ramspace_checkout_attempt_id: randomUUID() },
     };
     const { fake } = upstream({ pending: [other, pending] });
     const provider = createPolarBillingProvider(config);
@@ -504,7 +504,7 @@ describe("Polar protocol boundary", () => {
       id: checkoutId,
       organization_id: config.organizationId,
       external_customer_id: userId,
-      metadata: { synara_checkout_attempt_id: attemptId },
+      metadata: { ramspace_checkout_attempt_id: attemptId },
       products: [{ id: config.monthlyProductId }],
       product_id: config.monthlyProductId,
       status: "open",
@@ -533,7 +533,7 @@ describe("Polar protocol boundary", () => {
       id: randomUUID(),
       organization_id: config.organizationId,
       external_customer_id: userId,
-      metadata: { synara_checkout_attempt_id: attemptId },
+      metadata: { ramspace_checkout_attempt_id: attemptId },
       products: [{ id: config.monthlyProductId }],
       product_id: config.monthlyProductId,
       status: "open",
@@ -544,7 +544,7 @@ describe("Polar protocol boundary", () => {
       ...checkout,
       id: randomUUID(),
       external_customer_id: "other_user",
-      metadata: { synara_checkout_attempt_id: randomUUID() },
+      metadata: { ramspace_checkout_attempt_id: randomUUID() },
     }));
     const { fake } = upstream({ pendingPages: { 1: others, 2: [checkout] }, pendingTotal: 101 });
     const provider = createPolarBillingProvider(config);

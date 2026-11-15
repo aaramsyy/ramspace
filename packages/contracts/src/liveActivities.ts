@@ -49,8 +49,8 @@ export const CompletionPreviewHostReport = Schema.Struct({
   preview: CompletionPreviewEnvelope,
 });
 export type CompletionPreviewHostReport = typeof CompletionPreviewHostReport.Type;
-export const COMPLETION_PREVIEW_PROOF_TYPE = "synara-notification-preview+jwt";
-export const COMPLETION_PREVIEW_DOMAIN = "synara-notification-preview/v1";
+export const COMPLETION_PREVIEW_PROOF_TYPE = "ramspace-notification-preview+jwt";
+export const COMPLETION_PREVIEW_DOMAIN = "ramspace-notification-preview/v1";
 export const LiveActivitySource = Schema.Struct({
   hostId: Schema.String.check(Schema.isUUID(4)),
   threadId: Id,

@@ -1,5 +1,5 @@
 import { expect, it } from "vitest";
-import { pluralize as sourcePluralize } from "@synara/shared/text";
+import { pluralize as sourcePluralize } from "@ramspace/shared/text";
 
 import { pluralize } from "./pluralize";
 

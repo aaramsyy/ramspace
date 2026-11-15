@@ -9,7 +9,7 @@
 import { ServiceMap } from "effect";
 import type { Effect, Option, Scope } from "effect";
 
-import type { OrchestrationRegenerateThreadTitleResult, ThreadId } from "@synara/contracts";
+import type { OrchestrationRegenerateThreadTitleResult, ThreadId } from "@ramspace/contracts";
 import type { ProjectionRepositoryError } from "../../persistence/Errors.ts";
 import type {
   ProviderBlockingDeliveryEvidence,
@@ -78,4 +78,4 @@ export interface ProviderCommandReactorShape {
 export class ProviderCommandReactor extends ServiceMap.Service<
   ProviderCommandReactor,
   ProviderCommandReactorShape
->()("synara/orchestration/Services/ProviderCommandReactor") {}
+>()("ramspace/orchestration/Services/ProviderCommandReactor") {}

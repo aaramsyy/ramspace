@@ -3,7 +3,7 @@ import { executionKey, readExecutionContext } from "./executionContext";
 /** A legacy origin belongs to the first verified local environment only. */
 export function claimLegacyExecutionStorage(storage: Storage): boolean {
   if (readExecutionContext()?.remote !== null) return false;
-  const ownerKey = "synara:legacy-execution-owner:v1";
+  const ownerKey = "ramspace:legacy-execution-owner:v1";
   const prefix = executionKey("");
   if (storage.getItem(ownerKey) === null) storage.setItem(ownerKey, prefix);
   return storage.getItem(ownerKey) === prefix;

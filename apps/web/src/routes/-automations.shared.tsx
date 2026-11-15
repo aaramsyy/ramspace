@@ -17,8 +17,8 @@ import {
   type ProviderKind,
   type RuntimeMode,
   type ThreadId,
-} from "@synara/contracts";
-import { automationRequiresTargetThread } from "@synara/shared/automationMode";
+} from "@ramspace/contracts";
+import { automationRequiresTargetThread } from "@ramspace/shared/automationMode";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
@@ -110,7 +110,7 @@ import { useProviderModelCatalog } from "~/hooks/useProviderModelCatalog";
 import { useProviderStatusesForLocalConfig } from "~/hooks/useProviderStatusesForLocalConfig";
 import { useStore } from "~/store";
 import { resolveThreadPickerTitle } from "./-chatThreadRoute.logic";
-import { isSidechatThread } from "@synara/shared/sidechatThread";
+import { isSidechatThread } from "@ramspace/shared/sidechatThread";
 import { getFormatLocale, useTranslation, t } from "~/i18n";
 
 export const automationQueryKey = ["automations"] as const;
@@ -1215,7 +1215,7 @@ export function AutomationDialog({
               <span>{readExecutionContext()?.execution.label ?? "This computer"}</span>
             )}
           </div>
-          <p>This computer must stay awake with Synara running. Other computers can be closed.</p>
+          <p>This computer must stay awake with Ramspace running. Other computers can be closed.</p>
           {projects.length === 0 ? (
             <p>Add a project on this computer before creating an automation.</p>
           ) : null}

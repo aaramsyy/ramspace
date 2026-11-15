@@ -4,7 +4,7 @@
 // Layer: Chat composer hook
 // Exports: useLiveThreadModelSelection
 
-import type { ModelSelection, ThreadId } from "@synara/contracts";
+import type { ModelSelection, ThreadId } from "@ramspace/contracts";
 import { useEffect, useLayoutEffect, useMemo } from "react";
 
 import { hasActiveComposerSend, subscribeComposerSends } from "~/lib/composerSendOwnership";

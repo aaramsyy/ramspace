@@ -5,7 +5,7 @@
 // Layer: Chat composer logic
 // Exports: createThreadModelSelectionSync, threadModelSelectionToPersist
 
-import type { ModelSelection, ThreadId } from "@synara/contracts";
+import type { ModelSelection, ThreadId } from "@ramspace/contracts";
 
 import { modelSelectionStorageKey } from "../../composerDraftModels";
 import { modelSelectionsEqual } from "../ChatView.logic";

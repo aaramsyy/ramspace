@@ -3,7 +3,7 @@
 // Layer: Settings hook
 // Exports: useDefaultDesktopAppIcon
 
-import { desktopFlavorFromProtocol } from "@synara/shared/betaFeatures";
+import { desktopFlavorFromProtocol } from "@ramspace/shared/betaFeatures";
 import { useMemo } from "react";
 
 import { defaultDesktopAppIconForFlavor } from "~/appSettings";

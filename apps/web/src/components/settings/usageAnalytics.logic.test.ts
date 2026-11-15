@@ -1,4 +1,4 @@
-import type { StatsGetUsageAnalyticsResult } from "@synara/contracts";
+import type { StatsGetUsageAnalyticsResult } from "@ramspace/contracts";
 import { describe, expect, it } from "vitest";
 
 import {
@@ -90,7 +90,7 @@ const result: StatsGetUsageAnalyticsResult = {
     },
   ],
   pricing: { status: "fresh", fetchedAt: null },
-  scope: "synara",
+  scope: "ramspace",
   sessionFileProviders: [],
   projects: [{ projectId: "p-app", title: "App" }],
   unavailableProviders: ["cursor"],

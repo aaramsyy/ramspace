@@ -13,7 +13,7 @@ import type {
   ProviderApprovalDecision,
   ProviderInteractionMode,
   RuntimeMode,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import {
   type ConsoleState,
   createOpencodeClient,
@@ -49,8 +49,8 @@ import {
   spawnProviderProcess,
 } from "../platform/effectProcessRuntime.ts";
 
-import { NetService, type NetServiceShape } from "@synara/shared/Net";
-import { expandHomePath } from "@synara/shared/synaraHome";
+import { NetService, type NetServiceShape } from "@ramspace/shared/Net";
+import { expandHomePath } from "@ramspace/shared/ramspaceHome";
 import { buildOpenCodeServerProcessEnv as buildOpenCodeServerLaunchEnv } from "./providerBinaryResolution.ts";
 import { buildProviderProcessEnv } from "./providerProcessEnv.ts";
 import { readOpenCodeAuthFileUtf8 } from "./openCodeAuthPaths.ts";
@@ -1771,7 +1771,7 @@ const makeOpenCodeRuntime = (options?: OpenCodeRuntimeLiveOptions) =>
   });
 
 export class OpenCodeRuntime extends ServiceMap.Service<OpenCodeRuntime, OpenCodeRuntimeShape>()(
-  "synara/provider/opencodeRuntime",
+  "ramspace/provider/opencodeRuntime",
 ) {}
 
 export const makeOpenCodeRuntimeLive = (options?: OpenCodeRuntimeLiveOptions) =>

@@ -7,9 +7,9 @@
 
 import { forwardRef, type ReactNode } from "react";
 import { ProviderIcon } from "~/components/ProviderIcon";
-import { SynaraLogo } from "@synara/profile-ui/logo";
+import { RamspaceLogo } from "@ramspace/profile-ui/logo";
 import { ActivityHeatmap, CARD_HEATMAP_INTENSITY_CLASSES } from "./ActivityHeatmap";
-import { ProfileAvatar } from "@synara/profile-ui/avatar";
+import { ProfileAvatar } from "@ramspace/profile-ui/avatar";
 import {
   formatCompact,
   formatDays,
@@ -128,8 +128,8 @@ export const ShareCard = forwardRef<HTMLDivElement, ShareCardProps>(function Sha
           </div>
         </div>
         <div className="flex shrink-0 items-center gap-2 text-slate-600">
-          <SynaraLogo className="size-6 text-slate-700" />
-          <span className="text-xl font-normal tracking-tight">Synara</span>
+          <RamspaceLogo className="size-6 text-slate-700" />
+          <span className="text-xl font-normal tracking-tight">Ramspace</span>
         </div>
       </div>
 

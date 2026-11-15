@@ -4,7 +4,7 @@ import type {
   ExecutionEnvironmentDescriptor,
   ProjectReadFileResult,
   ProjectWriteFileResult,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 
 const { api, refreshGit } = vi.hoisted(() => ({
   api: { projects: { writeFile: vi.fn(), readFile: vi.fn() } },

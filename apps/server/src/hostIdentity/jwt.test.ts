@@ -9,7 +9,7 @@ import {
   HOST_PROOF_MAX_AGE_SECONDS,
   HostLinkClaims,
   HostProofClaims,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { Schema } from "effect";
 import { decodeProtectedHeader, importJWK, jwtVerify } from "jose";
 import { afterEach, describe, expect, it } from "vitest";
@@ -20,7 +20,7 @@ import { generateAndPersistHostIdentity, hostIdentityPath } from "./store";
 const roots: string[] = [];
 
 async function identity() {
-  const root = await fs.mkdtemp(path.join(os.tmpdir(), "synara-host-jwt-"));
+  const root = await fs.mkdtemp(path.join(os.tmpdir(), "ramspace-host-jwt-"));
   roots.push(root);
   return generateAndPersistHostIdentity(hostIdentityPath(path.join(root, "secrets")));
 }
@@ -30,7 +30,7 @@ afterEach(async () => {
 });
 
 describe("host JWT minting", () => {
-  it("mints an exact bounded synara-host-link+jwt proof", async () => {
+  it("mints an exact bounded ramspace-host-link+jwt proof", async () => {
     const keypair = await identity();
     const now = 1_786_640_000;
     const token = await mintHostLinkProof({
@@ -48,7 +48,7 @@ describe("host JWT minting", () => {
     expect(decodeProtectedHeader(token)).toMatchObject({ alg: "EdDSA", typ: HOST_LINK_JWT_TYP });
     const publicKey = await importJWK(keypair.publicKeyJwk, "EdDSA");
     const { payload } = await jwtVerify(token, publicKey, {
-      issuer: "synara-host:1bf09f13-24ff-4a10-bd79-ff8be153b593",
+      issuer: "ramspace-host:1bf09f13-24ff-4a10-bd79-ff8be153b593",
       audience: "https://api.example.test",
       currentDate: new Date(now * 1_000),
     });
@@ -81,7 +81,7 @@ describe("host JWT minting", () => {
     expect(decodeProtectedHeader(token)).toMatchObject({ alg: "EdDSA", typ: HOST_PROOF_JWT_TYP });
     const publicKey = await importJWK(keypair.publicKeyJwk, "EdDSA");
     const { payload } = await jwtVerify(token, publicKey, {
-      issuer: "synara-host:1bf09f13-24ff-4a10-bd79-ff8be153b593",
+      issuer: "ramspace-host:1bf09f13-24ff-4a10-bd79-ff8be153b593",
       audience: "https://api.example.test",
       currentDate: new Date(now * 1_000),
     });

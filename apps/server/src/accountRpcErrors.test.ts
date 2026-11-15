@@ -3,8 +3,8 @@
 // client, tryPromise wrapping is unwrapped, and the sensitive path never
 // attaches a cause.
 
-import { WsRpcError } from "@synara/contracts";
-import { AccountApiError } from "@synara/shared/account";
+import { WsRpcError } from "@ramspace/contracts";
+import { AccountApiError } from "@ramspace/shared/account";
 import { Cause } from "effect";
 import { describe, expect, it } from "vitest";
 

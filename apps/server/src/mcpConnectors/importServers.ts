@@ -2,7 +2,7 @@ import { readFile, stat } from "node:fs/promises";
 import { homedir } from "node:os";
 import * as Path from "node:path";
 import { parse as parseToml } from "smol-toml";
-import type { McpConnectorConnectInput } from "@synara/contracts";
+import type { McpConnectorConnectInput } from "@ramspace/contracts";
 import { normalizeConnectorInput } from "./config.ts";
 
 const record = (value: unknown): Record<string, unknown> =>

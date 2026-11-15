@@ -12,7 +12,7 @@ async function fixture(connected = true) {
   vi.resetModules();
   const events = new EventEmitter();
   const messages: Array<Record<string, unknown>> = [];
-  const environment = { SYNARA_DESKTOP_UPDATE_IPC: "1" };
+  const environment = { RAMSPACE_DESKTOP_UPDATE_IPC: "1" };
   vi.stubGlobal("process", {
     ...process,
     platform: "darwin",
@@ -35,19 +35,19 @@ async function fixture(connected = true) {
 describe("desktop updater parent channel", () => {
   it("consumes the marker and correlates only bounded responses with its pending request", async () => {
     const f = await fixture();
-    expect(f.environment).not.toHaveProperty("SYNARA_DESKTOP_UPDATE_IPC");
+    expect(f.environment).not.toHaveProperty("RAMSPACE_DESKTOP_UPDATE_IPC");
     const result = f.bridge.requestDesktopUpdate({ action: "status", authority: "owner:session" });
     const response = {
       accepted: true,
       status: { supported: true, state: null, busy: false, message: null },
     };
     f.events.emit("message", {
-      type: "synara:desktop-update:response",
+      type: "ramspace:desktop-update:response",
       id: "unrelated",
       result: response,
     });
     f.events.emit("message", {
-      type: "synara:desktop-update:response",
+      type: "ramspace:desktop-update:response",
       id: f.messages[0]?.id,
       result: response,
     });
@@ -63,7 +63,7 @@ describe("desktop updater parent channel", () => {
 
   it("does not accept an inherited marker without a private IPC channel", async () => {
     const f = await fixture(false);
-    expect(f.environment).not.toHaveProperty("SYNARA_DESKTOP_UPDATE_IPC");
+    expect(f.environment).not.toHaveProperty("RAMSPACE_DESKTOP_UPDATE_IPC");
     expect(f.bridge.desktopUpdateBridgeAvailable()).toBe(false);
     await expect(
       f.bridge.requestDesktopUpdate({ action: "status", authority: "owner:session" }),

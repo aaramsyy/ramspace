@@ -1,6 +1,6 @@
 // FILE: perf.ts
 // Purpose: Opt-in request instrumentation for the account API. Off unless
-// SYNARA_API_PERF=1. Records, per route pattern: request count, latency
+// RAMSPACE_API_PERF=1. Records, per route pattern: request count, latency
 // (p50/p95/max), database round trips and time, pool wait, outbound calls and
 // time by provider, and bytes in/out. Adds a Server-Timing header and logs one
 // aggregate line per window.
@@ -13,7 +13,7 @@ import { AsyncLocalStorage } from "node:async_hooks";
 import type { MiddlewareHandler } from "hono";
 import type pg from "pg";
 
-export const PERF_ENV_NAME = "SYNARA_API_PERF";
+export const PERF_ENV_NAME = "RAMSPACE_API_PERF";
 
 export function isPerfEnabled(env: Record<string, string | undefined>): boolean {
   return env[PERF_ENV_NAME] === "1";
@@ -214,9 +214,9 @@ export function createPerfRecorder(now: () => number = () => performance.now()):
   };
 
   function instrumentClient(client: pg.PoolClient | pg.Client) {
-    const marked = client as unknown as { __synaraPerf?: true };
-    if (marked.__synaraPerf) return;
-    marked.__synaraPerf = true;
+    const marked = client as unknown as { __ramspacePerf?: true };
+    if (marked.__ramspacePerf) return;
+    marked.__ramspacePerf = true;
     const original = client.query.bind(client) as (...args: unknown[]) => unknown;
     (client as unknown as { query: (...args: unknown[]) => unknown }).query = (
       ...args: unknown[]

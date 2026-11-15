@@ -9,7 +9,7 @@ export function projectCatalogKey(): string | null {
   const account = remote
     ? JSON.stringify([remote.accountAuthority, remote.userId, remote.organizationId])
     : controlAccountScope();
-  return `synara:project-catalog:v1:${encodeURIComponent(JSON.stringify([context.controller.environmentId, account]))}`;
+  return `ramspace:project-catalog:v1:${encodeURIComponent(JSON.stringify([context.controller.environmentId, account]))}`;
 }
 export function readProjectCatalog(key: string): ProjectCatalog {
   const raw = localStorage.getItem(key);

@@ -1,4 +1,4 @@
-import { type ModelSelection, ThreadId } from "@synara/contracts";
+import { type ModelSelection, ThreadId } from "@ramspace/contracts";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { modelSelection } from "../../composerDraftStoreTestFixtures";

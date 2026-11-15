@@ -3,8 +3,8 @@
 // Layer: Web chat presentation component
 // Exports: TimelineWorkEntryRow, EditedFileRowContent
 
-import type { ModelSelection, TurnId } from "@synara/contracts";
-import { PROVIDER_DESCRIPTORS } from "@synara/shared/providerMetadata";
+import type { ModelSelection, TurnId } from "@ramspace/contracts";
+import { PROVIDER_DESCRIPTORS } from "@ramspace/shared/providerMetadata";
 import {
   createElement,
   memo,
@@ -74,7 +74,7 @@ import { type ExpandedImagePreview } from "./ExpandedImagePreview";
 import { LinkChipIcon } from "../LinkChipIcon";
 import { McpServerIcon } from "./McpServerIcon";
 import { normalizeCompactToolLabel } from "./MessagesTimeline.logic";
-import { SynaraLogo } from "@synara/profile-ui/logo";
+import { RamspaceLogo } from "@ramspace/profile-ui/logo";
 import { ToolCallDetailsContent } from "./ToolCallDetailsDialog";
 import { DisclosureChevron } from "../ui/DisclosureChevron";
 import { DisclosureRegion } from "../ui/DisclosureRegion";
@@ -88,14 +88,14 @@ import {
   deriveCommandReadTargets,
   deriveFriendlyCommandTarget,
   deriveLiteralCommand,
-  deriveSynaraMcpToolTitle,
+  deriveRamspaceMcpToolTitle,
   extractWebFetchUrl,
   isGenericToolTitle,
-  isSynaraBrowserToolCall,
+  isRamspaceBrowserToolCall,
   normalizeToolTextForComparison,
   resolveCommandVisualKind,
-  sanitizeSynaraMcpToolPreview,
-  type SynaraMcpToolStatus,
+  sanitizeRamspaceMcpToolPreview,
+  type RamspaceMcpToolStatus,
 } from "../../lib/toolCallLabel";
 import {
   formatLiveActivityMeta,
@@ -122,8 +122,8 @@ type TimelineWorkEntry = WorkLogEntry;
 
 const AgentTaskIcon: LucideIcon = (props) => <BotIcon {...props} />;
 
-const SynaraToolIcon: LucideIcon = ({ className, ...props }) => (
-  <SynaraLogo {...props} className={cn("text-current", className)} />
+const RamspaceToolIcon: LucideIcon = ({ className, ...props }) => (
+  <RamspaceLogo {...props} className={cn("text-current", className)} />
 );
 
 function workToneIcon(tone: TimelineWorkEntry["tone"]): {
@@ -342,8 +342,8 @@ export function renderWorkEntryIcon(Icon: LucideIcon, className: string): ReactE
 export function workEntryLeftIcon(workEntry: TimelineWorkEntry): LucideIcon {
   if (isComputerWorkEntry(workEntry)) return ComputerUseIcon;
   if (isGitHubMcpToolCall(workEntry)) return GitHubIcon;
-  if (isSynaraBrowserWorkEntry(workEntry)) return GlobeIcon;
-  if (isSynaraToolCall(workEntry)) return SynaraToolIcon;
+  if (isRamspaceBrowserWorkEntry(workEntry)) return GlobeIcon;
+  if (isRamspaceToolCall(workEntry)) return RamspaceToolIcon;
   if (workEntry.itemType === "mcp_tool_call") return McpIcon;
   return workEntryIcon(workEntry);
 }
@@ -360,12 +360,12 @@ function isGitHubMcpToolCall(workEntry: TimelineWorkEntry): boolean {
   return Boolean(toolName?.startsWith("mcp__codex_apps__github"));
 }
 
-// Synara's own agent-gateway tools (synara_list_threads, synara_create_thread,
-// ...) get the Synara mark instead of the generic MCP glyph. Providers report
-// the call differently: Claude prefixes the MCP server (mcp__synara__*), ACP
-// agents surface the bare tool name (synara_*), and Codex reports server/tool
-// pairs that the label humanizer renders as "Synara: ...".
-function toolWorkEntryStatus(workEntry: TimelineWorkEntry): SynaraMcpToolStatus {
+// Ramspace's own agent-gateway tools (ramspace_list_threads, ramspace_create_thread,
+// ...) get the Ramspace mark instead of the generic MCP glyph. Providers report
+// the call differently: Claude prefixes the MCP server (mcp__ramspace__*), ACP
+// agents surface the bare tool name (ramspace_*), and Codex reports server/tool
+// pairs that the label humanizer renders as "Ramspace: ...".
+function toolWorkEntryStatus(workEntry: TimelineWorkEntry): RamspaceMcpToolStatus {
   if (workEntry.toolStatus) return workEntry.toolStatus;
   if (workEntry.liveActivity && isLiveActivityInProgress(workEntry.liveActivity)) return "running";
   return workEntry.activityKind !== undefined && workEntry.activityKind !== "tool.completed"
@@ -373,8 +373,8 @@ function toolWorkEntryStatus(workEntry: TimelineWorkEntry): SynaraMcpToolStatus 
     : "completed";
 }
 
-function isSynaraBrowserWorkEntry(workEntry: TimelineWorkEntry): boolean {
-  return isSynaraBrowserToolCall({
+function isRamspaceBrowserWorkEntry(workEntry: TimelineWorkEntry): boolean {
+  return isRamspaceBrowserToolCall({
     toolName: workEntry.toolName,
     title: workEntry.toolTitle,
     fallbackLabel: workEntry.label,
@@ -382,9 +382,9 @@ function isSynaraBrowserWorkEntry(workEntry: TimelineWorkEntry): boolean {
   });
 }
 
-function isSynaraToolCall(workEntry: TimelineWorkEntry): boolean {
+function isRamspaceToolCall(workEntry: TimelineWorkEntry): boolean {
   return (
-    deriveSynaraMcpToolTitle({
+    deriveRamspaceMcpToolTitle({
       toolName: workEntry.toolName,
       title: workEntry.toolTitle,
       fallbackLabel: workEntry.label,
@@ -405,7 +405,7 @@ function toolWorkEntryHeading(workEntry: TimelineWorkEntry, translate: typeof t)
   if (workEntry.displayToolTitle) return capitalizePhrase(workEntry.displayToolTitle);
   if (computerToolName(workEntry.toolName)) {
     // Work-log projection already resolves the action and target. The generic
-    // MCP presentation would replace that with "Synara clicked the desktop".
+    // MCP presentation would replace that with "Ramspace clicked the desktop".
     const title = normalizeCompactToolLabel(workEntry.toolTitle ?? "");
     if (title && !isGenericToolTitle(title) && !computerToolName(title))
       return capitalizePhrase(title);
@@ -418,7 +418,7 @@ function toolWorkEntryHeading(workEntry: TimelineWorkEntry, translate: typeof t)
   if (workEntry.activityKind === "turn.tasks.updated" || workEntry.monitorNotification) {
     return capitalizePhrase(workEntry.label);
   }
-  const synaraTitle = deriveSynaraMcpToolTitle(
+  const ramspaceTitle = deriveRamspaceMcpToolTitle(
     {
       toolName: workEntry.toolName,
       title: workEntry.toolTitle,
@@ -427,8 +427,8 @@ function toolWorkEntryHeading(workEntry: TimelineWorkEntry, translate: typeof t)
     },
     translate,
   );
-  if (synaraTitle) {
-    return synaraTitle;
+  if (ramspaceTitle) {
+    return ramspaceTitle;
   }
   if (!workEntry.toolTitle) {
     return capitalizePhrase(normalizeCompactToolLabel(workEntry.label));
@@ -528,8 +528,8 @@ export function workEntryDisplayParts(
   const rawPreview = workEntryPreview(workEntry);
   const preview =
     !isGitHubMcpToolCall(workEntry) &&
-    (isSynaraBrowserWorkEntry(workEntry) || isSynaraToolCall(workEntry))
-      ? sanitizeSynaraMcpToolPreview(
+    (isRamspaceBrowserWorkEntry(workEntry) || isRamspaceToolCall(workEntry))
+      ? sanitizeRamspaceMcpToolPreview(
           {
             preview: rawPreview,
             heading,
@@ -673,14 +673,14 @@ export const TimelineWorkEntryRow = memo(function TimelineWorkEntryRow(props: {
   // deliberately skip it and reuse only the shared tool-label typography.
   const isGitHubToolRow = isGitHubMcpToolCall(workEntry);
   const isComputerToolRow = isComputerWorkEntry(workEntry);
-  const isSynaraBrowserToolRow = !isGitHubToolRow && isSynaraBrowserWorkEntry(workEntry);
-  const isSynaraToolRow =
-    !isGitHubToolRow && !isSynaraBrowserToolRow && isSynaraToolCall(workEntry);
+  const isRamspaceBrowserToolRow = !isGitHubToolRow && isRamspaceBrowserWorkEntry(workEntry);
+  const isRamspaceToolRow =
+    !isGitHubToolRow && !isRamspaceBrowserToolRow && isRamspaceToolCall(workEntry);
   const isMcpToolRow =
     workEntry.itemType === "mcp_tool_call" &&
     !isGitHubToolRow &&
-    !isSynaraBrowserToolRow &&
-    !isSynaraToolRow;
+    !isRamspaceBrowserToolRow &&
+    !isRamspaceToolRow;
   const LeftIcon = workEntryLeftIcon(workEntry);
   const leftIconKind = webFetchUrl
     ? "web-fetch"
@@ -688,10 +688,10 @@ export const TimelineWorkEntryRow = memo(function TimelineWorkEntryRow(props: {
       ? "computer"
       : isGitHubToolRow || EntryIcon === GitHubIcon
         ? "github"
-        : isSynaraBrowserToolRow
+        : isRamspaceBrowserToolRow
           ? "browser"
-          : isSynaraToolRow
-            ? "synara"
+          : isRamspaceToolRow
+            ? "ramspace"
             : isMcpToolRow
               ? "mcp"
               : undefined;

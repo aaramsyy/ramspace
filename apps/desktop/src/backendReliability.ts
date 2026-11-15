@@ -1,9 +1,9 @@
 import type { ChildProcess } from "node:child_process";
 import { Schema } from "effect";
-import { ReliabilityInput } from "@synara/contracts";
+import { ReliabilityInput } from "@ramspace/contracts";
 
 const Message = Schema.Struct({
-  type: Schema.Literal("synara:reliability"),
+  type: Schema.Literal("ramspace:reliability"),
   issue: ReliabilityInput,
 }).annotate({ parseOptions: { onExcessProperty: "error" } });
 

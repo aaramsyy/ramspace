@@ -7,7 +7,7 @@ import {
   remoteResourcePresentationUrl,
   remoteResourceRoute,
   REMOTE_RESOURCE_PATH,
-} from "@synara/shared/remoteResources";
+} from "@ramspace/shared/remoteResources";
 import { JwtReplayCache, verifySessionCredential } from "../hostAuth";
 import type { RemoteConnectionGatewayOptions } from "../remoteSessions/gateway";
 import type { SessionCredentialServiceShape } from "../auth/Services/SessionCredentialService";
@@ -53,7 +53,7 @@ export function createRemoteResourceGateway(
             role: "client",
             accessOrigin: "remote",
             method: "bearer-session-token",
-            client: { label: "Synara remote resource", deviceType: "unknown" },
+            client: { label: "Ramspace remote resource", deviceType: "unknown" },
           }),
         );
       response.once("close", cleanup);

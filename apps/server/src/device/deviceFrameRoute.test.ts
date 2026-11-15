@@ -6,8 +6,8 @@ import { HttpRouter, HttpServerResponse } from "effect/unstable/http";
 import { describe, expect, it, vi } from "vitest";
 import WebSocket from "ws";
 
-import { DEVICE_FRAME_RESYNC_MESSAGE, DEVICE_FRAME_WS_PATH } from "@synara/shared/deviceFrame";
-import type { FrameSink } from "@synara/shared/frameTransport";
+import { DEVICE_FRAME_RESYNC_MESSAGE, DEVICE_FRAME_WS_PATH } from "@ramspace/shared/deviceFrame";
+import type { FrameSink } from "@ramspace/shared/frameTransport";
 
 import { makeBoundedNodeHttpServer } from "../nodeHttpServer";
 import { authErrorResponse } from "../auth/effectHttp";
@@ -116,7 +116,7 @@ describe("device frame connection lifetime", () => {
               Layer.provide(SqlitePersistenceMemory),
               Layer.provide(ServerSecretStoreLive),
               Layer.provide(
-                ServerConfig.layerTest(process.cwd(), { prefix: "synara-device-frame-auth-" }),
+                ServerConfig.layerTest(process.cwd(), { prefix: "ramspace-device-frame-auth-" }),
               ),
               Layer.provide(NodeServices.layer),
             ),

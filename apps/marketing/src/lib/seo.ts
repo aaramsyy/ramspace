@@ -17,17 +17,17 @@ import {
 import { releaseDateIso } from "@/lib/releaseDates";
 
 /** Canonical production origin; keep aligned with Vercel's primary domain. */
-export const SITE_URL = "https://www.trysynara.com";
+export const SITE_URL = "https://www.tryramspace.com";
 
 export const SITE_NAME = PRODUCT_NAME;
 
-export const CREATOR_NAME = "Emanuele Di Pietro";
-export const CREATOR_URL = "https://emanueledipietro.com";
-export const GITHUB_REPO_URL = "https://github.com/Emanuele-web04/synara";
+export const CREATOR_NAME = "aaramsyy";
+export const CREATOR_URL = "https://github.com/aaramsyy";
+export const GITHUB_REPO_URL = "https://github.com/aaramsyy/ramspace";
 export const GITHUB_RELEASES_URL = `${GITHUB_REPO_URL}/releases`;
-export const GITHUB_SPONSORS_URL = "https://github.com/sponsors/Emanuele-web04";
-export const X_PROFILE_URL = "https://x.com/emanueledpt";
-export const YOUTUBE_URL = "https://youtube.com/@emanueledpt";
+export const GITHUB_SPONSORS_URL = "https://github.com/sponsors/aaramsyy";
+export const X_PROFILE_URL = "https://github.com/aaramsyy";
+export const YOUTUBE_URL = "https://github.com/aaramsyy";
 
 /**
  * Search/share title — brand first, then the high-intent provider keywords.
@@ -40,7 +40,7 @@ export const SITE_TITLE = `${SITE_NAME} — AI Coding Workspace for Claude Code,
 export const SITE_DESCRIPTION = PRODUCT_META_DESCRIPTION;
 
 export const SEO_KEYWORDS = [
-  "Synara",
+  "Ramspace",
   "AI coding agents",
   "coding agent workspace",
   "local-first coding workspace",
@@ -71,10 +71,10 @@ export const OG_IMAGE = {
 };
 
 export const SITE_IMAGES = {
-  icon: "/synara-icon.png",
+  icon: "/ramspace-icon.png",
   og: "/og.png",
-  lightScreenshot: "/synara-ui-light.png",
-  darkScreenshot: "/synara-ui-dark.png",
+  lightScreenshot: "/ramspace-ui-light.png",
+  darkScreenshot: "/ramspace-ui-dark.png",
 };
 
 /** Builds an absolute production URL for metadata, sitemaps, and structured data. */
@@ -185,7 +185,7 @@ export const INSTALL_JSONLD = {
   "@context": "https://schema.org",
   "@type": "WebPage",
   "@id": `${SITE_URL}/install#webpage`,
-  name: "Download Synara",
+  name: "Download Ramspace",
   url: absoluteUrl("/install"),
   description: `Download ${SITE_NAME} for macOS, Windows, and Linux — ${PRODUCT_CATEGORY}`,
   isPartOf: { "@id": `${SITE_URL}/#website` },
@@ -203,10 +203,10 @@ export function changelogCollectionJsonLd(entries: readonly ChangelogEntry[]) {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
     "@id": `${SITE_URL}/changelog#collection`,
-    name: "Synara changelog",
+    name: "Ramspace changelog",
     url: absoluteUrl("/changelog"),
     description:
-      "Release notes for Synara, including provider support, coding-agent workflows, reliability, performance, and installer updates.",
+      "Release notes for Ramspace, including provider support, coding-agent workflows, reliability, performance, and installer updates.",
     isPartOf: { "@id": `${SITE_URL}/#website` },
     about: { "@id": `${SITE_URL}/#app` },
     mainEntity: {
@@ -214,7 +214,7 @@ export function changelogCollectionJsonLd(entries: readonly ChangelogEntry[]) {
       itemListElement: entries.map((entry, index) => ({
         "@type": "ListItem",
         position: index + 1,
-        name: `Synara ${entry.version}`,
+        name: `Ramspace ${entry.version}`,
         url: absoluteUrl(`/changelog/v${entry.version}`),
       })),
     },
@@ -228,10 +228,10 @@ export function releaseJsonLd(entry: ChangelogEntry) {
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "@id": `${SITE_URL}/changelog/v${entry.version}#release-notes`,
-    headline: `Synara ${entry.version} release notes`,
-    name: `Synara ${entry.version} changelog`,
+    headline: `Ramspace ${entry.version} release notes`,
+    name: `Ramspace ${entry.version} changelog`,
     url: absoluteUrl(`/changelog/v${entry.version}`),
-    description: `What's new in Synara ${entry.version}: ${highlights}.`,
+    description: `What's new in Ramspace ${entry.version}: ${highlights}.`,
     image: absoluteUrl(entry.heroImage ?? SITE_IMAGES.og),
     datePublished: date,
     dateModified: date,
@@ -252,16 +252,16 @@ export function sponsorJsonLd(
     "@context": "https://schema.org",
     "@type": "WebPage",
     "@id": `${SITE_URL}/sponsor#webpage`,
-    name: "Sponsor Synara",
+    name: "Sponsor Ramspace",
     url: absoluteUrl("/sponsor"),
     description:
-      "Sponsor Synara through GitHub Sponsors. Monthly tiers from $5 to $499 plus custom one-time amounts fund development, releases, and docs for the free, open-source desktop app.",
+      "Sponsor Ramspace through GitHub Sponsors. Monthly tiers from $5 to $499 plus custom one-time amounts fund development, releases, and docs for the free, open-source desktop app.",
     isPartOf: { "@id": `${SITE_URL}/#website` },
     about: { "@id": `${SITE_URL}/#app` },
     primaryImageOfPage: absoluteUrl(SITE_IMAGES.og),
     mainEntity: {
       "@type": "OfferCatalog",
-      name: "Synara sponsorship tiers",
+      name: "Ramspace sponsorship tiers",
       itemListElement: tiers.map((tier) => ({
         "@type": "Offer",
         name: tier.label,
@@ -295,16 +295,16 @@ export function sponsorsPageJsonLd(sponsors: ReadonlyArray<{ name: string; url: 
     "@context": "https://schema.org",
     "@type": "WebPage",
     "@id": `${SITE_URL}/sponsors#webpage`,
-    name: "Synara sponsors",
+    name: "Ramspace sponsors",
     url: absoluteUrl("/sponsors"),
     description:
-      "The people and companies funding Synara, the free and open-source command center for agentic development.",
+      "The people and companies funding Ramspace, the free and open-source command center for agentic development.",
     isPartOf: { "@id": `${SITE_URL}/#website` },
     about: { "@id": `${SITE_URL}/#app` },
     primaryImageOfPage: absoluteUrl(SITE_IMAGES.og),
     mainEntity: {
       "@type": "ItemList",
-      name: "Synara sponsors",
+      name: "Ramspace sponsors",
       numberOfItems: sponsors.length,
       itemListElement: sponsors.map((sponsor, index) => ({
         "@type": "ListItem",
@@ -344,7 +344,7 @@ export function pageMetadata({
       card: "summary_large_image",
       title,
       description,
-      creator: "@emanueledpt",
+      creator: "@aaramsyy",
       images: [OG_IMAGE],
     },
   };

@@ -1,7 +1,7 @@
 import "../../../index.css";
 
-import { type ServerProviderStatus } from "@synara/contracts";
-import { PROVIDER_DESCRIPTORS } from "@synara/shared/providerMetadata";
+import { type ServerProviderStatus } from "@ramspace/contracts";
+import { PROVIDER_DESCRIPTORS } from "@ramspace/shared/providerMetadata";
 import { page } from "vitest/browser";
 import { beforeEach, expect, it, vi } from "vitest";
 import { render } from "vitest-browser-react";
@@ -100,7 +100,7 @@ it("saves provider CPU priority opt-out and exposes reset to the default", async
   const result = await render(
     <ProvidersSettingsPanel {...props} updateSettings={updateSettings} />,
   );
-  const control = page.getByRole("switch", { name: "Keep Synara responsive" });
+  const control = page.getByRole("switch", { name: "Keep Ramspace responsive" });
   await expect.element(control).toBeChecked();
   await control.click();
   expect(updateSettings).toHaveBeenCalledWith({ lowerProviderProcessPriority: false });
@@ -111,7 +111,7 @@ it("saves provider CPU priority opt-out and exposes reset to the default", async
       updateSettings={updateSettings}
     />,
   );
-  await page.getByRole("button", { name: "Reset Keep Synara responsive to default" }).click();
+  await page.getByRole("button", { name: "Reset Keep Ramspace responsive to default" }).click();
   expect(updateSettings).toHaveBeenLastCalledWith({ lowerProviderProcessPriority: true });
   expect(control.element().closest('[data-slot="settings-row"]')?.textContent).toContain(
     "Restart existing sessions",

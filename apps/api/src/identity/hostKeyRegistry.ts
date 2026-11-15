@@ -8,7 +8,7 @@ import {
   HostProofClaims,
   LinkedAccountHost,
   type LinkStartRequest,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { and, eq, gt, isNotNull, isNull, lt, ne, or, sql } from "drizzle-orm";
 import type { NodePgDatabase } from "drizzle-orm/node-postgres";
 import { Schema } from "effect";
@@ -182,7 +182,7 @@ export function createHostKeyRegistry(
       await verifyJwtWithEmbeddedJwk(proof, {
         typ: HOST_PROOF_JWT_TYP,
         audience: apiIssuer,
-        issuer: `synara-host:${row.environmentId}`,
+        issuer: `ramspace-host:${row.environmentId}`,
         algorithms: ["EdDSA"],
         maxAgeSeconds: HOST_PROOF_MAX_AGE_SECONDS,
         publicKeyJwk: row.publicKeyJwk,
@@ -390,7 +390,7 @@ export function createHostKeyRegistry(
           await verifyJwtWithEmbeddedJwk(request.proof, {
             typ: HOST_LINK_JWT_TYP,
             audience: apiIssuer,
-            issuer: `synara-host:${claims.sub}`,
+            issuer: `ramspace-host:${claims.sub}`,
             algorithms: ["EdDSA"],
             maxAgeSeconds: HOST_LINK_MAX_AGE_SECONDS,
             publicKeyJwk: claims.publicKeyJwk,

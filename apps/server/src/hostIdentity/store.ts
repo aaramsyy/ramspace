@@ -7,7 +7,10 @@ import {
 import fs from "node:fs/promises";
 import path from "node:path";
 
-import { HostPublicKeyJwk, type HostPublicKeyJwk as HostPublicKeyJwkType } from "@synara/contracts";
+import {
+  HostPublicKeyJwk,
+  type HostPublicKeyJwk as HostPublicKeyJwkType,
+} from "@ramspace/contracts";
 import { Effect, Schema } from "effect";
 
 import { writeFileStringAtomically } from "../atomicWrite";

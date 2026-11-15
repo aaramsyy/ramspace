@@ -20,7 +20,7 @@ work and are outside this change.
    UI and Worker configuration. Reuse these implementations; no new database
    or authentication system. Record defects and external dependencies.
 2. **Enable a controlled application trial.** Keep Stable disabled via the
-   shared Beta feature list. Require `SYNARA_ACCOUNT_PROFILE_SYNC=1` on the
+   shared Beta feature list. Require `RAMSPACE_ACCOUNT_PROFILE_SYNC=1` on the
    server, advertise availability in its execution descriptor, and use that
    capability in the existing UI. Gate reporter startup and mutations using
    the same policy. Existing credentials alone must not activate reporting.
@@ -67,10 +67,10 @@ work and are outside this change.
 
 ## Dependencies, delivery and rollback
 
-The Synara account (`9f9caeb268766deda99bc580c775d50c`) now hosts
-`synara-account-api-trial` and `synara-profiles-trial` on workers.dev.
+The Ramspace account (`9f9caeb268766deda99bc580c775d50c`) now hosts
+`ramspace-account-api-trial` and `ramspace-profiles-trial` on workers.dev.
 The API runs in Cloudflare Containers; PostgreSQL remains in the existing
-Supabase Synara project (`ubdkfrnaqfbdymgipddq`) alongside unchanged advertising
+Supabase Ramspace project (`ubdkfrnaqfbdymgipddq`) alongside unchanged advertising
 tables. WorkOS Staging provides identity. Railway is excluded.
 
 The bootstrap, dedicated database role, verified TLS connection, runtime

@@ -39,8 +39,8 @@ function setup() {
   const getByName = vi.fn(() => Object.assign(stub, { fetch }));
   const namespace = {} as Cloudflare.Env["ACCOUNT_API"];
   const env = {
-    ACCOUNT_BASE_URL: "https://synara-account-api-trial.synara-orgs.workers.dev",
-    API_PUBLIC_URL: "https://synara-account-api-trial.synara-orgs.workers.dev/api/v1",
+    ACCOUNT_BASE_URL: "https://ramspace-account-api-trial.ramspace-orgs.workers.dev",
+    API_PUBLIC_URL: "https://ramspace-account-api-trial.ramspace-orgs.workers.dev/api/v1",
     DATABASE_URL: "postgres://test@localhost/test",
     WORKOS_API_KEY: "test",
     WORKOS_CLIENT_ID: "test",
@@ -144,16 +144,16 @@ describe("Cloudflare account API ingress", () => {
         new Request("https://api.example/api/v1/me", {
           headers: {
             "cf-connecting-ip": "2a06:98c0:3600::103",
-            "x-synara-client-ip": ip,
-            "x-synara-migration-secret": proof,
+            "x-ramspace-client-ip": ip,
+            "x-ramspace-migration-secret": proof,
           },
         }),
         { ...env, MIGRATION_PROXY_SECRET: "relay-key" },
       );
       const forwarded = fetch.mock.calls[0]![0];
       expect(forwarded.headers.get("x-forwarded-for")).toBe(expected);
-      expect(forwarded.headers.has("x-synara-migration-secret")).toBe(false);
-      expect(forwarded.headers.has("x-synara-client-ip")).toBe(false);
+      expect(forwarded.headers.has("x-ramspace-migration-secret")).toBe(false);
+      expect(forwarded.headers.has("x-ramspace-client-ip")).toBe(false);
     },
   );
 });
@@ -587,7 +587,7 @@ describe("Cloudflare account API container configuration", () => {
       ["a 503", () => Response.json({ error: "internal_error" }, { status: 503 })],
       ["a 429", () => Response.json({ error: "rate_limited" }, { status: 429 })],
       ["a raw transport error", () => new Response("Failed to start container", { status: 500 })],
-      ["a non-JSON 200", () => new Response("Synara account API", { status: 200 })],
+      ["a non-JSON 200", () => new Response("Ramspace account API", { status: 200 })],
     ])("never caches %s", async (_name, answer) => {
       const { env } = setup();
       const state = instanceRuntime();

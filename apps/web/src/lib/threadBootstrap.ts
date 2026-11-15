@@ -14,8 +14,8 @@ import {
   type RuntimeMode,
   type ThreadEnvironmentMode,
   type ThreadId,
-} from "@synara/contracts";
-import { resolveThreadEnvironmentMode } from "@synara/shared/threadEnvironment";
+} from "@ramspace/contracts";
+import { resolveThreadEnvironmentMode } from "@ramspace/shared/threadEnvironment";
 import type { NewChatDefault } from "../appSettings";
 import {
   type ComposerThreadDraftState,

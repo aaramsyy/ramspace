@@ -1,4 +1,4 @@
-import { ProjectId, type ThreadId } from "@synara/contracts";
+import { ProjectId, type ThreadId } from "@ramspace/contracts";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useComposerDraftStore } from "../composerDraftStore";

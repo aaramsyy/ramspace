@@ -1,5 +1,5 @@
 // FILE: SignInDialog.tsx
-// Purpose: "Sign in to Synara" modal — provider SSO through the
+// Purpose: "Sign in to Ramspace" modal — provider SSO through the
 // system browser (authorization code + PKCE with a loopback redirect,
 // server-brokered, deep-linked to Google/Apple/GitHub) and in-app email OTP:
 // the user enters their email, receives a 6-digit code, and enters it in the
@@ -9,7 +9,7 @@
 // first-run onboarding.
 // Layer: Web account feature.
 
-import type { AccountSsoProvider, AccountStatus } from "@synara/contracts";
+import type { AccountSsoProvider, AccountStatus } from "@ramspace/contracts";
 import { useEffect, useId, useRef, useState, type ComponentType } from "react";
 import { SiApple, SiGithub, SiGoogle } from "react-icons/si";
 import { Button } from "~/components/ui/button";
@@ -17,7 +17,7 @@ import { Dialog, DialogPopup, DialogTitle } from "~/components/ui/dialog";
 import { InputGroup, InputGroupAddon, InputGroupInput } from "~/components/ui/input-group";
 import { Kbd } from "~/components/ui/kbd";
 import { Spinner } from "~/components/ui/spinner";
-import { SynaraLogo } from "@synara/profile-ui/logo";
+import { RamspaceLogo } from "@ramspace/profile-ui/logo";
 import { useAccount } from "~/hooks/useAccount";
 import { useNowMs } from "~/hooks/useNowMs";
 import {
@@ -332,7 +332,7 @@ export function SignInPanel({ onSignedIn, onDismiss, variant = "dialog" }: SignI
       <div className="flex flex-col gap-3">
         <div className="flex items-center gap-2.5 pb-1">
           <img src="/app-icons/dark.png" alt="" className="size-7 shrink-0" draggable={false} />
-          <SignInPanelTitle variant={variant}>Sign in to Synara</SignInPanelTitle>
+          <SignInPanelTitle variant={variant}>Sign in to Ramspace</SignInPanelTitle>
         </div>
         {ssoWaiting ?? (
           <>
@@ -414,7 +414,7 @@ export function SignInPanel({ onSignedIn, onDismiss, variant = "dialog" }: SignI
       <SignInOrbit />
       <div className="flex flex-col gap-4 px-6 pb-5">
         <div className="flex flex-col items-center gap-1.5 pb-1 text-center">
-          <SignInPanelTitle variant={variant}>Sign in to Synara</SignInPanelTitle>
+          <SignInPanelTitle variant={variant}>Sign in to Ramspace</SignInPanelTitle>
           <p className="text-ui leading-snug text-muted-foreground">
             Your profile and workspace, on every device.
           </p>
@@ -797,7 +797,7 @@ function CodeEntryStep({
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-col items-center gap-3 text-center">
-        <SynaraLogo className="size-8" />
+        <RamspaceLogo className="size-8" />
         <SignInPanelTitle variant="embedded">Check your email</SignInPanelTitle>
         <p className="text-ui leading-snug text-muted-foreground">
           {entry.resent ? (

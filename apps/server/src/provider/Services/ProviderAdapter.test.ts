@@ -1,4 +1,4 @@
-import { ProviderInstanceId } from "@synara/contracts";
+import { ProviderInstanceId } from "@ramspace/contracts";
 import { describe, expect, it } from "vitest";
 
 import { resolveProviderSessionInstanceId } from "./ProviderAdapter.ts";

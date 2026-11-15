@@ -3,7 +3,7 @@ import { EventEmitter } from "node:events";
 import type { Socket } from "node:net";
 import { PassThrough } from "node:stream";
 
-import type { CuaPreviewTarget } from "@synara/shared/cuaDriverProtocol";
+import type { CuaPreviewTarget } from "@ramspace/shared/cuaDriverProtocol";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { ComputerFrameTap, type ComputerPreviewFrame } from "./computerFrameTap";

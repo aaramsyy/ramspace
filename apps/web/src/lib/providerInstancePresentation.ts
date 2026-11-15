@@ -4,7 +4,7 @@
 // Layer: Web presentation helper
 
 import { t } from "~/i18n";
-import type { ProviderInstanceId, ProviderKind, ServerProviderStatus } from "@synara/contracts";
+import type { ProviderInstanceId, ProviderKind, ServerProviderStatus } from "@ramspace/contracts";
 
 export function resolveProviderInstanceLabel(
   instances: ReadonlyArray<{ readonly instanceId: ProviderInstanceId; readonly label: string }>,

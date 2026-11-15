@@ -1,4 +1,4 @@
-import { ProjectId } from "@synara/contracts";
+import { ProjectId } from "@ramspace/contracts";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useComposerDraftStore } from "../composerDraftStore";

@@ -1,4 +1,4 @@
-import { AuthSessionId } from "@synara/contracts";
+import { AuthSessionId } from "@ramspace/contracts";
 import { assert, it } from "@effect/vitest";
 import { DateTime, Duration, Effect, Exit, Layer, Option } from "effect";
 import * as SqlClient from "effect/unstable/sql/SqlClient";

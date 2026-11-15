@@ -5,7 +5,7 @@ import type {
   AuthPairingCredentialResult,
   AuthSessionState,
   AuthWebSocketTokenResult,
-} from "@synara/contracts";
+} from "@ramspace/contracts";
 import { DateTime, Effect, Layer } from "effect";
 
 import { ServerConfig } from "../../config";

@@ -1,6 +1,6 @@
 // Owns desktop updater transitions, including staged updates retained across later checks.
 // main.ts owns transfers and artifact verification before publishing download completion.
-import type { DesktopRuntimeInfo, DesktopUpdateState } from "@synara/contracts";
+import type { DesktopRuntimeInfo, DesktopUpdateState } from "@ramspace/contracts";
 
 import {
   getCanRetryAfterDownloadFailure,

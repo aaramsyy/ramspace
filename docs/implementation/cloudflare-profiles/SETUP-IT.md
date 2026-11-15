@@ -1,4 +1,4 @@
-# Configurazione e prova dei profili Synara
+# Configurazione e prova dei profili Ramspace
 
 Configurazione scelta: pagine pubbliche su Cloudflare Workers, API su Cloudflare
 Containers, database PostgreSQL su Supabase, login tramite WorkOS. Railway non è
@@ -25,8 +25,8 @@ Il workflow GitHub non è stato eseguito; il deploy è avvenuto dal checkout.
 
 ## 1. Database Supabase esistente — configurato
 
-Per scelta dell'operatore usiamo **Synara** (`ubdkfrnaqfbdymgipddq`), lo stesso
-progetto degli sponsor. Il 28 settembre 2026 il bootstrap `synara_accounts_bootstrap`
+Per scelta dell'operatore usiamo **Ramspace** (`ubdkfrnaqfbdymgipddq`), lo stesso
+progetto degli sponsor. Il 28 settembre 2026 il bootstrap `ramspace_accounts_bootstrap`
 è stato applicato tramite MCP: 16 migrazioni API, 15 tabelle finali, RLS attiva e
 registro Drizzle aggiornato con gli hash originali. I profili nascono privati.
 L'accesso Data API alle nuove tabelle è revocato per `anon`, `authenticated` e
@@ -37,7 +37,7 @@ Mantieni la Data API del progetto per gli sponsor; non modificare globalmente i
 permessi né reimpostare la password PostgreSQL condivisa per questa prova.
 Non applicare di nuovo il bootstrap: i prossimi avvii usano il registro Drizzle.
 
-Il collegamento è completato: il ruolo dedicato `synara_account_api` possiede
+Il collegamento è completato: il ruolo dedicato `ramspace_account_api` possiede
 le tabelle account e il registro Drizzle, con i permessi necessari alle
 migrazioni e nessun accesso alle nove tabelle sponsor. La password PostgreSQL
 condivisa non è stata cambiata. `DATABASE_URL` è salvato come segreto Cloudflare.
@@ -52,13 +52,13 @@ rimane in WorkOS. Vedi le
 
 ## 2. Login su WorkOS
 
-Il progetto di prova è **Synara's Project → Staging**. Magic Auth è stato
+Il progetto di prova è **Ramspace's Project → Staging**. Magic Auth è stato
 abilitato e verificato nel dashboard il 28 settembre 2026. `WORKOS_API_KEY` e
 `WORKOS_CLIENT_ID` sono salvati come segreti cifrati nel Worker API. Rimane da
-provare logout e nuovo login; il primo accesso da Synara è riuscito.
+provare logout e nuovo login; il primo accesso da Ramspace è riuscito.
 Anche la callback desktop `http://127.0.0.1:*/callback` è stata registrata via
 MCP. WorkOS richiede una callback predefinita senza wildcard: è impostata a
-`http://127.0.0.1/callback`; Synara passa sempre la porta effettiva nella richiesta.
+`http://127.0.0.1/callback`; Ramspace passa sempre la porta effettiva nella richiesta.
 
 Nel [dashboard WorkOS](https://dashboard.workos.com), seleziona o crea
 l'applicazione AuthKit destinata al trial:
@@ -81,7 +81,7 @@ nei Worker: non rigenerarli. I segreti GitHub sotto servono solo per attivare
 la futura pubblicazione da Actions.
 
 Cloudflare → **My Profile → API Tokens → Create Token**: prepara un token per
-l'account **Synara Orgs**, con accesso di scrittura ai Workers e ai Containers e
+l'account **Ramspace Orgs**, con accesso di scrittura ai Workers e ai Containers e
 lettura delle impostazioni account. Il modello per modificare Workers è un
 punto di partenza; includi il permesso **Containers Edit/Write**. L’accesso MCP ora consente le modifiche concordate, ma non fornisce
 automaticamente una credenziale al workflow GitHub o a Wrangler.
@@ -91,14 +91,14 @@ Limita i deploy a `main` e salva il token del Worker API tra i segreti di
 quell’ambiente. Il deploy ordinario usa solo `CLOUDFLARE_API_TOKEN`. Per il
 primo provisioning dell’API, configura anche i segreti di base elencati qui.
 
-| Nome                          | Valore                                                        |
-| ----------------------------- | ------------------------------------------------------------- |
-| `CLOUDFLARE_API_TOKEN`        | Token di deploy Cloudflare dell'account Synara Orgs           |
-| `SYNARA_API_DATABASE_URL`     | Connessione del progetto Supabase Synara esistente            |
-| `SYNARA_API_WORKOS_API_KEY`   | API key WorkOS                                                |
-| `SYNARA_API_WORKOS_CLIENT_ID` | Client ID WorkOS                                              |
-| `SYNARA_API_SIGNING_KEY`      | Chiave casuale stabile, 32 byte in base64url                  |
-| `SYNARA_PROFILE_PROXY_SECRET` | Altro segreto casuale indipendente, condiviso dai due Workers |
+| Nome                            | Valore                                                        |
+| ------------------------------- | ------------------------------------------------------------- |
+| `CLOUDFLARE_API_TOKEN`          | Token di deploy Cloudflare dell'account Ramspace Orgs         |
+| `RAMSPACE_API_DATABASE_URL`     | Connessione del progetto Supabase Ramspace esistente          |
+| `RAMSPACE_API_WORKOS_API_KEY`   | API key WorkOS                                                |
+| `RAMSPACE_API_WORKOS_CLIENT_ID` | Client ID WorkOS                                              |
+| `RAMSPACE_API_SIGNING_KEY`      | Chiave casuale stabile, 32 byte in base64url                  |
+| `RAMSPACE_PROFILE_PROXY_SECRET` | Altro segreto casuale indipendente, condiviso dai due Workers |
 
 Sul Mac puoi generare una chiave direttamente negli appunti, senza stamparla:
 
@@ -127,39 +127,39 @@ Quando il workflow è disponibile in Actions:
 2. Verifica l'API:
 
    ```sh
-   curl --fail --silent --show-error https://synara-account-api-trial.synara-orgs.workers.dev/api/v1/instance
-   curl --fail --silent --show-error https://synara-account-api-trial.synara-orgs.workers.dev/api/v1/keys/jwks
+   curl --fail --silent --show-error https://ramspace-account-api-trial.ramspace-orgs.workers.dev/api/v1/instance
+   curl --fail --silent --show-error https://ramspace-account-api-trial.ramspace-orgs.workers.dev/api/v1/keys/jwks
    ```
 
    Devono rispondere con JSON valido. Questo prova che il processo è avviato;
    non prova ancora WorkOS o il ciclo completo dei profili.
 
 3. Esegui **Deploy Profiles** con
-   `https://synara-account-api-trial.synara-orgs.workers.dev` come `account_api_url`.
-   Questo workflow legge `CLOUDFLARE_API_TOKEN` e `SYNARA_PROFILE_PROXY_SECRET`
+   `https://ramspace-account-api-trial.ramspace-orgs.workers.dev` come `account_api_url`.
+   Questo workflow legge `CLOUDFLARE_API_TOKEN` e `RAMSPACE_PROFILE_PROXY_SECRET`
    dai segreti del repository o dell’organizzazione. Usa lì un token dedicato ai
    profili e lo stesso proxy secret già configurato sul Worker API.
 
 L'indirizzo delle pagine pubblicate è:
-`https://synara-profiles-trial.synara-orgs.workers.dev/@nome`.
-Per ora non modificare DNS o routing di `trysynara.com`.
+`https://ramspace-profiles-trial.ramspace-orgs.workers.dev/@nome`.
+Per ora non modificare DNS o routing di `tryramspace.com`.
 
 ## 5. Avviare un'app di prova isolata
 
 Dal checkout con queste modifiche, esegui prima il dry-run:
 
 ```sh
-SYNARA_ACCOUNT_URL=https://synara-account-api-trial.synara-orgs.workers.dev \
-SYNARA_ACCOUNT_PROFILE_SYNC=1 \
-VITE_PROFILES_PUBLIC_ORIGIN=https://synara-profiles-trial.synara-orgs.workers.dev \
-bun run dev --home-dir /private/tmp/synara-profiles-check --dry-run
+RAMSPACE_ACCOUNT_URL=https://ramspace-account-api-trial.ramspace-orgs.workers.dev \
+RAMSPACE_ACCOUNT_PROFILE_SYNC=1 \
+VITE_PROFILES_PUBLIC_ORIGIN=https://ramspace-profiles-trial.ramspace-orgs.workers.dev \
+bun run dev --home-dir /private/tmp/ramspace-profiles-check --dry-run
 ```
 
 Controlla home e porte stampate; il runner cerca porte disponibili. Poi ripeti
 lo stesso comando togliendo `--dry-run` e apri la porta web indicata. È una home
 di prova separata, senza la cronologia della tua installazione abituale.
 
-`SYNARA_ACCOUNT_URL` seleziona l'API; `SYNARA_ACCOUNT_PROFILE_SYNC=1` abilita
+`RAMSPACE_ACCOUNT_URL` seleziona l'API; `RAMSPACE_ACCOUNT_PROFILE_SYNC=1` abilita
 profilo e sincronizzazione delle statistiche aggregate. Il flag va usato soltanto
 in Beta/sviluppo: Stable continua a rifiutarlo. `VITE_PROFILES_PUBLIC_ORIGIN`
 seleziona il dominio per aprire/copiare/condividere il profilo e va impostato
@@ -188,7 +188,7 @@ ritirato dal nostro server. Controlla anche l'API pubblica:
 
 ```sh
 curl --silent --output /dev/null --write-out '%{http_code}\n' \
-  https://synara-account-api-trial.synara-orgs.workers.dev/api/v1/profiles/NOME
+  https://ramspace-account-api-trial.ramspace-orgs.workers.dev/api/v1/profiles/NOME
 ```
 
 Deve dare `404` da privato/inesistente e `200` da pubblico. Un `503` indica
@@ -197,7 +197,7 @@ profilo inesistente. Per isolare una mancata consegna email controllare WorkOS;
 per un errore database controllare URL, TLS e migrazioni del servizio API.
 
 L'upload degli avatar è ora configurato sul bucket R2 dedicato
-`synara-profile-avatars-trial`, con le cinque variabili `S3_*` cifrate nel Worker
+`ramspace-profile-avatars-trial`, con le cinque variabili `S3_*` cifrate nel Worker
 API e una chiave limitata a quel bucket. Il container è stato riavviato e
 riconosce la configurazione. Il primo upload tramite **Edit → Edit avatar**
 è riuscito; immagine R2 e pagina pubblica sono verificate. Restano da provare

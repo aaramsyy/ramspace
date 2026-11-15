@@ -46,7 +46,7 @@ export function CreateGitHubProjectFields(props: {
             />
           </GitHubRequirement>
           <GitHubRequirement index={2} title={t("git:destination")}>
-            {t("git:chooseTheParentFolderWhereSynaraShouldCreateThe")}
+            {t("git:chooseTheParentFolderWhereRamspaceShouldCreateThe")}
           </GitHubRequirement>
           <GitHubRequirement index={3} title={t("git:privateAccess")}>
             {t("git:publicRepositoriesWorkImmediatelyForPrivateRepositoriesRun")}{" "}

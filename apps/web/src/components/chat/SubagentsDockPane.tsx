@@ -9,7 +9,7 @@
 // Layer: Chat right-dock UI
 // Exports: SubagentsDockPane, SubagentsList (the presentational list it renders)
 
-import type { ThreadId } from "@synara/contracts";
+import type { ThreadId } from "@ramspace/contracts";
 import { useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 
