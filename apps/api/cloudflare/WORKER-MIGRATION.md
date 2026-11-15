@@ -24,3 +24,5 @@ and deployment/rollback instructions validated against a real staging account.
 A Free plan is a usage limit, not a guarantee that this application's workloads
 fit within it. Do not switch production traffic or release clients to this
 endpoint before these gates pass.
+
+Panduan setup berbahasa Indonesia: [SETUP-ID.md](SETUP-ID.md).
