@@ -1,0 +1,13 @@
+﻿{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "ramspace-account-worker",
+  "main": "cloudflare/account-worker.ts",
+  "compatibility_date": "2026-09-28",
+  "compatibility_flags": ["nodejs_compat"],
+  "workers_dev": true,
+  "preview_urls": false,
+  "triggers": { "crons": ["*/5 * * * *"] },
+  "secrets": {
+    "required": ["DATABASE_URL", "WORKOS_API_KEY", "WORKOS_CLIENT_ID", "API_SIGNING_KEY", "ACCOUNT_BASE_URL", "API_PUBLIC_URL"]
+  }
+}
