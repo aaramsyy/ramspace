@@ -281,6 +281,7 @@ import {
   resolveCommittedProviderModel,
   resolveDefaultEnvironmentPanelOpen,
   resolveEnvironmentPanelOpen,
+  shouldOfferComposerResume,
   resolveComposerHighlightedItemId,
   resolveEnvironmentPanelPreferenceUpdate,
   resolveEnvironmentPanelVisible,
@@ -4838,7 +4839,7 @@ export default function ChatView({
 
   const {
     onSubmitPlanFollowUp,
-    onContinueFailedTurn,
+    onResumeTurn,
     onEditUserMessage,
     onResumeWorkflowRun,
     onImplementPlanInNewThread,
@@ -4934,11 +4935,33 @@ export default function ChatView({
       setSubmittedClaudeSwitchKey(null);
     }
   }, [claudeSwitchKey]);
+  // An empty composer's Send becomes Resume; Enter on that empty draft resumes too.
+  const showComposerResume =
+    !showPlanFollowUpPrompt &&
+    !composerSendState.hasSendableContent &&
+    shouldOfferComposerResume({
+      isServerThread,
+      messages: activeThread?.messages ?? EMPTY_MESSAGES,
+      latestTurn: activeLatestTurn,
+      hasLiveWork: isWorking,
+      hasPendingRequests: pendingApprovals.length > 0 || pendingUserInputs.length > 0,
+      hasUsageLimitRecovery: activeThread?.usageLimitRecovery != null,
+      hasQueuedTurns: queuedComposerTurns.length > 0,
+      hasCacheReview: activeThread?.claudeCacheReview != null,
+      deliveryBlocked: isProviderDeliveryBlockDetail(activeThread?.error),
+    });
+  const onResumeFromComposer = useCallback(() => {
+    void onResumeTurn();
+  }, [onResumeTurn]);
   const onSend = useCallback(
     async (...args: Parameters<typeof submitComposerTurn>) => {
       if (isNativeSubagentMessagingUnavailable) {
         args[0]?.preventDefault();
         return false;
+      }
+      if (showComposerResume && args[2] === undefined) {
+        args[0]?.preventDefault();
+        return onResumeTurn();
       }
       // Keep the choice captured for this send: later picker changes belong to the
       // next message. Automatic queue drains must not acknowledge a new draft choice.
@@ -4949,7 +4972,13 @@ export default function ChatView({
       }
       return accepted;
     },
-    [claudeSwitchKey, isNativeSubagentMessagingUnavailable, submitComposerTurn],
+    [
+      claudeSwitchKey,
+      isNativeSubagentMessagingUnavailable,
+      onResumeTurn,
+      showComposerResume,
+      submitComposerTurn,
+    ],
   );
   const showClaudeModelSwitchNote =
     claudeSwitchKey !== null &&
@@ -6823,6 +6852,7 @@ export default function ChatView({
                     hasPrompt: prompt.trim().length > 0,
                     onInterrupt: onInterruptFromStopControl,
                     onImplementInNewThread: onImplementPlanInNewThread,
+                    ...(showComposerResume ? { onResume: onResumeFromComposer } : {}),
                   }}
                 />
               )}
@@ -7200,7 +7230,7 @@ export default function ChatView({
                       pendingApprovals.length > 0 ||
                       pendingUserInputs.length > 0
                     }
-                    onContinueFailedTurn={onContinueFailedTurn}
+                    onContinueFailedTurn={onResumeTurn}
                     onChangeRecoveryModel={() => handleModelPickerOpenChange(true)}
                     unblockingThread={unblockingActiveThread}
                     onDismissThreadError={dismissActiveThreadError}
