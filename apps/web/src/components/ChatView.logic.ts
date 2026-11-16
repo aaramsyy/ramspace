@@ -20,7 +20,9 @@ import {
   type RuntimeMode,
   type ServerProviderAuthStatus,
   type ThreadId as ThreadIdType,
+  type OrchestrationLatestTurn,
 } from "@ramspace/contracts";
+import { resolveTurnResumeTarget, type TurnResumeMessage } from "@ramspace/shared/turnResume";
 import { normalizeModelSlug } from "@ramspace/shared/model";
 import { approvalSessionGrantWidensSessionPolicy } from "@ramspace/shared/approvalSessionGrant";
 import { buildRamspaceBranchName } from "@ramspace/shared/git";
@@ -263,6 +265,41 @@ export async function persistModelSelectionBeforeRuntimeMode(input: {
   if (runtimeChanged && !downgradesFromAuto) {
     await input.persistRuntimeMode(input.nextRuntimeMode);
   }
+}
+
+/**
+ * Whether an empty composer's Send becomes Resume: the newest
+ * request never reached the provider, or the latest turn was interrupted (Stop,
+ * quit, crash, restart). A failed turn keeps its banner's Continue task. Live
+ * work, a pending request, a usage-limit wait, queued follow-ups, a held cache
+ * review or a delivery quarantine decide what runs next instead.
+ */
+export function shouldOfferComposerResume(input: {
+  isServerThread: boolean;
+  messages: ReadonlyArray<TurnResumeMessage>;
+  latestTurn: Pick<OrchestrationLatestTurn, "turnId" | "state"> | null;
+  hasLiveWork: boolean;
+  hasPendingRequests: boolean;
+  hasUsageLimitRecovery: boolean;
+  hasQueuedTurns: boolean;
+  hasCacheReview: boolean;
+  deliveryBlocked: boolean;
+}): boolean {
+  if (
+    !input.isServerThread ||
+    // A thread restored without any message has no task to resume.
+    input.messages.length === 0 ||
+    input.hasLiveWork ||
+    input.hasPendingRequests ||
+    input.hasUsageLimitRecovery ||
+    input.hasQueuedTurns ||
+    input.hasCacheReview ||
+    input.deliveryBlocked
+  ) {
+    return false;
+  }
+  const target = resolveTurnResumeTarget(input);
+  return target !== null && (target.kind === "resend" || target.state === "interrupted");
 }
 
 export function shouldRenderProviderHealthBanner(input: {
